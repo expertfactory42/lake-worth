@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lake Worth Archive - Extraction Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; }
+  h1 { color: #e0c97f; margin-bottom: 5px; }
+  .subtitle { color: #888; margin-bottom: 20px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  .stat-card {
+    background: #16213e;
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    border: 1px solid #1a3a5c;
+  }
+  .stat-card .number { font-size: 2.2em; font-weight: bold; color: #e0c97f; }
+  .stat-card .label { font-size: 0.85em; color: #aaa; margin-top: 4px; }
+
+  .section { margin-bottom: 25px; }
+  .section h2 { color: #e0c97f; margin-bottom: 10px; font-size: 1.2em; border-bottom: 1px solid #333; padding-bottom: 5px; }
+
+  .progress-bar-outer {
+    background: #16213e;
+    border-radius: 8px;
+    height: 24px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1px solid #1a3a5c;
+  }
+  .progress-bar-inner {
+    background: linear-gradient(90deg, #e0c97f, #c9a84c);
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    color: #1a1a2e;
+    font-weight: bold;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+  th { background: #16213e; color: #e0c97f; padding: 10px 8px; text-align: left; position: sticky; top: 0; }
+  td { padding: 8px; border-bottom: 1px solid #2a2a4a; }
+  tr:hover { background: #1e2d4a; }
+
+  .status-ok { color: #4caf50; }
+  .status-empty { color: #ff9800; }
+  .status-failed { color: #f44336; }
+
+  .article-card {
+    background: #16213e;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-left: 3px solid #e0c97f;
+  }
+  .article-card h3 { color: #e0c97f; margin-bottom: 6px; font-size: 1.05em; }
+  .article-meta { color: #888; font-size: 0.85em; margin-bottom: 8px; }
+  .article-text { font-size: 0.9em; line-height: 1.6; color: #ccc; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+  .article-text.expanded { max-height: none; }
+  .expand-btn { color: #e0c97f; cursor: pointer; font-size: 0.85em; margin-top: 5px; display: inline-block; }
+
+  .quote-block {
+    border-left: 3px solid #4caf50;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #1a2a3e;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+  }
+  .quote-speaker { color: #4caf50; font-style: normal; font-size: 0.85em; margin-top: 4px; }
+
+  .people-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .person-tag {
+    background: #1a3a5c;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+  }
+
+  .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+  .tab {
+    padding: 8px 18px;
+    background: #16213e;
+    border: 1px solid #1a3a5c;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #aaa;
+  }
+  .tab.active { background: #1a3a5c; color: #e0c97f; border-color: #e0c97f; }
+
+  .refresh-info { color: #666; font-size: 0.8em; margin-bottom: 15px; }
+
+  #log-table-container { max-height: 400px; overflow-y: auto; }
+
+  .filter-bar { margin-bottom: 15px; }
+  .filter-bar input {
+    background: #16213e;
+    border: 1px solid #1a3a5c;
+    color: #e0e0e0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: 300px;
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+
+<h1>Lake Worth Newspaper Archive</h1>
+<p class="subtitle">Fort Worth Star-Telegram & Record-Telegram, 1914–1925</p>
+<p class="refresh-info">Auto-refreshes every 10 seconds | Last updated: <span id="lastUpdate">—</span></p>
+
+<div class="stats-grid">
+  <div class="stat-card"><div class="number" id="statProcessed">—</div><div class="label">PDFs Processed</div></div>
+  <div class="stat-card"><div class="number" id="statTotal">—</div><div class="label">Total PDFs</div></div>
+  <div class="stat-card"><div class="number" id="statArticles">—</div><div class="label">Articles Found</div></div>
+  <div class="stat-card"><div class="number" id="statQuotes">—</div><div class="label">Quotes Captured</div></div>
+  <div class="stat-card"><div class="number" id="statPeople">—</div><div class="label">People Found</div></div>
+  <div class="stat-card"><div class="number" id="statImages">—</div><div class="label">Images Found</div></div>
+</div>
+
+<div class="progress-bar-outer">
+  <div class="progress-bar-inner" id="progressBar" style="width: 0%">0%</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('articles')">Articles</div>
+  <div class="tab" onclick="showTab('quotes')">Quotes</div>
+  <div class="tab" onclick="showTab('people')">People</div>
+  <div class="tab" onclick="showTab('log')">Processing Log</div>
+</div>
+
+<div id="tab-articles" class="section">
+  <div class="filter-bar">
+    <input type="text" id="articleFilter" placeholder="Filter articles..." oninput="renderArticles()">
+  </div>
+  <div id="articlesList"></div>
+</div>
+
+<div id="tab-quotes" class="section" style="display:none">
+  <div id="quotesList"></div>
+</div>
+
+<div id="tab-people" class="section" style="display:none">
+  <div class="people-list" id="peopleList"></div>
+</div>
+
+<div id="tab-log" class="section" style="display:none">
+  <div id="log-table-container">
+    <table>
+      <thead><tr><th>#</th><th>Status</th><th>Date</th><th>Page</th><th>Newspaper</th><th>Articles</th></tr></thead>
+      <tbody id="logBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+let allData = { stats: {}, articles: [], quotes: [], people: [], log: [] };
+
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).style.display = 'block';
+  event.target.classList.add('active');
+}
+
+function renderArticles() {
+  const filter = document.getElementById('articleFilter').value.toLowerCase();
+  const container = document.getElementById('articlesList');
+  const filtered = allData.articles.filter(a =>
+    !filter ||
+    (a.headline || '').toLowerCase().includes(filter) ||
+    (a.full_text || '').toLowerCase().includes(filter) ||
+    (a.newspaper || '').toLowerCase().includes(filter)
+  );
+
+  container.innerHTML = filtered.map((a, i) => {
+    const quotes = (a.quotes || []).map(q =>
+      `<div class="quote-block">"${esc(q.quote_text)}"<div class="quote-speaker">— ${esc(q.speaker)}${q.speaker_role ? ', ' + esc(q.speaker_role) : ''}</div></div>`
+    ).join('');
+
+    return `<div class="article-card">
+      <h3>${esc(a.headline || 'Untitled')}</h3>
+      <div class="article-meta">${esc(a.newspaper)} — ${a.date} — Page ${a.page} — ${a.pdf_filename}</div>
+      <div class="article-text" id="text-${i}">${esc(a.full_text || '')}</div>
+      <span class="expand-btn" onclick="toggleText(${i})">Show more/less</span>
+      ${quotes}
+    </div>`;
+  }).join('');
+}
+
+function toggleText(i) {
+  document.getElementById('text-' + i).classList.toggle('expanded');
+}
+
+function renderQuotes() {
+  const container = document.getElementById('quotesList');
+  container.innerHTML = allData.quotes.map(q =>
+    `<div class="quote-block">
+      "${esc(q.quote_text)}"
+      <div class="quote-speaker">— ${esc(q.speaker)}${q.speaker_role ? ', ' + esc(q.speaker_role) : ''}
+        <span style="color:#888"> | ${q.date} | ${esc(q.headline || '')}</span>
+      </div>
+    </div>`
+  ).join('') || '<p style="color:#888">No quotes captured yet.</p>';
+}
+
+function renderPeople() {
+  const container = document.getElementById('peopleList');
+  container.innerHTML = allData.people.map(p =>
+    `<div class="person-tag">${esc(p.name)}${p.role ? ' <span style="color:#888">(' + esc(p.role) + ')</span>' : ''}</div>`
+  ).join('') || '<p style="color:#888">No people found yet.</p>';
+}
+
+function renderLog() {
+  const tbody = document.getElementById('logBody');
+  tbody.innerHTML = allData.log.map((r, i) => {
+    const statusClass = r.articles > 0 ? 'status-ok' : r.status === 'FAILED' ? 'status-failed' : 'status-empty';
+    return `<tr>
+      <td>${i + 1}</td>
+      <td class="${statusClass}">${r.status}</td>
+      <td>${r.date}</td>
+      <td>${r.page}</td>
+      <td>${esc(r.newspaper)}</td>
+      <td>${r.articles}</td>
+    </tr>`;
+  }).join('');
+}
+
+function esc(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function refresh() {
+  try {
+    const resp = await fetch('http://localhost:8765/api/data');
+    allData = await resp.json();
+
+    document.getElementById('statProcessed').textContent = allData.stats.processed || 0;
+    document.getElementById('statTotal').textContent = allData.stats.total_pdfs || 0;
+    document.getElementById('statArticles').textContent = allData.stats.articles || 0;
+    document.getElementById('statQuotes').textContent = allData.stats.quotes || 0;
+    document.getElementById('statPeople').textContent = allData.stats.people || 0;
+    document.getElementById('statImages').textContent = allData.stats.images || 0;
+
+    const pct = allData.stats.total_pdfs ? Math.round(100 * allData.stats.processed / allData.stats.total_pdfs) : 0;
+    const bar = document.getElementById('progressBar');
+    bar.style.width = pct + '%';
+    bar.textContent = pct + '%';
+
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+
+    renderArticles();
+    renderQuotes();
+    renderPeople();
+    renderLog();
+  } catch(e) {
+    document.getElementById('lastUpdate').textContent = 'Connection error - is dashboard_server.py running?';
+  }
+}
+
+refresh();
+setInterval(refresh, 10000);
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+pdfs/
+downloads_temp/
+chrome_temp_profile/
+__pycache__/
+*.pyc
+*.jpg
+*.jpeg
+*.png
+images/
