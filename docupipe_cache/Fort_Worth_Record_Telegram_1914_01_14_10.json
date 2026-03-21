@@ -1,0 +1,138 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-01-14",
+  "pageNumber": 10,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "CAPT. PADDOCK HITS FROM HIS SHOULDER",
+      "subtitle": "Veteran Publicist Says Railroad Warehouse Bill and Marketing Commisioners Really Manage the Railroads-Farmers for the Legislature! How?",
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "TEXAS FARMERS MEET IN CALLED SESSION",
+      "subtitle": "Farm Products Will Be Given Attention at Meeting Which Opens Today at Finney Rifles' Armory.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "City Commission Grindings",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "DEVICE HURLS EXPLOSIVE FROM FLYING AEROPLANE",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "DIDN'T INCLUDE CALVES IN HIS COMPUTATION",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "LUCKY MEN CAN NOW FILL OUT NICE BLANK",
+      "subtitle": "Deputy Internal Revenue Collector Is Prepared to Help You Figure on What Income You Really Enjoy.",
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Washer Bros.",
+      "description": "The Washer Shoe Sale. Six hundred pairs women's high grade shoes. Splendid styles. good assortment of sizes and widths. Regularly sold at $4.00 and $5.00. Many Lines Boys and Girls' Shoes Reduced. Broken Lines Men's Shoes Reduced.",
+      "price": "$2.65 Per Pair"
+    },
+    {
+      "productOrBusiness": "ALEXANDER, POWER & RIDGWAY",
+      "description": "GENERAL LAW PRACTICE",
+      "price": null
+    },
+    {
+      "productOrBusiness": "DR. SCHNAPPS",
+      "description": "PLUMBING. Don't give out the work sint I have figured on the job.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "H. W. GREENWAY, Plumber",
+      "description": "Phone Rosedale 2223. Fort Wor",
+      "price": null
+    },
+    {
+      "productOrBusiness": "HOTEL POWHATAN",
+      "description": null,
+      "price": null
+    },
+    {
+      "productOrBusiness": "BLESSING",
+      "description": "FILMS and all REQUISITES Finish for AMATEURS",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Dr. I. C. McCo",
+      "description": "GENTELERIVARY ASD RECTA Heems 201-218 Fort Worth Sarl Bank Fort Worth, Texas,",
+      "price": null
+    },
+    {
+      "productOrBusiness": "BEWLEY'S BEST",
+      "description": "The Blue Ribbon Brand. EXTRA SPECIAL PATENT-Standard for over thirty years. HEALTH FLOUR-For a change: a nutritious, whole wheat product. WHEATMEAL-For the stomach's sake: a ghatinous, course-ground flour. THE BEST-THE MOST ECONOMICAL. Manufactured and guaranteed by Bewley Mills FORT WORTH, TEXAS",
+      "price": null
+    },
+    {
+      "productOrBusiness": "HOTEL LONGACRE",
+      "description": null,
+      "price": null
+    },
+    {
+      "productOrBusiness": "J. G. BOGGS",
+      "description": null,
+      "price": null
+    },
+    {
+      "productOrBusiness": "New Hippodrome",
+      "description": "MUTUAL WEEKLY. A roaring Keystone comedy with Mabel Norman, and three other big pictures.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Waggoner Bank and Trust Co.",
+      "description": "Xmas Club. 4% INTEREST PAID ON SAVINGS. The Only Exclusive Savings Bank in Fort Worth. Capital, Surplus and Undivided Profits $260,000.00. 506 Main St.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "CASTORIA",
+      "description": "For Infants and Children. The Kind You Have Always Bought. Bears the Signature of Chas. H. Fletcher",
+      "price": null
+    },
+    {
+      "productOrBusiness": "BRANTLEY-DRAUGHON BUSINESS COLLEGE",
+      "description": "STAND OF TELEGRAPHY, TELSTARThanh only $34 to all who In enroll by Jan. 12. SHORT. Positiva BOOKKEEPING, Fort Worth, Texas",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Paderewski",
+      "date": "JANUARY 30",
+      "venue": "Field-Lippman Piano store, 610 Houston Street"
+    },
+    {
+      "eventName": "Maud Powell",
+      "date": "FEBRUARY 11",
+      "venue": "Field-Lippman Piano store, 610 Houston Street"
+    },
+    {
+      "eventName": "Tetrazzini",
+      "date": "FEBRUARY 23",
+      "venue": "Field-Lippman Piano store, 610 Houston Street"
+    },
+    {
+      "eventName": "Ad Club Notice: The Lantern Slide Lecture. \"Commercial Literature From the Advertiser's Standpoint\"",
+      "date": "Wednesday, January 14th, 12:15 P. M.",
+      "venue": "THE WESTBROOK HOTEL"
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-08-21",
+  "pageNumber": 6,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "U. S. ARMY OFFICER FOILS RUSSIAN PLOT",
+      "subtitle": "Russian Gains Possession of Valuable Papers and Plans Belonging to U. S. but Clever Work Defeats Him.",
+      "topic": "International",
+      "fullText": null
+    },
+    {
+      "title": "FOREIGN COUNT, INCOG, PLACED IN A DUNGEON",
+      "subtitle": "Tries to Deceive Girl, but Reck-ons Without His Host: Driver of Nitroglycerin Wagon In-stantly Killed by Explosion.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "BOATS OR NO BOATS. QUESTION AT LAKE",
+      "subtitle": "Commissioner Blanke Is Op-posed to Any Boats or Camp-ing on Site for City's Drink-ing Supply.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Brief Local News",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MILK ORDINANCE ABOUT COMPLETED",
+      "subtitle": "Provides for $3 Fee for In-spection, $2 for Tuberculin Test and $3 for License Fee.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "COWAN RETAINED FOR RATE HEARING",
+      "subtitle": "Local Attorney With Judge H.A. Stedman of Austin Will Rep-resent State in Examination of Witnesses in Hearing Ac-corded Railroads.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "PERSONALS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "CROCKETT BROWNLEE IS SHOT AND KILLED",
+      "subtitle": "Employe of the Denver Road Is Shot by Burglar at Texline While on Annual Vacation.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ROTARIANS TO HOLD SPECIAL LUNCH TODAY",
+      "subtitle": "Arrangements for Next Base-ball Game Between Fats and Leans Are to Be Discussed.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "CONFEDERATE VETS' BENEFIT A SUCCESS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Is This Why English Beauties Are So Fair?",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "MAN IN CONVULSIONS ON FLOOR OF CHURCH",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FLOOD CREST REACHED IN WEST FORK OF RIVER",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Bicycle and Auto Collide: 13-Year-Old Boy Injured",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MEMORIAL SERVICES IN HONOR OF POPE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "LOCAL MOVING PICTURE ON NORTH SIDE TODAY",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "FRECKLES",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Just Apply This Paste and the Hairs Vanish",
+      "subtitle": "(Helps to Beauty)",
+      "topic": "Health",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "MAJESTIC",
+      "description": "\"When Caesar C's Her\" Nat Nazarro & Co. Northlane & Ward 4-Other Star Acts-4",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "ROTARIANS TO HOLD SPECIAL LUNCH",
+      "date": "TODAY",
+      "venue": "Unknown"
+    },
+    {
+      "eventName": "LOCAL MOVING PICTURE ON NORTH SIDE",
+      "date": "TODAY",
+      "venue": "Unknown"
+    },
+    {
+      "eventName": "AT THE MAJESTIC",
+      "date": null,
+      "venue": "MAJESTIC"
+    }
+  ]
+}

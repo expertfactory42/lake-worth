@@ -1,0 +1,260 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-09-04",
+  "pageNumber": 5,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "Department of Home Economics Created By City Federation",
+      "subtitle": "Mrs. E. L. Darwin of State Food Inspection Department Offers Many Valuable Suggestions to Fort Worth Women.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ELKS WILL HOLD BARBECUE-DANCE",
+      "subtitle": "Festivities Will Begin at 7 p. m. Friday at Lake Erie: Cars Leave at 6 and 6:30 p. m.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WILL INSPECT SCHOOL BUILDINGS TODAY",
+      "subtitle": "Members of Mothers' Clubs and Parent-Teachers' Association Will Attend Teachers' Institute at South Side School.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ROTARY CLUB WILL HOLD MEETING TODAY",
+      "subtitle": "Members Will Gather at Chamber of Commerce at 12:30 p. m. to Consider Important Subject: No Lunch Served.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "VETERANS' REUNION OPENS ON SATURDAY",
+      "subtitle": "Company B, Confederate Grays Will Entertain Visitors From All Parts of Texas Five Days at Confederate Park.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ROCK ISLAND OPENS AN EUROPEAN AGENCY",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "CONSCIENCE HURTS; CONFESSES CRIME",
+      "subtitle": "Constable Nace Mann Goes to Abilene for O. F. Brown, Who Declares He Cashed Bad Check in Fort Worth.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "POLY COMMISSIONERS TO INSPECT APPARATUS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "FALL HATS FOR MEN. Stetson Hats, Stripling's Special, and other lines. New shades of green, blue, brown, gray and black.",
+      "price": "$2.00, $3.00, $3.50"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "READY-TO-WEAR DEPARTMENT. Sacrifice prices on all Dresses on hand, in white crepe and lingerie, voiles, pure linen, etc. ; up to $10.00 values.",
+      "price": "$2.95"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "A table of Fine Tailored Skirts, some silk chuddah cloth, serges, basket weaves and black and white checks, long and medium tunics: not a skirt worth less than $5.00 to $7.50.",
+      "price": "$2.95"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Choice Pickups for 25c-A table of assorted garments, comprising Waists, Women's White Skirts, Children's White Skirts, Children's White and Colored Dresses and Dressing Sacques in crepe and lawn; values go to $1.00.",
+      "price": "25c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Men's Summer Trousers Must Go. One hundred and fifty pairs of Men's Summer Weight Trousers, good range of patterns and colors from which to make your selection. They are what is left from our $2.50 and $3.00 lines.",
+      "price": "$1.50"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Children's School Dresses, the latest fall models, high neck and long sleeves, in plaids, checks, stripes and solid colors, in gingham and percale.",
+      "price": "35c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Maids' White Caps.",
+      "price": "5c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Children's Drawers, sizes 2 to 10 years, with three pin tucks and finished in an embroidered edging.",
+      "price": "two pairs for 25c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Cover-All Check Gingham Aprons with shoulder straps.",
+      "price": "15c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Misses' and Junior Coat Dresses with accordion plaited all colors.",
+      "price": "$9.50"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "A bargain table of Fine Muslin Underwear, crepe, nainsook and cambric garments of all kinds; values to $1.00.",
+      "price": "48c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "TOILET ARTICLES. 25c Nail and Flesh Brushes.",
+      "price": "18c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Violette Rice Powder in white and flesh, 25c quality.",
+      "price": "15c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Boyce's Medicated Foot Massage for aching, burning and perspiring feet, 25c value.",
+      "price": "19c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Talcum Powder.",
+      "price": "15c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Oil Tanned Chamois Skins, guaranteed to wash, 25c value.",
+      "price": "19c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Mme. Ise'bell's Skin Food and Wrinkle Paste, feeds the tissues, strengthens the muscles and obliterates wrinkles; 50c 1-ounce jar.",
+      "price": "39c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Mme. Ise'bell's Skin Food and Wrinkle Paste, 2-ounce jar, $1.00 value.",
+      "price": "89c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "50c Hercules Rubber Gloves.",
+      "price": "35c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Palmolive Soap, 10c cake.",
+      "price": "3 cakes for 25c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "DRESS GOODS AND SILKS. Crepes and Tissues, 27 inches wide, sold up to 25c.",
+      "price": "8c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "One lot Crepes, Voiles and Rice Cloth, 30 and 36 inches wide, sold up to 35c.",
+      "price": "12 1/2c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "One lot Brown Linen, 27 inches wide.",
+      "price": "8c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "STAPLE DEPARTMENT. New Fall Dress Ginghams in stripes, plaids and checks of all descriptions.",
+      "price": "10c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Large range of patterns in Kimono Outings; some have borders to match.",
+      "price": "10c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "36-inch Soft Finished Bleached Domestic.",
+      "price": "15 yards for $1.00"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Hope Domestic.",
+      "price": "12 yards for $1.00"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "LACE CURTAINS AND NETS. Lace Curtains in white and ecru, 3 yards long.",
+      "price": "$1.25, $1.75 and $2.00"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Hemmed Marquisette in cream, white and ecru, 25c and 30c values.",
+      "price": "18c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "42-inch Curtain Nets, ecru, white and cream; worth up to 35c.",
+      "price": "15c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "35c and 40c Curtain Nets.",
+      "price": "25c"
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "Figured Scrims and Marquisettes with satin borders and plain crossbars; some with floral borders; sold regularly 30c and 35c.",
+      "price": "25c"
+    },
+    {
+      "productOrBusiness": "Clark's",
+      "description": "SHOES FOR THE WHOLE FAMILY. Fall and Winter Shoes have arrived: all the new styles and lasts for ladies, men, girls and boys.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Antikamnia Tablet",
+      "description": "For Headache. Neuralgia. La Grippe-Relieve All Nerve Pain",
+      "price": null
+    },
+    {
+      "productOrBusiness": "GRAY HAIR",
+      "description": "Darkened-Sure Pop-So Evenly No One Can Tell.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Cuticura Soap",
+      "description": "For Sallow, Blotchy, Rough or Greasy Skins",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Barbecue-Dance",
+      "date": "Friday",
+      "venue": "Lake Erie"
+    },
+    {
+      "eventName": "AT THE MAJESTIC",
+      "date": null,
+      "venue": "MAJESTIC"
+    },
+    {
+      "eventName": "SAVOY OPENS",
+      "date": "MONDAY MATINEE, SEPT. 7",
+      "venue": "SAVOY"
+    },
+    {
+      "eventName": "\"Under Royal Patronage\"",
+      "date": null,
+      "venue": "PHILLIPS THEATRE"
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+2026-03-20 15:29:46,282 [INFO] ============================================================
+2026-03-20 15:29:46,283 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 15:29:46,283 [INFO] ============================================================
+2026-03-20 15:29:46,283 [INFO]   Unclipped entries: 13297
+2026-03-20 15:29:46,283 [INFO]   Starting from: 1909-09-13
+2026-03-20 15:29:46,283 [INFO]   Max pages: 1
+2026-03-20 15:29:46,283 [INFO]   Throttle: 450 views/hour
+2026-03-20 15:29:46,283 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_152946.log
+2026-03-20 15:29:54,406 [INFO] 
+>>> Searching 1909-09-13 to 1909-10-13
+2026-03-20 15:30:15,755 [INFO]   No results found on page.
+2026-03-20 15:30:15,755 [INFO]   Found 0 results
+2026-03-20 15:30:15,755 [INFO]   No results, jumping ahead to 1910-03-12
+2026-03-20 15:30:15,755 [INFO] 
+>>> Searching 1910-03-12 to 1910-04-11
+2026-03-20 15:30:36,793 [INFO]   No results found on page.
+2026-03-20 15:30:36,794 [INFO]   Found 0 results
+2026-03-20 15:30:36,794 [INFO]   No results, jumping ahead to 1910-09-08
+2026-03-20 15:30:36,794 [INFO] 
+>>> Searching 1910-09-08 to 1910-10-08
+2026-03-20 15:31:00,068 [INFO]   No results found on page.
+2026-03-20 15:31:00,069 [INFO]   Found 0 results
+2026-03-20 15:31:00,069 [INFO]   No results, jumping ahead to 1911-03-07
+2026-03-20 15:31:00,070 [INFO] 
+>>> Searching 1911-03-07 to 1911-04-06
+2026-03-20 15:31:22,394 [INFO]   No results found on page.
+2026-03-20 15:31:22,395 [INFO]   Found 0 results
+2026-03-20 15:31:22,395 [INFO]   No results, jumping ahead to 1911-09-03
+2026-03-20 15:31:22,396 [INFO] 
+>>> Searching 1911-09-03 to 1911-10-03
+2026-03-20 15:31:44,389 [INFO]   No results found on page.
+2026-03-20 15:31:44,390 [INFO]   Found 0 results
+2026-03-20 15:31:44,390 [INFO]   No results, jumping ahead to 1912-03-01
+2026-03-20 15:31:44,390 [INFO] 
+>>> Searching 1912-03-01 to 1912-03-31
+2026-03-20 15:32:06,180 [INFO]   No results found on page.
+2026-03-20 15:32:06,181 [INFO]   Found 0 results
+2026-03-20 15:32:06,181 [INFO]   No results, jumping ahead to 1912-08-28
+2026-03-20 15:32:06,181 [INFO] 
+>>> Searching 1912-08-28 to 1912-09-27
+2026-03-20 15:32:27,833 [INFO]   No results found on page.
+2026-03-20 15:32:27,833 [INFO]   Found 0 results
+2026-03-20 15:32:27,833 [INFO]   No results, jumping ahead to 1913-02-24
+2026-03-20 15:32:27,834 [INFO] 
+>>> Searching 1913-02-24 to 1913-03-26
+2026-03-20 15:32:49,433 [INFO]   No results found on page.
+2026-03-20 15:32:49,433 [INFO]   Found 0 results
+2026-03-20 15:32:49,433 [INFO]   No results, jumping ahead to 1913-08-23
+2026-03-20 15:32:49,434 [INFO] 
+>>> Searching 1913-08-23 to 1913-09-22
+2026-03-20 15:33:10,514 [INFO]   No results found on page.
+2026-03-20 15:33:10,514 [INFO]   Found 0 results
+2026-03-20 15:33:10,514 [INFO]   No results, jumping ahead to 1914-02-19
+2026-03-20 15:33:10,514 [INFO] 
+>>> Searching 1914-02-19 to 1914-03-21
+2026-03-20 15:33:18,040 [INFO]   Found 10 results
+2026-03-20 15:33:22,530 [INFO]     Page: Fort_Worth_Star_Telegram_1914_02_19_7.pdf
+2026-03-20 15:33:27,304 [INFO]     Clicked Clip button
+2026-03-20 15:33:49,011 [ERROR]     Clip error: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: Unable to receive message from renderer
+  (Session info: chrome=146.0.7680.153); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x132173
+	0x131ea5
+	0x12ffb8
+	0x130806
+	0x146a7e
+	0x147265
+	0x14acbf
+	0x14ad58
+	0x18bc80
+	0x18c4ab
+	0x1cde6c
+	0x1aea84
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 15:33:49,020 [ERROR] Fatal error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+Traceback (most recent call last):
+  File "C:\lake_worth\clip_and_extract.py", line 861, in main
+    driver.get(search_url)
+    ~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\undetected_chromedriver\__init__.py", line 665, in get
+    return super().get(url)
+           ~~~~~~~~~~~^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 466, in get
+    self.execute(Command.GET, {"url": url})
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 446, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 15:33:49,032 [INFO] ============================================================
+2026-03-20 15:33:49,032 [INFO] DONE
+2026-03-20 15:33:49,033 [INFO]   Pages clipped: 0
+2026-03-20 15:33:49,033 [INFO]   Articles found: 0
+2026-03-20 15:33:49,033 [INFO]   Skipped: 0
+2026-03-20 15:33:49,033 [INFO]   Errors: 1
+2026-03-20 15:33:49,034 [INFO] ============================================================

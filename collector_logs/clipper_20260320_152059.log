@@ -1,0 +1,144 @@
+2026-03-20 15:20:59,407 [INFO] Added ocr_text column to processed_pdfs
+2026-03-20 15:20:59,410 [INFO] Added clip_url column to processed_pdfs
+2026-03-20 15:20:59,413 [INFO] Added clipped column to processed_pdfs
+2026-03-20 15:20:59,468 [INFO] ============================================================
+2026-03-20 15:20:59,468 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 15:20:59,469 [INFO] ============================================================
+2026-03-20 15:20:59,469 [INFO]   Unclipped entries: 13298
+2026-03-20 15:20:59,469 [INFO]   Starting from: 1909-09-04
+2026-03-20 15:20:59,469 [INFO]   Max pages: 1
+2026-03-20 15:20:59,469 [INFO]   Throttle: 450 views/hour
+2026-03-20 15:20:59,469 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_152059.log
+2026-03-20 15:21:08,373 [INFO] 
+>>> Searching 1909-09-04 to 1909-10-04
+2026-03-20 15:21:30,236 [INFO]   No results found on page.
+2026-03-20 15:21:30,236 [INFO]   Found 0 results
+2026-03-20 15:21:30,236 [INFO] 
+>>> Searching 1909-10-05 to 1909-11-04
+2026-03-20 15:21:52,155 [INFO]   No results found on page.
+2026-03-20 15:21:52,155 [INFO]   Found 0 results
+2026-03-20 15:21:52,155 [INFO] 
+>>> Searching 1909-11-05 to 1909-12-05
+2026-03-20 15:22:12,971 [INFO]   No results found on page.
+2026-03-20 15:22:12,971 [INFO]   Found 0 results
+2026-03-20 15:22:12,971 [INFO] 
+>>> Searching 1909-12-06 to 1910-01-05
+2026-03-20 15:22:33,977 [INFO]   No results found on page.
+2026-03-20 15:22:33,977 [INFO]   Found 0 results
+2026-03-20 15:22:33,977 [INFO] 
+>>> Searching 1910-01-06 to 1910-02-05
+2026-03-20 15:22:55,137 [INFO]   No results found on page.
+2026-03-20 15:22:55,137 [INFO]   Found 0 results
+2026-03-20 15:22:55,137 [INFO] 
+>>> Searching 1910-02-06 to 1910-03-08
+2026-03-20 15:23:17,901 [INFO]   No results found on page.
+2026-03-20 15:23:17,901 [INFO]   Found 0 results
+2026-03-20 15:23:17,901 [INFO] 
+>>> Searching 1910-03-09 to 1910-04-08
+2026-03-20 15:23:39,995 [INFO]   No results found on page.
+2026-03-20 15:23:39,995 [INFO]   Found 0 results
+2026-03-20 15:23:39,995 [INFO] 
+>>> Searching 1910-04-09 to 1910-05-09
+2026-03-20 15:23:48,185 [ERROR] Fatal error: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: Unable to receive message from renderer
+  (Session info: chrome=146.0.7680.153); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x132173
+	0x131ea5
+	0x12ffb8
+	0x130806
+	0x146a7e
+	0x147265
+	0x14acbf
+	0x14ad58
+	0x18bc80
+	0x18c4ab
+	0x1cde32
+	0x1aea84
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+Traceback (most recent call last):
+  File "C:\lake_worth\clip_and_extract.py", line 831, in main
+    page_urls = collect_search_results(driver)
+  File "C:\lake_worth\clip_and_extract.py", line 254, in collect_search_results
+    WebDriverWait(driver, WAIT_TIMEOUT).until(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        EC.presence_of_element_located((By.CSS_SELECTOR, "a[href*='/image/']"))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\support\wait.py", line 112, in until
+    value = method(self._driver)
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\support\expected_conditions.py", line 92, in _predicate
+    return driver.find_element(*locator)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 816, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 446, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: Unable to receive message from renderer
+  (Session info: chrome=146.0.7680.153); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x132173
+	0x131ea5
+	0x12ffb8
+	0x130806
+	0x146a7e
+	0x147265
+	0x14acbf
+	0x14ad58
+	0x18bc80
+	0x18c4ab
+	0x1cde32
+	0x1aea84
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 15:23:48,251 [INFO] ============================================================
+2026-03-20 15:23:48,251 [INFO] DONE
+2026-03-20 15:23:48,251 [INFO]   Pages clipped: 0
+2026-03-20 15:23:48,252 [INFO]   Articles found: 0
+2026-03-20 15:23:48,252 [INFO]   Skipped: 0
+2026-03-20 15:23:48,252 [INFO]   Errors: 0
+2026-03-20 15:23:48,252 [INFO] ============================================================

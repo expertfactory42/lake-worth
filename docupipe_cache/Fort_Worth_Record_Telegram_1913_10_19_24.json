@@ -1,0 +1,120 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1913-10-19",
+  "pageNumber": 24,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "MILAM AND BLANKE CLASH ON DAM WORK",
+      "subtitle": "Mayor and Water Commissioner Enliven City Hall Session Over Several Matters Concerning the Reservoir.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Weather Man Gets Up Against Some Inquiries He Can't Answer",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "RESERVOIR ISLANDS CANNOT 'BE LEASED",
+      "subtitle": "Representative of Fort Worth Rod and Gun Club Is Denied Rental of Club House Site by City Commission.",
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "THE GREAT ATLANTIC PACIFIC TEA CO",
+      "description": "Free Graniteware Pudding Pan with a purchase of 50 cents' worth of Coffees, Teas, Spices, Extracts and Baking Powders. Various coffees, teas, baking powder, extract, and butter for sale.",
+      "price": "40c"
+    },
+    {
+      "productOrBusiness": "Washer Bros.",
+      "description": "Attractive suits in the new black and white effects, check mixtures and stripes. The new English model. Also Hats, Shoes and Furnishings.",
+      "price": "$15 to $30"
+    },
+    {
+      "productOrBusiness": "LORD'S",
+      "description": "BEST Kodak Store FOR KODAKS, SUPPLIES, PICTURES PRINTED. Films Developed Free.",
+      "price": "3c Each and Up"
+    },
+    {
+      "productOrBusiness": "Westbrook Hotel",
+      "description": "SPECIAL SALE OF UNREDEEMED Genuine Diamonds. A lot of unredeemed Diamonds, real $55 to $75 values for $38.50. Such as Ladies' and Gentlemen's Rings, La Valieres, Ear Screws, Brooches, Bracelets, Studs and Scarf Pins.",
+      "price": "$38.50"
+    },
+    {
+      "productOrBusiness": "LORD'S",
+      "description": "GLASSES THAT FIT. We Succeed Because Our Glasses Give Perfect Sight, Our Frames Are Perfectly Adjusted. EYES TESTED FREE. ASK TO SEE OUR INVISIBLE BIFOCALS.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "MANSION HOTEL",
+      "description": "SPECIAL SUNDAY DINNER TODAY. Home Cooking and Seasonable Foods.",
+      "price": "35c"
+    },
+    {
+      "productOrBusiness": "SIMON'S LOAN OFFICE",
+      "description": "Unredeemed Diamonds. We want the people of Fort Worth to know where dollars can do double duty.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "J. P. SCOTT CO.",
+      "description": "HAVE YOUR RUGS CLEANED.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Bewley Mills",
+      "description": "BEWLEY'S BEST The Blue Ribbon Brand. EXTRA SPECIAL PATENT, HEALTH FLOUR, WHEATMEAL.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "RELIABLE MESSENGER",
+      "description": "Messenger service.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "ODELL, TURNER, SMITH & PARKER",
+      "description": "Attorneys.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Golden Rule",
+      "description": "Interesting Millinery News FOR MONDAY'S SHOPPERS. 200 shapes made of Velvet, Plush and Velour. Trimmed Hats.",
+      "price": "$2.98"
+    },
+    {
+      "productOrBusiness": "E. MARVIN SCOTT, Sec.",
+      "description": "PAY YOUR WATER RENT. Those living north of Texas & Pacific Ry. tracks must pay on or before 20th or they will be cut off.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "BLESSING",
+      "description": "Latest Films. Our motto: Not how cheap but how GOOD we can finish.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "L. GORDON",
+      "description": "Fall's Best Suits. Suits at $15.00 to $27.50. 52-inch long All Wool Cravenetted Overcoats, one half lined, at $12.50 to $17.50.",
+      "price": "$15.00 to $27.50"
+    },
+    {
+      "productOrBusiness": "ALEXANDER, POWER & RIDGWAY",
+      "description": "GENERAL LAW PRACTICE.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "PHILLIPS THEATER",
+      "description": "PATHE'S WEEKLY Every Monday. ALWAYS GOOD.",
+      "price": "Five Cents"
+    }
+  ],
+  "events": [
+    {
+      "eventName": "PATHE'S WEEKLY",
+      "date": "Every Monday",
+      "venue": "PHILLIPS THEATER"
+    }
+  ]
+}

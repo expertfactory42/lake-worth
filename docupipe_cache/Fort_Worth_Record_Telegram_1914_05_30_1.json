@@ -1,0 +1,89 @@
+{
+  "standardizationId": "Wr0ex6if",
+  "documentId": "uU5UVukX",
+  "data": {
+    "newspaperName": "Fort Worth Record-Telegram",
+    "publicationDate": "1914-05-30",
+    "pageNumber": 1,
+    "location": "Fort Worth, Texas",
+    "headlines": [
+      {
+        "title": "EMPRESS OF IRELAND DEATH LIST 934",
+        "subtitle": "STEAMER SINKS WITHIN FIFTEEN MINUTES AFTER COLLISION WITH COLLIER",
+        "topic": "International",
+        "fullText": "RIMOUSKI, Quebec, May 29-Sinking in ninety feet of water within fifteen minutes after being rammed amidships in the upper reaches of the St. Lawrence river early today the Canadian Pacific liner Empress of Ireland carried down with her more than goo of her passengers and crew. Of the 1.367 persons on board the liner only 433 are known to have been saved, making the probable death list 934.\nLooming up through the river mists, as the Empress of Ireland was lying to, waiting for the fog to lift or day to break, the Danisn collier Storstad crashed bow-on into the side of the big Canadian liner, striking her about midway of her length and ripping her side opep clear to the stern"
+      },
+      {
+        "title": "CARRANZA PROTESTS ACTION OF MEDIATORS",
+        "subtitle": "SPECIAL ENVOY OF REBEL CHIEF RECEIVED BY A.B. C. DIPLOMATS, BEARING MESSAGE SAYING THE REBELS WERE IGNORED.",
+        "topic": "Politics",
+        "fullText": "WASHINGTON, May 20- Mexican mediation was discussed at the cabinet meeting today and the administration took a positive position that the communication forwarded to the mediators at Niagara Falls by General Carranza, chief of the constitutionalist forces, should be received.\nPresident Wilson announced to the cabinet that General Carranza had dispatched a note to the mediation conference seeking representation, Details of the Carranza message were not discussed but it later was declared the administration took the view that the constitutionalist chief"
+      },
+      {
+        "title": "Home Rule Means Trouble in Ulster; Sailors Signaling Fleet",
+        "subtitle": null,
+        "topic": "International",
+        "fullText": "BELPART, May 29-The feeling which has been around here by the passing by the house of commons of the Irish home rule bill in akin to a flame ready to burst into a conflagration which may rage Indefinitely. Predictions range from the minimum of faction fighting between Oratigemen and nationallets, to the maximum of organised rebellion by the covenantora. The home government appreciating the situation, has drawn a cordon of torpedo boats in the harbor here, and conat guarde are patrolling the coast ready to signal by wig wag. to these vessels, any attempt at wan-Tunning er the Orange sympathizers."
+      },
+      {
+        "title": "Arctic Steamer Is Crushed by Ice Off Coast of Alaska",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": "NEW YORK, May 29. The Karluk, which carried the Stefansson expedition to the Arctic, was crushed in the ice last January, according to a message that was received here today from St. Michaels, Alaska.\nThe crew is marooned on Wrangel island."
+      },
+      {
+        "title": "BECKER TO DIE DURING WEEK OF JULY SIXTH",
+        "subtitle": "Judge Passes Sentence on Former Police Lieutenant for the Murder of Herman Rosenthal, the Gambler.",
+        "topic": "Local News",
+        "fullText": "NEW YORK, May 28 -Charles Heck"
+      },
+      {
+        "title": "Flood Waters Stop All Sawmills in Beaumont District; Brazos Rising",
+        "subtitle": "Serious Washouts Reported by Railroads Along the Neches, Brazos and Trinity Rivers; Farm Lands Are Believed to Be Badly Damaged.",
+        "topic": "Local News",
+        "fullText": "BEAUMONT, May 29 -With praminiy"
+      },
+      {
+        "title": "TRINITY IS RISING RAPIDLY AT DALLAS",
+        "subtitle": "Telegrams Received From That City Indicate That Lower Sections May Be Flooded by the River.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "COMMISSION OPENS INQUIRY INTO B. & O.",
+        "subtitle": "Purpose Is to Ascertain If Any Relationship Exists Between That Road and the Cincinnati, Hamilton & Dayton.",
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "EX-STATE SENATOR IS CUT IN AN AFFRAY",
+        "subtitle": "B. H. Johnson of Dallas and A. H. Ellett of San Angelo Engage in Brawl in Hotel.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "UNUSUAL ACTIVITY SHOWN BY HUERTA",
+        "subtitle": "Remaining Ministers of Cabinet Confer With Dictator; Later German Minister Calls at the National Palace.",
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "Mail Wagon Falls Into Creek: Driver and Team Escape",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      }
+    ],
+    "advertisements": [],
+    "events": []
+  },
+  "schemaId": "BQNNnBPR",
+  "schemaName": "Historical Newspaper Page V2",
+  "jobId": "Q99HlGwZ",
+  "dataset": "unassigned",
+  "filename": "Fort_Worth_Record_Telegram_1914_05_30_1",
+  "displayMode": "auto",
+  "timestamp": "2026-03-17T04:35:30.481000Z",
+  "metadata": null,
+  "fieldMetadata": null
+}

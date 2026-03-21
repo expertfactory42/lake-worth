@@ -1,0 +1,133 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-08-19",
+  "pageNumber": 5,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "GIRL CAUSES ARREST OF SMUGGLER GANG",
+      "subtitle": "Use of Stolen Boat Leads to Arrest of Fisherman, but Girl Finds Evidence That Brings About His Acquittal.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WILL BEGIN AUDIT OF ACCOUNTS OF THE WATER DEPARTMENT",
+      "subtitle": "Local Firm Will Start Work on Special Audit Next Monday Morning; Cost Will Be Be- tween $500 and $600.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "CUSTODY OF $1,000.000 CAUSES CLERK TO WORRY",
+      "subtitle": "Given Big Batch of Bonds to Keep Over Night; Dog Is Trained to Do the Work of Burglars and Does It Well.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "COMMISSIONERS DECIDE ACTION TUESDAY MORNING",
+      "subtitle": "Commissioner Blanke Is Suc- cessful in His Efforts to Have Special Audit Made of Ac- counts of Water Department.",
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "CITY PREPARES TO PROTECT WATER PLANT",
+      "subtitle": "City Engineer Is Ordered by the City Commission to Prepare Plans and Estimates of the Cost of Levees Around the Holly Plant.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "OFFICIALS INSPECT DAMAGE TO ROADS",
+      "subtitle": "Immediate Steps Will Be Taken to Repair Washed-Out Sec- tions of County Pikes; Azle Road Withstands Floods.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Y. M. B. L. WILL CONSIDER PIPE LINE FRANCHISE OVER SPILLWAY TODAY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WATER WILL FLOW",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "THREE ESCAPE FROM WORKHOUSE GANG",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "AD CLUB WILL CONSIDER PROBLEM TAX SUBJECTS",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "COMMITTEE WILL PASS ON W. P. LANE'S PROTEST",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "13TH WARD LEAGUE APPOINTS DELEGATES",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "HARVARD STUDENT IS HOME FROM EUROPE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "YOUNG MAN CHARGED WITH THEFT OF HORSE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "NEWS RECEIVED OF THE DEATH OF W. R. MOORE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "DRAWING JURY FOR SIXTY-SEVENTH COURT",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Clark's Great Alteration Sale -- Clothing Department",
+      "description": "Sale on men's suits, Palm Beach suits, Panamas, Poplins, shirts, union suits, hats, and ties.",
+      "price": "$13.25"
+    },
+    {
+      "productOrBusiness": "Leon Driver Launderers Dry Cleaners",
+      "description": "Laundering and dry cleaning services.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Merlin OClass \"THE HOUSE-OF VALUES\"",
+      "description": "Sale on men's low quarter shoes in tans and blacks.",
+      "price": "$2.50"
+    },
+    {
+      "productOrBusiness": "To Grow Hair on A Bald Head",
+      "description": "Advertisement for a hair growth product.",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Ad Club Meeting",
+      "date": "Wednesday, August 19",
+      "venue": "Westbrook Hotel"
+    }
+  ]
+}

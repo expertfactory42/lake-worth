@@ -1,0 +1,67 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1913-09-28",
+  "pageNumber": 11,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "READY TO COLLECT COIN FOR POLL TAX: EVERYBODY HUSTLE",
+      "subtitle": "County Officials Have Office Forces Working to Get Receipts and Rolls in Shape by Wednesday. URGE CITIZENS TO PAY EARLY AND AVOID RUSH No Desire to Repeat the Mad Scramble of the Closing Days of January-Some Persons Are Exempt.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "COTTON FUTURES TAX CENSURED BY DEALER",
+      "subtitle": "Clark's Tariff Provision Would Be Positive Detriment to the Industry, M. L. Dickerson Asserts.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "C. OF C. MEN TO VISIT PARKER COUNTY FAIR",
+      "subtitle": "Delegation Will Spend Next Thursday at Weatherford. Special Cars Chartered and All Will Be Welcomed.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Official Angler Doesn't Draw Pay",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "SECRETARY OF SPORT.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Bryant Anti-Leak Piston Ring",
+      "description": "We have a very attractive agency proposition to offer, one that will make you some quick money. Telephone or write us for full particulars. Every Automobile Owner Should Have This Ring. The Ring you will eventually use. GIVE US A TRIAL and be convinced that we have the Best Ring on the market at any price. This Ring IS Perfect. We Want Your Opinion on the Bryant Anti-Leak Piston Ring. Hundreds have already testified to its success-we want to know of you. Thousands of men have worked on expansion rings in an effort to overcome the leaks at the joints thereby giving greater service to the user. We have worked on it, too, and are glad to state that we have solved the problem. In sending orders give number of rings wanted, bore of cylinder, width of groove, depth of groove, make and model of car. BRYANT MACHINERY COMPANY 8th and Commerce Streets Fort Worth, Texas. ALL ORDERS GIVEN PROMPT ATTENTION. We are equipped to do all kinds of auto repair work; no job too small or too large for our special care.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Pyramid Pile Remedy",
+      "description": "Stop Piles Now. Quick Relief Is What You Want and Pyramid Pile Remedy is What You Should Use.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "DANDERINE",
+      "description": "GIRLS! GROW LOTS OF BEAUTIFUL HAIR! LUSTROUS, CHARMING-25 CENT DANDERINE. No more dandruff or falling hair -A real surprise awaits you.",
+      "price": "25 CENT"
+    },
+    {
+      "productOrBusiness": "Dr. W. H. Betts",
+      "description": "Notice of Removal. Dr.W.H.Betts THE OLD RELIABLE SPECIALIST. Has Removed His Offices to Between Ninth and Truth Streets.",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Parker County Fair",
+      "date": "Next Thursday",
+      "venue": "Weatherford"
+    }
+  ]
+}

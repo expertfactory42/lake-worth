@@ -1,0 +1,192 @@
+{
+  "standardizationId": "lxwOoHZ6",
+  "documentId": "zEdvzKey",
+  "data": {
+    "newspaperName": "Fort Worth Record-Telegram",
+    "publicationDate": "1914-05-26",
+    "pageNumber": 9,
+    "location": "Fort Worth, Texas",
+    "headlines": [
+      {
+        "title": "Brief Local News",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "Scoutmaster Who Saved Two Boys' Lives",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "SCHOOLMATES PLACE FLOWERS ON CASKETS",
+        "subtitle": "Funerals of Sammie Burns and Dave Hagler Who Were Drowned in Clear Fork Saturday, Are Held.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "First Surgeon to Sew Up Human Heart",
+        "subtitle": null,
+        "topic": "Health",
+        "fullText": null
+      },
+      {
+        "title": "Exposure of the Cocaine Traffic",
+        "subtitle": null,
+        "topic": "Health",
+        "fullText": "The illicit sale and use of cocaine and other habit-forming drugs in this city (as well as all other cities) is much greater than the public knows about. We, with several other druggists in Texas, have been trying for several years to stamp out as near as possible this terrible traffic. We know if the public could see some of the real life of the habitual user of some of these drags they would greatly assist us in every way possible. We would like for everyone in Fort Worth to sea this exposure in moving pictures at the Airdome Seventh and Throckmorton Streets Tonight"
+      },
+      {
+        "title": "City Will Open Bids On 5,000 Feet of New Fire Hose Tuesday",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "PERSONALS",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "\"NOT GUILTY\" RETURNED ON ORDER OF THE COURT",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "WHAT A GALLON WILL DO",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "WILSON HEARS PLANS TO DISSOLVE N.H. ROAD",
+        "subtitle": "Governor of Massachusetts May Be Asked to Devise a Means of Selling Boston & Maine Holdings.",
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "MASONS ESCORT BODY OF HAYES TO DEPOT",
+        "subtitle": "Following brief funeral services at Mr. Haves is survived by his breth-",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "MAYFIELD IS KEEPING UP POLITICAL FENCES",
+        "subtitle": null,
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "COMPLAINT CHARGES THEFT OF THREE DOGS",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "MISS CONGER TO GIVE POST-GRADUATE RECITAL",
+        "subtitle": null,
+        "topic": "Entertainment",
+        "fullText": null
+      },
+      {
+        "title": "DANDRUFF ON HEAD IN SHEETS",
+        "subtitle": "Pimples and Rash On Scalp. Hair Fell Out. Itch Terrible, Wanted to Tear Skin Off, Cuticura Soap and Ointment Cured.",
+        "topic": "Health",
+        "fullText": "Box 165, Smithfield. N. C .- \"When I"
+      },
+      {
+        "title": "TOO LATE TO CLASSIFY",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "Will Graduate With Military Honors",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "CORNELL EIGHTS TO ROW HARVARD TODAY ON CHARLES RIVER",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "Mother Sells Daughter for a Million Dollars",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "YOUNG WOMAN TELEGRAPH OPERATOR IS FOUND DYING IN WESTERN UNION OFFICE",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "CORNER STONE LAYING WILL BE GALA AFFAIR",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "BURY YOUR TROUBLES",
+        "subtitle": "See Page 10, Columa ?.",
+        "topic": "Other",
+        "fullText": null
+      }
+    ],
+    "advertisements": [
+      {
+        "productOrBusiness": "Uneeda Biscuit",
+        "description": "A crisp, clean, nutritious food. For everybody-everywhere. Fresh in the moisture-proof package.",
+        "price": "5 cents"
+      },
+      {
+        "productOrBusiness": "Zu Zu",
+        "description": "The funny little name of the famous little ginger snap that puts fresh \"snap\" and \"ginger\" into jaded appetites.",
+        "price": "5 cents"
+      },
+      {
+        "productOrBusiness": "GRAHAM CRACKERS",
+        "description": "The natural sweetness and nutriment of the wheat are retained, giving them a delightful flavor.",
+        "price": "10 cents"
+      },
+      {
+        "productOrBusiness": "Airdome",
+        "description": "Exposure of the Cocaine Traffic in moving pictures.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "Cuticura Soap and Ointment",
+        "description": "Cured dandruff, pimples and rash on scalp.",
+        "price": null
+      }
+    ],
+    "events": [
+      {
+        "eventName": "LOBBAN SONG RECITAL",
+        "date": "TONIGHT",
+        "venue": "METHODIST CHURCH"
+      },
+      {
+        "eventName": "Exposure of the Cocaine Traffic",
+        "date": "Tonight",
+        "venue": "Airdome Seventh and Throckmorton Streets"
+      }
+    ]
+  },
+  "schemaId": "BQNNnBPR",
+  "schemaName": "Historical Newspaper Page V2",
+  "jobId": "lcBiEKup",
+  "dataset": "unassigned",
+  "filename": "Fort_Worth_Record_Telegram_1914_05_26_9",
+  "displayMode": "auto",
+  "timestamp": "2026-03-17T04:31:48.985000Z",
+  "metadata": null,
+  "fieldMetadata": null
+}

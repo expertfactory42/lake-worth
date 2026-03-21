@@ -1,0 +1,110 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-08-29",
+  "pageNumber": 10,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "Man Shot Through Heart Two Times; Is Instantly Killed",
+      "subtitle": "Jack Thompson of Lampasas Surrenders to Police After Shooting: Bessie Williams Swallows Glass on Scene.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ANOTHER RISE IN TRINITY PREDICTED",
+      "subtitle": "Water Runs Twenty-Six Inches Over Spillway of Lake Worth Dam Late Friday Afternoon, With River Rising.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Exposition Falaces Proposed tor Shores Ot New Reservoir",
+      "subtitle": "City Commissioners Listen to Plan to Create Permanent Pleasure Ground on Banks of Lake Worth.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Y. M. B. L. DELEGATION TO ATTEND FAIR",
+      "subtitle": "Dr. Ross Trigg Will Head One Delegation Saturday Morning and B. F. Allen Jr. Another to Parker County Fair.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "BARBECUE DANCE GREATLY ENJOYED",
+      "subtitle": "W. G. Turner and L. P. Robertson Are Hosts to Friends at Forbes Lake Friday Night.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "POLICE CAPTURE TWO YOUTHFUL MARAUDERS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "YOUNG AND SON ARE GIVEN EXAMINING TRIAL",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MAYOR RESCINDS ALL MENDICANT PERMITS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Jamieson-Diggs Co",
+      "description": "New XXX Special Soft and Stiff Hats now ready you will find a distinct individuality of style not to be duplicated elsewhere. They will appeal to men who value exclusiveness. In becoming shapes and colors-distingue effects for the discriminating.",
+      "price": "$3.00"
+    },
+    {
+      "productOrBusiness": "Horrell & Criss",
+      "description": "Suits Up to $25.00 Correct Weight for Early Fall",
+      "price": "$10.00"
+    },
+    {
+      "productOrBusiness": "Horrell & Criss",
+      "description": "Straw Hats $3 Values",
+      "price": "85c"
+    },
+    {
+      "productOrBusiness": "Horrell & Criss",
+      "description": "Negligee and Plaited Shirts, $2.00 and $1.50 Values",
+      "price": "$1.15"
+    },
+    {
+      "productOrBusiness": "The Bryant School FOR BOYS",
+      "description": "Enrolling pupils now PHONE ROSEDALE 21.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Fort Worth Kindergarten Training School",
+      "description": "of the FORT WORTH PUBLIC SCHOOLS J. W. CANTWELL, Supt. A thorough course of two years; culture and training for teaching. For catalogue address Miss Elizabeth Hammers, 101 W. Terrell Ave. Rosedale 5170 Fort Worth, Texas",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Sims' School for Boys",
+      "description": "Opens Sept. 17. Address J. t Sims, Y. M. C. A. Bldg. PHONE LAMAR 161",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Reliable Messenger",
+      "description": "405 WEST 6TH ST",
+      "price": null
+    },
+    {
+      "productOrBusiness": "TURNER & DINGEE",
+      "description": "Cala. Head Lettuce. Fresh Roasting Ears. Firm Ripe Tomatoes. Squash, Okra, Peppers Fresh Gathered Stringless Beans. Elberta Peaches. Eating Pears. Good Cantaloupes Ripe Watermelons.",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "THE TREY O'HEARTS",
+      "date": "Today",
+      "venue": "NEW QUEEN"
+    }
+  ]
+}

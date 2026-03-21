@@ -1,0 +1,186 @@
+{
+  "newspaperName": "Fort Worth Star-Telegram",
+  "publicationDate": "1914-08-21",
+  "pageNumber": 8,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "NEW CRISIS IN ENGLAND",
+      "subtitle": "British Isles Luckily Caught With Good Harvest for Opening of Conflict.",
+      "topic": "International",
+      "fullText": null
+    },
+    {
+      "title": "CALLS ON U. S. TO GUARD ITS OWN INTEREST",
+      "subtitle": "Resolution Reaffirms \"Open Door\" Policy in China to Protect Islands.",
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "MUSIC GIVEN FOR BENEFIT LAWN FETE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WAREHOUSE BILLS WILL NOT CONFLICT",
+      "subtitle": "Cotton Congress Representative Gets Assurance National Bill Won't Interfere.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "RECOGNITION OF CARRANZA UNCONSIDERED",
+      "subtitle": "Bryan Considers Outlook Favorable for Peace in Mexico.",
+      "topic": "International",
+      "fullText": null
+    },
+    {
+      "title": "ELGIN RACE STARTS WITH 20 ENTRIES",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "MUCH WHEAT MOVING",
+      "subtitle": "Million Bushels on Way to Switzerland",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "OUIMET MAKES TOTAL OF 220, M'NAMARA 219",
+      "subtitle": "Four Players Withdraw in National Open Golf Tourney.",
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "LAWYERS ASK FOR RELIEF OF HIGHEST COURT",
+      "subtitle": "Resolutions Adopted by Bar Association Seek Legislative Action.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FAT AND LEAN ROTARIANS TO CLASH AGAIN",
+      "subtitle": "Salt Lake City Indorses as Next International Meeting Place.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "TEXAS ROAD ASKS TRUST CO. RECEIVER",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "COLLUSION IS ALLEGED BY NORMAL BOARD",
+      "subtitle": "Irregularities Discovered in Applications for Certificates Call for Investigation.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FT. WORTH GIRL LUCKY IN LEAVING GERMANY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "POLY PLANS TO PUT FRANCHISE IN FORCE",
+      "subtitle": "Telephone Company Agreement Will Come Up Next-Traction Next.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Santone Mayor Arrests Himself After Fighting",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "VETERAN POSTAL MAN",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "POLICE PUT BAN ON FAKE \"EXTRA\" CRY",
+      "subtitle": "Ward Being Used to Entice Nickels From Public, Is Basis of Complaints.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WEST FORK OUT OF BANKS BELOW LAKE",
+      "subtitle": "Water Running 21 Inches Over Spillway-Floods Have Receded.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "HOERR KEEPS TITLE.",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Packing House Market",
+      "description": "Meat specials including Round Steak, Loin Steak, Hamburger, Rump Roast, Rib Roast, Chuck Roast, Brisket Roast, and various types of bacon, sausage, and lard.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Dodson's Liver Tone",
+      "description": "A wholesome, vegetable liquid to take the place of calomel to strengthen the liver.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Tutt's Pills",
+      "description": "A remedy for a sluggish liver, available sugar coated or plain.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Star-Telegram Want Ads",
+      "description": "Classified ads section of the newspaper.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Jersey cow",
+      "description": "Fine Jersey cow for sale.",
+      "price": "$65"
+    },
+    {
+      "productOrBusiness": "Furnished or unfurnished rooms",
+      "description": "Furnished or unfurnished rooms for rent at 1201 Washington. Also 3 rooms of a furnished apartment.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Bay horse",
+      "description": "One bay horse, 14 hands high, for sale.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Maid and waitress position",
+      "description": "Wanted-Position as maid and waitress.",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "The Star-Telegram Free Milk and Ice fund benefit",
+      "date": "Saturday night",
+      "venue": "the city hall lawn"
+    },
+    {
+      "eventName": "Elgin Race",
+      "date": "Aug. 21",
+      "venue": "Elgin, Ill"
+    },
+    {
+      "eventName": "National Open Golf Tournament",
+      "date": "Aug. 21",
+      "venue": "Chicago"
+    },
+    {
+      "eventName": "Rotary Club Baseball Game (Fats vs. Leans)",
+      "date": null,
+      "venue": null
+    }
+  ]
+}

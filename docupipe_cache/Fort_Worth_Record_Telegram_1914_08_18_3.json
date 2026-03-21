@@ -1,0 +1,177 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-08-18",
+  "pageNumber": 3,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "Brief Local News",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "S. S. Cristobal Passing Through Panama Canal",
+      "subtitle": null,
+      "topic": "International",
+      "fullText": null
+    },
+    {
+      "title": "SAYS GENERAL CROP CONDITIONS ARE GOOD",
+      "subtitle": "Representative of Big Drug Manufacturing Company Declares Sudden Rise in Prices of Foodstuffs Is Not Due to European War.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "WATER WILL FLOW OVER DAM TODAY",
+      "subtitle": "Water Lacks Only Twenty Inches of Going Over Lake Worth Spillway on Monday Night.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "LEVEE BOARD WILL ASK FOR CONFERENCE",
+      "subtitle": "Efforts Will Be Made to Show the City Commission Benefits That Have Accrued to City Since Levee Was Built.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "PERSONALS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "STEEL BRIDGE OVER MILL CREEK LOST",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MOON'S POSITION CAUSES DISCOVERY",
+      "subtitle": "I. H. Burney Tells How Passengers on Boat 1,000 Miles at Sea Found Out War Had Been Declared.",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Obituary",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "TWELFTH WARD CLUB FOR BETTER CONDITIONS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WOMAN FACES THREE CHARGES OF THEFT",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "The Weather",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "EMPLOYMENT BUREAU OPENS SEPTEMBER 1",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "A BUSINESS MAN OFFERS FOR CITY TAX ASSESSOR AND COLLECTOR. MR. W.S. KEMBLE OF THE KEMBLE FURNITURE CO.",
+      "subtitle": null,
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "SEVENTH WARD WEST ORGANIZES PERMANENTLY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "OPPOSE ORGANIZATIONS BEING REPRESENTED",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "PASSENGERS ARRIVE FROM MINERAL WELLS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "CITY DETECTIVES RECOVER JEWELRY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "SECOND WARD ELECTS CONVENTION DELEGATES",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "HIGH WATER DELAYS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "CLEAR ARTESIAN WATER FLOWING IN MAINS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "SUCCESSOR TO BUCK MAY BE ELECTED",
+      "subtitle": null,
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "WILL ASK AMENDMENT OF VEHICLE PROVISION",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "DAMAGE BY ANTS",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "TOO LATE TO CLASSIFY",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Cuticura Soap and Ointment",
+      "description": "ITCHING BURNING ECZEMA ON BABY. All Over Head, Face, Legs and Arms. Cried and Itched All Night and Day. Disfigured Badly. Cuticura Soap and Ointment Healed. Samples Free by Mall",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "In Tune With the Wild",
+      "date": "TODAY",
+      "venue": "ODEON"
+    },
+    {
+      "eventName": "IDLE RICH",
+      "date": "TODAY",
+      "venue": "ODEON"
+    }
+  ]
+}

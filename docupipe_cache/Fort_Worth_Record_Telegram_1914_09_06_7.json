@@ -1,0 +1,115 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-09-06",
+  "pageNumber": 7,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "ZAPATA BLOCKING CARRANZA'S PLANS",
+      "subtitle": "Washington Sees Possibility of Additional Fighting in Southern Mexico Before Peace Is Finally Established.",
+      "topic": "Politics",
+      "fullText": "WASHINGTON, Frpt. k-Adminım"
+    },
+    {
+      "title": "OPINION ON PAVING MATTER DEFERRED",
+      "subtitle": "City. Commission Approves Bills and Receives Communications at Session Lasting Half Hour Saturday Morning.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "POLYTECHNIC",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "BARNUM & BAILEY HERE SEPTEMBER 28",
+      "subtitle": "\"The Wizard Prince of Arabia,\" Wonderful and Realistic Spectacle, Is Feature of \"Greatest Show\" This Season.",
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "POSITIONS FOUND FOR FIFTY APPLICANTS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "POLY WILL INSTALL THIRTY FIRE PLUGS",
+      "subtitle": "City Commissioners Authorize Purchase of Auto Fire Truck and Will Ask for Bids on Supply of Water Pipe.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "CITY WILL MAKE TEST OF WATER CONDUIT",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "58,000 Americans Died Last Year From Bright's Disease and Other Kidney Ailments.",
+      "subtitle": null,
+      "topic": "Health",
+      "fullText": null
+    },
+    {
+      "title": "HAS A CURE FOR PELLAGRA",
+      "subtitle": null,
+      "topic": "Health",
+      "fullText": null
+    },
+    {
+      "title": "CURRENCY ASSOCIATION OFFICE FORCE BUSY",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "R. E. BASS VICTIM OF HEART PARALYSIS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "NORTH SIDE NEWS",
+      "subtitle": "Building Permits",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "In the Courts",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "UNEEDA STORES",
+      "description": "A Few Cash Specials in Every Day Necessities-This Week Only. Compound lard in belk, very Special Tuesday Only 15 lbs. Sugar very best granulated $1.00 with every purchase of one dal-",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "Burton Dru Goods Go.",
+      "description": "Labor Day Tomorrow STORE CLOSED. See Tuesday morning's paper which will tell of the many new arrivals to be on display and sale. Many very charming new styles in Blouses, Basques, Skirts, Coats, Suits and Dresses. Remaining Summer stocks grouped and marked at ridiculously little prices lo make sure of a quick clearance.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "VALTIN HAFNER PIANO CO.",
+      "description": "FREE Round Trip Ticket to the Panama-Pacific Exposition SAN FRANCISCO, CAL. 1915 and $25.00 cash for pin money absolutely free for the mere suggestion of a name for the new high-grade Piano which we are about to put on sale in our new stores in Fort Worth and Dallas, Texas.",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "SPECIAL LABOR DAY DINNER",
+      "date": null,
+      "venue": "Y.W.C.A."
+    },
+    {
+      "eventName": "BARNUM & BAILEY",
+      "date": "SEPTEMBER 28",
+      "venue": null
+    }
+  ]
+}

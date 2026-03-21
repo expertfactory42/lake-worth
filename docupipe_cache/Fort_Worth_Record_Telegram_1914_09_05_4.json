@@ -1,0 +1,80 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-09-05",
+  "pageNumber": 4,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "GERMANY'S PREPAREDNESS IS FEATURE OF INITIAL STEPS OF WAR SEEN AT HEADQUARTERS",
+      "subtitle": "Plan of Kaiser's Campaign, Worked Out Many Years Ago, Is Strictly Adhered to, Every Effort, Regardless of the Cost of Lives, Being Directed Toward Crushing of France Quickly With Powerful Force First Mobilized.",
+      "topic": "International",
+      "fullText": null
+    },
+    {
+      "title": "Confederate Reunion And Old Settlers' Meeting Opens Today",
+      "subtitle": "Prominent Veterans. Daughters of Confederacy and Old Settlers on Six-Day Program at Confederate Park.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "UNITED STATES MUST PAY LOSSES CAUSED BY EUROPE'S WAR TO AMERICAN CUSTOMS",
+      "subtitle": null,
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "Entire Citizenship Invited to Join in Farade to Morris Fark With Rotarians September 11",
+      "subtitle": "Plans Are Made at Meeting of Rotary Club and Ladies' Committee of Cumberland Rest Held Friday to Make Benefit Field Day and Baseball Game Between Leans and Fats a Big Success.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FOOD ORDINANCES ARE TO BE NEXT STEP IN THE SANITATION CRUSADE",
+      "subtitle": "Women of City Federation and Board of Health Will Compile Remedies for the Conditions Found on Inspection Tour.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MERCHANT MARINE IS NOW ASSURED",
+      "subtitle": "President Wilson Signs Order Suspending Operation of Sections of Navigation Laws in New Registry Bill.",
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "REVOLT IN AUSTRIA MAY DISRUPT EMPIRE",
+      "subtitle": "LONDON, Sigt, &-A dispatch ta the",
+      "topic": "International",
+      "fullText": null
+    },
+    {
+      "title": "CARDINAL FERRATA IS APPOINTED NEW SECRETARY BY POPE",
+      "subtitle": null,
+      "topic": "International",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Canton Pharmacy",
+      "description": "Specials for Today. 7 bars Ivory Soap, Colgate's Ribbon Dental Cream, Brass Lined Pocket Knives, Self Honing Razor Strop (all leather), box Linen Stationery, Whisk Broom, No. 0 Brownie Kodak (for the children), Durham Duplex Razor, $5 model, Lather Brush, bristles won't come out, 25c Shaving Stick. A Box of Candy FREE with each 25c Rexall Purchase. Telephone us your wants. We save you money. CANTON PHARMACY, Inc. THE REXALL STORE. STEVE KELTON, President. Main at Fifth St. Lamar 149 and 1963",
+      "price": null
+    },
+    {
+      "productOrBusiness": "W. C. Stripling",
+      "description": "One-thousand, Eight Hundred Men's $1.00 and $1.50 Negligee Shirts, Saturday Sale at 69c each. Manufacturers' imperfections : only a small stain here and there which is hard to find ; just as good as any perfect shirt made, no holes, They come in neat colored stripes, also in plain white. Drop your work for a few minutes; answer this call quick and save money on the shirts you need for early fall wear; laundered cuff styles of hest grade woven madras and imported percales: fast washable colors; every shift cut to full stre: all sizes 14 to 18. If you buy a dozen and you are dissatisfied with a single one, bring it back and we will cheerfully refund the purchas price. They should go out with a rush. A GREAT SALE BECAUSE THEY ARE GREAT SHIRTS AT 69e EACH.",
+      "price": "69c each"
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Confederate Reunion And Old Settlers' Meeting",
+      "date": "Today",
+      "venue": "Confederate Park"
+    },
+    {
+      "eventName": "Parade to Morris Park With Rotarians",
+      "date": "September 11",
+      "venue": "Morris Park"
+    }
+  ]
+}

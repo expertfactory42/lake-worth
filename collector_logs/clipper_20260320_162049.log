@@ -1,0 +1,91 @@
+2026-03-20 16:20:49,565 [INFO] ============================================================
+2026-03-20 16:20:49,565 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 16:20:49,565 [INFO] ============================================================
+2026-03-20 16:20:49,565 [INFO]   Unclipped entries: 13296
+2026-03-20 16:20:49,565 [INFO]   Starting from: 1914-09-09
+2026-03-20 16:20:49,565 [INFO]   Max pages: 5
+2026-03-20 16:20:49,565 [INFO]   Throttle: 450 views/hour
+2026-03-20 16:20:49,565 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_162049.log
+2026-03-20 16:20:56,317 [INFO] Already logged in.
+2026-03-20 16:21:01,880 [INFO] 
+>>> Searching 1914-09-09 to 1914-10-09
+2026-03-20 16:21:08,410 [INFO]   Found 10 results
+2026-03-20 16:21:11,874 [INFO]     Already clipped: Fort_Worth_Record_Telegram_1914_09_09_10.pdf
+2026-03-20 16:21:18,821 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_09_7.pdf
+2026-03-20 16:21:24,135 [INFO]     Clicked Clip button
+2026-03-20 16:21:29,145 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:21:29,145 [INFO]     NW handle at (601,227), SE handle at (701,383)
+2026-03-20 16:21:29,158 [INFO]     Dragging NW by (-590, -111)
+2026-03-20 16:21:32,122 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:21:32,136 [INFO]     Dragged SE via JS: (701,383) -> (1416,755)
+2026-03-20 16:21:34,256 [INFO]     Clicked Save button
+2026-03-20 16:21:40,669 [INFO]     Navigated to clip article: https://star-telegram.newspapers.com/article/fort-worth-star-telegram/193823504/
+2026-03-20 16:22:40,103 [INFO]     OCR text: 584 chars, clip: https://star-telegram.newspapers.com/article/fort-worth-star...
+2026-03-20 16:22:40,111 [INFO]     No Lake Worth articles found in OCR
+2026-03-20 16:22:40,112 [INFO]   Progress: 1 clipped, 0 articles, 0 errors
+2026-03-20 16:22:46,917 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_10_6.pdf
+2026-03-20 16:22:52,277 [INFO]     Clicked Clip button
+2026-03-20 16:22:57,285 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:22:57,285 [INFO]     NW handle at (602,228), SE handle at (702,384)
+2026-03-20 16:22:57,295 [INFO]     Dragging NW by (-592, -111)
+2026-03-20 16:23:00,267 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:23:00,279 [INFO]     Dragged SE via JS: (702,384) -> (1416,755)
+2026-03-20 16:23:02,393 [INFO]     Clicked Save button
+2026-03-20 16:23:08,939 [INFO]     Navigated to clip article: https://star-telegram.newspapers.com/article/fort-worth-star-telegram/193823623/
+2026-03-20 16:23:26,184 [INFO]     Clicked: Hide Article Text (OCR)
+2026-03-20 16:24:10,613 [INFO]     OCR text: 28149 chars, clip: https://star-telegram.newspapers.com/article/fort-worth-star...
+2026-03-20 16:24:10,616 [INFO]     No Lake Worth articles found in OCR
+2026-03-20 16:24:10,616 [INFO]   Progress: 2 clipped, 0 articles, 0 errors
+2026-03-20 16:24:18,261 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_13_9.pdf
+2026-03-20 16:24:23,480 [INFO]     Clicked Clip button
+2026-03-20 16:24:28,488 [WARNING]     Could not find clip handles. Found: []
+2026-03-20 16:24:28,488 [WARNING]     Could not drag clip corners for Fort_Worth_Record_Telegram_1914_09_13_9.pdf
+2026-03-20 16:24:35,715 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_14_1.pdf
+2026-03-20 16:24:41,001 [INFO]     Clicked Clip button
+2026-03-20 16:24:46,007 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:24:46,007 [INFO]     NW handle at (600,227), SE handle at (701,383)
+2026-03-20 16:24:46,015 [INFO]     Dragging NW by (-590, -111)
+2026-03-20 16:24:48,975 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:24:48,985 [INFO]     Dragged SE via JS: (701,383) -> (1416,755)
+2026-03-20 16:24:51,108 [INFO]     Clicked Save button
+2026-03-20 16:24:57,648 [INFO]     Navigated to clip article: https://star-telegram.newspapers.com/article/fort-worth-star-telegram/193823768/
+2026-03-20 16:25:14,783 [INFO]     Clicked: Hide Article Text (OCR)
+2026-03-20 16:25:59,321 [INFO]     OCR text: 19332 chars, clip: https://star-telegram.newspapers.com/article/fort-worth-star...
+2026-03-20 16:26:07,841 [INFO] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-20 16:26:07,859 [INFO]     Found 1 articles
+2026-03-20 16:26:07,859 [INFO]   Progress: 3 clipped, 1 articles, 1 errors
+2026-03-20 16:26:15,090 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_15_9.pdf
+2026-03-20 16:26:20,451 [INFO]     Clicked Clip button
+2026-03-20 16:26:25,459 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:26:25,459 [INFO]     NW handle at (600,227), SE handle at (701,384)
+2026-03-20 16:26:25,469 [INFO]     Dragging NW by (-589, -111)
+2026-03-20 16:26:28,429 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:26:28,442 [INFO]     Dragged SE via JS: (701,384) -> (1416,755)
+2026-03-20 16:26:30,539 [INFO]     Clicked Save button
+2026-03-20 16:26:36,831 [INFO]     Navigated to clip article: https://star-telegram.newspapers.com/article/fort-worth-star-telegram/193823897/
+2026-03-20 16:27:35,427 [INFO]     OCR text: 23947 chars, clip: https://star-telegram.newspapers.com/article/fort-worth-star...
+2026-03-20 16:27:45,126 [INFO] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-20 16:27:45,129 [INFO]     Found 1 articles
+2026-03-20 16:27:45,129 [INFO]   Progress: 4 clipped, 2 articles, 1 errors
+2026-03-20 16:27:51,993 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_15_3.pdf
+2026-03-20 16:27:57,279 [INFO]     Clicked Clip button
+2026-03-20 16:28:02,288 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:28:02,288 [INFO]     NW handle at (595,224), SE handle at (687,367)
+2026-03-20 16:28:02,297 [INFO]     Dragging NW by (-585, -108)
+2026-03-20 16:28:05,266 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:28:05,278 [INFO]     Dragged SE via JS: (687,367) -> (1416,755)
+2026-03-20 16:28:07,394 [INFO]     Clicked Save button
+2026-03-20 16:28:16,109 [INFO]     Navigated to clip article: https://star-telegram.newspapers.com/article/fort-worth-record-telegram/19382401
+2026-03-20 16:28:33,318 [INFO]     Clicked: Hide Article Text (OCR)
+2026-03-20 16:29:17,824 [INFO]     OCR text: 24680 chars, clip: https://star-telegram.newspapers.com/article/fort-worth-reco...
+2026-03-20 16:29:29,714 [INFO] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-20 16:29:29,718 [INFO]     Found 1 articles
+2026-03-20 16:29:29,718 [INFO]   Progress: 5 clipped, 3 articles, 1 errors
+2026-03-20 16:29:34,714 [INFO]   Reached max_pages limit (5)
+2026-03-20 16:29:34,714 [INFO] ============================================================
+2026-03-20 16:29:34,714 [INFO] DONE
+2026-03-20 16:29:34,715 [INFO]   Pages clipped: 5
+2026-03-20 16:29:34,715 [INFO]   Articles found: 3
+2026-03-20 16:29:34,715 [INFO]   Skipped: 1
+2026-03-20 16:29:34,715 [INFO]   Errors: 1
+2026-03-20 16:29:34,715 [INFO] ============================================================

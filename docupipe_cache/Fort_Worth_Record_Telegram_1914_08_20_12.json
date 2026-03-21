@@ -1,0 +1,63 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-08-20",
+  "pageNumber": 12,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "MONEY TAKEN FROM U. S. IS COMING BACK",
+      "subtitle": "Western Banks Are Calling for Funds to Move Crops, but American Gold From Europe Is Being Steadily Returned.",
+      "topic": "Business",
+      "fullText": "NEW YORK, ANE. 13-An interest"
+    },
+    {
+      "title": "Water Rushes Over Spillway on Lake Worth Dam",
+      "subtitle": "For First Time, Six Inches and Still Going Up",
+      "topic": "Local News",
+      "fullText": "Engineer Lord, man on the job. Great Engineering Feat Will Give City One of the Finest Water Supplies in Country. Yesterday, for the first time, water"
+    },
+    {
+      "title": "HOKE SMITH SEEMS WINNER IN GEORGIA",
+      "subtitle": "Present Senator Has a Good Lead, While All Other Races Are in Doubt: Success in Primary Means Election.",
+      "topic": "Politics",
+      "fullText": "ATLANTA, Ga. Atg. 19-Scattering"
+    },
+    {
+      "title": "CHURCH TO OPPOSE LIQUOR TAX RAISE",
+      "subtitle": "17.000 Pastors of Methodist Denomination Urged to Combat Plan of Government to Increase Internal Revenue.",
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "Y.M.B.L.Steers Clear Of Folitics, But Will Work tor Fipe Line",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "VILLA MAY MAKE AN INVASION OF SONORA",
+      "subtitle": "Wires General Calles That If Revolt Against Maytorena Is Continued He Will Restore Order by Force.",
+      "topic": "International",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Haltom's Optical Parlor",
+      "description": "UR experience in vision testing enables us to comect your eyes with scientific accuracy. We specialize in the most modem Forms of spectacles and eyeglasses, including the popular Toric and Kryptok Invisible Bifocal Lenses. It will be a pleasure to demonstrate for you the superior merits of these lenses in our patented Fits-U Eyeglasses You wil admit that Fits-U's are the most comfortable and best-looking glases you ever saw. Corner Halm and Sisth Streets. When it Comes to Glesere Come to Haltom's",
+      "price": null
+    },
+    {
+      "productOrBusiness": "JEFFERY SALES CO. OF TEXAS",
+      "description": "BARGAIN In Used Electric Car We have a high-class electric car in Al first-class condition, with electrifier complete. This is not a low price car, but one of the highest grade on the market. Will sell at a real bargain. Investigate if you are in the market. The price will suit you. 705 COMMERCE STREET. PHONE LAMAR 1986",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Frank Keenan, Great Character Actor, Due",
+      "date": "Monday",
+      "venue": "Majestic"
+    }
+  ]
+}

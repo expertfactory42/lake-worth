@@ -1,0 +1,35 @@
+2026-03-20 16:37:50,293 [INFO] ============================================================
+2026-03-20 16:37:50,294 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 16:37:50,294 [INFO] ============================================================
+2026-03-20 16:37:50,294 [INFO]   Unclipped entries: 13292
+2026-03-20 16:37:50,294 [INFO]   Starting from: 1914-09-09
+2026-03-20 16:37:50,294 [INFO]   Max pages: 1
+2026-03-20 16:37:50,294 [INFO]   Throttle: 450 views/hour
+2026-03-20 16:37:50,295 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_163750.log
+2026-03-20 16:37:59,617 [INFO] Already logged in.
+2026-03-20 16:38:06,120 [INFO] 
+>>> Searching 1914-09-09 to 1914-10-09
+2026-03-20 16:38:14,092 [INFO]   Found 10 results
+2026-03-20 16:38:17,666 [INFO]     Already clipped: Fort_Worth_Record_Telegram_1914_09_09_10.pdf
+2026-03-20 16:38:25,891 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_09_7.pdf
+2026-03-20 16:38:31,482 [INFO]     Clicked Clip button
+2026-03-20 16:38:36,491 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:38:36,492 [INFO]     NW handle at (601,227), SE handle at (701,383)
+2026-03-20 16:38:36,503 [INFO]     Dragging NW by (-591, -111)
+2026-03-20 16:38:39,478 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:38:39,495 [INFO]     Dragged SE via JS: (701,383) -> (1416,755)
+2026-03-20 16:38:41,642 [INFO]     Clicked Save button
+2026-03-20 16:38:48,338 [INFO]     Navigated to clip article: https://star-telegram.newspapers.com/article/fort-worth-star-telegram/193824805/
+2026-03-20 16:38:55,450 [INFO]     Clicked: Hide Article Text (OCR)
+2026-03-20 16:39:34,750 [INFO]     OCR text: 26873 chars, clip: https://star-telegram.newspapers.com/article/fort-worth-star...
+2026-03-20 16:39:46,956 [INFO] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-20 16:39:46,971 [INFO]     Found 1 articles
+2026-03-20 16:39:46,971 [INFO]   Progress: 1 clipped, 1 articles, 0 errors
+2026-03-20 16:39:51,564 [INFO]   Reached max_pages limit (1)
+2026-03-20 16:39:51,565 [INFO] ============================================================
+2026-03-20 16:39:51,565 [INFO] DONE
+2026-03-20 16:39:51,565 [INFO]   Pages clipped: 1
+2026-03-20 16:39:51,566 [INFO]   Articles found: 1
+2026-03-20 16:39:51,566 [INFO]   Skipped: 1
+2026-03-20 16:39:51,566 [INFO]   Errors: 0
+2026-03-20 16:39:51,566 [INFO] ============================================================

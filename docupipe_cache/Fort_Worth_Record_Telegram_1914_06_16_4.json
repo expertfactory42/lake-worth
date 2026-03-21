@@ -1,0 +1,172 @@
+{
+  "standardizationId": "QkFxD6cw",
+  "documentId": "iokU3C25",
+  "data": {
+    "newspaperName": "Fort Worth Record-Telegram",
+    "publicationDate": "1914-06-16",
+    "pageNumber": 4,
+    "location": "Fort Worth, Texas",
+    "headlines": [
+      {
+        "title": "Brief Local News",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": "Much interest in being shown in the"
+      },
+      {
+        "title": "RAILROAD HEAD IS FORT WORTH VISITOR",
+        "subtitle": "President of Fort Worth & Den- ver Declares He Is Pleased With Crop Conditions Along His Line.",
+        "topic": "Business",
+        "fullText": "A party of Colorado & Reuthera offi."
+      },
+      {
+        "title": "Hints For Hot Weather Worriers",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "M'DONALD PREDICTS BALL'S WITHDRAWAL",
+        "subtitle": "Former Secretary of State in Speech Here Answers Argu- ments Advanced by Support- ers of Houston Man.",
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "ROADWAYS OF PARIS CAVE DURING STORM",
+        "subtitle": "Thunderstorm of Phenomenal Volume Believed to Have Cost Lives of Several Persons: Streets Regular Rivers.",
+        "topic": "International",
+        "fullText": null
+      },
+      {
+        "title": "PERSONALS",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "DECIDE UPON WHITE MAN'S PRIMARIES",
+        "subtitle": null,
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "Members of Moslah Temple Extending Brethren Invitation",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "SPECTACULAR SCENES IN PRODUCING \"SAMSON\"",
+        "subtitle": null,
+        "topic": "Entertainment",
+        "fullText": null
+      },
+      {
+        "title": "SCHEDULE OF CIRCLE TOUR FOR NATIONAL ROTARIANS ANNOUNCED",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "CHANGES MADE IN THE LINEUP OF PLAYERS MEADOWBROOK TEAM",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "A MESSAGE TO EVERYONE",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "OBITUARY",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "LEOPOLD MORRIS SPEAKS IN HIS OWN INTERESTS TO CROWD AT VICTORIA",
+        "subtitle": null,
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "CANDIDATES LOSE NO TIME IN MAKING GOOD THEIR ASSESSMENTS",
+        "subtitle": null,
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "TOO LATE TO CLASSIFY",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "FERGUSON ADDRESSES LARGE CROWD AT WACO ALONG THE USUAL LINES",
+        "subtitle": null,
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "The Weather",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "COMMISSION WILL SET SPECIAL DAY",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "DATE FOR CAMP OF STATE MILITIA IS SET FOR WEEK OF AUG. 17",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "On the Cattle Market",
+        "subtitle": null,
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "MASONIC LODGE NO. 148 ELECTS OFFICERS",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      }
+    ],
+    "advertisements": [
+      {
+        "productOrBusiness": "IMPORTED FURNITURE From ICELAND",
+        "description": "IMPORTED FURNITURE From ICELAND DECOMING YERY POPULAR.",
+        "price": null
+      }
+    ],
+    "events": [
+      {
+        "eventName": "THE LAST SERIES OF \"KATHLYN\"",
+        "date": "TODAY",
+        "venue": "ODEON THEATER"
+      },
+      {
+        "eventName": "SAMSON (J. Warren Kerrigan as Samson)",
+        "date": "TODAY AND TONIGHT",
+        "venue": "The New Queen 1410 MAIN STREET"
+      }
+    ]
+  },
+  "schemaId": "BQNNnBPR",
+  "schemaName": "Historical Newspaper Page V2",
+  "jobId": "3Tw34faO",
+  "dataset": "unassigned",
+  "filename": "Fort_Worth_Record_Telegram_1914_06_16_4",
+  "displayMode": "auto",
+  "timestamp": "2026-03-17T04:47:52.110000Z",
+  "metadata": null,
+  "fieldMetadata": null
+}

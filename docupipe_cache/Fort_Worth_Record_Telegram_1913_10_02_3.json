@@ -1,0 +1,173 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1913-10-02",
+  "pageNumber": 3,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "PHYSICIANS INSPECT FIND CLAREMONT MAN",
+      "subtitle": "HUMAN RATTLEBOX IN DRUGGED CONDITION",
+      "topic": "Local News",
+      "fullText": "Ellis Whitman Demonstrates Police Establish Identity of E. E. Kutch, Discovered Wandering Around, Unable to Tell Name or His Home."
+    },
+    {
+      "title": "PLANS TO ENLARGE CLINIC DISCUSSED",
+      "subtitle": "Indiscriminate Treatment of Public Is Opposed by Several Physicians; Possible to Erect Large Hospital With Two Charity Wards.",
+      "topic": "Health",
+      "fullText": "Indiscriminate treatment of public is opposed by several physicians; possible to erect large hospital with two charity wards."
+    },
+    {
+      "title": "FALLS FORTY FEET, STRIKES IRON PIPE",
+      "subtitle": "Charles Urban, Bricklayer, Sustains Fractures and Dislocation of Limbs as Result of Fall From Bank Building.",
+      "topic": "Local News",
+      "fullText": "Charles Urban, bricklayer, sustains fractures and dislocation of limbs as result of fall from bank building."
+    },
+    {
+      "title": "FORT WORTH AD MEN ARE LIVEST WIRES",
+      "subtitle": "Were There With the Goods at Chicago Meeting of National Executive Committee of Advertising Clubs.",
+      "topic": "Business",
+      "fullText": "Were there with the goods at Chicago meeting of national executive committee of advertising clubs."
+    },
+    {
+      "title": "EVERYBODY WILL DIG NOVEMBER 5 AND 6",
+      "subtitle": "Sweetwater Chamber of Commerce and Fort Worth Are Rustling Volunteers for Pick and Shovel Gang.",
+      "topic": "Local News",
+      "fullText": "Sweetwater Chamber of Commerce and Fort Worth are rustling volunteers for pick and shovel gang."
+    },
+    {
+      "title": "ALL VARIETIES OF FISH FOR THAT NEW LAKE",
+      "subtitle": "Claude McCaleb Triumphs in Campaign for Finny Denizens for Minnetonka, Alias West Fork Reservoir.",
+      "topic": "Local News",
+      "fullText": "Claude McCaleb triumphs in campaign for finny denizens for Minnetonka, alias West Fork reservoir."
+    },
+    {
+      "title": "EIGHT CASES DISMISSED IN JUDGE SWAYNE'S COURT",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": "Eight cases dismissed in Judge Swayne's court."
+    },
+    {
+      "title": "POLL TAX ROLLS OPENED AND NINETEEN PAID",
+      "subtitle": null,
+      "topic": "Politics",
+      "fullText": "Poll tax rolls opened and nineteen paid; receipt No. 1, for the Second ward."
+    },
+    {
+      "title": "TEMPERANCE UNION WILL MEET FRIDAY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": "A parlor meeting of the Woman's Temperance Union will meet Friday."
+    },
+    {
+      "title": "PLAINTIFFS CHANGED IN RAILROAD SUIT",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": "A court order was signed Tuesday (district court at Houston)."
+    },
+    {
+      "title": "FIRE FIGHTERS ENJOY A VERY QUIET MONTH",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": "A very quiet month in fire circles."
+    },
+    {
+      "title": "COLQUITT WILL CALL NEW SPECIAL SESSION TO REPAIR VETO DAMAGE, SAYS TERRELL",
+      "subtitle": "House Speaker Is Unsparing in His Criticism of Blue Pencil Demand for New Courts",
+      "topic": "Politics",
+      "fullText": "Colquitt will call new special session to repair veto damage, says Terrell. House Speaker is unsparing in his criticism of blue pencil; demand for new courts."
+    },
+    {
+      "title": "NEW EARTH FORCE HELPS THE SOUTH",
+      "subtitle": "Volcanic Fluid Pour in From Everywhere.",
+      "topic": "Other",
+      "fullText": "New earth force helps the South; volcanic fluid pour in from everywhere."
+    },
+    {
+      "title": "FREAK WEATHER FOR MONTH OF SEPTEMBER",
+      "subtitle": "The Hottest, the Coldest, the Wettest, the Brightest, With Very Few Exceptions of Any on Record.",
+      "topic": "Local News",
+      "fullText": "Freak weather for month of September: the hottest, the coldest, the wettest, the brightest, with very few exceptions of any on record."
+    },
+    {
+      "title": "YOUTH PLEADS OWN CASE WITH SUCCESS",
+      "subtitle": "A 17-Year-Old Boy Sought to Gain Free Entrance to Dancing Academy on Ladder, but Did Not Trespass.",
+      "topic": "Local News",
+      "fullText": "A 17-year-old boy sought to gain free entrance to dancing academy on ladder, but did not trespass. \"You are discharged,\" said Judge."
+    },
+    {
+      "title": "NEW PASSENGER AGENT FOR THE T. & P. ARRIVES",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": "New passenger agent for the T. & P. arrives; Faut Junkin, late of Chicago."
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "A. & L. August",
+      "description": "Keep Yourself Dry. New rain coats; Para rubber lined with cloth outer surface.",
+      "price": "Men's sizes (34 to 44) $5.00; Boys' sizes (6 to 16) $4.00; Gaberdine Slipon Cravenettes and Raincoats $7.50, $10.00, $15.00, $20.00 and $25.00"
+    },
+    {
+      "productOrBusiness": "Field-Lippman Piano Stores (Jesse French Piano Co.)",
+      "description": "Complimentary daily recitals in Victrola and Player Piano Departments from 4 to 5 o'clock; tickets for associate membership (Harmony Club course) for sale; phone Lamar 27. Address: 610 Houston Street. \"The Steinway House.\"",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Hostetter's Stomach Bitters",
+      "description": "For distress after eating; brings back appetite, aids digestion, keeps the bowels open and improves health in general. \"Try a bottle.\"",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Parisian Sage",
+      "description": "Goodbye dandruff; stops falling hair and itching scalp; removes dandruff with one application.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Winchester Rifle and Pistol Cartridges",
+      "description": "Advertisement promoting careful, scientific manufacture for accuracy, reliability, and uniformity; \"Use the W Brand\" and \"They Shoot Straight and Strong.\"",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Houston and Ninth",
+      "description": "Advertisement (business/product name not fully legible in OCR; appears as \"Houston and Ninth-Advertisement\").",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Daily recitals in Victrola and Player Piano Departments (Field-Lippman Piano Stores)",
+      "date": "Every day beginning yesterday afternoon till the Holidays",
+      "venue": "Field-Lippman Piano Stores (Jesse French Piano Co.), 610 Houston Street"
+    },
+    {
+      "eventName": "Harmony Club's Course joint recital (Madame Alda, Frank La Forge, Cassini)",
+      "date": "Nov. 13",
+      "venue": "Byers Opera House"
+    },
+    {
+      "eventName": "Madame Schumann-Heink performance",
+      "date": "Dec. 12",
+      "venue": "Chamber of Commerce Auditorium"
+    },
+    {
+      "eventName": "Mischa Elman performance",
+      "date": "March 25, 1914",
+      "venue": "Chamber of Commerce Auditorium"
+    },
+    {
+      "eventName": "Paderewski appearance",
+      "date": "Jan. 30",
+      "venue": "Chamber of Commerce Auditorium"
+    },
+    {
+      "eventName": "St. Louis Symphony Orchestra performance",
+      "date": "Nov. 26",
+      "venue": "Byers Opera House"
+    },
+    {
+      "eventName": "Everybody Will Dig (pick and shovel gang volunteer effort)",
+      "date": "November 5 and 6",
+      "venue": null
+    }
+  ]
+}

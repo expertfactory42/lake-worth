@@ -1,0 +1,96 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-08-31",
+  "pageNumber": 10,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "VETERANS COMMEND STEEPLECHASE CLUB",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "PENSION OFFICER IN ANNUAL ELECTION",
+      "subtitle": "Judge Geo. W. Kyser Thanked by R. E. Lee Camp for Services; President Writes Appreciation of Sympathy.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WE INVITE YOU TO OPEN AN ACCOUNT",
+      "subtitle": "Officers, Board of Directors and Honorary Directors Named; Outlook for Successful Horse Show Are Very Bright.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FORT WORTH MAN ACCIDENTALLY SHOT AT TYLER'S LAKE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "REVIVAL SERVICES",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "CANTON PHARMACY, Inc.",
+      "description": "Specials for Monday including Nail Brush, Compound Cathartic Pills, Denatured Alcohol, Fountain Syringe, Nail Files, Best Witch Hazel, Red Rubber Hot Water Bottle, Williams' Shaving Soap, Violet Dulce Toilet Water and Violet Talcum. A can of tobacco free with each pipe. A glass holder FREE with each 25c tooth brush.",
+      "price": "21c, 19c, 31c, 98c, 15c, 19c, 93c, 5c, 75c"
+    },
+    {
+      "productOrBusiness": "SANDEGARD GROCERY COMPANY",
+      "description": "Grocery store at Tenth and Houston Streets. Features include sanitary conditions and home cooked foods. Also operates Sandegard's Nine Economy Cash Stores.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Bewley's Best",
+      "description": "The Blue Ribbon Flour. Bakes Better Biscuits.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Fort Worth Kindergarten Training School",
+      "description": "A thorough course of two years; culture and training for teaching. Part of the Fort Worth Public Schools.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Come The Way",
+      "description": "Launderers and Dry Cleaners.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Canton Pharmacy",
+      "description": "KODAKS KODAK FILMS",
+      "price": null
+    },
+    {
+      "productOrBusiness": "LORD'S",
+      "description": "KODAKS AND SUPPLIES. PICTURES PRINTED From 3c Up. Films Developed Free. Mail Orders Our Specialty.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "THE BRYANT SCHOOL FOR BOYS.",
+      "description": "\"Efficiency\" is what we have and what you want.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "G.W. HALTOM JEWELER",
+      "description": "FINE WATCH AND JEWELRY REPAIRING. PROMPT SERVICE. ALL WORK GUARANTEED.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "PHILLIPS THEATER",
+      "description": "HEARST-SELIG NEWS. Also \"The Brand,\" featuring Alice Joyce and Tom Moore.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "ROYAL CASUALTY COMPANY",
+      "description": "Insurance for Automobile Collision, Plate Glass, Burglary, Liability, Property Damage, Common Accident, Health, Surety and Casualty Protection.",
+      "price": null
+    }
+  ],
+  "events": []
+}

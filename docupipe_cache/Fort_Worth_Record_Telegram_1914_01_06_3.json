@@ -1,0 +1,145 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-01-06",
+  "pageNumber": 3,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "Brief Local News",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Picture of Captain Bill McDonald In Only Dress Suit He Ever Wore",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "EXECUTOR FOR SCOTT ESTATE VISITS CITY",
+      "subtitle": "Says Debts of Estate Have Been Reduced From About $1.000,000 to $400,000 and That Will Be Wiped Out Soon.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "W. J. Williams, Detective, Called by Death.",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "URGES BUILDING OF WOLF-PROOF FENCES",
+      "subtitle": "A. C. Erkel, Ranchman, Says With Such Inclosures Raising of Swine Will Be Merely Routine.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "NORTH TEXAS WANTS THAT REGIONAL BANK",
+      "subtitle": "Dallas Bankers to Meet Fort Worth Financiers at Clearing House Association Headquarters and Discuss Subject. MAY AGREE ON LOCATION FOR RESERVE INSTITUTION North Texas Fears That Plum Will Either Go to South Texas or to Some City East of Mississippi River.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "NORTH SIDE NEWS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MEXICAN CATTLE SHIPMENTS COMING",
+      "subtitle": "Boatload With 1.400 Head Docked at Galveston for Fort Worth- Trainload Routed via Brownsville.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "PICK MUSICAL TALENT FOR AUDITORIUM OPENING",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "DEAN OF BACHELOR CORPS PEEVED OVER FOOT INTERFERENCE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WORTH COMMANDERY IMPORTANT CONCLAVE",
+      "subtitle": "Knights Templar to Hold Meeting Wednesday Night to Close Up Year's Work-Degrees to Be Conferred.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "OBITUARY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ANNUAL ELECTION BY DALLAS PATROL",
+      "subtitle": "Military Organization of Hella Temple Shrine Re-Elects Old Officers and Makes Elmer Renfro Honorary Colonel.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "STATE BANKS CONSIDER TAKING REGIONAL STOCK",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "RENALT CONQUERS BRIGHT'S DISEASE",
+      "subtitle": null,
+      "topic": "Health",
+      "fullText": null
+    },
+    {
+      "title": "MONDEY BEST POLL TAX DAY ON RECORD; 253 PAID",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "PIANO STORE MEN GUESTS OF EMPLOYER",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FINE MEN WHO TRIED TO BREAK OUT OF JAIL",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "CUTICURA SOAP And Cuticura Ointment",
+      "description": "because they keep the skin free from chapping, redness, roughness and irritation incidental to outdoor life in winter.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "SANDEGARD'S ECONOMY CASH STORES",
+      "description": "25 lbs. GRANULATED SUGAR FOR $1.00 with 1 lb. Special Blend Tea, 60c.",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "WESTBROOK HOTEL CAFE",
+      "description": "BEST EQUIPPED IN CITY",
+      "price": null
+    },
+    {
+      "productOrBusiness": "MOUNT OLIVET CEMETERY",
+      "description": "Just Look at This! Past Exalted Ruler Joe Hines Is Poet",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Knights Templar Meeting",
+      "date": "Wednesday Night",
+      "venue": null
+    }
+  ]
+}

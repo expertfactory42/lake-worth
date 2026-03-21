@@ -1,0 +1,1462 @@
+2026-03-20 10:44:29,049 [INFO] ============================================================
+2026-03-20 10:44:29,049 [INFO] Newspapers.com Metadata Collector
+2026-03-20 10:44:29,050 [INFO] ============================================================
+2026-03-20 10:44:29,050 [INFO]   Search term: "lake worth"
+2026-03-20 10:44:29,050 [INFO]   Restart every: 100 new entries
+2026-03-20 10:44:29,050 [INFO]   Throttle: 500 views/hour
+2026-03-20 10:44:29,050 [INFO]   Log file: c:\lake_worth\collector_logs\collector_20260320_104429.log
+2026-03-20 10:44:29,050 [INFO]   Error log: c:\lake_worth\collector_logs\errors_20260320_104429.log
+2026-03-20 10:44:29,051 [INFO] 
+>>> SESSION 1
+2026-03-20 10:44:29,098 [INFO] ============================================================
+2026-03-20 10:44:29,098 [INFO]   Starting session from: 1923-05-30
+2026-03-20 10:44:29,098 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-05-30&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 10:44:29,098 [INFO] ============================================================
+2026-03-20 10:44:30,489 [INFO] Opening Newspapers.com...
+2026-03-20 10:44:38,262 [INFO] Loading search results...
+2026-03-20 10:44:43,930 [INFO] --- Batch 1 ---
+2026-03-20 10:44:46,150 [INFO]   Found 10 new result links
+2026-03-20 10:44:49,797 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_05_30_15.pdf
+2026-03-20 10:44:53,358 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1923_05_30_7.pdf
+2026-03-20 10:44:57,078 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_05_30_11.pdf — Fort Worth Record-Telegram, 1923-05-30, p11
+2026-03-20 10:45:00,644 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_05_30_15.pdf — Fort Worth Record-Telegram, 1923-05-30, p15
+2026-03-20 10:45:04,250 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_05_30_16.pdf — Fort Worth Record-Telegram, 1923-05-30, p16
+2026-03-20 10:45:07,762 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_05_30_3.pdf — Fort Worth Star-Telegram, 1923-05-30, p3
+2026-03-20 10:45:11,188 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_05_30_9.pdf — Fort Worth Star-Telegram, 1923-05-30, p9
+2026-03-20 10:45:14,922 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_05_30_13.pdf — Fort Worth Star-Telegram, 1923-05-30, p13
+2026-03-20 10:45:18,500 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_05_30_4.pdf — Fort Worth Record-Telegram, 1923-05-30, p4
+2026-03-20 10:45:22,029 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_05_30_17.pdf — Fort Worth Record-Telegram, 1923-05-30, p17
+2026-03-20 10:45:22,029 [INFO]   Returning to search...
+2026-03-20 10:45:42,903 [INFO] --- Batch 2 ---
+2026-03-20 10:45:45,101 [INFO]   Found 10 new result links
+2026-03-20 10:45:48,629 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_05_31_12.pdf — Fort Worth Record-Telegram, 1923-05-31, p12
+2026-03-20 10:45:52,122 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_05_31_9.pdf — Fort Worth Star-Telegram, 1923-05-31, p9
+2026-03-20 10:45:55,536 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_05_31_12.pdf — Fort Worth Star-Telegram, 1923-05-31, p12
+2026-03-20 10:45:59,006 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_05_31_24.pdf — Fort Worth Star-Telegram, 1923-05-31, p24
+2026-03-20 10:46:02,504 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_05_31_9.pdf — Fort Worth Record-Telegram, 1923-05-31, p9
+2026-03-20 10:46:06,064 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_05_31_14.pdf — Fort Worth Record-Telegram, 1923-05-31, p14
+2026-03-20 10:46:09,774 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_05_31_1.pdf — Fort Worth Star-Telegram, 1923-05-31, p1
+2026-03-20 10:46:13,310 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_05_31_2.pdf — Fort Worth Star-Telegram, 1923-05-31, p2
+2026-03-20 10:46:16,805 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_05_31_3.pdf — Fort Worth Star-Telegram, 1923-05-31, p3
+2026-03-20 10:46:20,318 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_05_31_18.pdf — Fort Worth Star-Telegram, 1923-05-31, p18
+2026-03-20 10:46:20,319 [INFO]   Returning to search...
+2026-03-20 10:46:41,464 [INFO] --- Batch 3 ---
+2026-03-20 10:46:43,745 [INFO]   Found 10 new result links
+2026-03-20 10:46:47,163 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_05_31_22.pdf — Fort Worth Star-Telegram, 1923-05-31, p22
+2026-03-20 10:46:50,686 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_05_31_23.pdf — Fort Worth Star-Telegram, 1923-05-31, p23
+2026-03-20 10:46:54,256 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_01_17.pdf — Fort Worth Star-Telegram, 1923-06-01, p17
+2026-03-20 10:46:57,696 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_01_2.pdf — Fort Worth Star-Telegram, 1923-06-01, p2
+2026-03-20 10:47:01,697 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_01_5.pdf — Fort Worth Star-Telegram, 1923-06-01, p5
+2026-03-20 10:47:05,219 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_01_28.pdf — Fort Worth Star-Telegram, 1923-06-01, p28
+2026-03-20 10:47:08,752 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_01_7.pdf — Fort Worth Record-Telegram, 1923-06-01, p7
+2026-03-20 10:47:12,291 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_01_11.pdf — Fort Worth Record-Telegram, 1923-06-01, p11
+2026-03-20 10:47:15,838 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_01_17.pdf — Fort Worth Record-Telegram, 1923-06-01, p17
+2026-03-20 10:47:19,410 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_02_9.pdf — Fort Worth Star-Telegram, 1923-06-02, p9
+2026-03-20 10:47:19,410 [INFO]   Returning to search...
+2026-03-20 10:47:41,008 [INFO] --- Batch 4 ---
+2026-03-20 10:47:43,423 [INFO]   Found 10 new result links
+2026-03-20 10:47:46,871 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_02_13.pdf — Fort Worth Record-Telegram, 1923-06-02, p13
+2026-03-20 10:47:50,365 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_03_27.pdf — Fort Worth Star-Telegram, 1923-06-03, p27
+2026-03-20 10:47:53,819 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_03_30.pdf — Fort Worth Star-Telegram, 1923-06-03, p30
+2026-03-20 10:47:57,349 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_03_20.pdf — Fort Worth Star-Telegram, 1923-06-03, p20
+2026-03-20 10:48:00,896 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_03_31.pdf — Fort Worth Star-Telegram, 1923-06-03, p31
+2026-03-20 10:48:04,734 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_06_03_35.pdf — Fort Worth Record-Telegram, 1923-06-03, p35
+2026-03-20 10:48:08,187 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_03_46.pdf — Fort Worth Record-Telegram, 1923-06-03, p46
+2026-03-20 10:48:11,733 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_03_3.pdf — Fort Worth Star-Telegram, 1923-06-03, p3
+2026-03-20 10:48:15,315 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_03_4.pdf — Fort Worth Star-Telegram, 1923-06-03, p4
+2026-03-20 10:48:18,882 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_03_7.pdf — Fort Worth Star-Telegram, 1923-06-03, p7
+2026-03-20 10:48:18,882 [INFO]   Returning to search...
+2026-03-20 10:48:40,913 [INFO] --- Batch 5 ---
+2026-03-20 10:48:43,406 [INFO]   Found 10 new result links
+2026-03-20 10:48:46,834 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_03_17.pdf — Fort Worth Star-Telegram, 1923-06-03, p17
+2026-03-20 10:48:50,309 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_03_21.pdf — Fort Worth Star-Telegram, 1923-06-03, p21
+2026-03-20 10:48:53,778 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_03_26.pdf — Fort Worth Star-Telegram, 1923-06-03, p26
+2026-03-20 10:48:57,298 [INFO]   [4] Exists: Fort_Worth_Star_Telegram_1923_06_03_27.pdf
+2026-03-20 10:49:00,774 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_03_42.pdf — Fort Worth Star-Telegram, 1923-06-03, p42
+2026-03-20 10:49:04,287 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_03_44.pdf — Fort Worth Star-Telegram, 1923-06-03, p44
+2026-03-20 10:49:07,833 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_03_16.pdf — Fort Worth Record-Telegram, 1923-06-03, p16
+2026-03-20 10:49:11,307 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_03_20.pdf — Fort Worth Record-Telegram, 1923-06-03, p20
+2026-03-20 10:49:14,940 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_03_34.pdf — Fort Worth Record-Telegram, 1923-06-03, p34
+2026-03-20 10:49:18,668 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_03_52.pdf — Fort Worth Record-Telegram, 1923-06-03, p52
+2026-03-20 10:49:18,668 [INFO]   Returning to search...
+2026-03-20 10:49:41,355 [INFO] --- Batch 6 ---
+2026-03-20 10:49:43,905 [INFO]   Found 10 new result links
+2026-03-20 10:49:47,713 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_04_15.pdf — Fort Worth Record-Telegram, 1923-06-04, p15
+2026-03-20 10:49:51,529 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_04_3.pdf — Fort Worth Record-Telegram, 1923-06-04, p3
+2026-03-20 10:49:54,991 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_04_10.pdf — Fort Worth Record-Telegram, 1923-06-04, p10
+2026-03-20 10:49:58,459 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_05_14.pdf — Fort Worth Record-Telegram, 1923-06-05, p14
+2026-03-20 10:50:01,941 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_05_16.pdf — Fort Worth Record-Telegram, 1923-06-05, p16
+2026-03-20 10:50:05,507 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_05_13.pdf — Fort Worth Star-Telegram, 1923-06-05, p13
+2026-03-20 10:50:09,013 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_05_18.pdf — Fort Worth Star-Telegram, 1923-06-05, p18
+2026-03-20 10:50:12,529 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_05_23.pdf — Fort Worth Star-Telegram, 1923-06-05, p23
+2026-03-20 10:50:16,078 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_05_24.pdf — Fort Worth Star-Telegram, 1923-06-05, p24
+2026-03-20 10:50:19,655 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_05_9.pdf — Fort Worth Record-Telegram, 1923-06-05, p9
+2026-03-20 10:50:19,656 [INFO]   Returning to search...
+2026-03-20 10:50:42,605 [INFO] --- Batch 7 ---
+2026-03-20 10:50:45,271 [INFO]   Found 10 new result links
+2026-03-20 10:50:48,783 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_06_19.pdf — Fort Worth Star-Telegram, 1923-06-06, p19
+2026-03-20 10:50:52,242 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_06_15.pdf — Fort Worth Record-Telegram, 1923-06-06, p15
+2026-03-20 10:50:55,685 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_06_20.pdf — Fort Worth Star-Telegram, 1923-06-06, p20
+2026-03-20 10:50:59,304 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_06_18.pdf — Fort Worth Record-Telegram, 1923-06-06, p18
+2026-03-20 10:51:02,741 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_06_19.pdf — Fort Worth Record-Telegram, 1923-06-06, p19
+2026-03-20 10:51:06,369 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_06_07_16.pdf — Fort Worth Record-Telegram, 1923-06-07, p16
+2026-03-20 10:51:09,893 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_07_4.pdf — Fort Worth Star-Telegram, 1923-06-07, p4
+2026-03-20 10:51:13,488 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_07_11.pdf — Fort Worth Star-Telegram, 1923-06-07, p11
+2026-03-20 10:51:16,945 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_07_23.pdf — Fort Worth Star-Telegram, 1923-06-07, p23
+2026-03-20 10:51:20,455 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_07_11.pdf — Fort Worth Record-Telegram, 1923-06-07, p11
+2026-03-20 10:51:20,456 [INFO]   Returning to search...
+2026-03-20 10:51:43,294 [INFO] --- Batch 8 ---
+2026-03-20 10:51:46,035 [INFO]   Found 10 new result links
+2026-03-20 10:51:49,798 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_07_15.pdf — Fort Worth Record-Telegram, 1923-06-07, p15
+2026-03-20 10:51:53,283 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_07_17.pdf — Fort Worth Record-Telegram, 1923-06-07, p17
+2026-03-20 10:51:56,774 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_08_25.pdf — Fort Worth Star-Telegram, 1923-06-08, p25
+2026-03-20 10:52:00,190 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_08_19.pdf — Fort Worth Record-Telegram, 1923-06-08, p19
+2026-03-20 10:52:04,088 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_08_17.pdf — Fort Worth Star-Telegram, 1923-06-08, p17
+2026-03-20 10:52:07,792 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_06_08_14.pdf — Fort Worth Record-Telegram, 1923-06-08, p14
+2026-03-20 10:52:11,300 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_08_16.pdf — Fort Worth Record-Telegram, 1923-06-08, p16
+2026-03-20 10:52:14,737 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_08_2.pdf — Fort Worth Star-Telegram, 1923-06-08, p2
+2026-03-20 10:52:18,247 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_08_24.pdf — Fort Worth Star-Telegram, 1923-06-08, p24
+2026-03-20 10:52:21,683 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_08_18.pdf — Fort Worth Record-Telegram, 1923-06-08, p18
+2026-03-20 10:52:21,683 [INFO]   Returning to search...
+2026-03-20 10:52:44,764 [INFO] --- Batch 9 ---
+2026-03-20 10:52:47,598 [INFO]   Found 10 new result links
+2026-03-20 10:52:51,015 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_09_9.pdf — Fort Worth Star-Telegram, 1923-06-09, p9
+2026-03-20 10:52:54,608 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_09_11.pdf — Fort Worth Record-Telegram, 1923-06-09, p11
+2026-03-20 10:52:58,144 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_09_8.pdf — Fort Worth Star-Telegram, 1923-06-09, p8
+2026-03-20 10:53:01,567 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_09_15.pdf — Fort Worth Record-Telegram, 1923-06-09, p15
+2026-03-20 10:53:05,143 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_10_36.pdf — Fort Worth Star-Telegram, 1923-06-10, p36
+2026-03-20 10:53:08,634 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_10_25.pdf — Fort Worth Star-Telegram, 1923-06-10, p25
+2026-03-20 10:53:12,191 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_10_16.pdf — Fort Worth Star-Telegram, 1923-06-10, p16
+2026-03-20 10:53:15,659 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_10_24.pdf — Fort Worth Star-Telegram, 1923-06-10, p24
+2026-03-20 10:53:19,081 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_10_14.pdf — Fort Worth Star-Telegram, 1923-06-10, p14
+2026-03-20 10:53:22,808 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_10_35.pdf — Fort Worth Star-Telegram, 1923-06-10, p35
+2026-03-20 10:53:22,808 [INFO]   Returning to search...
+2026-03-20 10:53:45,963 [INFO] --- Batch 10 ---
+2026-03-20 10:53:48,885 [INFO]   Found 10 new result links
+2026-03-20 10:53:52,340 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_10_27.pdf — Fort Worth Record-Telegram, 1923-06-10, p27
+2026-03-20 10:53:55,973 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_10_35.pdf — Fort Worth Record-Telegram, 1923-06-10, p35
+2026-03-20 10:53:59,433 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_10_6.pdf — Fort Worth Star-Telegram, 1923-06-10, p6
+2026-03-20 10:54:02,905 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_10_12.pdf — Fort Worth Star-Telegram, 1923-06-10, p12
+2026-03-20 10:54:06,485 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_10_33.pdf — Fort Worth Star-Telegram, 1923-06-10, p33
+2026-03-20 10:54:09,980 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_10_40.pdf — Fort Worth Star-Telegram, 1923-06-10, p40
+2026-03-20 10:54:13,544 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_10_45.pdf — Fort Worth Star-Telegram, 1923-06-10, p45
+2026-03-20 10:54:16,975 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_10_25.pdf — Fort Worth Record-Telegram, 1923-06-10, p25
+2026-03-20 10:54:20,477 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_10_30.pdf — Fort Worth Record-Telegram, 1923-06-10, p30
+2026-03-20 10:54:24,075 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_10_77.pdf — Fort Worth Record-Telegram, 1923-06-10, p77
+2026-03-20 10:54:24,075 [INFO]   Returning to search...
+2026-03-20 10:54:48,031 [INFO] --- Batch 11 ---
+2026-03-20 10:54:51,054 [INFO]   Found 10 new result links
+2026-03-20 10:54:54,866 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_10_11.pdf — Fort Worth Record-Telegram, 1923-06-10, p11
+2026-03-20 10:54:58,715 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_11_9.pdf — Fort Worth Record-Telegram, 1923-06-11, p9
+2026-03-20 10:55:02,166 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_11_15.pdf — Fort Worth Star-Telegram, 1923-06-11, p15
+2026-03-20 10:55:02,166 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-20 10:55:02,166 [INFO]   Session 1: 100 new, 3 skipped (running total: 100 new)
+2026-03-20 10:55:02,166 [INFO]   Restarting in 3 seconds...
+2026-03-20 10:55:05,168 [INFO] 
+>>> SESSION 2
+2026-03-20 10:55:05,200 [INFO] ============================================================
+2026-03-20 10:55:05,201 [INFO]   Starting session from: 1923-06-11
+2026-03-20 10:55:05,201 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-06-11&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 10:55:05,201 [INFO] ============================================================
+2026-03-20 10:55:06,500 [INFO] Opening Newspapers.com...
+2026-03-20 10:55:13,218 [INFO] Loading search results...
+2026-03-20 10:55:18,435 [INFO] --- Batch 1 ---
+2026-03-20 10:55:20,548 [INFO]   Found 10 new result links
+2026-03-20 10:55:24,284 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1923_06_11_9.pdf
+2026-03-20 10:55:27,794 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1923_06_11_15.pdf
+2026-03-20 10:55:31,374 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_11_10.pdf — Fort Worth Record-Telegram, 1923-06-11, p10
+2026-03-20 10:55:34,847 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_11_1.pdf — Fort Worth Star-Telegram, 1923-06-11, p1
+2026-03-20 10:55:38,473 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_11_5.pdf — Fort Worth Star-Telegram, 1923-06-11, p5
+2026-03-20 10:55:42,017 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_11_13.pdf — Fort Worth Star-Telegram, 1923-06-11, p13
+2026-03-20 10:55:46,024 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_12_19.pdf — Fort Worth Star-Telegram, 1923-06-12, p19
+2026-03-20 10:55:49,669 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_12_5.pdf — Fort Worth Star-Telegram, 1923-06-12, p5
+2026-03-20 10:55:53,184 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_12_7.pdf — Fort Worth Star-Telegram, 1923-06-12, p7
+2026-03-20 10:55:56,720 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_12_8.pdf — Fort Worth Star-Telegram, 1923-06-12, p8
+2026-03-20 10:55:56,720 [INFO]   Returning to search...
+2026-03-20 10:56:17,257 [INFO] --- Batch 2 ---
+2026-03-20 10:56:19,452 [INFO]   Found 10 new result links
+2026-03-20 10:56:22,892 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_12_9.pdf — Fort Worth Star-Telegram, 1923-06-12, p9
+2026-03-20 10:56:26,347 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_12_14.pdf — Fort Worth Star-Telegram, 1923-06-12, p14
+2026-03-20 10:56:29,794 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_12_17.pdf — Fort Worth Star-Telegram, 1923-06-12, p17
+2026-03-20 10:56:33,290 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_12_3.pdf — Fort Worth Record-Telegram, 1923-06-12, p3
+2026-03-20 10:56:36,821 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_12_4.pdf — Fort Worth Record-Telegram, 1923-06-12, p4
+2026-03-20 10:56:40,403 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_06_12_6.pdf — Fort Worth Record-Telegram, 1923-06-12, p6
+2026-03-20 10:56:43,890 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_13_19.pdf — Fort Worth Star-Telegram, 1923-06-13, p19
+2026-03-20 10:56:47,353 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_13_20.pdf — Fort Worth Record-Telegram, 1923-06-13, p20
+2026-03-20 10:56:50,815 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_13_7.pdf — Fort Worth Star-Telegram, 1923-06-13, p7
+2026-03-20 10:56:54,397 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_13_14.pdf — Fort Worth Star-Telegram, 1923-06-13, p14
+2026-03-20 10:56:54,397 [INFO]   Returning to search...
+2026-03-20 10:57:15,286 [INFO] --- Batch 3 ---
+2026-03-20 10:57:17,559 [INFO]   Found 10 new result links
+2026-03-20 10:57:21,414 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_13_15.pdf — Fort Worth Record-Telegram, 1923-06-13, p15
+2026-03-20 10:57:24,820 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_14_21.pdf — Fort Worth Star-Telegram, 1923-06-14, p21
+2026-03-20 10:57:28,424 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_14_9.pdf — Fort Worth Star-Telegram, 1923-06-14, p9
+2026-03-20 10:57:32,206 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_14_8.pdf — Fort Worth Star-Telegram, 1923-06-14, p8
+2026-03-20 10:57:35,893 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_14_11.pdf — Fort Worth Record-Telegram, 1923-06-14, p11
+2026-03-20 10:57:39,311 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_14_22.pdf — Fort Worth Star-Telegram, 1923-06-14, p22
+2026-03-20 10:57:42,846 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_14_14.pdf — Fort Worth Record-Telegram, 1923-06-14, p14
+2026-03-20 10:57:46,822 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_15_13.pdf — Fort Worth Record-Telegram, 1923-06-15, p13
+2026-03-20 10:57:50,433 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_15_2.pdf — Fort Worth Star-Telegram, 1923-06-15, p2
+2026-03-20 10:57:53,868 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_15_18.pdf — Fort Worth Record-Telegram, 1923-06-15, p18
+2026-03-20 10:57:53,868 [INFO]   Returning to search...
+2026-03-20 10:58:15,078 [INFO] --- Batch 4 ---
+2026-03-20 10:58:17,436 [INFO]   Found 10 new result links
+2026-03-20 10:58:20,870 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_15_4.pdf — Fort Worth Star-Telegram, 1923-06-15, p4
+2026-03-20 10:58:24,385 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_15_6.pdf — Fort Worth Star-Telegram, 1923-06-15, p6
+2026-03-20 10:58:28,011 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_15_7.pdf — Fort Worth Star-Telegram, 1923-06-15, p7
+2026-03-20 10:58:31,539 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_15_8.pdf — Fort Worth Star-Telegram, 1923-06-15, p8
+2026-03-20 10:58:35,147 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_15_9.pdf — Fort Worth Star-Telegram, 1923-06-15, p9
+2026-03-20 10:58:38,714 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_15_18.pdf — Fort Worth Star-Telegram, 1923-06-15, p18
+2026-03-20 10:58:42,323 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_15_23.pdf — Fort Worth Star-Telegram, 1923-06-15, p23
+2026-03-20 10:58:45,845 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_15_14.pdf — Fort Worth Record-Telegram, 1923-06-15, p14
+2026-03-20 10:58:49,344 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_15_16.pdf — Fort Worth Record-Telegram, 1923-06-15, p16
+2026-03-20 10:58:52,846 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_16_14.pdf — Fort Worth Record-Telegram, 1923-06-16, p14
+2026-03-20 10:58:52,846 [INFO]   Returning to search...
+2026-03-20 10:59:14,424 [INFO] --- Batch 5 ---
+2026-03-20 10:59:16,885 [INFO]   Found 10 new result links
+2026-03-20 10:59:20,261 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_16_11.pdf — Fort Worth Record-Telegram, 1923-06-16, p11
+2026-03-20 10:59:23,804 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_16_6.pdf — Fort Worth Star-Telegram, 1923-06-16, p6
+2026-03-20 10:59:27,309 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_16_2.pdf — Fort Worth Record-Telegram, 1923-06-16, p2
+2026-03-20 10:59:30,695 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_17_12.pdf — Fort Worth Star-Telegram, 1923-06-17, p12
+2026-03-20 10:59:34,247 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_17_79.pdf — Fort Worth Record-Telegram, 1923-06-17, p79
+2026-03-20 10:59:37,676 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_17_29.pdf — Fort Worth Star-Telegram, 1923-06-17, p29
+2026-03-20 10:59:41,223 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_17_4.pdf — Fort Worth Star-Telegram, 1923-06-17, p4
+2026-03-20 10:59:44,742 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_17_20.pdf — Fort Worth Star-Telegram, 1923-06-17, p20
+2026-03-20 10:59:48,272 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_17_30.pdf — Fort Worth Star-Telegram, 1923-06-17, p30
+2026-03-20 10:59:51,725 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_17_27.pdf — Fort Worth Record-Telegram, 1923-06-17, p27
+2026-03-20 10:59:51,725 [INFO]   Returning to search...
+2026-03-20 11:00:13,518 [INFO] --- Batch 6 ---
+2026-03-20 11:00:16,061 [INFO]   Found 10 new result links
+2026-03-20 11:00:19,904 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_17_6.pdf — Fort Worth Star-Telegram, 1923-06-17, p6
+2026-03-20 11:00:23,664 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_17_10.pdf — Fort Worth Star-Telegram, 1923-06-17, p10
+2026-03-20 11:00:27,273 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_17_17.pdf — Fort Worth Star-Telegram, 1923-06-17, p17
+2026-03-20 11:00:30,863 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_17_18.pdf — Fort Worth Star-Telegram, 1923-06-17, p18
+2026-03-20 11:00:34,360 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_17_19.pdf — Fort Worth Star-Telegram, 1923-06-17, p19
+2026-03-20 11:00:37,887 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_17_26.pdf — Fort Worth Star-Telegram, 1923-06-17, p26
+2026-03-20 11:00:41,326 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_17_28.pdf — Fort Worth Star-Telegram, 1923-06-17, p28
+2026-03-20 11:00:44,829 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_17_37.pdf — Fort Worth Star-Telegram, 1923-06-17, p37
+2026-03-20 11:00:48,315 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_17_13.pdf — Fort Worth Record-Telegram, 1923-06-17, p13
+2026-03-20 11:00:51,692 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_17_19.pdf — Fort Worth Record-Telegram, 1923-06-17, p19
+2026-03-20 11:00:51,692 [INFO]   Returning to search...
+2026-03-20 11:01:14,054 [INFO] --- Batch 7 ---
+2026-03-20 11:01:16,682 [INFO]   Found 10 new result links
+2026-03-20 11:01:20,072 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_17_20.pdf — Fort Worth Record-Telegram, 1923-06-17, p20
+2026-03-20 11:01:23,512 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_17_25.pdf — Fort Worth Record-Telegram, 1923-06-17, p25
+2026-03-20 11:01:27,035 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_17_29.pdf — Fort Worth Record-Telegram, 1923-06-17, p29
+2026-03-20 11:01:30,473 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_17_30.pdf — Fort Worth Record-Telegram, 1923-06-17, p30
+2026-03-20 11:01:34,044 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_17_31.pdf — Fort Worth Record-Telegram, 1923-06-17, p31
+2026-03-20 11:01:37,514 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_06_18_14.pdf — Fort Worth Record-Telegram, 1923-06-18, p14
+2026-03-20 11:01:41,015 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_18_2.pdf — Fort Worth Star-Telegram, 1923-06-18, p2
+2026-03-20 11:01:44,400 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_18_4.pdf — Fort Worth Star-Telegram, 1923-06-18, p4
+2026-03-20 11:01:47,882 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_18_5.pdf — Fort Worth Star-Telegram, 1923-06-18, p5
+2026-03-20 11:01:51,320 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_18_14.pdf — Fort Worth Star-Telegram, 1923-06-18, p14
+2026-03-20 11:01:51,320 [INFO]   Returning to search...
+2026-03-20 11:02:13,683 [INFO] --- Batch 8 ---
+2026-03-20 11:02:16,403 [INFO]   Found 10 new result links
+2026-03-20 11:02:19,802 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_18_16.pdf — Fort Worth Star-Telegram, 1923-06-18, p16
+2026-03-20 11:02:23,314 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_18_15.pdf — Fort Worth Record-Telegram, 1923-06-18, p15
+2026-03-20 11:02:26,757 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_19_20.pdf — Fort Worth Star-Telegram, 1923-06-19, p20
+2026-03-20 11:02:30,204 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_19_15.pdf — Fort Worth Record-Telegram, 1923-06-19, p15
+2026-03-20 11:02:33,707 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_19_6.pdf — Fort Worth Star-Telegram, 1923-06-19, p6
+2026-03-20 11:02:37,143 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_19_8.pdf — Fort Worth Star-Telegram, 1923-06-19, p8
+2026-03-20 11:02:40,838 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_19_16.pdf — Fort Worth Star-Telegram, 1923-06-19, p16
+2026-03-20 11:02:44,293 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_19_21.pdf — Fort Worth Star-Telegram, 1923-06-19, p21
+2026-03-20 11:02:48,091 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_19_4.pdf — Fort Worth Record-Telegram, 1923-06-19, p4
+2026-03-20 11:02:51,491 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_19_13.pdf — Fort Worth Record-Telegram, 1923-06-19, p13
+2026-03-20 11:02:51,492 [INFO]   Returning to search...
+2026-03-20 11:03:14,345 [INFO] --- Batch 9 ---
+2026-03-20 11:03:17,149 [INFO]   Found 10 new result links
+2026-03-20 11:03:20,994 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_19_14.pdf — Fort Worth Record-Telegram, 1923-06-19, p14
+2026-03-20 11:03:24,440 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_19_17.pdf — Fort Worth Record-Telegram, 1923-06-19, p17
+2026-03-20 11:03:28,823 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_20_5.pdf — Fort Worth Star-Telegram, 1923-06-20, p5
+2026-03-20 11:03:32,237 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_20_17.pdf — Fort Worth Record-Telegram, 1923-06-20, p17
+2026-03-20 11:03:35,705 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_20_16.pdf — Fort Worth Star-Telegram, 1923-06-20, p16
+2026-03-20 11:03:39,377 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_20_17.pdf — Fort Worth Star-Telegram, 1923-06-20, p17
+2026-03-20 11:03:43,338 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_20_2.pdf — Fort Worth Star-Telegram, 1923-06-20, p2
+2026-03-20 11:03:46,806 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_20_3.pdf — Fort Worth Star-Telegram, 1923-06-20, p3
+2026-03-20 11:03:50,522 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_20_12.pdf — Fort Worth Star-Telegram, 1923-06-20, p12
+2026-03-20 11:03:54,061 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_20_18.pdf — Fort Worth Star-Telegram, 1923-06-20, p18
+2026-03-20 11:03:54,061 [INFO]   Returning to search...
+2026-03-20 11:04:17,344 [INFO] --- Batch 10 ---
+2026-03-20 11:04:20,233 [INFO]   Found 10 new result links
+2026-03-20 11:04:23,692 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_20_12.pdf — Fort Worth Record-Telegram, 1923-06-20, p12
+2026-03-20 11:04:27,201 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_20_16.pdf — Fort Worth Record-Telegram, 1923-06-20, p16
+2026-03-20 11:04:30,634 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_21_5.pdf — Fort Worth Record-Telegram, 1923-06-21, p5
+2026-03-20 11:04:34,085 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_21_20.pdf — Fort Worth Star-Telegram, 1923-06-21, p20
+2026-03-20 11:04:37,904 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_21_21.pdf — Fort Worth Star-Telegram, 1923-06-21, p21
+2026-03-20 11:04:41,847 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_06_21_4.pdf — Fort Worth Record-Telegram, 1923-06-21, p4
+2026-03-20 11:04:45,384 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_21_11.pdf — Fort Worth Record-Telegram, 1923-06-21, p11
+2026-03-20 11:04:48,842 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_21_14.pdf — Fort Worth Record-Telegram, 1923-06-21, p14
+2026-03-20 11:04:52,241 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_21_15.pdf — Fort Worth Record-Telegram, 1923-06-21, p15
+2026-03-20 11:04:55,700 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_21_1.pdf — Fort Worth Star-Telegram, 1923-06-21, p1
+2026-03-20 11:04:55,700 [INFO]   Returning to search...
+2026-03-20 11:05:19,504 [INFO] --- Batch 11 ---
+2026-03-20 11:05:22,489 [INFO]   Found 10 new result links
+2026-03-20 11:05:26,660 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_21_4.pdf — Fort Worth Star-Telegram, 1923-06-21, p4
+2026-03-20 11:05:30,565 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_21_5.pdf — Fort Worth Star-Telegram, 1923-06-21, p5
+2026-03-20 11:05:30,565 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-20 11:05:30,566 [INFO]   Session 2: 100 new, 2 skipped (running total: 200 new)
+2026-03-20 11:05:30,566 [INFO]   Restarting in 3 seconds...
+2026-03-20 11:05:33,566 [INFO] 
+>>> SESSION 3
+2026-03-20 11:05:33,600 [INFO] ============================================================
+2026-03-20 11:05:33,600 [INFO]   Starting session from: 1923-06-21
+2026-03-20 11:05:33,600 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-06-21&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 11:05:33,600 [INFO] ============================================================
+2026-03-20 11:05:35,089 [INFO] Opening Newspapers.com...
+2026-03-20 11:05:41,880 [INFO] Loading search results...
+2026-03-20 11:05:46,802 [INFO] --- Batch 1 ---
+2026-03-20 11:05:48,919 [INFO]   Found 10 new result links
+2026-03-20 11:05:52,636 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_06_21_1.pdf
+2026-03-20 11:05:56,217 [INFO]   [2] Exists: Fort_Worth_Record_Telegram_1923_06_21_5.pdf
+2026-03-20 11:05:59,739 [INFO]   [3] Exists: Fort_Worth_Star_Telegram_1923_06_21_20.pdf
+2026-03-20 11:06:03,250 [INFO]   [4] Exists: Fort_Worth_Star_Telegram_1923_06_21_21.pdf
+2026-03-20 11:06:06,844 [INFO]   [5] Exists: Fort_Worth_Record_Telegram_1923_06_21_4.pdf
+2026-03-20 11:06:10,272 [INFO]   [6] Exists: Fort_Worth_Record_Telegram_1923_06_21_11.pdf
+2026-03-20 11:06:13,789 [INFO]   [7] Exists: Fort_Worth_Record_Telegram_1923_06_21_14.pdf
+2026-03-20 11:06:17,277 [INFO]   [8] Exists: Fort_Worth_Record_Telegram_1923_06_21_15.pdf
+2026-03-20 11:06:20,816 [INFO]   [9] Exists: Fort_Worth_Star_Telegram_1923_06_21_4.pdf
+2026-03-20 11:06:24,250 [INFO]   [10] Exists: Fort_Worth_Star_Telegram_1923_06_21_5.pdf
+2026-03-20 11:06:24,250 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 11:06:24,250 [INFO]   Returning to search...
+2026-03-20 11:06:44,847 [INFO] --- Batch 2 ---
+2026-03-20 11:06:47,045 [INFO]   Found 10 new result links
+2026-03-20 11:06:50,537 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_22_25.pdf — Fort Worth Star-Telegram, 1923-06-22, p25
+2026-03-20 11:06:54,032 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_22_18.pdf — Fort Worth Record-Telegram, 1923-06-22, p18
+2026-03-20 11:06:57,525 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_22_1.pdf — Fort Worth Star-Telegram, 1923-06-22, p1
+2026-03-20 11:07:00,916 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_22_7.pdf — Fort Worth Star-Telegram, 1923-06-22, p7
+2026-03-20 11:07:04,442 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_22_17.pdf — Fort Worth Star-Telegram, 1923-06-22, p17
+2026-03-20 11:07:08,337 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_22_24.pdf — Fort Worth Star-Telegram, 1923-06-22, p24
+2026-03-20 11:07:11,812 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_22_7.pdf — Fort Worth Record-Telegram, 1923-06-22, p7
+2026-03-20 11:07:15,263 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_22_19.pdf — Fort Worth Record-Telegram, 1923-06-22, p19
+2026-03-20 11:07:18,835 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_23_8.pdf — Fort Worth Star-Telegram, 1923-06-23, p8
+2026-03-20 11:07:22,298 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_23_9.pdf — Fort Worth Star-Telegram, 1923-06-23, p9
+2026-03-20 11:07:22,298 [INFO]   Returning to search...
+2026-03-20 11:07:43,446 [INFO] --- Batch 3 ---
+2026-03-20 11:07:45,721 [INFO]   Found 10 new result links
+2026-03-20 11:07:49,150 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_23_10.pdf — Fort Worth Star-Telegram, 1923-06-23, p10
+2026-03-20 11:07:52,892 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_23_16.pdf — Fort Worth Record-Telegram, 1923-06-23, p16
+2026-03-20 11:07:57,019 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_23_20.pdf — Fort Worth Record-Telegram, 1923-06-23, p20
+2026-03-20 11:08:00,429 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_23_11.pdf — Fort Worth Record-Telegram, 1923-06-23, p11
+2026-03-20 11:08:04,023 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_24_18.pdf — Fort Worth Star-Telegram, 1923-06-24, p18
+2026-03-20 11:08:07,476 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_24_30.pdf — Fort Worth Star-Telegram, 1923-06-24, p30
+2026-03-20 11:08:11,341 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_24_1.pdf — Fort Worth Star-Telegram, 1923-06-24, p1
+2026-03-20 11:08:14,762 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_24_20.pdf — Fort Worth Star-Telegram, 1923-06-24, p20
+2026-03-20 11:08:18,285 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_24_23.pdf — Fort Worth Record-Telegram, 1923-06-24, p23
+2026-03-20 11:08:21,775 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_24_16.pdf — Fort Worth Star-Telegram, 1923-06-24, p16
+2026-03-20 11:08:21,775 [INFO]   Returning to search...
+2026-03-20 11:08:42,972 [INFO] --- Batch 4 ---
+2026-03-20 11:08:45,332 [INFO]   Found 10 new result links
+2026-03-20 11:08:49,515 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_24_27.pdf — Fort Worth Star-Telegram, 1923-06-24, p27
+2026-03-20 11:08:52,973 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_24_29.pdf — Fort Worth Star-Telegram, 1923-06-24, p29
+2026-03-20 11:08:56,420 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_24_3.pdf — Fort Worth Record-Telegram, 1923-06-24, p3
+2026-03-20 11:08:59,884 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_24_11.pdf — Fort Worth Record-Telegram, 1923-06-24, p11
+2026-03-20 11:09:03,381 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_24_28.pdf — Fort Worth Record-Telegram, 1923-06-24, p28
+2026-03-20 11:09:06,980 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_24_4.pdf — Fort Worth Star-Telegram, 1923-06-24, p4
+2026-03-20 11:09:10,384 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_24_6.pdf — Fort Worth Star-Telegram, 1923-06-24, p6
+2026-03-20 11:09:13,890 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_24_17.pdf — Fort Worth Star-Telegram, 1923-06-24, p17
+2026-03-20 11:09:17,317 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_24_26.pdf — Fort Worth Star-Telegram, 1923-06-24, p26
+2026-03-20 11:09:20,806 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_24_22.pdf — Fort Worth Record-Telegram, 1923-06-24, p22
+2026-03-20 11:09:20,806 [INFO]   Returning to search...
+2026-03-20 11:09:42,396 [INFO] --- Batch 5 ---
+2026-03-20 11:09:44,832 [INFO]   Found 10 new result links
+2026-03-20 11:09:48,982 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_24_24.pdf — Fort Worth Record-Telegram, 1923-06-24, p24
+2026-03-20 11:09:52,408 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_24_67.pdf — Fort Worth Record-Telegram, 1923-06-24, p67
+2026-03-20 11:09:56,782 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_24_71.pdf — Fort Worth Record-Telegram, 1923-06-24, p71
+2026-03-20 11:10:00,264 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_06_24_72.pdf — Fort Worth Record-Telegram, 1923-06-24, p72
+2026-03-20 11:10:04,215 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_24_73.pdf — Fort Worth Record-Telegram, 1923-06-24, p73
+2026-03-20 11:10:07,686 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_06_24_74.pdf — Fort Worth Record-Telegram, 1923-06-24, p74
+2026-03-20 11:10:11,204 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_24_75.pdf — Fort Worth Record-Telegram, 1923-06-24, p75
+2026-03-20 11:10:14,602 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_25_12.pdf — Fort Worth Record-Telegram, 1923-06-25, p12
+2026-03-20 11:10:18,887 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_25_11.pdf — Fort Worth Record-Telegram, 1923-06-25, p11
+2026-03-20 11:10:22,347 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_25_1.pdf — Fort Worth Star-Telegram, 1923-06-25, p1
+2026-03-20 11:10:22,347 [INFO]   Returning to search...
+2026-03-20 11:10:45,058 [INFO] --- Batch 6 ---
+2026-03-20 11:10:47,582 [INFO]   Found 10 new result links
+2026-03-20 11:10:51,362 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_25_2.pdf — Fort Worth Star-Telegram, 1923-06-25, p2
+2026-03-20 11:10:55,293 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_25_3.pdf — Fort Worth Star-Telegram, 1923-06-25, p3
+2026-03-20 11:10:58,737 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_25_12.pdf — Fort Worth Star-Telegram, 1923-06-25, p12
+2026-03-20 11:11:02,180 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_25_13.pdf — Fort Worth Star-Telegram, 1923-06-25, p13
+2026-03-20 11:11:05,769 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_25_14.pdf — Fort Worth Star-Telegram, 1923-06-25, p14
+2026-03-20 11:11:09,697 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_06_25_15.pdf — Fort Worth Record-Telegram, 1923-06-25, p15
+2026-03-20 11:11:13,142 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_25_16.pdf — Fort Worth Record-Telegram, 1923-06-25, p16
+2026-03-20 11:11:16,946 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_26_11.pdf — Fort Worth Record-Telegram, 1923-06-26, p11
+2026-03-20 11:11:20,625 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_26_9.pdf — Fort Worth Star-Telegram, 1923-06-26, p9
+2026-03-20 11:11:24,276 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_26_12.pdf — Fort Worth Record-Telegram, 1923-06-26, p12
+2026-03-20 11:11:24,276 [INFO]   Returning to search...
+2026-03-20 11:11:46,761 [INFO] --- Batch 7 ---
+2026-03-20 11:11:49,393 [INFO]   Found 10 new result links
+2026-03-20 11:11:53,325 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_26_4.pdf — Fort Worth Star-Telegram, 1923-06-26, p4
+2026-03-20 11:11:57,155 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_26_18.pdf — Fort Worth Star-Telegram, 1923-06-26, p18
+2026-03-20 11:12:00,975 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_26_19.pdf — Fort Worth Star-Telegram, 1923-06-26, p19
+2026-03-20 11:12:04,911 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_26_20.pdf — Fort Worth Star-Telegram, 1923-06-26, p20
+2026-03-20 11:12:08,338 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_26_5.pdf — Fort Worth Record-Telegram, 1923-06-26, p5
+2026-03-20 11:12:11,761 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_06_26_15.pdf — Fort Worth Record-Telegram, 1923-06-26, p15
+2026-03-20 11:12:15,198 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_06_26_16.pdf — Fort Worth Record-Telegram, 1923-06-26, p16
+2026-03-20 11:12:18,617 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_27_13.pdf — Fort Worth Record-Telegram, 1923-06-27, p13
+2026-03-20 11:12:22,466 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_06_27_12.pdf — Fort Worth Star-Telegram, 1923-06-27, p12
+2026-03-20 11:12:25,881 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_27_18.pdf — Fort Worth Star-Telegram, 1923-06-27, p18
+2026-03-20 11:12:25,881 [INFO]   Returning to search...
+2026-03-20 11:12:48,394 [INFO] --- Batch 8 ---
+2026-03-20 11:12:51,112 [INFO]   Found 10 new result links
+2026-03-20 11:12:54,566 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_27_17.pdf — Fort Worth Record-Telegram, 1923-06-27, p17
+2026-03-20 11:12:57,952 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_27_4.pdf — Fort Worth Star-Telegram, 1923-06-27, p4
+2026-03-20 11:13:01,627 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_06_27_15.pdf — Fort Worth Star-Telegram, 1923-06-27, p15
+2026-03-20 11:13:05,124 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_27_16.pdf — Fort Worth Star-Telegram, 1923-06-27, p16
+2026-03-20 11:13:09,331 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_06_27_14.pdf — Fort Worth Record-Telegram, 1923-06-27, p14
+2026-03-20 11:13:12,720 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_28_19.pdf — Fort Worth Star-Telegram, 1923-06-28, p19
+2026-03-20 11:13:16,192 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_28_7.pdf — Fort Worth Star-Telegram, 1923-06-28, p7
+2026-03-20 11:13:20,264 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_06_28_9.pdf — Fort Worth Star-Telegram, 1923-06-28, p9
+2026-03-20 11:13:23,741 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_28_6.pdf — Fort Worth Record-Telegram, 1923-06-28, p6
+2026-03-20 11:13:27,216 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_06_28_15.pdf — Fort Worth Record-Telegram, 1923-06-28, p15
+2026-03-20 11:13:27,216 [INFO]   Returning to search...
+2026-03-20 11:13:50,233 [INFO] --- Batch 9 ---
+2026-03-20 11:13:53,041 [INFO]   Found 10 new result links
+2026-03-20 11:13:56,489 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_06_29_25.pdf — Fort Worth Star-Telegram, 1923-06-29, p25
+2026-03-20 11:13:59,980 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_06_29_2.pdf — Fort Worth Record-Telegram, 1923-06-29, p2
+2026-03-20 11:14:03,376 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_29_11.pdf — Fort Worth Record-Telegram, 1923-06-29, p11
+2026-03-20 11:14:06,878 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_06_29_5.pdf — Fort Worth Star-Telegram, 1923-06-29, p5
+2026-03-20 11:14:10,404 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_06_29_10.pdf — Fort Worth Star-Telegram, 1923-06-29, p10
+2026-03-20 11:14:13,803 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_06_29_23.pdf — Fort Worth Star-Telegram, 1923-06-29, p23
+2026-03-20 11:14:17,245 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_06_29_19.pdf — Fort Worth Star-Telegram, 1923-06-29, p19
+2026-03-20 11:14:20,750 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_06_29_12.pdf — Fort Worth Record-Telegram, 1923-06-29, p12
+2026-03-20 11:14:24,211 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_06_29_16.pdf — Fort Worth Record-Telegram, 1923-06-29, p16
+2026-03-20 11:14:27,701 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_06_29_2.pdf — Fort Worth Star-Telegram, 1923-06-29, p2
+2026-03-20 11:14:27,701 [INFO]   Returning to search...
+2026-03-20 11:14:51,354 [INFO] --- Batch 10 ---
+2026-03-20 11:14:54,232 [INFO]   Found 10 new result links
+2026-03-20 11:14:57,616 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_06_30_13.pdf — Fort Worth Record-Telegram, 1923-06-30, p13
+2026-03-20 11:15:01,054 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_06_30_8.pdf — Fort Worth Star-Telegram, 1923-06-30, p8
+2026-03-20 11:15:04,568 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_06_30_4.pdf — Fort Worth Record-Telegram, 1923-06-30, p4
+2026-03-20 11:15:08,049 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_01_19.pdf — Fort Worth Star-Telegram, 1923-07-01, p19
+2026-03-20 11:15:11,451 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_01_23.pdf — Fort Worth Star-Telegram, 1923-07-01, p23
+2026-03-20 11:15:14,901 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_01_10.pdf — Fort Worth Record-Telegram, 1923-07-01, p10
+2026-03-20 11:15:18,395 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_01_12.pdf — Fort Worth Star-Telegram, 1923-07-01, p12
+2026-03-20 11:15:22,727 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_01_30.pdf — Fort Worth Star-Telegram, 1923-07-01, p30
+2026-03-20 11:15:26,171 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_01_66.pdf — Fort Worth Star-Telegram, 1923-07-01, p66
+2026-03-20 11:15:29,680 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_01_23.pdf — Fort Worth Record-Telegram, 1923-07-01, p23
+2026-03-20 11:15:29,680 [INFO]   Returning to search...
+2026-03-20 11:15:53,136 [INFO] --- Batch 11 ---
+2026-03-20 11:15:56,122 [INFO]   Found 10 new result links
+2026-03-20 11:16:00,692 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_01_3.pdf — Fort Worth Star-Telegram, 1923-07-01, p3
+2026-03-20 11:16:04,633 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_01_6.pdf — Fort Worth Star-Telegram, 1923-07-01, p6
+2026-03-20 11:16:08,600 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_01_8.pdf — Fort Worth Star-Telegram, 1923-07-01, p8
+2026-03-20 11:16:13,587 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_01_20.pdf — Fort Worth Star-Telegram, 1923-07-01, p20
+2026-03-20 11:16:17,091 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_01_28.pdf — Fort Worth Star-Telegram, 1923-07-01, p28
+2026-03-20 11:16:20,548 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_01_29.pdf — Fort Worth Star-Telegram, 1923-07-01, p29
+2026-03-20 11:16:24,054 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_01_46.pdf — Fort Worth Star-Telegram, 1923-07-01, p46
+2026-03-20 11:16:27,508 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_01_12.pdf — Fort Worth Record-Telegram, 1923-07-01, p12
+2026-03-20 11:16:31,010 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_01_16.pdf — Fort Worth Record-Telegram, 1923-07-01, p16
+2026-03-20 11:16:34,616 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_01_21.pdf — Fort Worth Record-Telegram, 1923-07-01, p21
+2026-03-20 11:16:34,616 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-20 11:16:34,616 [INFO]   Session 3: 100 new, 10 skipped (running total: 300 new)
+2026-03-20 11:16:34,616 [INFO]   Restarting in 3 seconds...
+2026-03-20 11:16:37,617 [INFO] 
+>>> SESSION 4
+2026-03-20 11:16:37,654 [INFO] ============================================================
+2026-03-20 11:16:37,655 [INFO]   Starting session from: 1923-07-01
+2026-03-20 11:16:37,655 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-07-01&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 11:16:37,655 [INFO] ============================================================
+2026-03-20 11:16:39,002 [INFO] Opening Newspapers.com...
+2026-03-20 11:16:45,890 [INFO] Loading search results...
+2026-03-20 11:16:50,782 [INFO] --- Batch 1 ---
+2026-03-20 11:16:52,909 [INFO]   Found 10 new result links
+2026-03-20 11:16:56,542 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_07_01_19.pdf
+2026-03-20 11:17:00,142 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1923_07_01_23.pdf
+2026-03-20 11:17:03,624 [INFO]   [3] Exists: Fort_Worth_Record_Telegram_1923_07_01_10.pdf
+2026-03-20 11:17:07,153 [INFO]   [4] Exists: Fort_Worth_Star_Telegram_1923_07_01_12.pdf
+2026-03-20 11:17:10,619 [INFO]   [5] Exists: Fort_Worth_Star_Telegram_1923_07_01_30.pdf
+2026-03-20 11:17:14,138 [INFO]   [6] Exists: Fort_Worth_Star_Telegram_1923_07_01_66.pdf
+2026-03-20 11:17:18,653 [INFO]   [7] Exists: Fort_Worth_Record_Telegram_1923_07_01_23.pdf
+2026-03-20 11:17:22,071 [INFO]   [8] Exists: Fort_Worth_Star_Telegram_1923_07_01_3.pdf
+2026-03-20 11:17:26,110 [INFO]   [9] Exists: Fort_Worth_Star_Telegram_1923_07_01_6.pdf
+2026-03-20 11:17:29,570 [INFO]   [10] Exists: Fort_Worth_Star_Telegram_1923_07_01_8.pdf
+2026-03-20 11:17:29,570 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 11:17:29,570 [INFO]   Returning to search...
+2026-03-20 11:17:50,072 [INFO] --- Batch 2 ---
+2026-03-20 11:17:52,259 [INFO]   Found 10 new result links
+2026-03-20 11:17:55,687 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_07_01_20.pdf
+2026-03-20 11:17:55,687 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 11:17:55,687 [INFO]   Returning to search...
+2026-03-20 11:18:03,824 [INFO] --- Batch 3 ---
+2026-03-20 11:18:06,031 [INFO]   Found 9 new result links
+2026-03-20 11:18:09,793 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_07_01_28.pdf
+2026-03-20 11:18:09,793 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 11:18:09,794 [INFO]   Returning to search...
+2026-03-20 11:18:16,901 [INFO] --- Batch 4 ---
+2026-03-20 11:18:19,092 [INFO]   Found 8 new result links
+2026-03-20 11:18:23,218 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_07_01_29.pdf
+2026-03-20 11:18:23,218 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 11:18:23,218 [INFO]   Returning to search...
+2026-03-20 11:18:30,427 [INFO] --- Batch 5 ---
+2026-03-20 11:18:32,616 [INFO]   Found 7 new result links
+2026-03-20 11:18:36,209 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_07_01_46.pdf
+2026-03-20 11:18:36,209 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 11:18:36,209 [INFO]   Returning to search...
+2026-03-20 11:18:43,334 [INFO] --- Batch 6 ---
+2026-03-20 11:18:45,521 [INFO]   Found 6 new result links
+2026-03-20 11:18:49,222 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1923_07_01_12.pdf
+2026-03-20 11:18:49,223 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 11:18:49,223 [INFO]   Returning to search...
+2026-03-20 11:18:56,301 [INFO] --- Batch 7 ---
+2026-03-20 11:18:58,481 [INFO]   Found 5 new result links
+2026-03-20 11:19:01,875 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1923_07_01_16.pdf
+2026-03-20 11:19:01,875 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 11:19:01,876 [INFO]   Returning to search...
+2026-03-20 11:19:09,286 [INFO] --- Batch 8 ---
+2026-03-20 11:19:11,465 [INFO]   Found 4 new result links
+2026-03-20 11:19:14,979 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1923_07_01_21.pdf
+2026-03-20 11:19:14,979 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 11:19:14,979 [INFO]   Returning to search...
+2026-03-20 11:19:22,060 [INFO] --- Batch 9 ---
+2026-03-20 11:19:24,243 [INFO]   Found 3 new result links
+2026-03-20 11:19:28,122 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_01_24.pdf — Fort Worth Record-Telegram, 1923-07-01, p24
+2026-03-20 11:19:32,629 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_01_75.pdf — Fort Worth Record-Telegram, 1923-07-01, p75
+2026-03-20 11:19:36,467 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_01_82.pdf — Fort Worth Record-Telegram, 1923-07-01, p82
+2026-03-20 11:19:36,467 [INFO]   Returning to search...
+2026-03-20 11:19:57,152 [INFO] --- Batch 10 ---
+2026-03-20 11:19:59,429 [INFO]   Found 10 new result links
+2026-03-20 11:20:02,874 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_02_6.pdf — Fort Worth Star-Telegram, 1923-07-02, p6
+2026-03-20 11:20:06,340 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_02_17.pdf — Fort Worth Star-Telegram, 1923-07-02, p17
+2026-03-20 11:20:09,718 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_02_18.pdf — Fort Worth Star-Telegram, 1923-07-02, p18
+2026-03-20 11:20:13,170 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_02_11.pdf — Fort Worth Record-Telegram, 1923-07-02, p11
+2026-03-20 11:20:16,638 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_02_1.pdf — Fort Worth Star-Telegram, 1923-07-02, p1
+2026-03-20 11:20:20,155 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_02_14.pdf — Fort Worth Star-Telegram, 1923-07-02, p14
+2026-03-20 11:20:23,550 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_07_02_12.pdf — Fort Worth Record-Telegram, 1923-07-02, p12
+2026-03-20 11:20:27,444 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_02_14.pdf — Fort Worth Record-Telegram, 1923-07-02, p14
+2026-03-20 11:20:30,893 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_02_16.pdf — Fort Worth Record-Telegram, 1923-07-02, p16
+2026-03-20 11:20:34,392 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_03_13.pdf — Fort Worth Record-Telegram, 1923-07-03, p13
+2026-03-20 11:20:34,392 [INFO]   Returning to search...
+2026-03-20 11:20:55,606 [INFO] --- Batch 11 ---
+2026-03-20 11:20:57,977 [INFO]   Found 10 new result links
+2026-03-20 11:21:01,829 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_03_2.pdf — Fort Worth Star-Telegram, 1923-07-03, p2
+2026-03-20 11:21:06,038 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_03_5.pdf — Fort Worth Star-Telegram, 1923-07-03, p5
+2026-03-20 11:21:09,670 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_03_7.pdf — Fort Worth Record-Telegram, 1923-07-03, p7
+2026-03-20 11:21:13,132 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_03_4.pdf — Fort Worth Star-Telegram, 1923-07-03, p4
+2026-03-20 11:21:16,599 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_03_12.pdf — Fort Worth Star-Telegram, 1923-07-03, p12
+2026-03-20 11:21:20,148 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_03_16.pdf — Fort Worth Record-Telegram, 1923-07-03, p16
+2026-03-20 11:21:23,657 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_03_9.pdf — Fort Worth Star-Telegram, 1923-07-03, p9
+2026-03-20 11:21:27,869 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_03_17.pdf — Fort Worth Star-Telegram, 1923-07-03, p17
+2026-03-20 11:21:31,368 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_03_4.pdf — Fort Worth Record-Telegram, 1923-07-03, p4
+2026-03-20 11:21:34,893 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_03_17.pdf — Fort Worth Record-Telegram, 1923-07-03, p17
+2026-03-20 11:21:34,893 [INFO]   Returning to search...
+2026-03-20 11:21:56,397 [INFO] --- Batch 12 ---
+2026-03-20 11:21:58,850 [INFO]   Found 10 new result links
+2026-03-20 11:22:02,735 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_03_20.pdf — Fort Worth Record-Telegram, 1923-07-03, p20
+2026-03-20 11:22:06,168 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_04_5.pdf — Fort Worth Record-Telegram, 1923-07-04, p5
+2026-03-20 11:22:10,141 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_04_1.pdf — Fort Worth Star-Telegram, 1923-07-04, p1
+2026-03-20 11:22:13,673 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_04_9.pdf — Fort Worth Star-Telegram, 1923-07-04, p9
+2026-03-20 11:22:17,575 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_04_14.pdf — Fort Worth Star-Telegram, 1923-07-04, p14
+2026-03-20 11:22:21,067 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_04_6.pdf — Fort Worth Record-Telegram, 1923-07-04, p6
+2026-03-20 11:22:24,506 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_07_04_8.pdf — Fort Worth Record-Telegram, 1923-07-04, p8
+2026-03-20 11:22:28,566 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_04_9.pdf — Fort Worth Record-Telegram, 1923-07-04, p9
+2026-03-20 11:22:32,142 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_05_6.pdf — Fort Worth Star-Telegram, 1923-07-05, p6
+2026-03-20 11:22:35,631 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_05_11.pdf — Fort Worth Record-Telegram, 1923-07-05, p11
+2026-03-20 11:22:35,631 [INFO]   Returning to search...
+2026-03-20 11:22:58,596 [INFO] --- Batch 13 ---
+2026-03-20 11:23:01,242 [INFO]   Found 10 new result links
+2026-03-20 11:23:04,755 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_05_12.pdf — Fort Worth Record-Telegram, 1923-07-05, p12
+2026-03-20 11:23:08,211 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_05_17.pdf — Fort Worth Record-Telegram, 1923-07-05, p17
+2026-03-20 11:23:11,751 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_05_7.pdf — Fort Worth Star-Telegram, 1923-07-05, p7
+2026-03-20 11:23:15,363 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_05_20.pdf — Fort Worth Star-Telegram, 1923-07-05, p20
+2026-03-20 11:23:19,042 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_05_15.pdf — Fort Worth Record-Telegram, 1923-07-05, p15
+2026-03-20 11:23:22,687 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_05_16.pdf — Fort Worth Record-Telegram, 1923-07-05, p16
+2026-03-20 11:23:26,182 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_06_9.pdf — Fort Worth Star-Telegram, 1923-07-06, p9
+2026-03-20 11:23:29,864 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_06_4.pdf — Fort Worth Record-Telegram, 1923-07-06, p4
+2026-03-20 11:23:33,272 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_06_21.pdf — Fort Worth Star-Telegram, 1923-07-06, p21
+2026-03-20 11:23:36,770 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_06_13.pdf — Fort Worth Record-Telegram, 1923-07-06, p13
+2026-03-20 11:23:36,770 [INFO]   Returning to search...
+2026-03-20 11:23:58,872 [INFO] --- Batch 14 ---
+2026-03-20 11:24:01,606 [INFO]   Found 10 new result links
+2026-03-20 11:24:05,190 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_07_10.pdf — Fort Worth Star-Telegram, 1923-07-07, p10
+2026-03-20 11:24:08,630 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_07_8.pdf — Fort Worth Star-Telegram, 1923-07-07, p8
+2026-03-20 11:24:12,025 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_07_11.pdf — Fort Worth Record-Telegram, 1923-07-07, p11
+2026-03-20 11:24:15,429 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_08_18.pdf — Fort Worth Star-Telegram, 1923-07-08, p18
+2026-03-20 11:24:18,858 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_08_18.pdf — Fort Worth Record-Telegram, 1923-07-08, p18
+2026-03-20 11:24:22,382 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_08_20.pdf — Fort Worth Star-Telegram, 1923-07-08, p20
+2026-03-20 11:24:25,992 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_08_29.pdf — Fort Worth Star-Telegram, 1923-07-08, p29
+2026-03-20 11:24:29,392 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_08_10.pdf — Fort Worth Star-Telegram, 1923-07-08, p10
+2026-03-20 11:24:33,219 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_08_22.pdf — Fort Worth Star-Telegram, 1923-07-08, p22
+2026-03-20 11:24:36,898 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_08_24.pdf — Fort Worth Star-Telegram, 1923-07-08, p24
+2026-03-20 11:24:36,898 [INFO]   Returning to search...
+2026-03-20 11:24:59,595 [INFO] --- Batch 15 ---
+2026-03-20 11:25:02,491 [INFO]   Found 10 new result links
+2026-03-20 11:25:06,004 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_08_42.pdf — Fort Worth Star-Telegram, 1923-07-08, p42
+2026-03-20 11:25:10,418 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_08_47.pdf — Fort Worth Star-Telegram, 1923-07-08, p47
+2026-03-20 11:25:13,884 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_08_6.pdf — Fort Worth Record-Telegram, 1923-07-08, p6
+2026-03-20 11:25:17,930 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_08_9.pdf — Fort Worth Record-Telegram, 1923-07-08, p9
+2026-03-20 11:25:21,405 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_08_21.pdf — Fort Worth Record-Telegram, 1923-07-08, p21
+2026-03-20 11:25:24,864 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_08_75.pdf — Fort Worth Record-Telegram, 1923-07-08, p75
+2026-03-20 11:25:28,389 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_09_2.pdf — Fort Worth Star-Telegram, 1923-07-09, p2
+2026-03-20 11:25:31,913 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_09_11.pdf — Fort Worth Record-Telegram, 1923-07-09, p11
+2026-03-20 11:25:35,383 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_09_12.pdf — Fort Worth Star-Telegram, 1923-07-09, p12
+2026-03-20 11:25:38,788 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_09_13.pdf — Fort Worth Star-Telegram, 1923-07-09, p13
+2026-03-20 11:25:38,788 [INFO]   Returning to search...
+2026-03-20 11:26:02,853 [INFO] --- Batch 16 ---
+2026-03-20 11:26:05,662 [INFO]   Found 10 new result links
+2026-03-20 11:26:09,576 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_10_17.pdf — Fort Worth Star-Telegram, 1923-07-10, p17
+2026-03-20 11:26:13,469 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_10_3.pdf — Fort Worth Star-Telegram, 1923-07-10, p3
+2026-03-20 11:26:16,892 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_10_11.pdf — Fort Worth Star-Telegram, 1923-07-10, p11
+2026-03-20 11:26:20,364 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_10_5.pdf — Fort Worth Record-Telegram, 1923-07-10, p5
+2026-03-20 11:26:23,870 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_10_6.pdf — Fort Worth Record-Telegram, 1923-07-10, p6
+2026-03-20 11:26:27,351 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_10_11.pdf — Fort Worth Record-Telegram, 1923-07-10, p11
+2026-03-20 11:26:30,772 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_11_2.pdf — Fort Worth Star-Telegram, 1923-07-11, p2
+2026-03-20 11:26:34,267 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_11_3.pdf — Fort Worth Record-Telegram, 1923-07-11, p3
+2026-03-20 11:26:37,728 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_11_17.pdf — Fort Worth Star-Telegram, 1923-07-11, p17
+2026-03-20 11:26:41,152 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_11_18.pdf — Fort Worth Star-Telegram, 1923-07-11, p18
+2026-03-20 11:26:41,152 [INFO]   Returning to search...
+2026-03-20 11:27:05,195 [INFO] --- Batch 17 ---
+2026-03-20 11:27:08,083 [INFO]   Found 10 new result links
+2026-03-20 11:27:12,068 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_11_2.pdf — Fort Worth Record-Telegram, 1923-07-11, p2
+2026-03-20 11:27:15,776 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_11_4.pdf — Fort Worth Record-Telegram, 1923-07-11, p4
+2026-03-20 11:27:19,218 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_12_13.pdf — Fort Worth Record-Telegram, 1923-07-12, p13
+2026-03-20 11:27:22,740 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_12_16.pdf — Fort Worth Star-Telegram, 1923-07-12, p16
+2026-03-20 11:27:26,193 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_12_5.pdf — Fort Worth Record-Telegram, 1923-07-12, p5
+2026-03-20 11:27:29,661 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_12_1.pdf — Fort Worth Star-Telegram, 1923-07-12, p1
+2026-03-20 11:27:33,481 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_12_3.pdf — Fort Worth Star-Telegram, 1923-07-12, p3
+2026-03-20 11:27:36,950 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_12_5.pdf — Fort Worth Star-Telegram, 1923-07-12, p5
+2026-03-20 11:27:40,419 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_13_20.pdf — Fort Worth Star-Telegram, 1923-07-13, p20
+2026-03-20 11:27:43,861 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_13_21.pdf — Fort Worth Star-Telegram, 1923-07-13, p21
+2026-03-20 11:27:43,861 [INFO]   Returning to search...
+2026-03-20 11:28:07,844 [INFO] --- Batch 18 ---
+2026-03-20 11:28:10,824 [INFO]   Found 10 new result links
+2026-03-20 11:28:14,270 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_13_13.pdf — Fort Worth Record-Telegram, 1923-07-13, p13
+2026-03-20 11:28:17,797 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_13_6.pdf — Fort Worth Record-Telegram, 1923-07-13, p6
+2026-03-20 11:28:21,187 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_13_14.pdf — Fort Worth Record-Telegram, 1923-07-13, p14
+2026-03-20 11:28:24,756 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_13_16.pdf — Fort Worth Record-Telegram, 1923-07-13, p16
+2026-03-20 11:28:28,186 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_14_8.pdf — Fort Worth Star-Telegram, 1923-07-14, p8
+2026-03-20 11:28:31,615 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_14_11.pdf — Fort Worth Record-Telegram, 1923-07-14, p11
+2026-03-20 11:28:35,204 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_14_9.pdf — Fort Worth Star-Telegram, 1923-07-14, p9
+2026-03-20 11:28:38,714 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_14_6.pdf — Fort Worth Record-Telegram, 1923-07-14, p6
+2026-03-20 11:28:42,368 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_14_15.pdf — Fort Worth Record-Telegram, 1923-07-14, p15
+2026-03-20 11:28:45,818 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_15_8.pdf — Fort Worth Record-Telegram, 1923-07-15, p8
+2026-03-20 11:28:45,819 [INFO]   Returning to search...
+2026-03-20 11:29:09,727 [INFO] --- Batch 19 ---
+2026-03-20 11:29:12,787 [INFO]   Found 10 new result links
+2026-03-20 11:29:16,233 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_15_19.pdf — Fort Worth Star-Telegram, 1923-07-15, p19
+2026-03-20 11:29:19,650 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_15_28.pdf — Fort Worth Star-Telegram, 1923-07-15, p28
+2026-03-20 11:29:23,099 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_15_9.pdf — Fort Worth Record-Telegram, 1923-07-15, p9
+2026-03-20 11:29:26,709 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_15_18.pdf — Fort Worth Record-Telegram, 1923-07-15, p18
+2026-03-20 11:29:30,354 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_15_19.pdf — Fort Worth Record-Telegram, 1923-07-15, p19
+2026-03-20 11:29:33,820 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_15_20.pdf — Fort Worth Star-Telegram, 1923-07-15, p20
+2026-03-20 11:29:37,298 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_15_29.pdf — Fort Worth Star-Telegram, 1923-07-15, p29
+2026-03-20 11:29:37,298 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-20 11:29:37,299 [INFO]   Session 4: 100 new, 17 skipped (running total: 400 new)
+2026-03-20 11:29:37,299 [INFO]   Restarting in 3 seconds...
+2026-03-20 11:29:40,300 [INFO] 
+>>> SESSION 5
+2026-03-20 11:29:40,334 [INFO] ============================================================
+2026-03-20 11:29:40,334 [INFO]   Starting session from: 1923-07-15
+2026-03-20 11:29:40,334 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-07-15&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 11:29:40,334 [INFO] ============================================================
+2026-03-20 11:29:41,628 [INFO] Opening Newspapers.com...
+2026-03-20 11:29:47,896 [INFO] Loading search results...
+2026-03-20 11:29:53,053 [INFO] --- Batch 1 ---
+2026-03-20 11:29:55,182 [INFO]   Found 10 new result links
+2026-03-20 11:29:59,310 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1923_07_15_8.pdf
+2026-03-20 11:30:03,397 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1923_07_15_19.pdf
+2026-03-20 11:30:07,134 [INFO]   [3] Exists: Fort_Worth_Star_Telegram_1923_07_15_28.pdf
+2026-03-20 11:30:10,709 [INFO]   [4] Exists: Fort_Worth_Record_Telegram_1923_07_15_9.pdf
+2026-03-20 11:30:14,252 [INFO]   [5] Exists: Fort_Worth_Record_Telegram_1923_07_15_18.pdf
+2026-03-20 11:30:17,683 [INFO]   [6] Exists: Fort_Worth_Record_Telegram_1923_07_15_19.pdf
+2026-03-20 11:30:21,191 [INFO]   [7] Exists: Fort_Worth_Star_Telegram_1923_07_15_20.pdf
+2026-03-20 11:30:24,681 [INFO]   [8] Exists: Fort_Worth_Star_Telegram_1923_07_15_29.pdf
+2026-03-20 11:30:28,703 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_15_17.pdf — Fort Worth Record-Telegram, 1923-07-15, p17
+2026-03-20 11:30:32,754 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_15_67.pdf — Fort Worth Record-Telegram, 1923-07-15, p67
+2026-03-20 11:30:32,754 [INFO]   Returning to search...
+2026-03-20 11:30:53,348 [INFO] --- Batch 2 ---
+2026-03-20 11:30:55,544 [INFO]   Found 10 new result links
+2026-03-20 11:30:59,065 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_15_12.pdf — Fort Worth Star-Telegram, 1923-07-15, p12
+2026-03-20 11:31:02,683 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_15_17.pdf — Fort Worth Star-Telegram, 1923-07-15, p17
+2026-03-20 11:31:06,182 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_15_18.pdf — Fort Worth Star-Telegram, 1923-07-15, p18
+2026-03-20 11:31:10,174 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_15_25.pdf — Fort Worth Star-Telegram, 1923-07-15, p25
+2026-03-20 11:31:14,137 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_15_26.pdf — Fort Worth Star-Telegram, 1923-07-15, p26
+2026-03-20 11:31:17,582 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_15_30.pdf — Fort Worth Star-Telegram, 1923-07-15, p30
+2026-03-20 11:31:21,708 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_15_35.pdf — Fort Worth Star-Telegram, 1923-07-15, p35
+2026-03-20 11:31:25,198 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_15_15.pdf — Fort Worth Record-Telegram, 1923-07-15, p15
+2026-03-20 11:31:28,625 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_15_60.pdf — Fort Worth Record-Telegram, 1923-07-15, p60
+2026-03-20 11:31:32,128 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_15_66.pdf — Fort Worth Record-Telegram, 1923-07-15, p66
+2026-03-20 11:31:32,128 [INFO]   Returning to search...
+2026-03-20 11:31:53,608 [INFO] --- Batch 3 ---
+2026-03-20 11:31:55,899 [INFO]   Found 10 new result links
+2026-03-20 11:31:59,975 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_16_16.pdf — Fort Worth Star-Telegram, 1923-07-16, p16
+2026-03-20 11:32:03,782 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_16_9.pdf — Fort Worth Record-Telegram, 1923-07-16, p9
+2026-03-20 11:32:07,256 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_16_2.pdf — Fort Worth Star-Telegram, 1923-07-16, p2
+2026-03-20 11:32:10,737 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_16_15.pdf — Fort Worth Star-Telegram, 1923-07-16, p15
+2026-03-20 11:32:14,891 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_16_3.pdf — Fort Worth Record-Telegram, 1923-07-16, p3
+2026-03-20 11:32:18,410 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_16_9.pdf — Fort Worth Star-Telegram, 1923-07-16, p9
+2026-03-20 11:32:21,947 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_07_16_7.pdf — Fort Worth Record-Telegram, 1923-07-16, p7
+2026-03-20 11:32:25,393 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_16_15.pdf — Fort Worth Record-Telegram, 1923-07-16, p15
+2026-03-20 11:32:29,261 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_17_17.pdf — Fort Worth Star-Telegram, 1923-07-17, p17
+2026-03-20 11:32:32,788 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_17_18.pdf — Fort Worth Star-Telegram, 1923-07-17, p18
+2026-03-20 11:32:32,788 [INFO]   Returning to search...
+2026-03-20 11:32:54,020 [INFO] --- Batch 4 ---
+2026-03-20 11:32:56,384 [INFO]   Found 10 new result links
+2026-03-20 11:32:59,830 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_17_1.pdf — Fort Worth Record-Telegram, 1923-07-17, p1
+2026-03-20 11:33:03,383 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_17_11.pdf — Fort Worth Record-Telegram, 1923-07-17, p11
+2026-03-20 11:33:06,862 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_17_15.pdf — Fort Worth Record-Telegram, 1923-07-17, p15
+2026-03-20 11:33:10,323 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_17_2.pdf — Fort Worth Star-Telegram, 1923-07-17, p2
+2026-03-20 11:33:13,717 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_17_5.pdf — Fort Worth Star-Telegram, 1923-07-17, p5
+2026-03-20 11:33:17,110 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_17_12.pdf — Fort Worth Star-Telegram, 1923-07-17, p12
+2026-03-20 11:33:20,574 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_07_17_5.pdf — Fort Worth Record-Telegram, 1923-07-17, p5
+2026-03-20 11:33:24,032 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_18_9.pdf — Fort Worth Record-Telegram, 1923-07-18, p9
+2026-03-20 11:33:27,503 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_18_17.pdf — Fort Worth Star-Telegram, 1923-07-18, p17
+2026-03-20 11:33:30,967 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_18_18.pdf — Fort Worth Star-Telegram, 1923-07-18, p18
+2026-03-20 11:33:30,968 [INFO]   Returning to search...
+2026-03-20 11:33:55,000 [INFO] --- Batch 5 ---
+2026-03-20 11:33:57,439 [INFO]   Found 10 new result links
+2026-03-20 11:34:00,887 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_18_13.pdf — Fort Worth Record-Telegram, 1923-07-18, p13
+2026-03-20 11:34:04,415 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_18_6.pdf — Fort Worth Star-Telegram, 1923-07-18, p6
+2026-03-20 11:34:08,089 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_18_7.pdf — Fort Worth Star-Telegram, 1923-07-18, p7
+2026-03-20 11:34:11,667 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_18_19.pdf — Fort Worth Star-Telegram, 1923-07-18, p19
+2026-03-20 11:34:15,143 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_18_6.pdf — Fort Worth Record-Telegram, 1923-07-18, p6
+2026-03-20 11:34:18,650 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_18_10.pdf — Fort Worth Record-Telegram, 1923-07-18, p10
+2026-03-20 11:34:22,099 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_19_2.pdf — Fort Worth Star-Telegram, 1923-07-19, p2
+2026-03-20 11:34:25,560 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_19_17.pdf — Fort Worth Star-Telegram, 1923-07-19, p17
+2026-03-20 11:34:29,177 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_19_16.pdf — Fort Worth Star-Telegram, 1923-07-19, p16
+2026-03-20 11:34:32,656 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_19_18.pdf — Fort Worth Star-Telegram, 1923-07-19, p18
+2026-03-20 11:34:32,657 [INFO]   Returning to search...
+2026-03-20 11:34:54,425 [INFO] --- Batch 6 ---
+2026-03-20 11:34:56,966 [INFO]   Found 10 new result links
+2026-03-20 11:35:00,335 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_19_3.pdf — Fort Worth Record-Telegram, 1923-07-19, p3
+2026-03-20 11:35:03,835 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_19_8.pdf — Fort Worth Record-Telegram, 1923-07-19, p8
+2026-03-20 11:35:07,533 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_19_12.pdf — Fort Worth Record-Telegram, 1923-07-19, p12
+2026-03-20 11:35:10,926 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_19_14.pdf — Fort Worth Record-Telegram, 1923-07-19, p14
+2026-03-20 11:35:14,458 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_19_17.pdf — Fort Worth Record-Telegram, 1923-07-19, p17
+2026-03-20 11:35:17,957 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_19_18.pdf — Fort Worth Record-Telegram, 1923-07-19, p18
+2026-03-20 11:35:21,444 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_07_19_19.pdf — Fort Worth Record-Telegram, 1923-07-19, p19
+2026-03-20 11:35:24,855 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_19_22.pdf — Fort Worth Record-Telegram, 1923-07-19, p22
+2026-03-20 11:35:28,677 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_19_3.pdf — Fort Worth Star-Telegram, 1923-07-19, p3
+2026-03-20 11:35:32,065 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_20_19.pdf — Fort Worth Star-Telegram, 1923-07-20, p19
+2026-03-20 11:35:32,065 [INFO]   Returning to search...
+2026-03-20 11:35:54,357 [INFO] --- Batch 7 ---
+2026-03-20 11:35:56,971 [INFO]   Found 10 new result links
+2026-03-20 11:36:00,353 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_20_20.pdf — Fort Worth Star-Telegram, 1923-07-20, p20
+2026-03-20 11:36:03,746 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_20_3.pdf — Fort Worth Star-Telegram, 1923-07-20, p3
+2026-03-20 11:36:08,236 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_20_18.pdf — Fort Worth Star-Telegram, 1923-07-20, p18
+2026-03-20 11:36:12,003 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_20_7.pdf — Fort Worth Record-Telegram, 1923-07-20, p7
+2026-03-20 11:36:16,049 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_20_6.pdf — Fort Worth Star-Telegram, 1923-07-20, p6
+2026-03-20 11:36:19,549 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_20_8.pdf — Fort Worth Star-Telegram, 1923-07-20, p8
+2026-03-20 11:36:23,016 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_07_20_10.pdf — Fort Worth Record-Telegram, 1923-07-20, p10
+2026-03-20 11:36:23,016 [INFO]   >>> THROTTLE: 500 views in the last hour. Pausing 503s until 11:44:46...
+2026-03-20 11:44:50,367 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_20_13.pdf — Fort Worth Record-Telegram, 1923-07-20, p13
+2026-03-20 11:44:54,430 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_20_15.pdf — Fort Worth Record-Telegram, 1923-07-20, p15
+2026-03-20 11:44:57,838 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_21_8.pdf — Fort Worth Star-Telegram, 1923-07-21, p8
+2026-03-20 11:44:57,838 [INFO]   Returning to search...
+2026-03-20 11:45:20,558 [INFO] --- Batch 8 ---
+2026-03-20 11:45:23,296 [INFO]   Found 10 new result links
+2026-03-20 11:45:26,830 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_21_3.pdf — Fort Worth Record-Telegram, 1923-07-21, p3
+2026-03-20 11:45:30,480 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_21_9.pdf — Fort Worth Record-Telegram, 1923-07-21, p9
+2026-03-20 11:45:33,998 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_21_1.pdf — Fort Worth Star-Telegram, 1923-07-21, p1
+2026-03-20 11:45:37,534 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_21_7.pdf — Fort Worth Record-Telegram, 1923-07-21, p7
+2026-03-20 11:45:41,065 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_21_11.pdf — Fort Worth Record-Telegram, 1923-07-21, p11
+2026-03-20 11:45:45,224 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_22_12.pdf — Fort Worth Star-Telegram, 1923-07-22, p12
+2026-03-20 11:45:49,342 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_22_15.pdf — Fort Worth Star-Telegram, 1923-07-22, p15
+2026-03-20 11:45:54,280 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_22_25.pdf — Fort Worth Star-Telegram, 1923-07-22, p25
+2026-03-20 11:45:57,748 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_22_18.pdf — Fort Worth Record-Telegram, 1923-07-22, p18
+2026-03-20 11:46:01,267 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_22_6.pdf — Fort Worth Star-Telegram, 1923-07-22, p6
+2026-03-20 11:46:01,267 [INFO]   Returning to search...
+2026-03-20 11:46:24,386 [INFO] --- Batch 9 ---
+2026-03-20 11:46:27,182 [INFO]   Found 10 new result links
+2026-03-20 11:46:31,564 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_22_13.pdf — Fort Worth Star-Telegram, 1923-07-22, p13
+2026-03-20 11:46:35,209 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_22_22.pdf — Fort Worth Record-Telegram, 1923-07-22, p22
+2026-03-20 11:46:38,795 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_22_24.pdf — Fort Worth Star-Telegram, 1923-07-22, p24
+2026-03-20 11:46:42,370 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_22_26.pdf — Fort Worth Star-Telegram, 1923-07-22, p26
+2026-03-20 11:46:45,923 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_22_7.pdf — Fort Worth Record-Telegram, 1923-07-22, p7
+2026-03-20 11:46:49,418 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_22_16.pdf — Fort Worth Record-Telegram, 1923-07-22, p16
+2026-03-20 11:46:53,552 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_07_22_19.pdf — Fort Worth Record-Telegram, 1923-07-22, p19
+2026-03-20 11:46:57,019 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_22_20.pdf — Fort Worth Record-Telegram, 1923-07-22, p20
+2026-03-20 11:47:01,010 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_22_67.pdf — Fort Worth Record-Telegram, 1923-07-22, p67
+2026-03-20 11:47:04,813 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_22_74.pdf — Fort Worth Record-Telegram, 1923-07-22, p74
+2026-03-20 11:47:04,814 [INFO]   Returning to search...
+2026-03-20 11:47:28,218 [INFO] --- Batch 10 ---
+2026-03-20 11:47:31,306 [INFO]   Found 10 new result links
+2026-03-20 11:47:35,228 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_23_3.pdf — Fort Worth Star-Telegram, 1923-07-23, p3
+2026-03-20 11:47:38,869 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_23_13.pdf — Fort Worth Record-Telegram, 1923-07-23, p13
+2026-03-20 11:47:42,380 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_23_1.pdf — Fort Worth Star-Telegram, 1923-07-23, p1
+2026-03-20 11:47:46,404 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_23_12.pdf — Fort Worth Star-Telegram, 1923-07-23, p12
+2026-03-20 11:47:50,058 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_23_13.pdf — Fort Worth Star-Telegram, 1923-07-23, p13
+2026-03-20 11:47:53,506 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_23_14.pdf — Fort Worth Star-Telegram, 1923-07-23, p14
+2026-03-20 11:47:57,193 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_07_23_1.pdf — Fort Worth Record-Telegram, 1923-07-23, p1
+2026-03-20 11:48:00,635 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_23_11.pdf — Fort Worth Record-Telegram, 1923-07-23, p11
+2026-03-20 11:48:04,304 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_24_17.pdf — Fort Worth Star-Telegram, 1923-07-24, p17
+2026-03-20 11:48:08,161 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_24_3.pdf — Fort Worth Record-Telegram, 1923-07-24, p3
+2026-03-20 11:48:08,162 [INFO]   Returning to search...
+2026-03-20 11:48:31,839 [INFO] --- Batch 11 ---
+2026-03-20 11:48:34,816 [INFO]   Found 10 new result links
+2026-03-20 11:48:38,307 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_24_2.pdf — Fort Worth Star-Telegram, 1923-07-24, p2
+2026-03-20 11:48:41,696 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_24_16.pdf — Fort Worth Star-Telegram, 1923-07-24, p16
+2026-03-20 11:48:45,158 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_24_8.pdf — Fort Worth Record-Telegram, 1923-07-24, p8
+2026-03-20 11:48:49,044 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_24_11.pdf — Fort Worth Record-Telegram, 1923-07-24, p11
+2026-03-20 11:48:52,521 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_24_14.pdf — Fort Worth Record-Telegram, 1923-07-24, p14
+2026-03-20 11:48:55,988 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_25_18.pdf — Fort Worth Star-Telegram, 1923-07-25, p18
+2026-03-20 11:48:59,394 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_25_5.pdf — Fort Worth Star-Telegram, 1923-07-25, p5
+2026-03-20 11:49:02,834 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_07_25_3.pdf — Fort Worth Record-Telegram, 1923-07-25, p3
+2026-03-20 11:49:02,834 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-20 11:49:02,835 [INFO]   Session 5: 100 new, 8 skipped (running total: 500 new)
+2026-03-20 11:49:02,835 [INFO]   Restarting in 3 seconds...
+2026-03-20 11:49:05,835 [INFO] 
+>>> SESSION 6
+2026-03-20 11:49:05,877 [INFO] ============================================================
+2026-03-20 11:49:05,877 [INFO]   Starting session from: 1923-07-25
+2026-03-20 11:49:05,877 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-07-25&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 11:49:05,877 [INFO] ============================================================
+2026-03-20 11:49:07,101 [INFO] Opening Newspapers.com...
+2026-03-20 11:49:13,710 [INFO] Loading search results...
+2026-03-20 11:49:18,920 [INFO] --- Batch 1 ---
+2026-03-20 11:49:21,049 [INFO]   Found 10 new result links
+2026-03-20 11:49:24,648 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_07_25_18.pdf
+2026-03-20 11:49:28,187 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1923_07_25_5.pdf
+2026-03-20 11:49:31,803 [INFO]   [3] Exists: Fort_Worth_Record_Telegram_1923_07_25_3.pdf
+2026-03-20 11:49:35,335 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_25_11.pdf — Fort Worth Record-Telegram, 1923-07-25, p11
+2026-03-20 11:49:38,874 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_25_4.pdf — Fort Worth Star-Telegram, 1923-07-25, p4
+2026-03-20 11:49:42,323 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_25_7.pdf — Fort Worth Star-Telegram, 1923-07-25, p7
+2026-03-20 11:49:45,847 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_25_14.pdf — Fort Worth Star-Telegram, 1923-07-25, p14
+2026-03-20 11:49:49,354 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_25_19.pdf — Fort Worth Star-Telegram, 1923-07-25, p19
+2026-03-20 11:49:53,217 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_25_5.pdf — Fort Worth Record-Telegram, 1923-07-25, p5
+2026-03-20 11:49:57,034 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_25_9.pdf — Fort Worth Record-Telegram, 1923-07-25, p9
+2026-03-20 11:49:57,034 [INFO]   Returning to search...
+2026-03-20 11:50:17,506 [INFO] --- Batch 2 ---
+2026-03-20 11:50:19,707 [INFO]   Found 10 new result links
+2026-03-20 11:50:23,101 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_25_13.pdf — Fort Worth Record-Telegram, 1923-07-25, p13
+2026-03-20 11:50:26,662 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_26_5.pdf — Fort Worth Star-Telegram, 1923-07-26, p5
+2026-03-20 11:50:30,151 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_26_2.pdf — Fort Worth Record-Telegram, 1923-07-26, p2
+2026-03-20 11:50:33,664 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_26_1.pdf — Fort Worth Star-Telegram, 1923-07-26, p1
+2026-03-20 11:50:37,534 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_26_4.pdf — Fort Worth Star-Telegram, 1923-07-26, p4
+2026-03-20 11:50:41,021 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_26_9.pdf — Fort Worth Star-Telegram, 1923-07-26, p9
+2026-03-20 11:50:44,991 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_26_18.pdf — Fort Worth Star-Telegram, 1923-07-26, p18
+2026-03-20 11:50:48,425 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_26_20.pdf — Fort Worth Star-Telegram, 1923-07-26, p20
+2026-03-20 11:50:52,245 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_26_10.pdf — Fort Worth Record-Telegram, 1923-07-26, p10
+2026-03-20 11:50:55,848 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_26_11.pdf — Fort Worth Record-Telegram, 1923-07-26, p11
+2026-03-20 11:50:55,848 [INFO]   Returning to search...
+2026-03-20 11:51:17,147 [INFO] --- Batch 3 ---
+2026-03-20 11:51:19,417 [INFO]   Found 10 new result links
+2026-03-20 11:51:22,931 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_27_19.pdf — Fort Worth Star-Telegram, 1923-07-27, p19
+2026-03-20 11:51:26,398 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_27_2.pdf — Fort Worth Star-Telegram, 1923-07-27, p2
+2026-03-20 11:51:29,883 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_07_27_17.pdf — Fort Worth Star-Telegram, 1923-07-27, p17
+2026-03-20 11:51:33,610 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_27_18.pdf — Fort Worth Star-Telegram, 1923-07-27, p18
+2026-03-20 11:51:37,087 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_07_27_10.pdf — Fort Worth Record-Telegram, 1923-07-27, p10
+2026-03-20 11:51:41,323 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_07_27_13.pdf — Fort Worth Record-Telegram, 1923-07-27, p13
+2026-03-20 11:51:44,787 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_07_28_13.pdf — Fort Worth Record-Telegram, 1923-07-28, p13
+2026-03-20 11:51:48,225 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_28_1.pdf — Fort Worth Star-Telegram, 1923-07-28, p1
+2026-03-20 11:51:51,649 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_28_8.pdf — Fort Worth Star-Telegram, 1923-07-28, p8
+2026-03-20 11:51:55,948 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_28_9.pdf — Fort Worth Record-Telegram, 1923-07-28, p9
+2026-03-20 11:51:55,948 [INFO]   Returning to search...
+2026-03-20 11:52:16,938 [INFO] --- Batch 4 ---
+2026-03-20 11:52:19,308 [INFO]   Found 10 new result links
+2026-03-20 11:52:22,725 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_29_18.pdf — Fort Worth Star-Telegram, 1923-07-29, p18
+2026-03-20 11:52:26,927 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_07_29_15.pdf — Fort Worth Star-Telegram, 1923-07-29, p15
+2026-03-20 11:52:30,388 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_29_11.pdf — Fort Worth Record-Telegram, 1923-07-29, p11
+2026-03-20 11:52:33,850 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_29_24.pdf — Fort Worth Record-Telegram, 1923-07-29, p24
+2026-03-20 11:52:37,292 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_29_1.pdf — Fort Worth Star-Telegram, 1923-07-29, p1
+2026-03-20 11:52:40,787 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_29_3.pdf — Fort Worth Star-Telegram, 1923-07-29, p3
+2026-03-20 11:52:44,640 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_29_14.pdf — Fort Worth Star-Telegram, 1923-07-29, p14
+2026-03-20 11:52:48,183 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_29_23.pdf — Fort Worth Star-Telegram, 1923-07-29, p23
+2026-03-20 11:52:51,629 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_07_29_26.pdf — Fort Worth Star-Telegram, 1923-07-29, p26
+2026-03-20 11:52:55,100 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_07_29_3.pdf — Fort Worth Record-Telegram, 1923-07-29, p3
+2026-03-20 11:52:55,100 [INFO]   Returning to search...
+2026-03-20 11:53:16,820 [INFO] --- Batch 5 ---
+2026-03-20 11:53:19,278 [INFO]   Found 10 new result links
+2026-03-20 11:53:23,136 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_07_29_23.pdf — Fort Worth Record-Telegram, 1923-07-29, p23
+2026-03-20 11:53:26,651 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_29_70.pdf — Fort Worth Record-Telegram, 1923-07-29, p70
+2026-03-20 11:53:30,125 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_29_74.pdf — Fort Worth Record-Telegram, 1923-07-29, p74
+2026-03-20 11:53:33,656 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_07_30_16.pdf — Fort Worth Star-Telegram, 1923-07-30, p16
+2026-03-20 11:53:37,219 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_07_30_7.pdf — Fort Worth Star-Telegram, 1923-07-30, p7
+2026-03-20 11:53:40,733 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_07_30_4.pdf — Fort Worth Star-Telegram, 1923-07-30, p4
+2026-03-20 11:53:44,319 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_07_30_14.pdf — Fort Worth Star-Telegram, 1923-07-30, p14
+2026-03-20 11:53:47,827 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_07_31_5.pdf — Fort Worth Star-Telegram, 1923-07-31, p5
+2026-03-20 11:53:51,394 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_07_31_7.pdf — Fort Worth Record-Telegram, 1923-07-31, p7
+2026-03-20 11:53:55,022 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_07_31_15.pdf — Fort Worth Star-Telegram, 1923-07-31, p15
+2026-03-20 11:53:55,022 [INFO]   Returning to search...
+2026-03-20 11:54:17,952 [INFO] --- Batch 6 ---
+2026-03-20 11:54:20,738 [INFO]   Found 10 new result links
+2026-03-20 11:54:25,649 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_07_31_16.pdf — Fort Worth Star-Telegram, 1923-07-31, p16
+2026-03-20 11:54:29,245 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_07_31_5.pdf — Fort Worth Record-Telegram, 1923-07-31, p5
+2026-03-20 11:54:32,757 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_07_31_10.pdf — Fort Worth Record-Telegram, 1923-07-31, p10
+2026-03-20 11:54:36,348 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_07_31_12.pdf — Fort Worth Record-Telegram, 1923-07-31, p12
+2026-03-20 11:54:39,833 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_01_8.pdf — Fort Worth Star-Telegram, 1923-08-01, p8
+2026-03-20 11:54:43,686 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_01_14.pdf — Fort Worth Star-Telegram, 1923-08-01, p14
+2026-03-20 11:54:47,661 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_01_5.pdf — Fort Worth Record-Telegram, 1923-08-01, p5
+2026-03-20 11:54:51,147 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_01_18.pdf — Fort Worth Star-Telegram, 1923-08-01, p18
+2026-03-20 11:54:55,169 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_01_19.pdf — Fort Worth Star-Telegram, 1923-08-01, p19
+2026-03-20 11:54:58,965 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_01_11.pdf — Fort Worth Record-Telegram, 1923-08-01, p11
+2026-03-20 11:54:58,965 [INFO]   Returning to search...
+2026-03-20 11:55:21,247 [INFO] --- Batch 7 ---
+2026-03-20 11:55:23,863 [INFO]   Found 10 new result links
+2026-03-20 11:55:27,333 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_02_6.pdf — Fort Worth Star-Telegram, 1923-08-02, p6
+2026-03-20 11:55:32,254 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_02_14.pdf — Fort Worth Star-Telegram, 1923-08-02, p14
+2026-03-20 11:55:35,758 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_02_18.pdf — Fort Worth Star-Telegram, 1923-08-02, p18
+2026-03-20 11:55:39,635 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_02_19.pdf — Fort Worth Star-Telegram, 1923-08-02, p19
+2026-03-20 11:55:43,173 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_02_14.pdf — Fort Worth Record-Telegram, 1923-08-02, p14
+2026-03-20 11:55:46,820 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_03_4.pdf — Fort Worth Star-Telegram, 1923-08-03, p4
+2026-03-20 11:55:50,788 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_03_18.pdf — Fort Worth Star-Telegram, 1923-08-03, p18
+2026-03-20 11:55:54,290 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_03_20.pdf — Fort Worth Star-Telegram, 1923-08-03, p20
+2026-03-20 11:55:57,672 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_03_13.pdf — Fort Worth Record-Telegram, 1923-08-03, p13
+2026-03-20 11:56:01,175 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_03_7.pdf — Fort Worth Record-Telegram, 1923-08-03, p7
+2026-03-20 11:56:01,176 [INFO]   Returning to search...
+2026-03-20 11:56:23,929 [INFO] --- Batch 8 ---
+2026-03-20 11:56:26,646 [INFO]   Found 10 new result links
+2026-03-20 11:56:30,815 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_03_16.pdf — Fort Worth Record-Telegram, 1923-08-03, p16
+2026-03-20 11:56:34,397 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_04_11.pdf — Fort Worth Record-Telegram, 1923-08-04, p11
+2026-03-20 11:56:38,070 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_04_6.pdf — Fort Worth Star-Telegram, 1923-08-04, p6
+2026-03-20 11:56:41,567 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_04_10.pdf — Fort Worth Star-Telegram, 1923-08-04, p10
+2026-03-20 11:56:45,058 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_04_14.pdf — Fort Worth Record-Telegram, 1923-08-04, p14
+2026-03-20 11:56:49,094 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_04_16.pdf — Fort Worth Record-Telegram, 1923-08-04, p16
+2026-03-20 11:56:52,581 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_05_5.pdf — Fort Worth Star-Telegram, 1923-08-05, p5
+2026-03-20 11:56:56,201 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_05_8.pdf — Fort Worth Star-Telegram, 1923-08-05, p8
+2026-03-20 11:57:00,142 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_05_18.pdf — Fort Worth Star-Telegram, 1923-08-05, p18
+2026-03-20 11:57:03,604 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_05_22.pdf — Fort Worth Star-Telegram, 1923-08-05, p22
+2026-03-20 11:57:03,604 [INFO]   Returning to search...
+2026-03-20 11:57:26,316 [INFO] --- Batch 9 ---
+2026-03-20 11:57:29,123 [INFO]   Found 10 new result links
+2026-03-20 11:57:33,167 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_05_31.pdf — Fort Worth Star-Telegram, 1923-08-05, p31
+2026-03-20 11:57:36,593 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_05_9.pdf — Fort Worth Record-Telegram, 1923-08-05, p9
+2026-03-20 11:57:40,039 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_05_15.pdf — Fort Worth Star-Telegram, 1923-08-05, p15
+2026-03-20 11:57:43,531 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_05_19.pdf — Fort Worth Star-Telegram, 1923-08-05, p19
+2026-03-20 11:57:47,192 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_05_20.pdf — Fort Worth Star-Telegram, 1923-08-05, p20
+2026-03-20 11:57:51,081 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_05_29.pdf — Fort Worth Star-Telegram, 1923-08-05, p29
+2026-03-20 11:57:54,543 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_05_30.pdf — Fort Worth Star-Telegram, 1923-08-05, p30
+2026-03-20 11:57:58,059 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_05_57.pdf — Fort Worth Star-Telegram, 1923-08-05, p57
+2026-03-20 11:58:01,851 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_05_2.pdf — Fort Worth Record-Telegram, 1923-08-05, p2
+2026-03-20 11:58:05,422 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_05_17.pdf — Fort Worth Record-Telegram, 1923-08-05, p17
+2026-03-20 11:58:05,422 [INFO]   Returning to search...
+2026-03-20 11:58:28,807 [INFO] --- Batch 10 ---
+2026-03-20 11:58:31,724 [INFO]   Found 10 new result links
+2026-03-20 11:58:35,118 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_05_19.pdf — Fort Worth Record-Telegram, 1923-08-05, p19
+2026-03-20 11:58:38,559 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_05_20.pdf — Fort Worth Record-Telegram, 1923-08-05, p20
+2026-03-20 11:58:42,057 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_05_25.pdf — Fort Worth Record-Telegram, 1923-08-05, p25
+2026-03-20 11:58:45,520 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_08_05_56.pdf — Fort Worth Record-Telegram, 1923-08-05, p56
+2026-03-20 11:58:49,135 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_05_61.pdf — Fort Worth Record-Telegram, 1923-08-05, p61
+2026-03-20 11:58:53,130 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_05_62.pdf — Fort Worth Record-Telegram, 1923-08-05, p62
+2026-03-20 11:58:56,624 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_05_63.pdf — Fort Worth Record-Telegram, 1923-08-05, p63
+2026-03-20 11:59:00,077 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_06_2.pdf — Fort Worth Star-Telegram, 1923-08-06, p2
+2026-03-20 11:59:03,578 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_06_3.pdf — Fort Worth Star-Telegram, 1923-08-06, p3
+2026-03-20 11:59:07,907 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_06_15.pdf — Fort Worth Star-Telegram, 1923-08-06, p15
+2026-03-20 11:59:07,907 [INFO]   Returning to search...
+2026-03-20 11:59:31,349 [INFO] --- Batch 11 ---
+2026-03-20 11:59:34,315 [INFO]   Found 10 new result links
+2026-03-20 11:59:37,795 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_06_11.pdf — Fort Worth Record-Telegram, 1923-08-06, p11
+2026-03-20 11:59:41,297 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_06_14.pdf — Fort Worth Record-Telegram, 1923-08-06, p14
+2026-03-20 11:59:44,688 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_06_7.pdf — Fort Worth Star-Telegram, 1923-08-06, p7
+2026-03-20 11:59:44,688 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-20 11:59:44,689 [INFO]   Session 6: 100 new, 3 skipped (running total: 600 new)
+2026-03-20 11:59:44,689 [INFO]   Restarting in 3 seconds...
+2026-03-20 11:59:47,689 [INFO] 
+>>> SESSION 7
+2026-03-20 11:59:47,722 [INFO] ============================================================
+2026-03-20 11:59:47,722 [INFO]   Starting session from: 1923-08-06
+2026-03-20 11:59:47,722 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-08-06&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 11:59:47,722 [INFO] ============================================================
+2026-03-20 11:59:49,010 [INFO] Opening Newspapers.com...
+2026-03-20 11:59:55,360 [INFO] Loading search results...
+2026-03-20 12:00:00,129 [INFO] --- Batch 1 ---
+2026-03-20 12:00:02,265 [INFO]   Found 10 new result links
+2026-03-20 12:00:06,198 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_08_06_2.pdf
+2026-03-20 12:00:09,799 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1923_08_06_3.pdf
+2026-03-20 12:00:13,383 [INFO]   [3] Exists: Fort_Worth_Star_Telegram_1923_08_06_15.pdf
+2026-03-20 12:00:16,991 [INFO]   [4] Exists: Fort_Worth_Record_Telegram_1923_08_06_11.pdf
+2026-03-20 12:00:20,551 [INFO]   [5] Exists: Fort_Worth_Record_Telegram_1923_08_06_14.pdf
+2026-03-20 12:00:24,115 [INFO]   [6] Exists: Fort_Worth_Star_Telegram_1923_08_06_7.pdf
+2026-03-20 12:00:27,588 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_06_14.pdf — Fort Worth Star-Telegram, 1923-08-06, p14
+2026-03-20 12:00:31,210 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_06_16.pdf — Fort Worth Star-Telegram, 1923-08-06, p16
+2026-03-20 12:00:34,757 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_06_5.pdf — Fort Worth Record-Telegram, 1923-08-06, p5
+2026-03-20 12:00:38,346 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_06_13.pdf — Fort Worth Record-Telegram, 1923-08-06, p13
+2026-03-20 12:00:38,346 [INFO]   Returning to search...
+2026-03-20 12:00:59,917 [INFO] --- Batch 2 ---
+2026-03-20 12:01:02,151 [INFO]   Found 10 new result links
+2026-03-20 12:01:05,956 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_07_11.pdf — Fort Worth Record-Telegram, 1923-08-07, p11
+2026-03-20 12:01:09,527 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_07_14.pdf — Fort Worth Record-Telegram, 1923-08-07, p14
+2026-03-20 12:01:13,049 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_07_2.pdf — Fort Worth Star-Telegram, 1923-08-07, p2
+2026-03-20 12:01:16,491 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_08_07_7.pdf — Fort Worth Record-Telegram, 1923-08-07, p7
+2026-03-20 12:01:20,024 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_07_3.pdf — Fort Worth Star-Telegram, 1923-08-07, p3
+2026-03-20 12:01:23,505 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_07_5.pdf — Fort Worth Star-Telegram, 1923-08-07, p5
+2026-03-20 12:01:26,936 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_07_9.pdf — Fort Worth Star-Telegram, 1923-08-07, p9
+2026-03-20 12:01:30,792 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_07_12.pdf — Fort Worth Star-Telegram, 1923-08-07, p12
+2026-03-20 12:01:34,337 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_07_13.pdf — Fort Worth Record-Telegram, 1923-08-07, p13
+2026-03-20 12:01:37,964 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_08_11.pdf — Fort Worth Record-Telegram, 1923-08-08, p11
+2026-03-20 12:01:37,964 [INFO]   Returning to search...
+2026-03-20 12:01:58,752 [INFO] --- Batch 3 ---
+2026-03-20 12:02:01,102 [INFO]   Found 10 new result links
+2026-03-20 12:02:04,557 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_08_18.pdf — Fort Worth Star-Telegram, 1923-08-08, p18
+2026-03-20 12:02:08,214 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_08_11.pdf — Fort Worth Star-Telegram, 1923-08-08, p11
+2026-03-20 12:02:11,664 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_08_12.pdf — Fort Worth Star-Telegram, 1923-08-08, p12
+2026-03-20 12:02:15,263 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_08_16.pdf — Fort Worth Star-Telegram, 1923-08-08, p16
+2026-03-20 12:02:18,851 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_08_6.pdf — Fort Worth Record-Telegram, 1923-08-08, p6
+2026-03-20 12:02:22,351 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_08_12.pdf — Fort Worth Record-Telegram, 1923-08-08, p12
+2026-03-20 12:02:26,089 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_08_15.pdf — Fort Worth Record-Telegram, 1923-08-08, p15
+2026-03-20 12:02:30,602 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_09_9.pdf — Fort Worth Star-Telegram, 1923-08-09, p9
+2026-03-20 12:02:34,124 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_09_11.pdf — Fort Worth Star-Telegram, 1923-08-09, p11
+2026-03-20 12:02:37,531 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_09_1.pdf — Fort Worth Star-Telegram, 1923-08-09, p1
+2026-03-20 12:02:37,532 [INFO]   Returning to search...
+2026-03-20 12:02:58,919 [INFO] --- Batch 4 ---
+2026-03-20 12:03:01,412 [INFO]   Found 10 new result links
+2026-03-20 12:03:05,009 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_09_13.pdf — Fort Worth Record-Telegram, 1923-08-09, p13
+2026-03-20 12:03:08,580 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_09_11.pdf — Fort Worth Record-Telegram, 1923-08-09, p11
+2026-03-20 12:03:12,120 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_09_13.pdf — Fort Worth Star-Telegram, 1923-08-09, p13
+2026-03-20 12:03:15,712 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_09_16.pdf — Fort Worth Star-Telegram, 1923-08-09, p16
+2026-03-20 12:03:19,181 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_09_14.pdf — Fort Worth Record-Telegram, 1923-08-09, p14
+2026-03-20 12:03:23,099 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_09_9.pdf — Fort Worth Record-Telegram, 1923-08-09, p9
+2026-03-20 12:03:26,592 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_10_11.pdf — Fort Worth Record-Telegram, 1923-08-10, p11
+2026-03-20 12:03:30,326 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_10_13.pdf — Fort Worth Record-Telegram, 1923-08-10, p13
+2026-03-20 12:03:33,749 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_10_10.pdf — Fort Worth Star-Telegram, 1923-08-10, p10
+2026-03-20 12:03:37,459 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_10_19.pdf — Fort Worth Star-Telegram, 1923-08-10, p19
+2026-03-20 12:03:37,459 [INFO]   Returning to search...
+2026-03-20 12:03:58,914 [INFO] --- Batch 5 ---
+2026-03-20 12:04:01,481 [INFO]   Found 10 new result links
+2026-03-20 12:04:05,346 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_10_20.pdf — Fort Worth Star-Telegram, 1923-08-10, p20
+2026-03-20 12:04:08,755 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_10_4.pdf — Fort Worth Record-Telegram, 1923-08-10, p4
+2026-03-20 12:04:12,371 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_10_1.pdf — Fort Worth Star-Telegram, 1923-08-10, p1
+2026-03-20 12:04:15,868 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_10_6.pdf — Fort Worth Star-Telegram, 1923-08-10, p6
+2026-03-20 12:04:19,956 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_10_12.pdf — Fort Worth Star-Telegram, 1923-08-10, p12
+2026-03-20 12:04:23,407 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_10_13.pdf — Fort Worth Star-Telegram, 1923-08-10, p13
+2026-03-20 12:04:26,928 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_10_16.pdf — Fort Worth Star-Telegram, 1923-08-10, p16
+2026-03-20 12:04:30,396 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_10_7.pdf — Fort Worth Record-Telegram, 1923-08-10, p7
+2026-03-20 12:04:35,225 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_10_14.pdf — Fort Worth Record-Telegram, 1923-08-10, p14
+2026-03-20 12:04:38,631 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_11_7.pdf — Fort Worth Record-Telegram, 1923-08-11, p7
+2026-03-20 12:04:38,631 [INFO]   Returning to search...
+2026-03-20 12:05:00,942 [INFO] --- Batch 6 ---
+2026-03-20 12:05:03,487 [INFO]   Found 10 new result links
+2026-03-20 12:05:07,284 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_11_11.pdf — Fort Worth Record-Telegram, 1923-08-11, p11
+2026-03-20 12:05:11,051 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_11_13.pdf — Fort Worth Record-Telegram, 1923-08-11, p13
+2026-03-20 12:05:14,514 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_11_2.pdf — Fort Worth Star-Telegram, 1923-08-11, p2
+2026-03-20 12:05:17,943 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_11_10.pdf — Fort Worth Star-Telegram, 1923-08-11, p10
+2026-03-20 12:05:21,589 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_11_8.pdf — Fort Worth Record-Telegram, 1923-08-11, p8
+2026-03-20 12:05:25,386 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_12_18.pdf — Fort Worth Star-Telegram, 1923-08-12, p18
+2026-03-20 12:05:28,875 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_12_20.pdf — Fort Worth Star-Telegram, 1923-08-12, p20
+2026-03-20 12:05:32,352 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_12_9.pdf — Fort Worth Record-Telegram, 1923-08-12, p9
+2026-03-20 12:05:35,874 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_12_14.pdf — Fort Worth Star-Telegram, 1923-08-12, p14
+2026-03-20 12:05:39,674 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_12_17.pdf — Fort Worth Record-Telegram, 1923-08-12, p17
+2026-03-20 12:05:39,674 [INFO]   Returning to search...
+2026-03-20 12:06:01,984 [INFO] --- Batch 7 ---
+2026-03-20 12:06:04,598 [INFO]   Found 10 new result links
+2026-03-20 12:06:08,296 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_12_67.pdf — Fort Worth Record-Telegram, 1923-08-12, p67
+2026-03-20 12:06:11,699 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_12_6.pdf — Fort Worth Star-Telegram, 1923-08-12, p6
+2026-03-20 12:06:15,250 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_12_21.pdf — Fort Worth Star-Telegram, 1923-08-12, p21
+2026-03-20 12:06:18,718 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_12_24.pdf — Fort Worth Star-Telegram, 1923-08-12, p24
+2026-03-20 12:06:22,122 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_12_27.pdf — Fort Worth Star-Telegram, 1923-08-12, p27
+2026-03-20 12:06:25,591 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_12_8.pdf — Fort Worth Record-Telegram, 1923-08-12, p8
+2026-03-20 12:06:29,069 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_12_19.pdf — Fort Worth Record-Telegram, 1923-08-12, p19
+2026-03-20 12:06:32,544 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_12_75.pdf — Fort Worth Record-Telegram, 1923-08-12, p75
+2026-03-20 12:06:35,955 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_12_9.pdf — Fort Worth Star-Telegram, 1923-08-12, p9
+2026-03-20 12:06:39,596 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_12_12.pdf — Fort Worth Star-Telegram, 1923-08-12, p12
+2026-03-20 12:06:39,597 [INFO]   Returning to search...
+2026-03-20 12:07:01,945 [INFO] --- Batch 8 ---
+2026-03-20 12:07:04,656 [INFO]   Found 10 new result links
+2026-03-20 12:07:08,629 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_12_15.pdf — Fort Worth Star-Telegram, 1923-08-12, p15
+2026-03-20 12:07:12,103 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_12_57.pdf — Fort Worth Star-Telegram, 1923-08-12, p57
+2026-03-20 12:07:15,530 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_12_60.pdf — Fort Worth Star-Telegram, 1923-08-12, p60
+2026-03-20 12:07:19,127 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_08_12_21.pdf — Fort Worth Record-Telegram, 1923-08-12, p21
+2026-03-20 12:07:22,593 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_12_27.pdf — Fort Worth Record-Telegram, 1923-08-12, p27
+2026-03-20 12:07:26,022 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_12_66.pdf — Fort Worth Record-Telegram, 1923-08-12, p66
+2026-03-20 12:07:32,365 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_12_78.pdf — Fort Worth Record-Telegram, 1923-08-12, p78
+2026-03-20 12:07:36,087 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_12_80.pdf — Fort Worth Record-Telegram, 1923-08-12, p80
+2026-03-20 12:07:39,506 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_13_14.pdf — Fort Worth Star-Telegram, 1923-08-13, p14
+2026-03-20 12:07:43,079 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_13_5.pdf — Fort Worth Record-Telegram, 1923-08-13, p5
+2026-03-20 12:07:43,079 [INFO]   Returning to search...
+2026-03-20 12:08:06,196 [INFO] --- Batch 9 ---
+2026-03-20 12:08:08,996 [INFO]   Found 10 new result links
+2026-03-20 12:08:12,411 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_13_13.pdf — Fort Worth Record-Telegram, 1923-08-13, p13
+2026-03-20 12:08:16,080 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_13_2.pdf — Fort Worth Star-Telegram, 1923-08-13, p2
+2026-03-20 12:08:19,892 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_13_14.pdf — Fort Worth Record-Telegram, 1923-08-13, p14
+2026-03-20 12:08:23,327 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_08_14_5.pdf — Fort Worth Record-Telegram, 1923-08-14, p5
+2026-03-20 12:08:26,743 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_14_13.pdf — Fort Worth Record-Telegram, 1923-08-14, p13
+2026-03-20 12:08:30,249 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_14_14.pdf — Fort Worth Record-Telegram, 1923-08-14, p14
+2026-03-20 12:08:33,758 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_14_1.pdf — Fort Worth Star-Telegram, 1923-08-14, p1
+2026-03-20 12:08:37,289 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_14_4.pdf — Fort Worth Star-Telegram, 1923-08-14, p4
+2026-03-20 12:08:40,728 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_14_12.pdf — Fort Worth Star-Telegram, 1923-08-14, p12
+2026-03-20 12:08:44,232 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_14_17.pdf — Fort Worth Star-Telegram, 1923-08-14, p17
+2026-03-20 12:08:44,232 [INFO]   Returning to search...
+2026-03-20 12:09:07,653 [INFO] --- Batch 10 ---
+2026-03-20 12:09:10,535 [INFO]   Found 10 new result links
+2026-03-20 12:09:15,174 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_14_18.pdf — Fort Worth Star-Telegram, 1923-08-14, p18
+2026-03-20 12:09:18,648 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_14_4.pdf — Fort Worth Record-Telegram, 1923-08-14, p4
+2026-03-20 12:09:22,099 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_14_11.pdf — Fort Worth Record-Telegram, 1923-08-14, p11
+2026-03-20 12:09:25,527 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_08_14_3.pdf — Fort Worth Record-Telegram, 1923-08-14, p3
+2026-03-20 12:09:29,034 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_15_14.pdf — Fort Worth Record-Telegram, 1923-08-15, p14
+2026-03-20 12:09:32,542 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_15_7.pdf — Fort Worth Star-Telegram, 1923-08-15, p7
+2026-03-20 12:09:36,027 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_15_10.pdf — Fort Worth Star-Telegram, 1923-08-15, p10
+2026-03-20 12:09:39,662 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_15_12.pdf — Fort Worth Star-Telegram, 1923-08-15, p12
+2026-03-20 12:09:44,790 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_15_14.pdf — Fort Worth Star-Telegram, 1923-08-15, p14
+2026-03-20 12:09:48,260 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_15_17.pdf — Fort Worth Star-Telegram, 1923-08-15, p17
+2026-03-20 12:09:48,260 [INFO]   Returning to search...
+2026-03-20 12:10:11,837 [INFO] --- Batch 11 ---
+2026-03-20 12:10:14,810 [INFO]   Found 10 new result links
+2026-03-20 12:10:18,635 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_15_18.pdf — Fort Worth Star-Telegram, 1923-08-15, p18
+2026-03-20 12:10:22,437 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_15_3.pdf — Fort Worth Record-Telegram, 1923-08-15, p3
+2026-03-20 12:10:25,974 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_15_5.pdf — Fort Worth Record-Telegram, 1923-08-15, p5
+2026-03-20 12:10:29,786 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_08_15_13.pdf — Fort Worth Record-Telegram, 1923-08-15, p13
+2026-03-20 12:10:33,283 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_15_15.pdf — Fort Worth Record-Telegram, 1923-08-15, p15
+2026-03-20 12:10:37,384 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_15_17.pdf — Fort Worth Record-Telegram, 1923-08-15, p17
+2026-03-20 12:10:37,384 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-20 12:10:37,385 [INFO]   Session 7: 100 new, 6 skipped (running total: 700 new)
+2026-03-20 12:10:37,385 [INFO]   Restarting in 3 seconds...
+2026-03-20 12:10:40,386 [INFO] 
+>>> SESSION 8
+2026-03-20 12:10:40,419 [INFO] ============================================================
+2026-03-20 12:10:40,419 [INFO]   Starting session from: 1923-08-15
+2026-03-20 12:10:40,419 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-08-15&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 12:10:40,419 [INFO] ============================================================
+2026-03-20 12:10:41,750 [INFO] Opening Newspapers.com...
+2026-03-20 12:10:48,142 [INFO] Loading search results...
+2026-03-20 12:10:53,156 [INFO] --- Batch 1 ---
+2026-03-20 12:10:55,281 [INFO]   Found 10 new result links
+2026-03-20 12:10:59,168 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1923_08_15_14.pdf
+2026-03-20 12:11:02,808 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1923_08_15_7.pdf
+2026-03-20 12:11:06,310 [INFO]   [3] Exists: Fort_Worth_Star_Telegram_1923_08_15_10.pdf
+2026-03-20 12:11:09,908 [INFO]   [4] Exists: Fort_Worth_Star_Telegram_1923_08_15_12.pdf
+2026-03-20 12:11:13,466 [INFO]   [5] Exists: Fort_Worth_Star_Telegram_1923_08_15_14.pdf
+2026-03-20 12:11:16,985 [INFO]   [6] Exists: Fort_Worth_Star_Telegram_1923_08_15_17.pdf
+2026-03-20 12:11:20,429 [INFO]   [7] Exists: Fort_Worth_Star_Telegram_1923_08_15_18.pdf
+2026-03-20 12:11:24,005 [INFO]   [8] Exists: Fort_Worth_Record_Telegram_1923_08_15_3.pdf
+2026-03-20 12:11:27,629 [INFO]   [9] Exists: Fort_Worth_Record_Telegram_1923_08_15_5.pdf
+2026-03-20 12:11:31,098 [INFO]   [10] Exists: Fort_Worth_Record_Telegram_1923_08_15_13.pdf
+2026-03-20 12:11:31,098 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 12:11:31,098 [INFO]   Returning to search...
+2026-03-20 12:11:51,767 [INFO] --- Batch 2 ---
+2026-03-20 12:11:53,967 [INFO]   Found 10 new result links
+2026-03-20 12:11:57,495 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1923_08_15_15.pdf
+2026-03-20 12:11:57,495 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 12:11:57,495 [INFO]   Returning to search...
+2026-03-20 12:12:04,710 [INFO] --- Batch 3 ---
+2026-03-20 12:12:06,903 [INFO]   Found 9 new result links
+2026-03-20 12:12:10,474 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1923_08_15_17.pdf
+2026-03-20 12:12:10,474 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 12:12:10,475 [INFO]   Returning to search...
+2026-03-20 12:12:17,698 [INFO] --- Batch 4 ---
+2026-03-20 12:12:19,899 [INFO]   Found 8 new result links
+2026-03-20 12:12:23,513 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_16_6.pdf — Fort Worth Record-Telegram, 1923-08-16, p6
+2026-03-20 12:12:26,996 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_16_17.pdf — Fort Worth Star-Telegram, 1923-08-16, p17
+2026-03-20 12:12:31,587 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_16_13.pdf — Fort Worth Record-Telegram, 1923-08-16, p13
+2026-03-20 12:12:35,056 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_16_2.pdf — Fort Worth Star-Telegram, 1923-08-16, p2
+2026-03-20 12:12:38,697 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_16_3.pdf — Fort Worth Star-Telegram, 1923-08-16, p3
+2026-03-20 12:12:42,172 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_16_7.pdf — Fort Worth Star-Telegram, 1923-08-16, p7
+2026-03-20 12:12:45,733 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_16_11.pdf — Fort Worth Record-Telegram, 1923-08-16, p11
+2026-03-20 12:12:49,352 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_16_15.pdf — Fort Worth Record-Telegram, 1923-08-16, p15
+2026-03-20 12:12:49,352 [INFO]   Returning to search...
+2026-03-20 12:13:10,400 [INFO] --- Batch 5 ---
+2026-03-20 12:13:12,686 [INFO]   Found 10 new result links
+2026-03-20 12:13:16,188 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_17_6.pdf — Fort Worth Record-Telegram, 1923-08-17, p6
+2026-03-20 12:13:19,653 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_17_11.pdf — Fort Worth Record-Telegram, 1923-08-17, p11
+2026-03-20 12:13:23,128 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_17_4.pdf — Fort Worth Star-Telegram, 1923-08-17, p4
+2026-03-20 12:13:26,634 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_17_7.pdf — Fort Worth Star-Telegram, 1923-08-17, p7
+2026-03-20 12:13:30,161 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_17_18.pdf — Fort Worth Star-Telegram, 1923-08-17, p18
+2026-03-20 12:13:33,745 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_17_19.pdf — Fort Worth Star-Telegram, 1923-08-17, p19
+2026-03-20 12:13:37,263 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_17_13.pdf — Fort Worth Record-Telegram, 1923-08-17, p13
+2026-03-20 12:13:40,677 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_18_7.pdf — Fort Worth Star-Telegram, 1923-08-18, p7
+2026-03-20 12:13:44,365 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_18_11.pdf — Fort Worth Record-Telegram, 1923-08-18, p11
+2026-03-20 12:13:47,809 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_18_6.pdf — Fort Worth Record-Telegram, 1923-08-18, p6
+2026-03-20 12:13:47,809 [INFO]   Returning to search...
+2026-03-20 12:14:09,190 [INFO] --- Batch 6 ---
+2026-03-20 12:14:11,556 [INFO]   Found 10 new result links
+2026-03-20 12:14:15,533 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_18_13.pdf — Fort Worth Record-Telegram, 1923-08-18, p13
+2026-03-20 12:14:19,012 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_18_2.pdf — Fort Worth Star-Telegram, 1923-08-18, p2
+2026-03-20 12:14:22,488 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_18_1.pdf — Fort Worth Star-Telegram, 1923-08-18, p1
+2026-03-20 12:14:26,002 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_18_8.pdf — Fort Worth Star-Telegram, 1923-08-18, p8
+2026-03-20 12:14:29,662 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_18_10.pdf — Fort Worth Star-Telegram, 1923-08-18, p10
+2026-03-20 12:14:33,142 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_19_72.pdf — Fort Worth Record-Telegram, 1923-08-19, p72
+2026-03-20 12:14:36,629 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_19_8.pdf — Fort Worth Star-Telegram, 1923-08-19, p8
+2026-03-20 12:14:40,032 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_19_24.pdf — Fort Worth Star-Telegram, 1923-08-19, p24
+2026-03-20 12:14:43,677 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_19_19.pdf — Fort Worth Record-Telegram, 1923-08-19, p19
+2026-03-20 12:14:47,180 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_19_4.pdf — Fort Worth Star-Telegram, 1923-08-19, p4
+2026-03-20 12:14:47,180 [INFO]   Returning to search...
+2026-03-20 12:15:08,759 [INFO] --- Batch 7 ---
+2026-03-20 12:15:11,204 [INFO]   Found 10 new result links
+2026-03-20 12:15:14,596 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_19_22.pdf — Fort Worth Star-Telegram, 1923-08-19, p22
+2026-03-20 12:15:18,065 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_19_9.pdf — Fort Worth Star-Telegram, 1923-08-19, p9
+2026-03-20 12:15:21,929 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_19_21.pdf — Fort Worth Star-Telegram, 1923-08-19, p21
+2026-03-20 12:15:25,756 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_19_39.pdf — Fort Worth Star-Telegram, 1923-08-19, p39
+2026-03-20 12:15:29,316 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_19_9.pdf — Fort Worth Record-Telegram, 1923-08-19, p9
+2026-03-20 12:15:32,772 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_19_20.pdf — Fort Worth Record-Telegram, 1923-08-19, p20
+2026-03-20 12:15:36,232 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_19_65.pdf — Fort Worth Record-Telegram, 1923-08-19, p65
+2026-03-20 12:15:39,881 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_19_19.pdf — Fort Worth Star-Telegram, 1923-08-19, p19
+2026-03-20 12:15:43,354 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_19_8.pdf — Fort Worth Record-Telegram, 1923-08-19, p8
+2026-03-20 12:15:46,737 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_19_11.pdf — Fort Worth Record-Telegram, 1923-08-19, p11
+2026-03-20 12:15:46,737 [INFO]   Returning to search...
+2026-03-20 12:16:08,835 [INFO] --- Batch 8 ---
+2026-03-20 12:16:11,381 [INFO]   Found 10 new result links
+2026-03-20 12:16:15,674 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_19_18.pdf — Fort Worth Record-Telegram, 1923-08-19, p18
+2026-03-20 12:16:19,077 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_19_22.pdf — Fort Worth Record-Telegram, 1923-08-19, p22
+2026-03-20 12:16:23,028 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_19_66.pdf — Fort Worth Record-Telegram, 1923-08-19, p66
+2026-03-20 12:16:26,542 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_08_19_68.pdf — Fort Worth Record-Telegram, 1923-08-19, p68
+2026-03-20 12:16:31,000 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_20_14.pdf — Fort Worth Record-Telegram, 1923-08-20, p14
+2026-03-20 12:16:34,476 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_20_4.pdf — Fort Worth Star-Telegram, 1923-08-20, p4
+2026-03-20 12:16:37,936 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_20_12.pdf — Fort Worth Star-Telegram, 1923-08-20, p12
+2026-03-20 12:16:41,444 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_20_13.pdf — Fort Worth Star-Telegram, 1923-08-20, p13
+2026-03-20 12:16:45,397 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_20_14.pdf — Fort Worth Star-Telegram, 1923-08-20, p14
+2026-03-20 12:16:48,851 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_20_11.pdf — Fort Worth Record-Telegram, 1923-08-20, p11
+2026-03-20 12:16:48,851 [INFO]   Returning to search...
+2026-03-20 12:17:11,045 [INFO] --- Batch 9 ---
+2026-03-20 12:17:13,663 [INFO]   Found 10 new result links
+2026-03-20 12:17:17,053 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_20_13.pdf — Fort Worth Record-Telegram, 1923-08-20, p13
+2026-03-20 12:17:20,545 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_21_4.pdf — Fort Worth Star-Telegram, 1923-08-21, p4
+2026-03-20 12:17:23,991 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_21_9.pdf — Fort Worth Star-Telegram, 1923-08-21, p9
+2026-03-20 12:17:27,485 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_21_10.pdf — Fort Worth Star-Telegram, 1923-08-21, p10
+2026-03-20 12:17:30,885 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_21_17.pdf — Fort Worth Star-Telegram, 1923-08-21, p17
+2026-03-20 12:17:34,373 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_21_3.pdf — Fort Worth Record-Telegram, 1923-08-21, p3
+2026-03-20 12:17:37,790 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_21_14.pdf — Fort Worth Record-Telegram, 1923-08-21, p14
+2026-03-20 12:17:41,312 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_22_17.pdf — Fort Worth Star-Telegram, 1923-08-22, p17
+2026-03-20 12:17:44,783 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_22_12.pdf — Fort Worth Record-Telegram, 1923-08-22, p12
+2026-03-20 12:17:48,401 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_22_1.pdf — Fort Worth Star-Telegram, 1923-08-22, p1
+2026-03-20 12:17:48,401 [INFO]   Returning to search...
+2026-03-20 12:18:10,707 [INFO] --- Batch 10 ---
+2026-03-20 12:18:13,411 [INFO]   Found 10 new result links
+2026-03-20 12:18:17,319 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_22_13.pdf — Fort Worth Star-Telegram, 1923-08-22, p13
+2026-03-20 12:18:20,866 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_22_18.pdf — Fort Worth Star-Telegram, 1923-08-22, p18
+2026-03-20 12:18:25,334 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_22_14.pdf — Fort Worth Record-Telegram, 1923-08-22, p14
+2026-03-20 12:18:28,857 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_08_22_18.pdf — Fort Worth Record-Telegram, 1923-08-22, p18
+2026-03-20 12:18:32,384 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_23_5.pdf — Fort Worth Star-Telegram, 1923-08-23, p5
+2026-03-20 12:18:36,312 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_23_17.pdf — Fort Worth Star-Telegram, 1923-08-23, p17
+2026-03-20 12:18:39,786 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_23_18.pdf — Fort Worth Star-Telegram, 1923-08-23, p18
+2026-03-20 12:18:43,374 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_23_16.pdf — Fort Worth Star-Telegram, 1923-08-23, p16
+2026-03-20 12:18:46,839 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_23_7.pdf — Fort Worth Record-Telegram, 1923-08-23, p7
+2026-03-20 12:18:50,516 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_23_11.pdf — Fort Worth Record-Telegram, 1923-08-23, p11
+2026-03-20 12:18:50,516 [INFO]   Returning to search...
+2026-03-20 12:19:13,653 [INFO] --- Batch 11 ---
+2026-03-20 12:19:16,463 [INFO]   Found 10 new result links
+2026-03-20 12:19:19,888 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_23_13.pdf — Fort Worth Record-Telegram, 1923-08-23, p13
+2026-03-20 12:19:23,991 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_24_19.pdf — Fort Worth Star-Telegram, 1923-08-24, p19
+2026-03-20 12:19:23,992 [INFO]   >>> THROTTLE: 500 views in the last hour. Pausing 0s until 12:19:24...
+2026-03-20 12:19:27,714 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_24_13.pdf — Fort Worth Record-Telegram, 1923-08-24, p13
+2026-03-20 12:19:27,714 [INFO]   >>> THROTTLE: 500 views in the last hour. Pausing 0s until 12:19:28...
+2026-03-20 12:19:31,590 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_24_14.pdf — Fort Worth Star-Telegram, 1923-08-24, p14
+2026-03-20 12:19:31,590 [INFO]   >>> THROTTLE: 500 views in the last hour. Pausing 1s until 12:19:32...
+2026-03-20 12:19:36,125 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_24_7.pdf — Fort Worth Record-Telegram, 1923-08-24, p7
+2026-03-20 12:19:36,125 [INFO]   >>> THROTTLE: 500 views in the last hour. Pausing 23s until 12:19:59...
+2026-03-20 12:20:02,912 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_24_3.pdf — Fort Worth Star-Telegram, 1923-08-24, p3
+2026-03-20 12:20:07,011 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_24_4.pdf — Fort Worth Star-Telegram, 1923-08-24, p4
+2026-03-20 12:20:10,390 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_24_5.pdf — Fort Worth Star-Telegram, 1923-08-24, p5
+2026-03-20 12:20:13,860 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_24_6.pdf — Fort Worth Star-Telegram, 1923-08-24, p6
+2026-03-20 12:20:17,383 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_24_20.pdf — Fort Worth Star-Telegram, 1923-08-24, p20
+2026-03-20 12:20:17,383 [INFO]   Returning to search...
+2026-03-20 12:20:41,748 [INFO] --- Batch 12 ---
+2026-03-20 12:20:44,650 [INFO]   Found 10 new result links
+2026-03-20 12:20:48,488 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_24_4.pdf — Fort Worth Record-Telegram, 1923-08-24, p4
+2026-03-20 12:20:52,256 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_24_8.pdf — Fort Worth Record-Telegram, 1923-08-24, p8
+2026-03-20 12:20:55,747 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_24_11.pdf — Fort Worth Record-Telegram, 1923-08-24, p11
+2026-03-20 12:20:59,193 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_25_10.pdf — Fort Worth Star-Telegram, 1923-08-25, p10
+2026-03-20 12:21:03,550 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_25_3.pdf — Fort Worth Record-Telegram, 1923-08-25, p3
+2026-03-20 12:21:07,443 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_25_1.pdf — Fort Worth Star-Telegram, 1923-08-25, p1
+2026-03-20 12:21:10,929 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_25_7.pdf — Fort Worth Star-Telegram, 1923-08-25, p7
+2026-03-20 12:21:14,339 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_25_8.pdf — Fort Worth Star-Telegram, 1923-08-25, p8
+2026-03-20 12:21:18,246 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_25_5.pdf — Fort Worth Record-Telegram, 1923-08-25, p5
+2026-03-20 12:21:22,215 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_25_11.pdf — Fort Worth Record-Telegram, 1923-08-25, p11
+2026-03-20 12:21:22,215 [INFO]   Returning to search...
+2026-03-20 12:21:45,426 [INFO] --- Batch 13 ---
+2026-03-20 12:21:48,391 [INFO]   Found 10 new result links
+2026-03-20 12:21:52,020 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_25_9.pdf — Fort Worth Star-Telegram, 1923-08-25, p9
+2026-03-20 12:21:55,444 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_08_25_14.pdf — Fort Worth Record-Telegram, 1923-08-25, p14
+2026-03-20 12:21:58,927 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_26_19.pdf — Fort Worth Star-Telegram, 1923-08-26, p19
+2026-03-20 12:22:02,499 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_26_17.pdf — Fort Worth Star-Telegram, 1923-08-26, p17
+2026-03-20 12:22:06,037 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_26_23.pdf — Fort Worth Star-Telegram, 1923-08-26, p23
+2026-03-20 12:22:10,094 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_26_11.pdf — Fort Worth Record-Telegram, 1923-08-26, p11
+2026-03-20 12:22:13,652 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_26_22.pdf — Fort Worth Record-Telegram, 1923-08-26, p22
+2026-03-20 12:22:18,348 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_26_23.pdf — Fort Worth Record-Telegram, 1923-08-26, p23
+2026-03-20 12:22:21,790 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_26_24.pdf — Fort Worth Record-Telegram, 1923-08-26, p24
+2026-03-20 12:22:25,361 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_26_1.pdf — Fort Worth Star-Telegram, 1923-08-26, p1
+2026-03-20 12:22:25,361 [INFO]   Returning to search...
+2026-03-20 12:22:49,482 [INFO] --- Batch 14 ---
+2026-03-20 12:22:52,829 [INFO]   Found 10 new result links
+2026-03-20 12:22:56,306 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_26_5.pdf — Fort Worth Star-Telegram, 1923-08-26, p5
+2026-03-20 12:22:59,769 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_26_7.pdf — Fort Worth Star-Telegram, 1923-08-26, p7
+2026-03-20 12:22:59,769 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-20 12:22:59,769 [INFO]   Session 8: 100 new, 12 skipped (running total: 800 new)
+2026-03-20 12:22:59,770 [INFO]   Restarting in 3 seconds...
+2026-03-20 12:23:02,770 [INFO] 
+>>> SESSION 9
+2026-03-20 12:23:02,810 [INFO] ============================================================
+2026-03-20 12:23:02,811 [INFO]   Starting session from: 1923-08-26
+2026-03-20 12:23:02,811 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-08-26&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 12:23:02,811 [INFO] ============================================================
+2026-03-20 12:23:05,040 [INFO] Opening Newspapers.com...
+2026-03-20 12:23:12,107 [INFO] Loading search results...
+2026-03-20 12:23:17,976 [INFO] --- Batch 1 ---
+2026-03-20 12:23:20,119 [INFO]   Found 10 new result links
+2026-03-20 12:23:23,791 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1923_08_26_19.pdf
+2026-03-20 12:23:27,369 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1923_08_26_17.pdf
+2026-03-20 12:23:31,322 [INFO]   [3] Exists: Fort_Worth_Star_Telegram_1923_08_26_23.pdf
+2026-03-20 12:23:35,004 [INFO]   [4] Exists: Fort_Worth_Record_Telegram_1923_08_26_11.pdf
+2026-03-20 12:23:38,567 [INFO]   [5] Exists: Fort_Worth_Record_Telegram_1923_08_26_22.pdf
+2026-03-20 12:23:42,017 [INFO]   [6] Exists: Fort_Worth_Record_Telegram_1923_08_26_23.pdf
+2026-03-20 12:23:45,546 [INFO]   [7] Exists: Fort_Worth_Record_Telegram_1923_08_26_24.pdf
+2026-03-20 12:23:48,953 [INFO]   [8] Exists: Fort_Worth_Star_Telegram_1923_08_26_1.pdf
+2026-03-20 12:23:52,422 [INFO]   [9] Exists: Fort_Worth_Star_Telegram_1923_08_26_5.pdf
+2026-03-20 12:23:55,866 [INFO]   [10] Exists: Fort_Worth_Star_Telegram_1923_08_26_7.pdf
+2026-03-20 12:23:55,867 [INFO]   10 consecutive existing entries. Skipping ahead.
+2026-03-20 12:23:55,867 [INFO]   Returning to search...
+2026-03-20 12:24:16,742 [INFO] --- Batch 2 ---
+2026-03-20 12:24:18,945 [INFO]   Found 10 new result links
+2026-03-20 12:24:22,424 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_26_8.pdf — Fort Worth Star-Telegram, 1923-08-26, p8
+2026-03-20 12:24:25,885 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_26_11.pdf — Fort Worth Star-Telegram, 1923-08-26, p11
+2026-03-20 12:24:29,633 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_08_26_16.pdf — Fort Worth Star-Telegram, 1923-08-26, p16
+2026-03-20 12:24:33,243 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_26_21.pdf — Fort Worth Star-Telegram, 1923-08-26, p21
+2026-03-20 12:24:36,804 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_26_6.pdf — Fort Worth Record-Telegram, 1923-08-26, p6
+2026-03-20 12:24:41,181 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_08_26_12.pdf — Fort Worth Record-Telegram, 1923-08-26, p12
+2026-03-20 12:24:44,780 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_08_26_21.pdf — Fort Worth Record-Telegram, 1923-08-26, p21
+2026-03-20 12:24:48,311 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_26_28.pdf — Fort Worth Record-Telegram, 1923-08-26, p28
+2026-03-20 12:24:51,848 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_08_27_16.pdf — Fort Worth Star-Telegram, 1923-08-27, p16
+2026-03-20 12:24:55,254 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_27_5.pdf — Fort Worth Record-Telegram, 1923-08-27, p5
+2026-03-20 12:24:55,255 [INFO]   Returning to search...
+2026-03-20 12:25:16,166 [INFO] --- Batch 3 ---
+2026-03-20 12:25:18,451 [INFO]   Found 10 new result links
+2026-03-20 12:25:22,051 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_27_14.pdf — Fort Worth Star-Telegram, 1923-08-27, p14
+2026-03-20 12:25:25,473 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_27_15.pdf — Fort Worth Star-Telegram, 1923-08-27, p15
+2026-03-20 12:25:28,958 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_27_4.pdf — Fort Worth Record-Telegram, 1923-08-27, p4
+2026-03-20 12:25:32,584 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_28_17.pdf — Fort Worth Star-Telegram, 1923-08-28, p17
+2026-03-20 12:25:36,048 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_08_28_12.pdf — Fort Worth Star-Telegram, 1923-08-28, p12
+2026-03-20 12:25:39,493 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_28_16.pdf — Fort Worth Star-Telegram, 1923-08-28, p16
+2026-03-20 12:25:43,036 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_28_18.pdf — Fort Worth Star-Telegram, 1923-08-28, p18
+2026-03-20 12:25:46,554 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_28_5.pdf — Fort Worth Record-Telegram, 1923-08-28, p5
+2026-03-20 12:25:50,605 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_28_13.pdf — Fort Worth Record-Telegram, 1923-08-28, p13
+2026-03-20 12:25:54,472 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_08_29_17.pdf — Fort Worth Star-Telegram, 1923-08-29, p17
+2026-03-20 12:25:54,472 [INFO]   Returning to search...
+2026-03-20 12:26:16,319 [INFO] --- Batch 4 ---
+2026-03-20 12:26:18,670 [INFO]   Found 10 new result links
+2026-03-20 12:26:22,987 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_08_29_1.pdf — Fort Worth Star-Telegram, 1923-08-29, p1
+2026-03-20 12:26:26,454 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_29_6.pdf — Fort Worth Star-Telegram, 1923-08-29, p6
+2026-03-20 12:26:29,888 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_29_13.pdf — Fort Worth Record-Telegram, 1923-08-29, p13
+2026-03-20 12:26:33,338 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_29_11.pdf — Fort Worth Star-Telegram, 1923-08-29, p11
+2026-03-20 12:26:36,862 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_29_23.pdf — Fort Worth Record-Telegram, 1923-08-29, p23
+2026-03-20 12:26:40,344 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_30_16.pdf — Fort Worth Star-Telegram, 1923-08-30, p16
+2026-03-20 12:26:43,790 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_30_17.pdf — Fort Worth Star-Telegram, 1923-08-30, p17
+2026-03-20 12:26:47,851 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_08_30_18.pdf — Fort Worth Star-Telegram, 1923-08-30, p18
+2026-03-20 12:26:51,331 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_30_7.pdf — Fort Worth Record-Telegram, 1923-08-30, p7
+2026-03-20 12:26:54,844 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_08_30_9.pdf — Fort Worth Record-Telegram, 1923-08-30, p9
+2026-03-20 12:26:54,844 [INFO]   Returning to search...
+2026-03-20 12:27:16,349 [INFO] --- Batch 5 ---
+2026-03-20 12:27:18,801 [INFO]   Found 10 new result links
+2026-03-20 12:27:22,917 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_08_30_10.pdf — Fort Worth Record-Telegram, 1923-08-30, p10
+2026-03-20 12:27:26,362 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_08_31_19.pdf — Fort Worth Star-Telegram, 1923-08-31, p19
+2026-03-20 12:27:30,379 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_08_31_17.pdf — Fort Worth Record-Telegram, 1923-08-31, p17
+2026-03-20 12:27:33,886 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_08_31_6.pdf — Fort Worth Star-Telegram, 1923-08-31, p6
+2026-03-20 12:27:37,335 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_08_31_7.pdf — Fort Worth Record-Telegram, 1923-08-31, p7
+2026-03-20 12:27:40,869 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_08_31_14.pdf — Fort Worth Star-Telegram, 1923-08-31, p14
+2026-03-20 12:27:44,660 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_08_31_18.pdf — Fort Worth Star-Telegram, 1923-08-31, p18
+2026-03-20 12:27:48,168 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_08_31_15.pdf — Fort Worth Record-Telegram, 1923-08-31, p15
+2026-03-20 12:27:51,569 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_08_31_16.pdf — Fort Worth Record-Telegram, 1923-08-31, p16
+2026-03-20 12:27:55,067 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_09_01_9.pdf — Fort Worth Star-Telegram, 1923-09-01, p9
+2026-03-20 12:27:55,067 [INFO]   Returning to search...
+2026-03-20 12:28:17,315 [INFO] --- Batch 6 ---
+2026-03-20 12:28:19,854 [INFO]   Found 10 new result links
+2026-03-20 12:28:23,907 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_09_01_1.pdf — Fort Worth Star-Telegram, 1923-09-01, p1
+2026-03-20 12:28:27,313 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_09_01_1.pdf — Fort Worth Record-Telegram, 1923-09-01, p1
+2026-03-20 12:28:30,766 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_09_01_13.pdf — Fort Worth Record-Telegram, 1923-09-01, p13
+2026-03-20 12:28:34,216 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_09_02_19.pdf — Fort Worth Star-Telegram, 1923-09-02, p19
+2026-03-20 12:28:37,841 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_09_02_9.pdf — Fort Worth Star-Telegram, 1923-09-02, p9
+2026-03-20 12:28:41,502 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_09_02_5.pdf — Fort Worth Star-Telegram, 1923-09-02, p5
+2026-03-20 12:28:44,976 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_09_02_24.pdf — Fort Worth Star-Telegram, 1923-09-02, p24
+2026-03-20 12:28:48,442 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_09_02_8.pdf — Fort Worth Record-Telegram, 1923-09-02, p8
+2026-03-20 12:28:51,967 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_09_02_11.pdf — Fort Worth Star-Telegram, 1923-09-02, p11
+2026-03-20 12:28:55,588 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_09_02_16.pdf — Fort Worth Star-Telegram, 1923-09-02, p16
+2026-03-20 12:28:55,588 [INFO]   Returning to search...
+2026-03-20 12:29:17,689 [INFO] --- Batch 7 ---
+2026-03-20 12:29:20,307 [INFO]   Found 10 new result links
+2026-03-20 12:29:23,737 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_09_02_20.pdf — Fort Worth Star-Telegram, 1923-09-02, p20
+2026-03-20 12:29:27,615 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_09_02_21.pdf — Fort Worth Star-Telegram, 1923-09-02, p21
+2026-03-20 12:29:31,190 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_09_02_25.pdf — Fort Worth Star-Telegram, 1923-09-02, p25
+2026-03-20 12:29:34,851 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_09_02_9.pdf — Fort Worth Record-Telegram, 1923-09-02, p9
+2026-03-20 12:29:38,287 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_09_02_59.pdf — Fort Worth Record-Telegram, 1923-09-02, p59
+2026-03-20 12:29:42,094 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_09_03_7.pdf — Fort Worth Record-Telegram, 1923-09-03, p7
+2026-03-20 12:29:45,500 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_09_03_11.pdf — Fort Worth Star-Telegram, 1923-09-03, p11
+2026-03-20 12:29:48,947 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_09_03_12.pdf — Fort Worth Star-Telegram, 1923-09-03, p12
+2026-03-20 12:29:52,341 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_09_03_15.pdf — Fort Worth Star-Telegram, 1923-09-03, p15
+2026-03-20 12:29:55,975 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_09_03_11.pdf — Fort Worth Record-Telegram, 1923-09-03, p11
+2026-03-20 12:29:55,975 [INFO]   Returning to search...
+2026-03-20 12:30:18,362 [INFO] --- Batch 8 ---
+2026-03-20 12:30:21,083 [INFO]   Found 10 new result links
+2026-03-20 12:30:24,566 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_09_04_6.pdf — Fort Worth Star-Telegram, 1923-09-04, p6
+2026-03-20 12:30:28,272 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_09_04_9.pdf — Fort Worth Record-Telegram, 1923-09-04, p9
+2026-03-20 12:30:31,723 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_09_04_11.pdf — Fort Worth Record-Telegram, 1923-09-04, p11
+2026-03-20 12:30:35,124 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_09_04_9.pdf — Fort Worth Star-Telegram, 1923-09-04, p9
+2026-03-20 12:30:38,646 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_09_04_19.pdf — Fort Worth Star-Telegram, 1923-09-04, p19
+2026-03-20 12:30:42,226 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_09_05_17.pdf — Fort Worth Star-Telegram, 1923-09-05, p17
+2026-03-20 12:30:45,745 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_09_05_11.pdf — Fort Worth Star-Telegram, 1923-09-05, p11
+2026-03-20 12:30:49,203 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_09_05_7.pdf — Fort Worth Record-Telegram, 1923-09-05, p7
+2026-03-20 12:30:53,048 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_09_05_11.pdf — Fort Worth Record-Telegram, 1923-09-05, p11
+2026-03-20 12:30:56,925 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_09_06_17.pdf — Fort Worth Star-Telegram, 1923-09-06, p17
+2026-03-20 12:30:56,925 [INFO]   Returning to search...
+2026-03-20 12:31:20,202 [INFO] --- Batch 9 ---
+2026-03-20 12:31:23,085 [INFO]   Found 10 new result links
+2026-03-20 12:31:26,634 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_09_06_11.pdf — Fort Worth Record-Telegram, 1923-09-06, p11
+2026-03-20 12:31:30,078 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_09_06_13.pdf — Fort Worth Record-Telegram, 1923-09-06, p13
+2026-03-20 12:31:33,653 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_09_06_19.pdf — Fort Worth Star-Telegram, 1923-09-06, p19
+2026-03-20 12:31:37,179 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_09_07_21.pdf — Fort Worth Star-Telegram, 1923-09-07, p21
+2026-03-20 12:31:40,637 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_09_07_12.pdf — Fort Worth Record-Telegram, 1923-09-07, p12
+2026-03-20 12:31:44,156 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_09_07_6.pdf — Fort Worth Star-Telegram, 1923-09-07, p6
+2026-03-20 12:31:47,601 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_09_07_15.pdf — Fort Worth Record-Telegram, 1923-09-07, p15
+2026-03-20 12:31:51,208 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_09_07_16.pdf — Fort Worth Record-Telegram, 1923-09-07, p16
+2026-03-20 12:31:54,679 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_09_07_20.pdf — Fort Worth Record-Telegram, 1923-09-07, p20
+2026-03-20 12:31:58,455 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_09_08_4.pdf — Fort Worth Star-Telegram, 1923-09-08, p4
+2026-03-20 12:31:58,455 [INFO]   Returning to search...
+2026-03-20 12:32:21,984 [INFO] --- Batch 10 ---
+2026-03-20 12:32:24,870 [INFO]   Found 10 new result links
+2026-03-20 12:32:29,090 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_09_08_8.pdf — Fort Worth Star-Telegram, 1923-09-08, p8
+2026-03-20 12:32:32,584 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_09_08_9.pdf — Fort Worth Star-Telegram, 1923-09-08, p9
+2026-03-20 12:32:36,001 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_09_08_15.pdf — Fort Worth Record-Telegram, 1923-09-08, p15
+2026-03-20 12:32:39,867 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_09_09_90.pdf — Fort Worth Record-Telegram, 1923-09-09, p90
+2026-03-20 12:32:43,739 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_09_09_24.pdf — Fort Worth Star-Telegram, 1923-09-09, p24
+2026-03-20 12:32:47,266 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_09_09_27.pdf — Fort Worth Star-Telegram, 1923-09-09, p27
+2026-03-20 12:32:50,802 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_09_09_75.pdf — Fort Worth Record-Telegram, 1923-09-09, p75
+2026-03-20 12:32:54,322 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_09_09_13.pdf — Fort Worth Star-Telegram, 1923-09-09, p13
+2026-03-20 12:32:57,894 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_09_09_23.pdf — Fort Worth Star-Telegram, 1923-09-09, p23
+2026-03-20 12:33:01,539 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_09_09_36.pdf — Fort Worth Star-Telegram, 1923-09-09, p36
+2026-03-20 12:33:01,539 [INFO]   Returning to search...
+2026-03-20 12:33:25,264 [INFO] --- Batch 11 ---
+2026-03-20 12:33:28,503 [INFO]   Found 10 new result links
+2026-03-20 12:33:31,914 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1923_09_09_37.pdf — Fort Worth Star-Telegram, 1923-09-09, p37
+2026-03-20 12:33:35,333 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_09_09_50.pdf — Fort Worth Star-Telegram, 1923-09-09, p50
+2026-03-20 12:33:38,716 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_09_09_17.pdf — Fort Worth Record-Telegram, 1923-09-09, p17
+2026-03-20 12:33:42,193 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_09_09_32.pdf — Fort Worth Record-Telegram, 1923-09-09, p32
+2026-03-20 12:33:45,680 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_09_09_44.pdf — Fort Worth Record-Telegram, 1923-09-09, p44
+2026-03-20 12:33:49,146 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_09_09_73.pdf — Fort Worth Record-Telegram, 1923-09-09, p73
+2026-03-20 12:33:52,573 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_09_09_85.pdf — Fort Worth Record-Telegram, 1923-09-09, p85
+2026-03-20 12:33:56,076 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_09_09_89.pdf — Fort Worth Record-Telegram, 1923-09-09, p89
+2026-03-20 12:33:59,503 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_09_10_14.pdf — Fort Worth Record-Telegram, 1923-09-10, p14
+2026-03-20 12:34:02,903 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_09_10_15.pdf — Fort Worth Star-Telegram, 1923-09-10, p15
+2026-03-20 12:34:02,903 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-20 12:34:02,904 [INFO]   Session 9: 100 new, 10 skipped (running total: 900 new)
+2026-03-20 12:34:02,904 [INFO]   Restarting in 3 seconds...
+2026-03-20 12:34:05,904 [INFO] 
+>>> SESSION 10
+2026-03-20 12:34:05,941 [INFO] ============================================================
+2026-03-20 12:34:05,941 [INFO]   Starting session from: 1923-09-10
+2026-03-20 12:34:05,942 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1923-09-10&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-20 12:34:05,942 [INFO] ============================================================
+2026-03-20 12:34:07,307 [INFO] Opening Newspapers.com...
+2026-03-20 12:34:14,485 [INFO] Loading search results...
+2026-03-20 12:34:19,604 [INFO] --- Batch 1 ---
+2026-03-20 12:34:21,737 [INFO]   Found 10 new result links
+2026-03-20 12:34:25,463 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1923_09_10_14.pdf
+2026-03-20 12:34:29,035 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1923_09_10_15.pdf
+2026-03-20 12:34:32,976 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1923_09_11_5.pdf — Fort Worth Star-Telegram, 1923-09-11, p5
+2026-03-20 12:34:36,438 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1923_09_11_11.pdf — Fort Worth Star-Telegram, 1923-09-11, p11
+2026-03-20 12:34:40,141 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_09_11_6.pdf — Fort Worth Record-Telegram, 1923-09-11, p6
+2026-03-20 12:34:44,034 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1923_09_11_15.pdf — Fort Worth Record-Telegram, 1923-09-11, p15
+2026-03-20 12:34:47,588 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_09_11_13.pdf — Fort Worth Star-Telegram, 1923-09-11, p13
+2026-03-20 12:34:51,150 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_09_11_14.pdf — Fort Worth Star-Telegram, 1923-09-11, p14
+2026-03-20 12:34:54,630 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1923_09_11_19.pdf — Fort Worth Star-Telegram, 1923-09-11, p19
+2026-03-20 12:34:58,291 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1923_09_11_9.pdf — Fort Worth Record-Telegram, 1923-09-11, p9
+2026-03-20 12:34:58,291 [INFO]   Returning to search...
+2026-03-20 12:35:18,861 [INFO] --- Batch 2 ---
+2026-03-20 12:35:21,050 [INFO]   Found 10 new result links
+2026-03-20 12:35:24,579 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_09_11_16.pdf — Fort Worth Record-Telegram, 1923-09-11, p16
+2026-03-20 12:35:28,186 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1923_09_12_8.pdf — Fort Worth Star-Telegram, 1923-09-12, p8
+2026-03-20 12:35:31,678 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_09_12_11.pdf — Fort Worth Record-Telegram, 1923-09-12, p11
+2026-03-20 12:35:35,137 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_09_12_13.pdf — Fort Worth Record-Telegram, 1923-09-12, p13
+2026-03-20 12:35:38,713 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1923_09_12_2.pdf — Fort Worth Star-Telegram, 1923-09-12, p2
+2026-03-20 12:35:42,249 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_09_12_19.pdf — Fort Worth Star-Telegram, 1923-09-12, p19
+2026-03-20 12:35:45,709 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1923_09_12_4.pdf — Fort Worth Record-Telegram, 1923-09-12, p4
+2026-03-20 12:35:49,204 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1923_09_12_10.pdf — Fort Worth Record-Telegram, 1923-09-12, p10
+2026-03-20 12:35:53,055 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1923_09_13_32.pdf — Fort Worth Record-Telegram, 1923-09-13, p32
+2026-03-20 12:35:57,369 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1923_09_13_20.pdf — Fort Worth Star-Telegram, 1923-09-13, p20
+2026-03-20 12:35:57,369 [INFO]   Returning to search...
+2026-03-20 12:36:17,769 [INFO] --- Batch 3 ---
+2026-03-20 12:36:20,061 [INFO]   Found 10 new result links
+2026-03-20 12:36:23,510 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1923_09_13_10.pdf — Fort Worth Record-Telegram, 1923-09-13, p10
+2026-03-20 12:36:26,961 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1923_09_13_33.pdf — Fort Worth Record-Telegram, 1923-09-13, p33
+2026-03-20 12:36:30,474 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1923_09_13_11.pdf — Fort Worth Record-Telegram, 1923-09-13, p11
+2026-03-20 12:36:33,962 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1923_09_13_13.pdf — Fort Worth Record-Telegram, 1923-09-13, p13
+2026-03-20 12:36:37,416 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1923_09_13_35.pdf — Fort Worth Record-Telegram, 1923-09-13, p35
+2026-03-20 12:36:41,201 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1923_09_13_1.pdf — Fort Worth Star-Telegram, 1923-09-13, p1
+2026-03-20 12:36:44,755 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1923_09_13_6.pdf — Fort Worth Star-Telegram, 1923-09-13, p6
+2026-03-20 12:36:48,225 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1923_09_13_19.pdf — Fort Worth Star-Telegram, 1923-09-13, p19
+2026-03-20 12:36:48,225 [INFO]   >>> THROTTLE: 500 views in the last hour. Pausing 482s until 12:44:50...

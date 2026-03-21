@@ -1,0 +1,82 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-09-01",
+  "pageNumber": 6,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "Neglected Duty.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "SECRETS OF HEALTH AND HAPPINESS",
+      "subtitle": null,
+      "topic": "Health",
+      "fullText": null
+    },
+    {
+      "title": "GALVESTON COTTON EXPORTS DECREASE",
+      "subtitle": "Report for Year Shows Better Prices Received for Texas Crops, but 656,452 Bales Less Shipped.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "BARRETT'S PLAN TO RELIEVE EMERGENCY",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "STATE OWNERSHIP FOR WAREHOUSES PROVES BLOCKADE",
+      "subtitle": "Day in the House.",
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "ASK AMENDMENT TO COUNTERFEITING LAW",
+      "subtitle": "El Paso City Officials Request Governor to Provide Means to Punish Circulators of False Mexican Money.",
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "RELICS OF 1852 ARE FOUND IN RED RIVER",
+      "subtitle": "Craft Sunk After Trading Trip From New Orleans Is Dis- covered When River Changes Its Course.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Just a Moment.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Talking About Fort Worth",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "DAILY STRENGTH AND CHEER.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "THREE KILLED NEAR CORPUS CHRISTI IN SHOOTING AFFRAYS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "$1,500,000 IN STATE TREASURY TO BEGIN NEW FISCAL YEAR",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    }
+  ],
+  "advertisements": [],
+  "events": []
+}

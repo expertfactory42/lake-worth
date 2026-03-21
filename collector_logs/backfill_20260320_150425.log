@@ -1,0 +1,21 @@
+2026-03-20 15:04:25,142 [INFO] ============================================================
+2026-03-20 15:04:25,143 [INFO] URL Backfill (no page visits)
+2026-03-20 15:04:25,143 [INFO] ============================================================
+2026-03-20 15:04:25,143 [INFO]   Entries missing URLs: 13298
+2026-03-20 15:04:25,143 [INFO]   Starting from: 1909-09-04
+2026-03-20 15:04:25,143 [INFO]   Max updates: 20
+2026-03-20 15:04:25,144 [INFO]   Log: c:\lake_worth\collector_logs\backfill_20260320_150425.log
+2026-03-20 15:04:35,234 [INFO] 
+>>> SESSION 1: 1909-09-04 to 1909-12-03
+2026-03-20 15:04:48,259 [INFO]   Total results this batch: 0
+2026-03-20 15:04:48,260 [INFO]   Session 1: 0 updated (total: 0, remaining: 13298)
+2026-03-20 15:04:50,260 [INFO] 
+>>> SESSION 2: 1909-12-04 to 1910-03-04
+2026-03-20 15:05:02,400 [INFO]   Total results this batch: 0
+2026-03-20 15:05:02,401 [INFO]   Session 2: 0 updated (total: 0, remaining: 13298)
+2026-03-20 15:05:04,401 [INFO] 
+>>> SESSION 3: 1910-03-05 to 1910-06-03
+2026-03-20 15:05:16,388 [INFO]   Total results this batch: 0
+2026-03-20 15:05:16,388 [INFO]   Session 3: 0 updated (total: 0, remaining: 13298)
+2026-03-20 15:05:18,389 [INFO] 
+>>> SESSION 4: 1910-06-04 to 1910-09-02

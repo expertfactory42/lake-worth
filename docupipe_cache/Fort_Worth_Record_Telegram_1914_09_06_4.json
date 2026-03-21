@@ -1,0 +1,182 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-09-06",
+  "pageNumber": 4,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "DALLAS PLANS FOR GREAT LABOR DAY",
+      "subtitle": "Over 2,000 Men Will March in Line Next Monday: Picnic Is Scheduled With Games in the Afternoon After Parade.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MEMORIAL SERMON AT CAMP TODAY",
+      "subtitle": "Rev. I. Z. T. Morris Will Address Confederate Veterans at Reunion Grounds Sunday: Tents Are Pitched.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FIRST GALA DAY FETE TO BE HELD SEPT. 12",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "BOY SCOUTS LEAVE FOR HIKE TO VILLAGE CREEK",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "BOYS BREAK OUT OF DALLAS JAIL FRIDAY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MRS. L. JACKSON IS BACK FROM EAST",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "METHODIST ELDERS IN CONFERENCE SEPT. 9",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FARMERS' UNION MEN ARE STILL AT AUSTIN",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "GRAND JURY REPORTS WEEK'S DELIBERATIONS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "BOWLING TOURNAMENT IS NOW ON IN DALLAS",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "DALLAS GUN CLUB TO GIVE A SHOOT MONDAY",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "M'KINNEY CROWD IS TOLD BAILEY VIEWS",
+      "subtitle": "Former Texas Senator Addresses Texans Upon Use of Money in Primaries; Opposes National Prohibition.",
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "COMMISSIONERS GIVE $500 FOR CHARITY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MERCHANT MARINE BILL IS AMENDED IN REPORT OF THE HOUSE",
+      "subtitle": null,
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "JURY COMMISSION IS NAMED BY SWAYNE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FIRE ON ELM STREET DOES $7,400 DAMAGE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WAREHOUSE BOUGHT BY MINERAL WELLS MEN FOR COTTON CROP",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "ROBERTSON COUNTY RANCHER SHOT FROM AMBUSH AT BRIDGE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "NO MORE PRIZE FIGHTS TO BE HELD IN DALLAS",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "TWO ARE INDICTED FOR STEALING ELECTRICITY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Houston Hat Co.",
+      "description": "We have closed our store in Dallas, but we are not going to close the Fort Worth store. Come to see us. We can give you more and better styles than ever.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "HILL & HILL",
+      "description": "Our Respects to Labor Day And All That It Stands For. We hope that each year to come will hold a greater share of prosperity for the UNION MAN-",
+      "price": null
+    },
+    {
+      "productOrBusiness": "HOSTETTER'S STOMACH BITTERS",
+      "description": "Time for Action IS NOW. Don't neglect or postpone helping your stomach, liver and bowels when there is any indication of weakness. To do so only invites sickness. Take HOSTETTER'S STOMACH BITTERS today and let it help you back to daily health and strength",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Anna M. Stanley",
+      "description": "TEACHER OF PIANO, KINDERGARTEN AND PUBLIC SCHOOL MUSIC. Makes a specialty of coaching public school teachers. Studio, 509 May Street. Phone Rosedale 5249",
+      "price": null
+    },
+    {
+      "productOrBusiness": "The Crest Sanitarium",
+      "description": "Whiskey, Morphine and Cocaine Vs. Health, Freedom and Prosperity. Your Case Can Be Won at The Crest Sanitarium Without Hyoscine, Atropine, Duboieine, Pierotoxine or Spartine. Consultation and Advice Free. W. H. FORD, M. D. 911 East Seventh Street, Dallas, Texas. Phone Bell Cliff 348.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "MISTLETOE BUTTER",
+      "description": "IS CREAMERY BUTTER OF THE HIGHEST GRADE. Nothing but PURE cream goes into the manufacture of this butter, which is made in the most modern and sanitary butter factory in the Southwest. Consumers, every grocer can get good butter; demand that yours get \"Mistletoe Fancy Creamery Butter.\" Farmers, we are cash buyers of hand separated cream of good quality. The dairy cow is the farmer's friend. Let us show you how. Write for prices. Nissley Creamery Company FORT WORTH, TEXAS",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "GREAT LABOR DAY",
+      "date": "Next Monday",
+      "venue": null
+    },
+    {
+      "eventName": "FIRST GALA DAY FETE",
+      "date": "SEPT. 12",
+      "venue": null
+    },
+    {
+      "eventName": "METHODIST ELDERS IN CONFERENCE",
+      "date": "SEPT. 9",
+      "venue": null
+    },
+    {
+      "eventName": "DALLAS GUN CLUB SHOOT",
+      "date": "MONDAY",
+      "venue": null
+    }
+  ]
+}

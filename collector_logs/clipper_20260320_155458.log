@@ -1,0 +1,107 @@
+2026-03-20 15:54:58,217 [INFO] ============================================================
+2026-03-20 15:54:58,217 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 15:54:58,217 [INFO] ============================================================
+2026-03-20 15:54:58,217 [INFO]   Unclipped entries: 13297
+2026-03-20 15:54:58,217 [INFO]   Starting from: 1914-09-09
+2026-03-20 15:54:58,217 [INFO]   Max pages: 1
+2026-03-20 15:54:58,217 [INFO]   Throttle: 450 views/hour
+2026-03-20 15:54:58,217 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_155458.log
+2026-03-20 15:55:05,238 [INFO] Already logged in.
+2026-03-20 15:55:11,098 [INFO] 
+>>> Searching 1914-09-09 to 1914-10-09
+2026-03-20 15:55:18,146 [INFO]   Found 10 results
+2026-03-20 15:55:22,175 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_09_10.pdf
+2026-03-20 15:55:27,364 [INFO]     Clicked Clip button
+2026-03-20 15:55:32,372 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 15:55:32,372 [INFO]     NW handle at (643,224), SE handle at (734,366)
+2026-03-20 15:55:33,920 [INFO]     Dragged NW handle to top-left
+2026-03-20 15:55:33,926 [INFO]     SE handle now at (734,366)
+2026-03-20 15:55:34,188 [ERROR]     Clip error: Message: move target out of bounds
+  (Session info: chrome=146.0.7680.153)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x1d4037
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 15:55:41,011 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_09_7.pdf
+2026-03-20 15:55:46,299 [INFO]     Clicked Clip button
+2026-03-20 15:55:51,306 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 15:55:51,306 [INFO]     NW handle at (642,227), SE handle at (742,383)
+2026-03-20 15:55:52,873 [INFO]     Dragged NW handle to top-left
+2026-03-20 15:55:52,878 [INFO]     SE handle now at (742,383)
+2026-03-20 15:55:52,882 [ERROR]     Clip error: Message: move target out of bounds
+  (Session info: chrome=146.0.7680.153)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x1d4037
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 15:56:00,438 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_10_6.pdf
+2026-03-20 15:56:05,922 [INFO]     Clicked Clip button
+2026-03-20 15:56:10,930 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 15:56:10,930 [INFO]     NW handle at (642,228), SE handle at (743,384)
+2026-03-20 15:56:10,936 [ERROR]     Clip error: Message: move target out of bounds
+  (Session info: chrome=146.0.7680.153)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x1d4037
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 15:56:18,159 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_13_9.pdf

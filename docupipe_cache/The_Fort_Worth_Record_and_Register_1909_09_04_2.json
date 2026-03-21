@@ -1,0 +1,119 @@
+{
+  "newspaperName": "The Fort Worth Record and Register",
+  "publicationDate": "1909-09-04",
+  "pageNumber": 2,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "DAIRY ORDINANCE STILL HANGS FIRE",
+      "subtitle": "City Commission Refuses to Act on Matter at Tuesday's Session.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "TENNIS TOURNEY STARTS AT T. C. U.",
+      "subtitle": "Thirty Entrants for Annual Event; Clyde Tomlinson Still a Contender; Winner Gets Loving Cup.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "YOUNG AMERICA AND HIS DEMANDS",
+      "subtitle": "His right to demand the best- Easter Clothes is recognized here. We are featuring the new brown plaids. black and white checks and fancy mixtures in all the new Easter styles- attractively priced- $5 to $16.50",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "GOLD MEDAL IS AWARDED KEITH",
+      "subtitle": "Dr. R. H. Gough Presents Winner of T. C. U. Preliminary Oratorical With Medal.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "SETTLES FOR LAND",
+      "subtitle": "City Commission Approves Payment of $16,556 for Submerged Property.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ALLEGE DAMAGES FROM UNFINISHED CULVERTS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MANY RECRUITING FOR NAVY FROM FORT WORTH",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Winter Furniture Company",
+      "description": "Fort Worth's Great Cash Store. A new car of dining room furniture offers remarkable savings. This solid oak Buffet, either golden or fumed, only .. . $13.85. 41 different styles up to $47.75 for \"Period\" designs.",
+      "price": "$13.85"
+    },
+    {
+      "productOrBusiness": "CREDIT TAILORING SYSTEM",
+      "description": "Where Better Clothes Are Made. \"If you live in Fort Worth we will trust you.\"",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Washer Bros.",
+      "description": "New Easter Furnishings. Just received, new shipment of Boys' Shirts, Blouses, Neckwear, Hosiery Underwear and the three new Arrow Collars- Lexicon, Ashby, Fanfare",
+      "price": "$5 to $16.50"
+    },
+    {
+      "productOrBusiness": "PintoGroceryCo.",
+      "description": "Groceries",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Geo. R. Newkirk",
+      "description": "DON'T drive_an old Ford car. Trade it in to Newkirk on a new one- bay the difference in easy payments. Who Sells Ford Cars",
+      "price": null
+    },
+    {
+      "productOrBusiness": "DR. BETTS",
+      "description": "FORTY YEARS' EXPERIENCE SPECIALIST. Hours, 9 a. m. to 4 p. m. 10141% MAIN STREET FORT WORTH, TEXAS",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Washer Bros",
+      "description": "The Easter Hat. In all the new and popular soft, light weight felts, in colors of gray and light fawns with contrasting and match bands, in the new medium low crown and flat set brim. A large line of conservative shapes in the new colors. Easter Hats, $3, $4 and $5. LARGEST HAT DEPARTMENT IN THE SOUTH",
+      "price": "$3, $4 and $5"
+    },
+    {
+      "productOrBusiness": "Stonestreet & Davisto",
+      "description": "The Two Newest Summer Collars designed specially for warm weather wear. very comfortable and cool and will prove the most popular collar for many seasons. We have a complete line of sizes. PIPING ROCK PROSPERITY 2 for 25c. SOFT COLLARS We are showing them in all materials and designs. SILK SHIRTS-There has been a great demand already for Silk Shirts which indicates their popularity this season! There was never a more complete line of the new colors and shades than our stock now offer you, priced from $3.50 to $10.00",
+      "price": "2 for 25c"
+    },
+    {
+      "productOrBusiness": "Children Cry FOR FLETCHER'S CASTORIA",
+      "description": "Children Cry FOR FLETCHER'S CASTORIA",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Massingill & McDonald",
+      "description": "SCREENE",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Hunter Liquor Co.",
+      "description": "Old Preston Hunter BOTTLED IN BOND WHISKEY. Send us a trial order for OLD PRESTON HUNTER. Full measure. Don't put this off- ORDER NOW goods will go forward by first express. FOUR QUARTS, EXPRESS PAID, $4.00. There Is only one way you can be sure of getting pure whiskey-that is to INSIST On BOTTLED-IN-BOND.",
+      "price": "$4.00"
+    },
+    {
+      "productOrBusiness": "DRS. TERRELL",
+      "description": "OSTEOPATHIC PHYSICIANS. American National Bank Bldg.",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Annual tennis tournament",
+      "date": null,
+      "venue": "T. C. U."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+2026-03-21 12:47:51,199 [INFO] Added ocr_text column to processed_pdfs
+2026-03-21 12:47:51,201 [INFO] Added clip_url column to processed_pdfs
+2026-03-21 12:47:51,204 [INFO] Added clipped column to processed_pdfs
+2026-03-21 12:47:51,207 [INFO] Added has_photo column to articles
+2026-03-21 12:47:51,209 [INFO] Added photo_description column to articles

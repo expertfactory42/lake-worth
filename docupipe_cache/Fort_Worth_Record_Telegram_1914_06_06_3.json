@@ -1,0 +1,223 @@
+{
+  "standardizationId": "LfJIoev9",
+  "documentId": "EjPAYram",
+  "data": {
+    "newspaperName": "Fort Worth Record-Telegram",
+    "publicationDate": "1914-06-06",
+    "pageNumber": 3,
+    "location": "Fort Worth, Texas",
+    "headlines": [
+      {
+        "title": "Brief Local News",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "Graduate of Polytechnic Becomes Editor",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": "Buford O. Brown,"
+      },
+      {
+        "title": "BODY AND SPIRIT CONNECTION FOUND",
+        "subtitle": "Scientist Discovers That the Soul of Man Is Tied to His Body by Fear Alone and Courage Will Free It. DRIFTS FOR MANY DAYS IN OPEN BOAT AT SEA Daughter of General in U. S. Army Picked Up Off Coast of China; Actress Marries Member of the Nobility.",
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "FLOOD CONDITIONS IN WISCONSIN ALARMING",
+        "subtitle": "Several Villages Inundated and Much Damage Is Caused to Property: No Report of Loss of Life.",
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "BOY AND BULL PUP HAVE REAL FUN AT EXPENSE OF A FELINE",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "PERSONALS",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "PATHE DAILY NEWS SHOWS HERE FIRST",
+        "subtitle": null,
+        "topic": "Entertainment",
+        "fullText": null
+      },
+      {
+        "title": "The Weather",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "Polytechnic Happenings.",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "OBITUARY",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "FAITHFUL EMPLOYES OF BANK REWARDED",
+        "subtitle": null,
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "BURY YOUR TROUBLES",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "GETTING VIADUCT READY FOR OPENING CEREMONIES",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      }
+    ],
+    "advertisements": [
+      {
+        "productOrBusiness": "H. C. Meacham Co.",
+        "description": "Men's Department with modern conveniences, revolving wardrobes, and a wide selection of clothing, hats, shirts, and more. Located at Twelfth and Main.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "Silk Shirts for Men",
+        "description": "Made of pure silk in the newest patterns, white grounds with heavy stripes of blue, lavender, red and green; no better value to be had for $3.50. Your initial worked on the shirt for 25c.",
+        "price": "$3.50"
+      },
+      {
+        "productOrBusiness": "Clothing for Men",
+        "description": "Our attractive collection of Men's Suits includes a model for every man. The tailoring and workmanship are of the highest order and the materials were selected to give style, appearance and wear. The materials are blue serge and cheviots and worsteds in a good range of grays, blues, tans and other popular shades for summer wear, in solid colors, stripes, checks and tanton plaids.",
+        "price": "$15.00 to $30.00"
+      },
+      {
+        "productOrBusiness": "SHIRTS WITH DRAWERS ATTACHED",
+        "description": "A shirt with the tail made into drawers: does away with unnecessary shirt tail and prevents shirt from pulling out; made of madras, percale and silk pongee in patterns you will like; each, $1.50, $2.00, $2.50 and $3.00.",
+        "price": "$1.50, $2.00, $2.50 and $3.00"
+      },
+      {
+        "productOrBusiness": "\"WEAR-WEL\" STRAW HATS",
+        "description": "Rough and Smooth Straws in styles wanted now ; a becoming shape for every man ; not the best hat made, but the best for $2.00.",
+        "price": "$2.00"
+      },
+      {
+        "productOrBusiness": "SILK SOCKS FOR MEN",
+        "description": "Made with double heel and toe, in colors of black, tan, navy, gray and purple ; all sizes ; pair, 35c, or three for $1.00.",
+        "price": "35c"
+      },
+      {
+        "productOrBusiness": "MEN' SILK HATS",
+        "description": "Made of pure silk, in colors of white, black and tan; ideal for summer wear ; each, soc and $1.00.",
+        "price": "50c and $1.00"
+      },
+      {
+        "productOrBusiness": "PALM BEACH SUITS",
+        "description": "We have them in both plain and stripes, in well made, perfect garments ; suit, $6.50 and $7.50.",
+        "price": "$6.50 AND $7.50"
+      },
+      {
+        "productOrBusiness": "WASH TIES",
+        "description": "Wash Ties of the better kind, made with open ends in bias corded stripes ; each, 35c or three for $1.00. Better ties correspondingly low",
+        "price": "35c"
+      },
+      {
+        "productOrBusiness": "MOHAIR SUITS",
+        "description": "A cool Summer Suit in blue and gray grounds with small pin stripes; good, sensible models; well fitting and wear resisting; suit, $10,00, $12.50 and $15.00.",
+        "price": "$10.00 TO $15.00"
+      },
+      {
+        "productOrBusiness": "EXTRA-DURHAM DUPLEX RAZOR SET",
+        "description": "A Durham Duplex Safety Razor, a Durham Duplex Blade and a 25c stick of Durham Duplex Shaving Soap, all for 35c.",
+        "price": "35c"
+      },
+      {
+        "productOrBusiness": "WOOD FIBER SUITS",
+        "description": "A new material this season ; cleans like a Palm Beach ; comes in silk finished gray that does not soil easily ; suit, $12.50.",
+        "price": "$12.50"
+      },
+      {
+        "productOrBusiness": "MEN'S PAJAMAS",
+        "description": "Made of figured crepe in a light weight, suitable for summer wear ; very special at $1.50.",
+        "price": "$1.50"
+      },
+      {
+        "productOrBusiness": "BOYS' PALM BEACH SUITS",
+        "description": "Made in a new Norfolk model, with full peg trousers; blue with pin stripes or Palm Beach color in plain or striped ; ages 8 to 18 years ; suit, $5.00; second floor, Boys' Department.",
+        "price": "$5.00"
+      },
+      {
+        "productOrBusiness": "MEN'S NIGHT SHIRTS",
+        "description": "Made of durable white muslin, extra long and extra wide; the summer kind; each. soc.",
+        "price": "50c"
+      },
+      {
+        "productOrBusiness": "BOYS' KHAKI SUITS",
+        "description": "Made of an excellent quality khaki, Norfolk style, with peg top trousers ; ages 6 to 18 years; suit, $2.50; second floor, Boys\" Department.",
+        "price": "$2.50"
+      },
+      {
+        "productOrBusiness": "MEN'S POROSKNIT UNDERWEAR",
+        "description": "Short sleeve shirts and ankle length drawers, cool and comfortable : garment, 38c, or two for. 75c.",
+        "price": "38c"
+      },
+      {
+        "productOrBusiness": "BOYS' PALM BEACH PANTS",
+        "description": "Made of a good quality Palm Beach in solid color and stripes, peg top ; ages 5 to 17 years ; pair, $1.25 and $1.50; second floor, Boys' Department.",
+        "price": "$1.25 and $1.50"
+      },
+      {
+        "productOrBusiness": "BALBRIGGAN UNDERWEAR",
+        "description": "White er ecru, short or long sleeves, knee or ankle length ; a soc garment for agc ; separate shirts and drawers.",
+        "price": "29c"
+      },
+      {
+        "productOrBusiness": "MEN'S BATHING SUITS",
+        "description": "One or Two-Piece Suits made of blue jersey cloth, white of red trimmed; each, 75c.",
+        "price": "75c"
+      },
+      {
+        "productOrBusiness": "MEN'S LEATHER OXFORDS",
+        "description": "Men's Shoes in the popular English styles, with one-half-inch heels ; black and light and dark tans; Goodyear welt soles ; high-grade shoes ; pair, $5.00.",
+        "price": "$5.00"
+      },
+      {
+        "productOrBusiness": "MEN'S WHITE AND PALM BEACH OXFORDS",
+        "description": "It is time for White Canvas and Palm Beach Oxfords. They are made of the finest of materials, with Good year welt soles ; all snappy lasts: union made; pair, $3.50.",
+        "price": "$3.50"
+      },
+      {
+        "productOrBusiness": "Black and Tan Shoes",
+        "description": "Nearly every new style for men in Black and Tan Shoes. We claim extra value for every pair at $3.00 and $4.00.",
+        "price": "$3.00 and $4.00"
+      }
+    ],
+    "events": [
+      {
+        "eventName": "AT THE SAVOY",
+        "date": null,
+        "venue": "SAVOY"
+      }
+    ]
+  },
+  "schemaId": "BQNNnBPR",
+  "schemaName": "Historical Newspaper Page V2",
+  "jobId": "ecxoFp9V",
+  "dataset": "unassigned",
+  "filename": "Fort_Worth_Record_Telegram_1914_06_06_3",
+  "displayMode": "auto",
+  "timestamp": "2026-03-17T04:43:18.056000Z",
+  "metadata": null,
+  "fieldMetadata": null
+}

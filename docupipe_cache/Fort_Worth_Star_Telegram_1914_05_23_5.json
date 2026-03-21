@@ -1,0 +1,132 @@
+{
+  "standardizationId": "2YFpEmut",
+  "documentId": "BapEIyxV",
+  "data": {
+    "newspaperName": "Fort Worth Star-Telegram",
+    "publicationDate": "1914-05-23",
+    "pageNumber": 5,
+    "location": "Fort Worth, Texas",
+    "headlines": [
+      {
+        "title": "WEEK'S STOCK MARKET CLOSES WITH RISE IN UNITED STATES STEEL",
+        "subtitle": "Most of Active Issues Tended Slightly Upward in Day's Brief Session.",
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "Cotton Bulls Hold Position; Finals Show Further Gains",
+        "subtitle": "Clearing Weather in Texas Offset by Continued Drouth in Eastern Belt Sentiment Largely Bullish and Holders Stand Firm.",
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "WHEAT RULES FIRM WITH FAIR SUPPORT; SHORTS BUY FREELY",
+        "subtitle": "Reports of Damage by Hessian Fly Causes Uneasiness Among Traders.",
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "Practically No Market on Saturday in Cattle Yards",
+        "subtitle": "Receipts Limited to 58 Calves Supply of 700 Hogs Is Disposed of at Steady Prices, With Three Cars Notching $8,35 for a Top No Sheep.",
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "COFFEE TRADE DULL; CONSUMPTION DEMAND SHOWS BIG DECREASE",
+        "subtitle": "Strawberry Supply More Liberal and of Better Quality. Poultry Steady.",
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "SECURITIES TAKE ON MIDSUMMER DULLNESS",
+        "subtitle": "Crop Prospects Continue Favorable and Mexican Situation Helped to Hold Prices.",
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "FREE MILK AND ICE WORKERS MEET MONDAY",
+        "subtitle": "Members of Sub - Committee Will Be Announced in Star-Telegram Sunday.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "ROTARIANS FROLIC IN STUNTS AT LAKE ERIE",
+        "subtitle": "Barbecue, Vaudeville, Dancing and Song Feature First Outing of Season.",
+        "topic": "Entertainment",
+        "fullText": null
+      },
+      {
+        "title": "THREE FILE CLAIMS ON DAMAGE TO LAND",
+        "subtitle": "Overflow at Lake Werth Basis for Additional Actions Against City.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "FIVE WOMEN ESCAPE JAIL; THREE CAUGHT",
+        "subtitle": "Negroes Climb Thrugh Window to Two Make Get-Away.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "WOMEN FRIGHTENED BY MEXICAN; MAN FINED",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "CONTRACTS AWARDED",
+        "subtitle": "Jay Grew to Do Work on Three Bridges",
+        "topic": "Local News",
+        "fullText": null
+      }
+    ],
+    "advertisements": [
+      {
+        "productOrBusiness": "Electric Bitters",
+        "description": "A treatment of Electric Bitters increases your appetite; stops indigestion, makes you feel better. A splendid tonic for liver, kidney and stomach. Get a bottle today.",
+        "price": "50c and $1.00"
+      },
+      {
+        "productOrBusiness": "Burklen's Arnica Salve",
+        "description": "Burklen's Arnica Salve for Eczema.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "Chamberlain's Cough Remedy",
+        "description": "AN EXCELLENT COUGH MEDICINE The soothing and healing properties of Chamberlain's Cough Remedy make it especially valuable for children. It is pleasant to take and contains no harmful drugs.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "Chamberlain's Tablets",
+        "description": "I was ill with stomach trouble and in three months on limewater and milk. He then had liver trouble, they failed to relieve him. He was eventually cured by Chamberlain's Tablets.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "DOUGLASS W. KING",
+        "description": "FORT WORTH, TEXAS \"Member Texas Grain Dealers' Assn. Fort Worth Grain and Cotton Exchange",
+        "price": null
+      }
+    ],
+    "events": [
+      {
+        "eventName": "Star-Telegram Free Milk and Ice Fund Meeting",
+        "date": "Monday",
+        "venue": "First Methodist church"
+      },
+      {
+        "eventName": "Fort Worth Rotary Club Outing",
+        "date": "Friday night",
+        "venue": "Lake Erie"
+      }
+    ]
+  },
+  "schemaId": "BQNNnBPR",
+  "schemaName": "Historical Newspaper Page V2",
+  "jobId": "B4i9x5ek",
+  "dataset": "unassigned",
+  "filename": "Fort_Worth_Star_Telegram_1914_05_23_5",
+  "displayMode": "auto",
+  "timestamp": "2026-03-17T04:29:46.968000Z",
+  "metadata": null,
+  "fieldMetadata": null
+}

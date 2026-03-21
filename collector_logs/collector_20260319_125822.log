@@ -1,0 +1,39 @@
+2026-03-19 12:58:22,921 [INFO] ============================================================
+2026-03-19 12:58:22,921 [INFO] Newspapers.com Metadata Collector
+2026-03-19 12:58:22,921 [INFO] ============================================================
+2026-03-19 12:58:22,922 [INFO]   Search term: "lake worth"
+2026-03-19 12:58:22,922 [INFO]   Restart every: 100 new entries
+2026-03-19 12:58:22,922 [INFO]   Throttle: 500 views/hour
+2026-03-19 12:58:22,922 [INFO]   Log file: c:\lake_worth\collector_logs\collector_20260319_125822.log
+2026-03-19 12:58:22,922 [INFO]   Error log: c:\lake_worth\collector_logs\errors_20260319_125822.log
+2026-03-19 12:58:22,923 [INFO] 
+>>> SESSION 1
+2026-03-19 12:58:22,932 [INFO] ============================================================
+2026-03-19 12:58:22,932 [INFO]   Starting session from: 1917-08-21
+2026-03-19 12:58:22,933 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1917-08-21&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-19 12:58:22,933 [INFO] ============================================================
+2026-03-19 12:58:24,460 [INFO] Opening Newspapers.com...
+2026-03-19 12:58:31,822 [INFO] Loading search results...
+2026-03-19 12:58:36,890 [INFO] --- Batch 1 ---
+2026-03-19 12:58:39,039 [INFO]   Found 10 new result links
+2026-03-19 12:58:42,739 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1917_08_21_9.pdf
+2026-03-19 12:58:46,284 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1917_08_21_4.pdf
+2026-03-19 12:58:49,804 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1917_08_21_10.pdf — Fort Worth Star-Telegram, 1917-08-21, p10
+2026-03-19 12:58:53,497 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1917_08_22_5.pdf — Fort Worth Record-Telegram, 1917-08-22, p5
+2026-03-19 12:58:56,971 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1917_08_22_2.pdf — Fort Worth Star-Telegram, 1917-08-22, p2
+2026-03-19 12:59:00,519 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1917_08_22_9.pdf — Fort Worth Star-Telegram, 1917-08-22, p9
+2026-03-19 12:59:04,397 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1917_08_22_3.pdf — Fort Worth Record-Telegram, 1917-08-22, p3
+2026-03-19 12:59:08,306 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1917_08_22_3.pdf — Fort Worth Star-Telegram, 1917-08-22, p3
+2026-03-19 12:59:12,193 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1917_08_22_5.pdf — Fort Worth Star-Telegram, 1917-08-22, p5
+2026-03-19 12:59:15,671 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1917_08_22_6.pdf — Fort Worth Star-Telegram, 1917-08-22, p6
+2026-03-19 12:59:15,671 [INFO]   Returning to search...
+2026-03-19 12:59:26,939 [INFO] No more results to load.
+2026-03-19 12:59:26,939 [INFO]   Session 1: 8 new, 2 skipped (running total: 8 new)
+2026-03-19 12:59:26,939 [INFO]   All results collected.
+2026-03-19 12:59:26,940 [INFO] ============================================================
+2026-03-19 12:59:26,940 [INFO] DONE
+2026-03-19 12:59:26,940 [INFO]   Sessions: 1
+2026-03-19 12:59:26,940 [INFO]   Total new entries: 8
+2026-03-19 12:59:26,940 [INFO]   Total skipped: 2
+2026-03-19 12:59:26,940 [INFO]   Error log: c:\lake_worth\collector_logs\errors_20260319_125822.log
+2026-03-19 12:59:26,940 [INFO] ============================================================

@@ -1,0 +1,139 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-06-18",
+  "pageNumber": 5,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "Brief Local News",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "SELECT NAME FOR NEW THEOLOGICAL COLLEGE OF T.C.U.",
+      "subtitle": "Will Be Known as \"The Brite College of the Bible\" in Honor of the Man Who Made Endowment. TO ERECT $30,000 BUILDING AT ONCE Dr. Bacon Saunders of Fort Worth Is Made President of Board of Directors and Rev. L. D. Anderson, Secretary.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Man Who Gave $100,000 to Endow Theological College",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MARRIED COQUETTE CAUSES MAN'S DEATH",
+      "subtitle": "As Visitor Is Killed in Her Home by Another Suitor Her Husband Enters; Says She Has Learned Her Lesson.",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "RACES TO SAN ANTONIO TO SAVE HER BROTHER",
+      "subtitle": "Prevents Gambler From Winning Crooked Game: District Attorney Is Killed by Burglar Whom He Had \"Sent Up.\"",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "WILL MANUFACTURE PUNCTURE-PROOF INNER TUBES HERE",
+      "subtitle": "B. H. Miller Applies for Patent on His Invention and Opens Plant to Begin Operations.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "FORT WORTH SEEKS NEXT MEETING OF PRESS ASSOCIATION",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FAT MEN. BOYS AND GIRLS ENGAGE IN FREE-FOR-ALL",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "PERSONALS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "NEWLY MARRIED COUPLE TO TAKE LONG TRIP",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "TEXAS STUDENTS GET DEGREES IN FOREMOST COLLEGES OF COUNTRY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "OBITUARY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "THREE FORT WORTH COMPANIES TO ATTEND THE STATE MANEUVERS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "HAIR WOULD FALL BY HANDFULS",
+      "subtitle": "Scalp Covered with Dandruff. Itching so Intense Could Not Sleep. Cuticura Soap and Ointment Completely Cured. Now Has Long Hair.",
+      "topic": "Health",
+      "fullText": null
+    },
+    {
+      "title": "Polytechnic Happenings.",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Constable Turns Back on Prisoner. Prisoner Vamooses",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ELECTRICAL CONTRACTORS MUST TAKE OUT PERMITS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MISS MASON TO TEACH IN T. C. U. ART DEPARTMENT",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Clark's Clothes",
+      "description": "A store for men of judgment, not necessarily men of means. Sells Palm Beach, Panama, and Poplin suits, Mohair and Silian coats, and Linen pants. Also specials on Shirts, Underwear, Pajamas, Night Shirts, Neckwear and Sox.",
+      "price": "$7.00"
+    },
+    {
+      "productOrBusiness": "Dierling & Black",
+      "description": "THE - HOUSE -OF VALUES. SECOND. HOUSTON & MAIN. Specials on Blouse Waists, Taffeta and Moire Silk Tailored Skirts, and Underwear.",
+      "price": "$1.25"
+    },
+    {
+      "productOrBusiness": "Great Novels in a Nutshell",
+      "description": "Great Novels in a Nutshell",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Dr. Pepper",
+      "description": "KING OF BEVERAGES. LIQUID SUNSHINE. IS MADE IN A CLEAN FACTORY. The extreme care-the hygienic cleanliness-used in making as well as shipping Dr. Pepper, means a lot to you.",
+      "price": "5c"
+    }
+  ],
+  "events": []
+}

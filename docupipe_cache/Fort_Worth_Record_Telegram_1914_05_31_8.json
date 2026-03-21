@@ -1,0 +1,98 @@
+{
+  "standardizationId": "JAgI8xy4",
+  "documentId": "33H7zjUZ",
+  "data": {
+    "newspaperName": "Fort Worth Record-Telegram",
+    "publicationDate": "1914-05-31",
+    "pageNumber": 8,
+    "location": "Fort Worth, Texas",
+    "headlines": [],
+    "advertisements": [
+      {
+        "productOrBusiness": "Compound",
+        "description": null,
+        "price": "55c"
+      },
+      {
+        "productOrBusiness": "Fancy Fresh Tomatoes",
+        "description": null,
+        "price": "10c"
+      },
+      {
+        "productOrBusiness": "Corn",
+        "description": "104 cases extra fancy",
+        "price": "$1.15 per dozen"
+      },
+      {
+        "productOrBusiness": "Tomatoes",
+        "description": "cane bolle Park",
+        "price": "15c"
+      },
+      {
+        "productOrBusiness": "Van Camp's",
+        "description": null,
+        "price": "9c for 3 cans"
+      },
+      {
+        "productOrBusiness": "Macaroni",
+        "description": null,
+        "price": "15c for packages"
+      },
+      {
+        "productOrBusiness": "Arbuskia's",
+        "description": null,
+        "price": "24c"
+      },
+      {
+        "productOrBusiness": "Paney Pink",
+        "description": null,
+        "price": "11c"
+      },
+      {
+        "productOrBusiness": "Worth Bient",
+        "description": null,
+        "price": "27c"
+      },
+      {
+        "productOrBusiness": "Armour's Grape",
+        "description": null,
+        "price": "37c"
+      },
+      {
+        "productOrBusiness": "Medium sized Crimes",
+        "description": null,
+        "price": "49c"
+      },
+      {
+        "productOrBusiness": "Sardines in Offre",
+        "description": null,
+        "price": "11c"
+      },
+      {
+        "productOrBusiness": "Armour, Grape",
+        "description": null,
+        "price": "65c"
+      },
+      {
+        "productOrBusiness": "Large site Crisco",
+        "description": null,
+        "price": "98c"
+      },
+      {
+        "productOrBusiness": "Faser Head",
+        "description": null,
+        "price": "25c"
+      }
+    ],
+    "events": []
+  },
+  "schemaId": "BQNNnBPR",
+  "schemaName": "Historical Newspaper Page V2",
+  "jobId": "jt0y8Fjr",
+  "dataset": "unassigned",
+  "filename": "Fort_Worth_Record_Telegram_1914_05_31_8",
+  "displayMode": "auto",
+  "timestamp": "2026-03-17T04:36:52.810000Z",
+  "metadata": null,
+  "fieldMetadata": null
+}

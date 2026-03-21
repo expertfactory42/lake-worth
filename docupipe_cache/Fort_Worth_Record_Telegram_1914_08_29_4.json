@@ -1,0 +1,100 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-08-29",
+  "pageNumber": 4,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "Disappointment Ahead.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "SECRETS OF HEALTH AND HAPPINESS",
+      "subtitle": null,
+      "topic": "Health",
+      "fullText": null
+    },
+    {
+      "title": "Sketches from Life",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Cheap Fuel, Cheap Water.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "What Is the Animus?",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "FEAR DRIVES MAN TO TAKE OWN LIFE",
+      "subtitle": "Hounded by Financially Powerful Enemy, He Takes Easiest Way Out of the Trouble by Going the Suicide Route.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "SLEUTH'S CLEVER WORK RECOVERS STOLEN JEWELS",
+      "subtitle": "Wealthy Woman, Overcome by Vanity, Wears the Jewels to the Opera \"Just Once\" and This Leads to Her Arrest.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "The Duty of Reservists",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Expanding Our Commerce.",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "Public Discussion",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Talking About The Record.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Just a Moment.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Bally Strength and Cheer.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Teeth in This.",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    }
+  ],
+  "advertisements": [],
+  "events": [
+    {
+      "eventName": "AT THE MOVIES TUDAT.",
+      "date": null,
+      "venue": null
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+2026-03-20 15:43:03,730 [INFO] ============================================================
+2026-03-20 15:43:03,731 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 15:43:03,731 [INFO] ============================================================
+2026-03-20 15:43:03,731 [INFO]   Unclipped entries: 13297
+2026-03-20 15:43:03,731 [INFO]   Starting from: 1914-09-09
+2026-03-20 15:43:03,731 [INFO]   Max pages: 1
+2026-03-20 15:43:03,731 [INFO]   Throttle: 450 views/hour
+2026-03-20 15:43:03,731 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_154303.log
+2026-03-20 15:43:14,229 [INFO] NOT LOGGED IN — please log in to newspapers.com in the browser window.
+2026-03-20 15:43:14,229 [INFO] Waiting up to 30 seconds for login...
+2026-03-20 15:43:31,021 [INFO] Login detected! Continuing...
+2026-03-20 15:43:37,619 [INFO] 
+>>> Searching 1914-09-09 to 1914-10-09
+2026-03-20 15:43:45,792 [INFO]   Found 10 results
+2026-03-20 15:43:49,501 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_09_10.pdf
+2026-03-20 15:43:54,132 [INFO]     Clicked Clip button
+2026-03-20 15:44:18,372 [INFO]     Found 4 handles with selector: circle
+2026-03-20 15:44:18,421 [INFO]     Dragging UL handle from (544, 162) by (-539, -157)
+2026-03-20 15:44:19,986 [INFO]     Dragging LR handle from (640, 311) by (638, 327)
+2026-03-20 15:44:20,258 [ERROR]     Clip error: Message: move target out of bounds
+  (Session info: chrome=146.0.7680.153)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x1d4037
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 15:44:28,456 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_09_7.pdf

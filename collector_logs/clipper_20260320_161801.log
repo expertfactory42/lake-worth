@@ -1,0 +1,34 @@
+2026-03-20 16:18:01,885 [INFO] ============================================================
+2026-03-20 16:18:01,885 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 16:18:01,886 [INFO] ============================================================
+2026-03-20 16:18:01,886 [INFO]   Unclipped entries: 13297
+2026-03-20 16:18:01,886 [INFO]   Starting from: 1914-09-09
+2026-03-20 16:18:01,886 [INFO]   Max pages: 1
+2026-03-20 16:18:01,886 [INFO]   Throttle: 450 views/hour
+2026-03-20 16:18:01,886 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_161801.log
+2026-03-20 16:18:09,765 [INFO] Already logged in.
+2026-03-20 16:18:15,402 [INFO] 
+>>> Searching 1914-09-09 to 1914-10-09
+2026-03-20 16:18:21,956 [INFO]   Found 10 results
+2026-03-20 16:18:25,490 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_09_10.pdf
+2026-03-20 16:18:30,682 [INFO]     Clicked Clip button
+2026-03-20 16:18:35,692 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:18:35,692 [INFO]     NW handle at (596,224), SE handle at (687,366)
+2026-03-20 16:18:35,706 [INFO]     Dragging NW by (-585, -108)
+2026-03-20 16:18:38,678 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:18:38,693 [INFO]     Dragged SE via JS: (687,366) -> (1416,755)
+2026-03-20 16:18:40,812 [INFO]     Clicked Save button
+2026-03-20 16:18:46,810 [INFO]     Navigated to clip article: https://star-telegram.newspapers.com/article/fort-worth-record-telegram/19382326
+2026-03-20 16:19:04,001 [INFO]     Clicked: Hide Article Text (OCR)
+2026-03-20 16:19:48,428 [INFO]     OCR text: 26813 chars, clip: https://star-telegram.newspapers.com/article/fort-worth-reco...
+2026-03-20 16:20:00,334 [INFO] HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-03-20 16:20:00,350 [INFO]     Found 1 articles
+2026-03-20 16:20:00,351 [INFO]   Progress: 1 clipped, 1 articles, 0 errors
+2026-03-20 16:20:04,371 [INFO]   Reached max_pages limit (1)
+2026-03-20 16:20:04,371 [INFO] ============================================================
+2026-03-20 16:20:04,372 [INFO] DONE
+2026-03-20 16:20:04,372 [INFO]   Pages clipped: 1
+2026-03-20 16:20:04,372 [INFO]   Articles found: 1
+2026-03-20 16:20:04,372 [INFO]   Skipped: 0
+2026-03-20 16:20:04,372 [INFO]   Errors: 0
+2026-03-20 16:20:04,372 [INFO] ============================================================

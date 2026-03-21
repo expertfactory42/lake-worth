@@ -1,0 +1,108 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-01-08",
+  "pageNumber": 12,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "ROMANCE OF YEARS IS AIRED IN COURT",
+      "subtitle": "Estate of Walter M. Parker Is Adjudicated by Judge Meek. Strange Ways of a Man Who Made Stake and of Daughter Who Knew Him Not.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "SERNON IN THE RECORD GETS CHURCH MEMBERS",
+      "subtitle": "Is He a Good Citizen? Words Say \"Yes.\"But Actions Say: \"No\"",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "POSTPONE ACTION ON SWITCHING ORDINANCE",
+      "subtitle": "Counsel for Railroads and Legal Representative of Switchmen Agree to Defer Discussion of Full Crew Measure.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "AD MEN TO GO TO TORONTO ON SPECIAL",
+      "subtitle": "Committee Appointed to Visit Canadian City and Make Arrangements for Accommodation of Ft. Worth Delegates.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "City Commission Grindings",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MAY PICK PRAIRIE ROUTE FOR MERIDIAN HIGHWAY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "TO FURTHER CONSIDER BUILDING 9-MILE BRIDGE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Fletcher's CASTORIA",
+      "description": "A harmless substitute for Castor Oil, Paregoric, Drops and Soothing Syrups. For the relief of Constipation, Flatulence, Wind Colic, all Teething Troubles and Diarrhea.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Washer Bros.",
+      "description": "Great Sale of Men's Shirts. MANHATTAN SHIRTS REDUCED. OUR OWN MAKE AND OTHERS. Negligee, Plaited and Semi-Stiff Bosoms. Full Dress Shirts. Plaited Tuexdo Shirts. Light Weight Flannel. Silk Shirts. Earl & Wilson Silk and Wool Negligee Shirts. A special lot of broken lines, $2.00 and $2.50 Negligee Shirts and Plaited Shirts.",
+      "price": "$1.15, $1.40, $1.90, $2.25, $2.65, $1.75, $2.00, $2.45, $1.50, $3.75, $4.00, $5.50, $1.35"
+    },
+    {
+      "productOrBusiness": "Drs. Sellers & Gough",
+      "description": "EYE, EAR. NOSE, THROAT",
+      "price": null
+    },
+    {
+      "productOrBusiness": "H. W. GREENWAY, Plumber",
+      "description": "PLUMBING. Don't give out the work until I have figured on the job.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Dr. I. C. McCoy",
+      "description": "GESTTO-ERIVARY SPECIALIST.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "R. HANSEN & CO.",
+      "description": "Let Us Do Your PLUMBING. We do it better. quicker ang for less",
+      "price": null
+    },
+    {
+      "productOrBusiness": "BLESSING",
+      "description": "FILMS and all REQUISITES. Finish for AMATEURS",
+      "price": null
+    },
+    {
+      "productOrBusiness": "DR. SCHNAPPS.",
+      "description": "PAINLESS REMOVAL OF YOUR CORNS. CHIROPODEST.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "DR. H. L. WARWICK",
+      "description": "Practice Limited to Diseases of the Eye, Ear, Nose and Throat.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Grape-Nuts",
+      "description": "Cereal food made from whole wheat and malted barley. Contains all the natural nutritive elements of these great food grains, including the mineral phosphates.",
+      "price": "15c the package"
+    },
+    {
+      "productOrBusiness": "Stonestreet & Davis",
+      "description": "Special reductions on the celebrated Manhattan Shirts. Complete line of sizes, generous assortment of materials, in demi-stiff and pleated : all this season styles and patterns.",
+      "price": "$1.15, $1.35, $1.45, $1.85, $2.25"
+    }
+  ],
+  "events": []
+}

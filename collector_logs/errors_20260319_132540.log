@@ -1,0 +1,846 @@
+2026-03-19 14:51:12,829 PARSE_FAIL | https://star-telegram.newspapers.com/image/634403804/?match=1&terms=%22lake%20worth%22 | title: 502 Bad Gateway
+2026-03-19 21:42:50,765 PARSE_FAIL | https://star-telegram.newspapers.com/image/634453936/?match=1&terms=%22lake%20worth%22 | title: 502 Bad Gateway
+2026-03-20 01:01:30,926 PARSE_FAIL | https://star-telegram.newspapers.com/image/634462565/?match=1&terms=%22lake%20worth%22 | title: star-telegram.newspapers.com
+2026-03-20 01:01:36,208 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634462653/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_CONNECTION_TIMED_OUT
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:02:01,940 PARSE_FAIL | https://star-telegram.newspapers.com/image/634581450/?match=1&terms=%22lake%20worth%22 | title: star-telegram.newspapers.com
+2026-03-20 01:02:04,010 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634581452/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:02:04,057 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634581456/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:02:04,107 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634581466/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:02:04,157 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:19,123 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634462767/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:19,252 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634581477/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:19,382 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634581485/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:19,435 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634462686/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:19,580 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634581474/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:19,629 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634581475/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:19,727 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634581489/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:19,776 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634462911/?match=1&terms=%22lake%20worth%22 | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:19,862 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:24,495 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:29,163 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:33,750 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:38,473 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:43,070 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:47,712 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:52,327 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:03:57,011 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:04:01,523 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 01:04:06,204 SESSION_CRASH | Message: unknown error: net::ERR_INTERNET_DISCONNECTED
+  (Session info: chrome=145.0.7632.160)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x13f2be
+	0x1323d4
+	0x133e2c
+	0x132864
+	0x1321a5
+	0x131ea5
+	0x12ffb8
+	0x1306ca
+	0x14583e
+	0x1cc174
+	0x1aea3c
+	0x1cb621
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 03:42:54,996 PARSE_FAIL | https://star-telegram.newspapers.com/image/634459972/?match=1&terms=%22lake%20worth%22 | title: 502 Bad Gateway
+2026-03-20 04:42:45,567 PARSE_FAIL | https://star-telegram.newspapers.com/image/634474443/?match=1&terms=%22lake%20worth%22 | title: Worker threw exception | star-telegram.newspapers.com | Cloudflare

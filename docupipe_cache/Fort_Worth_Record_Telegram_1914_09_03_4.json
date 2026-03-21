@@ -1,0 +1,98 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-09-03",
+  "pageNumber": 4,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "ASSISTANCE FROM FEDERAL TREASURY ASKED BY FARMERS",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "BUTTE, UNDER RULE OF MILITIA, IS QUIET",
+      "subtitle": "First Day of Martial Law in Montana City Passes Without Disturbance Despite the Threats of Miners.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Woman Demonstrator May Be Secured tor County by Y. M. B.L.",
+      "subtitle": "Miss Bernice Carter, State Agent of Girls' Clubs, and G. W. Eudaley Address Weekly Meeting of League.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MAY ERECT AUTO CLUBHOUSE NEAR NEW RESERVOIR",
+      "subtitle": "Members at Well Attended Meeting Pledge Themselves to Build Loop Driveway to Lake Worth. NEW BOARD DIRECTORS CHOSEN AT MEETING Secretary E. E. Edwards Is Praised for Efficient Service Rendered Club During Past Year.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WOMAN IS VICTIM OF OWN HAND",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "NEW WAR PICTURES TO BE SHOWN AT THE HIPPODROME TODAY",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "GREAT SUMS SPENT FOR IMPROVEMENTS",
+      "subtitle": "City of Dallas to Use $145,000 for Civic Work, Including Paving, Grading and Park Repairs.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "HAMMOND ANNOUNCES COUNTY SCHOOL DATES",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ADOPT NEW POLICY OF GETTING POLICEMEN",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WITNESSES TESTIFY IN FRANKLIN MURDER",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "CABINET MEMBERS WILL TAKE OATH OF OFFICE IMMEDIATELY",
+      "subtitle": null,
+      "topic": "Politics",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "1914 Detroiter",
+      "description": "I have a 1914 Detroiter as good as new. Has been run 1,500 miles. I will sell today for $550 If you want a bargain, call Lamar 5740. FRANK ANDERSON",
+      "price": "$550"
+    },
+    {
+      "productOrBusiness": "Cotton",
+      "description": "Want Cotton! All We Can Get at 12c Per Lb. P. O. E. Fort Worth or Dallas.",
+      "price": "12c Per Lb."
+    },
+    {
+      "productOrBusiness": "THE VALTIN HAFNER PIANO CO.",
+      "description": "You Want a Piano! We Want Money! and prove It by making you this liberal offer when you need It You may not be able to sell cotton. We can sell It. We will pay you lle per pound for all we can get. Call and see me at once ng etter store. THE VALTIN HAFNER PIANO CO. Wholesale and Retall. DALLAS, DES Fim ... Phone Mais 3290",
+      "price": "lle per pound"
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Rotary Field Day",
+      "date": "Sept. 11",
+      "venue": null
+    }
+  ]
+}

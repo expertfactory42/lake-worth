@@ -1,0 +1,20 @@
+2026-03-20 16:02:21,961 [INFO] ============================================================
+2026-03-20 16:02:21,961 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 16:02:21,961 [INFO] ============================================================
+2026-03-20 16:02:21,961 [INFO]   Unclipped entries: 13297
+2026-03-20 16:02:21,961 [INFO]   Starting from: 1914-09-09
+2026-03-20 16:02:21,961 [INFO]   Max pages: 1
+2026-03-20 16:02:21,961 [INFO]   Throttle: 450 views/hour
+2026-03-20 16:02:21,961 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_160221.log
+2026-03-20 16:02:28,995 [INFO] Already logged in.
+2026-03-20 16:02:36,264 [INFO] 
+>>> Searching 1914-09-09 to 1914-10-09
+2026-03-20 16:02:43,480 [INFO]   Found 10 results
+2026-03-20 16:02:47,015 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_09_10.pdf
+2026-03-20 16:02:52,378 [INFO]     Clicked Clip button
+2026-03-20 16:02:57,386 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:02:57,387 [INFO]     NW handle at (643,224), SE handle at (735,366)
+2026-03-20 16:02:57,396 [INFO]     Dragging NW by (-633, -108)
+2026-03-20 16:03:00,372 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:03:00,384 [INFO]     Dragged SE via JS: (735,366) -> (1416,755)
+2026-03-20 16:03:02,526 [INFO]     Clicked Save button

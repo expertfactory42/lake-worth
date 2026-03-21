@@ -1,0 +1,15 @@
+2026-03-20 15:36:46,416 [INFO] ============================================================
+2026-03-20 15:36:46,416 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 15:36:46,416 [INFO] ============================================================
+2026-03-20 15:36:46,417 [INFO]   Unclipped entries: 13297
+2026-03-20 15:36:46,417 [INFO]   Starting from: 1914-09-09
+2026-03-20 15:36:46,417 [INFO]   Max pages: 1
+2026-03-20 15:36:46,417 [INFO]   Throttle: 450 views/hour
+2026-03-20 15:36:46,417 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_153646.log
+2026-03-20 15:36:56,740 [INFO] 
+>>> Searching 1914-09-09 to 1914-10-09
+2026-03-20 15:37:19,890 [INFO]   No results found on page.
+2026-03-20 15:37:19,890 [INFO]   Found 0 results
+2026-03-20 15:37:19,890 [INFO]   No results, jumping ahead to 1915-03-08
+2026-03-20 15:37:19,890 [INFO] 
+>>> Searching 1915-03-08 to 1915-04-07

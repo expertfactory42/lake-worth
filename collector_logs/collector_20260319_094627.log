@@ -1,0 +1,26 @@
+2026-03-19 09:46:27,597 [INFO] ============================================================
+2026-03-19 09:46:27,597 [INFO] Newspapers.com Metadata Collector
+2026-03-19 09:46:27,598 [INFO] ============================================================
+2026-03-19 09:46:27,598 [INFO]   Search term: "lake worth"
+2026-03-19 09:46:27,598 [INFO]   Restart every: 100 new entries
+2026-03-19 09:46:27,598 [INFO]   Log file: c:\lake_worth\collector_logs\collector_20260319_094627.log
+2026-03-19 09:46:27,598 [INFO]   Error log: c:\lake_worth\collector_logs\errors_20260319_094627.log
+2026-03-19 09:46:27,598 [INFO] 
+>>> SESSION 1
+2026-03-19 09:46:27,603 [INFO] ============================================================
+2026-03-19 09:46:27,603 [INFO]   Starting session from: 1916-08-07
+2026-03-19 09:46:27,604 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1916-08-07&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-19 09:46:27,604 [INFO] ============================================================
+2026-03-19 09:46:28,973 [INFO] Opening Newspapers.com...
+2026-03-19 09:46:44,295 [INFO] Loading search results...
+2026-03-19 09:46:58,531 [INFO] --- Batch 1 ---
+2026-03-19 09:47:31,880 [INFO] No more results.
+2026-03-19 09:47:31,881 [INFO]   Session 1: 0 new, 0 skipped (running total: 0 new)
+2026-03-19 09:47:31,881 [INFO]   All results collected.
+2026-03-19 09:47:31,881 [INFO] ============================================================
+2026-03-19 09:47:31,881 [INFO] DONE
+2026-03-19 09:47:31,881 [INFO]   Sessions: 1
+2026-03-19 09:47:31,881 [INFO]   Total new entries: 0
+2026-03-19 09:47:31,881 [INFO]   Total skipped: 0
+2026-03-19 09:47:31,881 [INFO]   Error log: c:\lake_worth\collector_logs\errors_20260319_094627.log
+2026-03-19 09:47:31,881 [INFO] ============================================================

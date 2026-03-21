@@ -1,0 +1,76 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1913-10-19",
+  "pageNumber": 19,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "JUDGE PEDEN HOLDS JURY SYSTEM WRONG",
+      "subtitle": "Lawyers' Luncheon Will Debate Advantages of Supplanting Unanimous Verdict With Nine Members' Decision.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ELOQUENT TRIBUTE TO STEPHEN NOBLE",
+      "subtitle": "Life-Long Friend, Judge C. M. Templeton, Recounts Virtues and Lovable Qualities of the Dead Railroad Veteran.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ERROR CAUSES SMITH TO MEET OPPOSITION",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "WITNESSES IN ARSON TRIAL MUST SHOW UP",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "ONE NEGRO KILLS ANOTHER BY MISTAKE FOR BERGLAR.",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Dr. A. Reed Cushion Sole Shoes",
+      "description": "The Genuine Comfort Shoe. SPECIALLY made for tender feet. Soft leather on natural lasts that fit every curve of the foot. We have them in several styles. If you are bothered with your feet Dr. Reed's shoes are what you need.",
+      "price": "$5.50"
+    },
+    {
+      "productOrBusiness": "Ritter Flood Co.",
+      "description": "Exclusive Agents for Dr. A. Reed Cushion Sole Shoes. ATT SHOES STOCKINGS. 805 HOUSTON STREET",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Ellison Furniture & Carpet Co.",
+      "description": "On October 15th We Gave Away A Free Sewing Machine. The Free is the Machine needed in every home. Phone for our machine man. On credit at cash prices. Corner West Seventh and Throckmorton Streets",
+      "price": null
+    },
+    {
+      "productOrBusiness": "American Cafe and Buffet",
+      "description": "Everything to eat and drink-Cabaret-high-class entertainment to please the most exacting. Call and see and you will appreciate our efforts to give you the best. We aim to please. Special Dinner Every Sunday, 12 to 8 p. m. 1103 MAIN STREET.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "WILSON HEATERS",
+      "description": "We are exclusive agents for WILSON HEATERS for wood and coal, in size to suit any room and in price to suit almost any purse. No stove manufactured gives out more heat for the fuel used than the Wilson Heater, A pretty display of these stoves can be seen in our south window. You'll need a stove soon-make it a Wilson Heater. We carry a full line of other makes for wood, coal and gas.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "J. B. Burnside",
+      "description": "The Old Hardware Corner. Fifth and Houston.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Encyclopaedia Britannica",
+      "description": "New Eleventh Edition. Information cheerfully furnished by resident representative. FRED S. PARSONS Worth Hotel. Fort Worth, Texas.",
+      "price": null
+    }
+  ],
+  "events": []
+}

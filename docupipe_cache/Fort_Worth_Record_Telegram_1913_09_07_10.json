@@ -1,0 +1,103 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1913-09-07",
+  "pageNumber": 10,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "BAPTIST CHURCH WILL NOT PROSECUTE ARSON CASES",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "THE NEW CONFEDERATE PARK",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "A BUNCH OF TEXAS BABIES",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "FORT WORTH IS THE MECCA OF BUYERS:",
+      "subtitle": "LOCAL FIRMS ENJOY BEST TRADE OF YEAR",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "TEMPLE SUNDAY SCHOOLS TO HOLD MONSTER RALLY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "STORIES FOR CHILDREN AT LIBRARY AND PARK",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "DIRECTS MEXICAN WAR FROM PARIS",
+      "subtitle": "Senor Diaz Lombardo.European Representative of Gen. Carranza, Marks Every Day on Map. Gains From Huerta.",
+      "topic": "International",
+      "fullText": null
+    },
+    {
+      "title": "TO SUPPLY NORTH SIDE WITH MORE NEW HOMES",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "AUGUST BROUGHT RET IM",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "MUSICALE BY MULKEY EPWORTH LEAGUERS",
+      "subtitle": null,
+      "topic": "Entertainment",
+      "fullText": null
+    },
+    {
+      "title": "GROUP - OF - KATY - SECTION - FOREMEN",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": "This photograph shows a group of Missouri, Kansas & Texas section foremen, who recently attended a conference at Denison. The meeting was called by Superintendent A. S. Johnson of the Denison division. The foremen were thoroughly instructed regarding their duties and official reports. The conference closed with a dinner given by Johnson."
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Guy Richardson Pitner",
+      "description": "Teacher of Artistic Piano Playing Leschetizsky System of Technie. Studio, 501 Continental Bank Building. Phone Lamar 6487.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "HALTOM'S OPTICAL PARLOR",
+      "description": "Don't Neglect the Children's Eyes If your hoy or giri has complained. COR MAIN AND SIXTH ENTRANCE ON SIXTH ST. \"WHENIT COMES TO GLASSES COME TO US",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Goodtex Co.",
+      "description": "Coats, Suits DressesandSkirts We extend to all the merchants visiting Fort Worth a cordial invitation to visit our establishment-the only one in the Southwest. Strictly sanitary and up-to-date. SEE OUR LINE BEFORE YOU BUY And save money. Our Fall Style Book sent on request.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "THE STRIPLING-JENKINS CO.",
+      "description": "Manufacturers. Phone Lamar 4267. Fort Worth, Texas",
+      "price": null
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Guy Richardson Pitner Season Opening",
+      "date": "SEPTEMBER 8",
+      "venue": null
+    }
+  ]
+}

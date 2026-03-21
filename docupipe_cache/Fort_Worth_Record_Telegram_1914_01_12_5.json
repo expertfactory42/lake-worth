@@ -1,0 +1,153 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-01-12",
+  "pageNumber": 5,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "Brief Local News",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Robert E. Lee and Abraham Lincoln Figure in Court",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "TAYLOR HAS MUCH TO SAY ABOUT FARMING",
+      "subtitle": "Bell County Man Asserts Country People Must Quit Being Merely Consumers and Produce More of What They Use.",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "CHURCH NEWS AND SUNDAY SUBJECTS OF THE MINISTERS",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "REV. M. E. CHAPPELL TALKS TO POLICEMEN",
+      "subtitle": "He Tells \"Bluecoats\" It Is Far More Profitable to Mold a Life for Christ Than It Is to Earn a Living.",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "ONLY GOD STANDS BETWEEN MAN AND DEFEAT. SAYS PASTOR",
+      "subtitle": "Rev. L. D. Anderson Delivers Able Address on 'Preparation for Victory'-Gideon Called to Lead Weak.",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "CITY'S BEST ASSET IS ITS MEN AND ITS WOMEN, PASTOR SAYS",
+      "subtitle": "Rev. Edward McShane Waits Tells Congregation Its Citizens Are Greater Than Railroads, Skyscrapers, Packing Houses or Paved Streets.",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "GOD CREATED MAN IN HIS OWN IMAGE' TEXT",
+      "subtitle": "Rev. J. A. Rice Preaches Strong Sermon on Subject of \"Are We Creating or Destroying Human Souls?\"",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "NORRIS CASE IS SET FOR TRIAL TODAY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Policeman Arrests Deputy and Charge, Deputy Is Released",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "DR. BOAZ PREACHES AT UNION GOSPEL MISSION",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "D. A. R. SCHOLARSHIP AWAITS TEXAS GIRL",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "PERSONALS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "AVIATOR FALLS ON HIGH TENSION WIRES",
+      "subtitle": "R. C. King in Benoist Biplane Narrowly Escapes Electrocution When Machine Collides With Cables Sunday.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "OBITUARY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "DALLAS MINISTER TALKS AT HIPPODROME THEATER",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "THIEVES LOOT HOME.",
+      "subtitle": "STEAL SILVERWARE Residence of H. J. Pincus, 2108 Lipscomb, Is Entered Sunday Morning-Much Clothing and Valuables Taken.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "MINE WORKERS' CONGRESS EXPECTS 2.000 DELEGATES",
+      "subtitle": null,
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "MOUNT OLIVET CEMETERY",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "JUDGE GAGE TALKS TO LIFE DISCUSSION CLUB",
+      "subtitle": null,
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "COMMANDER SHAW TAKES CHARGE OF U. C. V. CAMP",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "\"QUEEN OF LITTLE ITALY\" OUT TO BEAT BATHHOUSE",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "RENALT",
+      "description": "Conquers Rheumatism Also Kidney, Stomach and Blad. TRY A BOTTLE TODAY. FOR SALE BY ALL DRUGGISTS",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Motor Car Specialty Co.",
+      "description": "Best Grade of Gasoline",
+      "price": "16c Per Gallon"
+    }
+  ],
+  "events": []
+}

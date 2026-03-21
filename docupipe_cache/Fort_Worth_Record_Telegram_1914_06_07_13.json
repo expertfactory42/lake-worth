@@ -1,0 +1,123 @@
+{
+  "standardizationId": "YpFs912t",
+  "documentId": "FliahaYz",
+  "data": {
+    "newspaperName": "Fort Worth Record-Telegram",
+    "publicationDate": "1914-06-07",
+    "pageNumber": 13,
+    "location": "Fort Worth, Texas",
+    "headlines": [
+      {
+        "title": "Brief Local News",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "Newspaper Man to London",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": "KANSAS CITY, June 6 Alfred D. mitman, a writer on the staff of the How we today received a tele- gram that he had been selected as one - Americana to be sent to London by the American Amsoeta study work peste, Ser. Pittman wil Besides those from the United States. there will be five each from England, France, Germany and Russia, About to : months will be occupied in the study"
+      },
+      {
+        "title": "Manly Midget Mascot Is Well Drilled",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "LABOR DELEGATES OFF TO EL PASO MEETING",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "MAN IS KNOCKED IN THE HEAD AND ROBBED",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "FLOWERS AND SHRUBS ADD TOUCH OF NATURE TO MEACHAM'S STORE",
+        "subtitle": null,
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "Couple Wed ta Dallas",
+        "subtitle": null,
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "LINER RESCUES STEAMER'S CREW AFTER COLLISION",
+        "subtitle": null,
+        "topic": "International",
+        "fullText": "LONDON, Jump \" The Allam Time Work. The crew of seventeen was saved."
+      }
+    ],
+    "advertisements": [
+      {
+        "productOrBusiness": "WACO",
+        "description": "ROUND TRIP",
+        "price": "$1.50"
+      },
+      {
+        "productOrBusiness": "Ft. Worth & Denver City Railway",
+        "description": "COOL COLORADO IS THE NATION'S Trouble Cemetery AND THE DOUBLE-DAILY FAST THROUGH TRAINS",
+        "price": null
+      },
+      {
+        "productOrBusiness": "SOUTHERN PACIFIC CO. Atlantle steamship Lines, \"Morgan Line\"",
+        "description": "THREE SAILINGS WEEK. LY BETWEEN New York and Galveston",
+        "price": null
+      },
+      {
+        "productOrBusiness": "TTON BELT ROUTES",
+        "description": "VACATION TICKETS -to- Most Everywhere in the North, East and Southeast. Low fare summer excursions",
+        "price": "$38.10"
+      },
+      {
+        "productOrBusiness": "Santa fe",
+        "description": "The only line to both 1915 Panama Expositions- San Francisco and San Diego. Spend your vacation at Grand Canyon of Arizona and Yosemite.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "T.&B.V.Ry",
+        "description": "SPECIAL RATES Houston and Return",
+        "price": "$9.35"
+      },
+      {
+        "productOrBusiness": "HAMBURG-AMERICAN LINE",
+        "description": "TWO) CRUISES AROUND the WORLD Ithrough the PANAMA CANAL",
+        "price": "$900 Up"
+      },
+      {
+        "productOrBusiness": "T. & Palres Mountain and Caleago & Altos",
+        "description": "CHICAGO -- Round trip 11638, unwurpasset train service",
+        "price": "11638"
+      },
+      {
+        "productOrBusiness": "A. J. Anderson Co. Gun Store",
+        "description": "DYNAMITE AND BLASTING SUPPLIES We Carry the Largest Line In Texas",
+        "price": null
+      }
+    ],
+    "events": [
+      {
+        "eventName": "Graduating Recital",
+        "date": "Thursday evening. June 11",
+        "venue": "First Christian church, Sixth and Throckmorton streets"
+      }
+    ]
+  },
+  "schemaId": "BQNNnBPR",
+  "schemaName": "Historical Newspaper Page V2",
+  "jobId": "EvCC89KO",
+  "dataset": "unassigned",
+  "filename": "Fort_Worth_Record_Telegram_1914_06_07_13",
+  "displayMode": "auto",
+  "timestamp": "2026-03-17T04:43:52.137000Z",
+  "metadata": null,
+  "fieldMetadata": null
+}

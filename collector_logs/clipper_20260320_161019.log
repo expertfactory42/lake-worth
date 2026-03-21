@@ -1,0 +1,173 @@
+2026-03-20 16:10:19,038 [INFO] ============================================================
+2026-03-20 16:10:19,038 [INFO] Full-Page Clipper + Article Extractor
+2026-03-20 16:10:19,038 [INFO] ============================================================
+2026-03-20 16:10:19,038 [INFO]   Unclipped entries: 13297
+2026-03-20 16:10:19,038 [INFO]   Starting from: 1914-09-09
+2026-03-20 16:10:19,038 [INFO]   Max pages: 1
+2026-03-20 16:10:19,039 [INFO]   Throttle: 450 views/hour
+2026-03-20 16:10:19,039 [INFO]   Log: c:\lake_worth\collector_logs\clipper_20260320_161019.log
+2026-03-20 16:10:25,840 [INFO] Already logged in.
+2026-03-20 16:10:31,403 [INFO] 
+>>> Searching 1914-09-09 to 1914-10-09
+2026-03-20 16:10:38,428 [INFO]   Found 10 results
+2026-03-20 16:10:41,963 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_09_10.pdf
+2026-03-20 16:10:47,286 [INFO]     Clicked Clip button
+2026-03-20 16:10:52,295 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:10:52,295 [INFO]     NW handle at (595,224), SE handle at (686,366)
+2026-03-20 16:10:52,307 [INFO]     Dragging NW by (-584, -107)
+2026-03-20 16:10:55,282 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:10:55,295 [INFO]     Dragged SE via JS: (686,366) -> (1416,755)
+2026-03-20 16:10:57,409 [INFO]     Clicked Save button
+2026-03-20 16:11:28,793 [WARNING]     Could not find View Clip for Fort_Worth_Record_Telegram_1914_09_09_10.pdf
+2026-03-20 16:11:35,818 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_09_7.pdf
+2026-03-20 16:11:41,143 [INFO]     Clicked Clip button
+2026-03-20 16:11:46,151 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:11:46,151 [INFO]     NW handle at (642,227), SE handle at (742,383)
+2026-03-20 16:11:46,162 [INFO]     Dragging NW by (-632, -111)
+2026-03-20 16:11:49,135 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:11:49,148 [INFO]     Dragged SE via JS: (742,383) -> (1416,755)
+2026-03-20 16:11:51,281 [INFO]     Clicked Save button
+2026-03-20 16:12:23,102 [WARNING]     Could not find View Clip for Fort_Worth_Star_Telegram_1914_09_09_7.pdf
+2026-03-20 16:12:30,134 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_10_6.pdf
+2026-03-20 16:12:35,454 [INFO]     Clicked Clip button
+2026-03-20 16:12:40,464 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:12:40,464 [INFO]     NW handle at (642,227), SE handle at (743,383)
+2026-03-20 16:12:40,477 [INFO]     Dragging NW by (-632, -111)
+2026-03-20 16:12:43,426 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:12:43,440 [INFO]     Dragged SE via JS: (743,383) -> (1416,755)
+2026-03-20 16:12:45,572 [INFO]     Clicked Save button
+2026-03-20 16:13:17,607 [WARNING]     Could not find View Clip for Fort_Worth_Star_Telegram_1914_09_10_6.pdf
+2026-03-20 16:13:24,492 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_13_9.pdf
+2026-03-20 16:13:29,795 [INFO]     Clicked Clip button
+2026-03-20 16:13:34,802 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:13:34,802 [INFO]     NW handle at (643,224), SE handle at (735,367)
+2026-03-20 16:13:34,810 [INFO]     Dragging NW by (-633, -107)
+2026-03-20 16:13:37,764 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:13:37,778 [INFO]     Dragged SE via JS: (735,367) -> (1416,755)
+2026-03-20 16:13:39,906 [INFO]     Clicked Save button
+2026-03-20 16:14:11,172 [WARNING]     Could not find View Clip for Fort_Worth_Record_Telegram_1914_09_13_9.pdf
+2026-03-20 16:14:19,330 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_14_1.pdf
+2026-03-20 16:14:24,642 [INFO]     Clicked Clip button
+2026-03-20 16:14:29,650 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:14:29,650 [INFO]     NW handle at (642,227), SE handle at (742,383)
+2026-03-20 16:14:29,662 [INFO]     Dragging NW by (-631, -111)
+2026-03-20 16:14:32,632 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:14:32,646 [INFO]     Dragged SE via JS: (742,383) -> (1416,755)
+2026-03-20 16:14:34,826 [INFO]     Clicked Save button
+2026-03-20 16:15:06,915 [WARNING]     Could not find View Clip for Fort_Worth_Star_Telegram_1914_09_14_1.pdf
+2026-03-20 16:15:13,809 [INFO]     Page: Fort_Worth_Star_Telegram_1914_09_15_9.pdf
+2026-03-20 16:15:19,187 [INFO]     Clicked Clip button
+2026-03-20 16:15:24,202 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:15:24,203 [INFO]     NW handle at (642,227), SE handle at (743,384)
+2026-03-20 16:15:24,215 [INFO]     Dragging NW by (-631, -111)
+2026-03-20 16:15:27,175 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:15:27,191 [INFO]     Dragged SE via JS: (743,384) -> (1416,755)
+2026-03-20 16:15:29,325 [INFO]     Clicked Save button
+2026-03-20 16:16:01,104 [WARNING]     Could not find View Clip for Fort_Worth_Star_Telegram_1914_09_15_9.pdf
+2026-03-20 16:16:09,318 [INFO]     Page: Fort_Worth_Record_Telegram_1914_09_15_3.pdf
+2026-03-20 16:16:14,611 [INFO]     Clicked Clip button
+2026-03-20 16:16:19,620 [INFO]     Viewer bounds: (0,106) to (1426,765)
+2026-03-20 16:16:19,620 [INFO]     NW handle at (643,224), SE handle at (735,367)
+2026-03-20 16:16:19,634 [INFO]     Dragging NW by (-632, -107)
+2026-03-20 16:16:22,579 [INFO]     Dragged NW handle to top-left
+2026-03-20 16:16:22,592 [INFO]     Dragged SE via JS: (735,367) -> (1416,755)
+2026-03-20 16:16:24,688 [INFO]     Clicked Save button
+2026-03-20 16:16:29,699 [ERROR]     Clip error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 16:16:29,701 [ERROR] Fatal error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+Traceback (most recent call last):
+  File "C:\lake_worth\clip_and_extract.py", line 932, in main
+    driver.get(search_url)
+    ~~~~~~~~~~^^^^^^^^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\undetected_chromedriver\__init__.py", line 665, in get
+    return super().get(url)
+           ~~~~~~~~~~~^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 466, in get
+    self.execute(Command.GET, {"url": url})
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 446, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Michael\AppData\Local\Programs\Python\Python314\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-20 16:16:29,709 [INFO] ============================================================
+2026-03-20 16:16:29,709 [INFO] DONE
+2026-03-20 16:16:29,709 [INFO]   Pages clipped: 0
+2026-03-20 16:16:29,710 [INFO]   Articles found: 0
+2026-03-20 16:16:29,710 [INFO]   Skipped: 0
+2026-03-20 16:16:29,710 [INFO]   Errors: 7
+2026-03-20 16:16:29,710 [INFO] ============================================================

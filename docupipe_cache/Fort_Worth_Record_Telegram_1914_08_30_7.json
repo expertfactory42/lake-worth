@@ -1,0 +1,82 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-08-30",
+  "pageNumber": 7,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "Rotarians to Farade Through City Streets on Way to Great Field Day",
+      "subtitle": "Automobiles for Members and Auto Trucks for Teams; General Committee Meeting for Charitable Event Called for Tuesday Noon.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "STEEPLECHASE CLUB HOLDS MEETING TODAY",
+      "subtitle": "Plans Will Be Laid for Social Events During Horse Show and Officers and Directors Will Be Elected.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "SUPERINTENDENT OF RESERVOIR RESIGNS",
+      "subtitle": "J. C. Lord's Work on Big Lake Worth Project Ended, He Thanks City Commissioners for Co-Operation.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "DELEGATES NAMED TO BANKERS' MEETING",
+      "subtitle": "Five Hundred Bankers Will Visit Fort Worth on Sept. 25 on a Circle Tour of Various Cities in Texas.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "BAD CHECK ARTISTS AT WORK, SAYS KERR",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "CLEARING HOUSES TO CONFER WITH BOARD",
+      "subtitle": "Federal Reserve Association Invites Seven Financiers to Take Part in Meeting to Discuss Foreign Indebtedness.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "HIGH COMPLIMENT IS PAID GUY R. PITNER",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "PRESIDENT TAKES A FULL DAY'S REST IN SUMMER CAPITOL",
+      "subtitle": null,
+      "topic": "Politics",
+      "fullText": null
+    },
+    {
+      "title": "MOTORCYCLE RIDER HAS BOTH LEGS BROKEN",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "PASSENGER ENGINE STRIKES AN AUTO AND FOUR ARE KILLED",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Fakes & Co.",
+      "description": "Ladies' Hat Trimmings. Silk Tapestry and Metal Galoon Bands for fall and winter hats. Dropped patterns and all lengths less than 8 yds. at Half Price.",
+      "price": "Half Price"
+    }
+  ],
+  "events": [
+    {
+      "eventName": "Mlle. Aerida balloonist exhibition",
+      "date": "SUNDAY, 5 P. M.",
+      "venue": "LAKE COMO"
+    }
+  ]
+}

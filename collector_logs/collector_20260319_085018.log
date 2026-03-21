@@ -1,0 +1,1112 @@
+2026-03-19 08:50:18,149 [INFO] ============================================================
+2026-03-19 08:50:18,149 [INFO] Newspapers.com Metadata Collector
+2026-03-19 08:50:18,149 [INFO] ============================================================
+2026-03-19 08:50:18,150 [INFO]   Search term: "lake worth"
+2026-03-19 08:50:18,150 [INFO]   Restart every: 100 new entries
+2026-03-19 08:50:18,150 [INFO]   Log file: c:\lake_worth\collector_logs\collector_20260319_085018.log
+2026-03-19 08:50:18,150 [INFO]   Error log: c:\lake_worth\collector_logs\errors_20260319_085018.log
+2026-03-19 08:50:18,151 [INFO] 
+>>> SESSION 1
+2026-03-19 08:50:18,155 [INFO] ============================================================
+2026-03-19 08:50:18,155 [INFO]   Starting session from: 1915-11-16
+2026-03-19 08:50:18,155 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1915-11-16&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-19 08:50:18,155 [INFO] ============================================================
+2026-03-19 08:50:19,801 [INFO] Opening Newspapers.com...
+2026-03-19 08:50:27,910 [INFO] Loading search results...
+2026-03-19 08:50:34,110 [INFO] --- Batch 1 ---
+2026-03-19 08:50:36,267 [INFO]   Found 10 new result links
+2026-03-19 08:50:39,888 [INFO]   [1] Exists: Fort_Worth_Star_Telegram_1915_11_16_7.pdf
+2026-03-19 08:50:43,419 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1915_11_16_14.pdf
+2026-03-19 08:50:47,000 [INFO]   [3] Exists: Fort_Worth_Star_Telegram_1915_11_16_16.pdf
+2026-03-19 08:50:50,700 [INFO]   [4] Exists: Fort_Worth_Record_Telegram_1915_11_16_1.pdf
+2026-03-19 08:50:54,211 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1915_11_17_9.pdf — Fort Worth Record-Telegram, 1915-11-17, p9
+2026-03-19 08:50:57,627 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1915_11_17_18.pdf — Fort Worth Star-Telegram, 1915-11-17, p18
+2026-03-19 08:51:01,122 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1915_11_17_12.pdf — Fort Worth Record-Telegram, 1915-11-17, p12
+2026-03-19 08:51:04,855 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1915_11_18_8.pdf — Fort Worth Star-Telegram, 1915-11-18, p8
+2026-03-19 08:51:08,476 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1915_11_18_14.pdf — Fort Worth Star-Telegram, 1915-11-18, p14
+2026-03-19 08:51:12,023 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1915_11_19_12.pdf — Fort Worth Star-Telegram, 1915-11-19, p12
+2026-03-19 08:51:12,023 [INFO]   Returning to search...
+2026-03-19 08:51:33,063 [INFO] --- Batch 2 ---
+2026-03-19 08:51:35,266 [INFO]   Found 10 new result links
+2026-03-19 08:51:38,970 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1915_11_19_16.pdf — Fort Worth Star-Telegram, 1915-11-19, p16
+2026-03-19 08:51:42,489 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1915_11_20_12.pdf — Fort Worth Record-Telegram, 1915-11-20, p12
+2026-03-19 08:51:45,947 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1915_11_20_4.pdf — Fort Worth Star-Telegram, 1915-11-20, p4
+2026-03-19 08:51:49,526 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1915_11_20_4.pdf — Fort Worth Record-Telegram, 1915-11-20, p4
+2026-03-19 08:51:53,128 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1915_11_21_6.pdf — Fort Worth Star-Telegram, 1915-11-21, p6
+2026-03-19 08:51:56,976 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1915_11_21_26.pdf — Fort Worth Star-Telegram, 1915-11-21, p26
+2026-03-19 08:52:00,429 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1915_11_21_14.pdf — Fort Worth Record-Telegram, 1915-11-21, p14
+2026-03-19 08:52:04,014 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1915_11_22_5.pdf — Fort Worth Record-Telegram, 1915-11-22, p5
+2026-03-19 08:52:07,990 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1915_11_22_6.pdf — Fort Worth Record-Telegram, 1915-11-22, p6
+2026-03-19 08:52:11,496 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1915_11_23_1.pdf — Fort Worth Record-Telegram, 1915-11-23, p1
+2026-03-19 08:52:11,497 [INFO]   Returning to search...
+2026-03-19 08:52:32,473 [INFO] --- Batch 3 ---
+2026-03-19 08:52:34,749 [INFO]   Found 10 new result links
+2026-03-19 08:52:38,250 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1915_11_23_5.pdf — Fort Worth Record-Telegram, 1915-11-23, p5
+2026-03-19 08:52:41,768 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1915_11_23_7.pdf — Fort Worth Star-Telegram, 1915-11-23, p7
+2026-03-19 08:52:45,354 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1915_11_23_14.pdf — Fort Worth Star-Telegram, 1915-11-23, p14
+2026-03-19 08:52:48,857 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1915_11_23_17.pdf — Fort Worth Star-Telegram, 1915-11-23, p17
+2026-03-19 08:52:52,408 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1915_11_23_7.pdf — Fort Worth Record-Telegram, 1915-11-23, p7
+2026-03-19 08:52:55,924 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1915_11_25_4.pdf — Fort Worth Record-Telegram, 1915-11-25, p4
+2026-03-19 08:52:59,597 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1915_11_25_11.pdf — Fort Worth Star-Telegram, 1915-11-25, p11
+2026-03-19 08:53:03,017 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1915_11_25_12.pdf — Fort Worth Record-Telegram, 1915-11-25, p12
+2026-03-19 08:53:06,740 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1915_11_26_5.pdf — Fort Worth Record-Telegram, 1915-11-26, p5
+2026-03-19 08:53:10,193 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1915_11_26_5.pdf — Fort Worth Star-Telegram, 1915-11-26, p5
+2026-03-19 08:53:10,193 [INFO]   Returning to search...
+2026-03-19 08:53:31,587 [INFO] --- Batch 4 ---
+2026-03-19 08:53:33,939 [INFO]   Found 10 new result links
+2026-03-19 08:53:37,504 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1915_11_26_9.pdf — Fort Worth Star-Telegram, 1915-11-26, p9
+2026-03-19 08:53:41,329 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1915_11_27_1.pdf — Fort Worth Star-Telegram, 1915-11-27, p1
+2026-03-19 08:53:44,771 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1915_11_27_4.pdf — Fort Worth Record-Telegram, 1915-11-27, p4
+2026-03-19 08:53:48,414 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1915_11_28_1.pdf — Fort Worth Record-Telegram, 1915-11-28, p1
+2026-03-19 08:53:51,957 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1915_11_28_10.pdf — Fort Worth Star-Telegram, 1915-11-28, p10
+2026-03-19 08:53:55,479 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1915_11_28_17.pdf — Fort Worth Record-Telegram, 1915-11-28, p17
+2026-03-19 08:53:58,991 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1915_11_28_1.pdf — Fort Worth Star-Telegram, 1915-11-28, p1
+2026-03-19 08:54:02,517 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1915_11_28_4.pdf — Fort Worth Record-Telegram, 1915-11-28, p4
+2026-03-19 08:54:06,023 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1915_11_28_30.pdf — Fort Worth Record-Telegram, 1915-11-28, p30
+2026-03-19 08:54:09,485 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1915_11_29_1.pdf — Fort Worth Star-Telegram, 1915-11-29, p1
+2026-03-19 08:54:09,485 [INFO]   Returning to search...
+2026-03-19 08:54:31,132 [INFO] --- Batch 5 ---
+2026-03-19 08:54:33,562 [INFO]   Found 10 new result links
+2026-03-19 08:54:38,347 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1915_11_30_10.pdf — Fort Worth Star-Telegram, 1915-11-30, p10
+2026-03-19 08:54:41,874 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1915_11_30_7.pdf — Fort Worth Star-Telegram, 1915-11-30, p7
+2026-03-19 08:54:45,288 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1915_12_01_7.pdf — Fort Worth Record-Telegram, 1915-12-01, p7
+2026-03-19 08:54:48,731 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1915_12_01_9.pdf — Fort Worth Star-Telegram, 1915-12-01, p9
+2026-03-19 08:54:52,324 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1915_12_01_5.pdf — Fort Worth Record-Telegram, 1915-12-01, p5
+2026-03-19 08:54:55,739 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1915_12_02_8.pdf — Fort Worth Star-Telegram, 1915-12-02, p8
+2026-03-19 08:54:59,225 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1915_12_02_5.pdf — Fort Worth Record-Telegram, 1915-12-02, p5
+2026-03-19 08:55:02,651 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1915_12_03_1.pdf — Fort Worth Star-Telegram, 1915-12-03, p1
+2026-03-19 08:55:06,274 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1915_12_04_4.pdf — Fort Worth Star-Telegram, 1915-12-04, p4
+2026-03-19 08:55:09,833 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1915_12_04_3.pdf — Fort Worth Record-Telegram, 1915-12-04, p3
+2026-03-19 08:55:09,833 [INFO]   Returning to search...
+2026-03-19 08:55:32,315 [INFO] --- Batch 6 ---
+2026-03-19 08:55:34,853 [INFO]   Found 10 new result links
+2026-03-19 08:55:38,732 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1915_12_05_5.pdf — Fort Worth Star-Telegram, 1915-12-05, p5
+2026-03-19 08:55:42,573 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1915_12_05_30.pdf — Fort Worth Record-Telegram, 1915-12-05, p30
+2026-03-19 08:55:46,005 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1915_12_05_16.pdf — Fort Worth Record-Telegram, 1915-12-05, p16
+2026-03-19 08:55:49,511 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1915_12_05_34.pdf — Fort Worth Record-Telegram, 1915-12-05, p34
+2026-03-19 08:55:53,117 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1915_12_06_9.pdf — Fort Worth Star-Telegram, 1915-12-06, p9
+2026-03-19 08:55:56,629 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1915_12_08_7.pdf — Fort Worth Record-Telegram, 1915-12-08, p7
+2026-03-19 08:56:00,311 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1915_12_09_10.pdf — Fort Worth Star-Telegram, 1915-12-09, p10
+2026-03-19 08:56:03,890 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1915_12_09_3.pdf — Fort Worth Record-Telegram, 1915-12-09, p3
+2026-03-19 08:56:07,902 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1915_12_10_18.pdf — Fort Worth Record-Telegram, 1915-12-10, p18
+2026-03-19 08:56:11,632 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1915_12_11_3.pdf — Fort Worth Record-Telegram, 1915-12-11, p3
+2026-03-19 08:56:11,632 [INFO]   Returning to search...
+2026-03-19 08:56:34,095 [INFO] --- Batch 7 ---
+2026-03-19 08:56:36,777 [INFO]   Found 10 new result links
+2026-03-19 08:56:40,292 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1915_12_11_1.pdf — Fort Worth Record-Telegram, 1915-12-11, p1
+2026-03-19 08:56:43,877 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1915_12_11_5.pdf — Fort Worth Star-Telegram, 1915-12-11, p5
+2026-03-19 08:56:47,317 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1915_12_12_1.pdf — Fort Worth Record-Telegram, 1915-12-12, p1
+2026-03-19 08:56:50,727 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1915_12_12_43.pdf — Fort Worth Star-Telegram, 1915-12-12, p43
+2026-03-19 08:56:54,152 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1915_12_14_9.pdf — Fort Worth Record-Telegram, 1915-12-14, p9
+2026-03-19 08:56:57,646 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1915_12_15_5.pdf — Fort Worth Record-Telegram, 1915-12-15, p5
+2026-03-19 08:57:01,065 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1915_12_16_14.pdf — Fort Worth Record-Telegram, 1915-12-16, p14
+2026-03-19 08:57:04,708 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1915_12_17_9.pdf — Fort Worth Star-Telegram, 1915-12-17, p9
+2026-03-19 08:57:08,145 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1915_12_18_12.pdf — Fort Worth Record-Telegram, 1915-12-18, p12
+2026-03-19 08:57:11,731 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1915_12_19_18.pdf — Fort Worth Star-Telegram, 1915-12-19, p18
+2026-03-19 08:57:11,731 [INFO]   Returning to search...
+2026-03-19 08:57:34,835 [INFO] --- Batch 8 ---
+2026-03-19 08:57:37,564 [INFO]   Found 10 new result links
+2026-03-19 08:57:41,043 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1915_12_21_7.pdf — Fort Worth Record-Telegram, 1915-12-21, p7
+2026-03-19 08:57:44,471 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1915_12_23_4.pdf — Fort Worth Star-Telegram, 1915-12-23, p4
+2026-03-19 08:57:47,911 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1915_12_23_8.pdf — Fort Worth Star-Telegram, 1915-12-23, p8
+2026-03-19 08:57:51,512 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1915_12_24_16.pdf — Fort Worth Star-Telegram, 1915-12-24, p16
+2026-03-19 08:57:55,058 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1915_12_24_8.pdf — Fort Worth Star-Telegram, 1915-12-24, p8
+2026-03-19 08:57:58,561 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1915_12_24_1.pdf — Fort Worth Record-Telegram, 1915-12-24, p1
+2026-03-19 08:58:02,026 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1915_12_27_6.pdf — Fort Worth Star-Telegram, 1915-12-27, p6
+2026-03-19 08:58:05,607 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1915_12_27_7.pdf — Fort Worth Star-Telegram, 1915-12-27, p7
+2026-03-19 08:58:09,892 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1915_12_28_12.pdf — Fort Worth Record-Telegram, 1915-12-28, p12
+2026-03-19 08:58:13,436 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1915_12_30_2.pdf — Fort Worth Star-Telegram, 1915-12-30, p2
+2026-03-19 08:58:13,436 [INFO]   Returning to search...
+2026-03-19 08:58:36,402 [INFO] --- Batch 9 ---
+2026-03-19 08:58:39,228 [INFO]   Found 10 new result links
+2026-03-19 08:58:42,692 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1915_12_30_8.pdf — Fort Worth Star-Telegram, 1915-12-30, p8
+2026-03-19 08:58:46,224 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1915_12_31_3.pdf — Fort Worth Record-Telegram, 1915-12-31, p3
+2026-03-19 08:58:49,705 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1915_12_31_4.pdf — Fort Worth Record-Telegram, 1915-12-31, p4
+2026-03-19 08:58:53,242 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_01_02_1.pdf — Fort Worth Record-Telegram, 1916-01-02, p1
+2026-03-19 08:58:56,808 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_01_02_8.pdf — Fort Worth Record-Telegram, 1916-01-02, p8
+2026-03-19 08:59:00,208 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_01_03_3.pdf — Fort Worth Star-Telegram, 1916-01-03, p3
+2026-03-19 08:59:03,820 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_01_03_6.pdf — Fort Worth Star-Telegram, 1916-01-03, p6
+2026-03-19 08:59:07,430 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_01_04_5.pdf — Fort Worth Star-Telegram, 1916-01-04, p5
+2026-03-19 08:59:11,132 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_01_04_10.pdf — Fort Worth Record-Telegram, 1916-01-04, p10
+2026-03-19 08:59:14,584 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_01_05_7.pdf — Fort Worth Star-Telegram, 1916-01-05, p7
+2026-03-19 08:59:14,584 [INFO]   Returning to search...
+2026-03-19 08:59:38,016 [INFO] --- Batch 10 ---
+2026-03-19 08:59:40,967 [INFO]   Found 10 new result links
+2026-03-19 08:59:44,389 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_01_05_4.pdf — Fort Worth Record-Telegram, 1916-01-05, p4
+2026-03-19 08:59:47,806 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_01_05_1.pdf — Fort Worth Record-Telegram, 1916-01-05, p1
+2026-03-19 08:59:51,348 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_01_05_6.pdf — Fort Worth Record-Telegram, 1916-01-05, p6
+2026-03-19 08:59:54,868 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_01_05_7.pdf — Fort Worth Record-Telegram, 1916-01-05, p7
+2026-03-19 08:59:58,509 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_01_06_1.pdf — Fort Worth Record-Telegram, 1916-01-06, p1
+2026-03-19 09:00:02,114 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_01_06_9.pdf — Fort Worth Star-Telegram, 1916-01-06, p9
+2026-03-19 09:00:05,665 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_01_06_3.pdf — Fort Worth Record-Telegram, 1916-01-06, p3
+2026-03-19 09:00:09,157 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_01_06_1.pdf — Fort Worth Star-Telegram, 1916-01-06, p1
+2026-03-19 09:00:12,648 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_01_06_3.pdf — Fort Worth Star-Telegram, 1916-01-06, p3
+2026-03-19 09:00:16,215 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_01_06_11.pdf — Fort Worth Star-Telegram, 1916-01-06, p11
+2026-03-19 09:00:16,215 [INFO]   Returning to search...
+2026-03-19 09:00:41,716 [INFO] --- Batch 11 ---
+2026-03-19 09:00:45,236 [INFO]   Found 10 new result links
+2026-03-19 09:00:49,155 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_01_06_4.pdf — Fort Worth Record-Telegram, 1916-01-06, p4
+2026-03-19 09:00:52,987 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_01_06_6.pdf — Fort Worth Record-Telegram, 1916-01-06, p6
+2026-03-19 09:00:56,432 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_01_06_8.pdf — Fort Worth Record-Telegram, 1916-01-06, p8
+2026-03-19 09:01:00,035 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_01_07_14.pdf — Fort Worth Record-Telegram, 1916-01-07, p14
+2026-03-19 09:01:00,036 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-19 09:01:00,036 [INFO]   Session 1: 100 new, 4 skipped (running total: 100 new)
+2026-03-19 09:01:00,036 [INFO]   Restarting in 3 seconds...
+2026-03-19 09:01:03,037 [INFO] 
+>>> SESSION 2
+2026-03-19 09:01:03,040 [INFO] ============================================================
+2026-03-19 09:01:03,040 [INFO]   Starting session from: 1916-01-07
+2026-03-19 09:01:03,040 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1916-01-07&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-19 09:01:03,040 [INFO] ============================================================
+2026-03-19 09:01:04,501 [INFO] Opening Newspapers.com...
+2026-03-19 09:01:11,814 [INFO] Loading search results...
+2026-03-19 09:01:17,087 [INFO] --- Batch 1 ---
+2026-03-19 09:01:19,221 [INFO]   Found 10 new result links
+2026-03-19 09:01:22,818 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1916_01_07_14.pdf
+2026-03-19 09:01:26,582 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_01_07_5.pdf — Fort Worth Star-Telegram, 1916-01-07, p5
+2026-03-19 09:01:30,313 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_01_07_1.pdf — Fort Worth Record-Telegram, 1916-01-07, p1
+2026-03-19 09:01:33,828 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_01_08_7.pdf — Fort Worth Record-Telegram, 1916-01-08, p7
+2026-03-19 09:01:37,477 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_01_08_5.pdf — Fort Worth Record-Telegram, 1916-01-08, p5
+2026-03-19 09:01:41,107 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_01_08_6.pdf — Fort Worth Record-Telegram, 1916-01-08, p6
+2026-03-19 09:01:44,774 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_01_09_17.pdf — Fort Worth Star-Telegram, 1916-01-09, p17
+2026-03-19 09:01:48,231 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_01_09_9.pdf — Fort Worth Record-Telegram, 1916-01-09, p9
+2026-03-19 09:01:51,641 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_01_09_36.pdf — Fort Worth Record-Telegram, 1916-01-09, p36
+2026-03-19 09:01:55,114 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_01_09_11.pdf — Fort Worth Star-Telegram, 1916-01-09, p11
+2026-03-19 09:01:55,114 [INFO]   Returning to search...
+2026-03-19 09:02:16,441 [INFO] --- Batch 2 ---
+2026-03-19 09:02:18,647 [INFO]   Found 10 new result links
+2026-03-19 09:02:22,125 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_01_09_25.pdf — Fort Worth Star-Telegram, 1916-01-09, p25
+2026-03-19 09:02:25,619 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_01_10_11.pdf — Fort Worth Star-Telegram, 1916-01-10, p11
+2026-03-19 09:02:29,034 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_01_10_12.pdf — Fort Worth Star-Telegram, 1916-01-10, p12
+2026-03-19 09:02:32,594 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_01_10_3.pdf — Fort Worth Star-Telegram, 1916-01-10, p3
+2026-03-19 09:02:36,081 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_01_10_4.pdf — Fort Worth Record-Telegram, 1916-01-10, p4
+2026-03-19 09:02:39,549 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_01_11_5.pdf — Fort Worth Star-Telegram, 1916-01-11, p5
+2026-03-19 09:02:43,128 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_01_11_7.pdf — Fort Worth Record-Telegram, 1916-01-11, p7
+2026-03-19 09:02:46,586 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_01_11_12.pdf — Fort Worth Record-Telegram, 1916-01-11, p12
+2026-03-19 09:02:50,087 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_01_12_5.pdf — Fort Worth Star-Telegram, 1916-01-12, p5
+2026-03-19 09:02:53,488 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_01_12_9.pdf — Fort Worth Record-Telegram, 1916-01-12, p9
+2026-03-19 09:02:53,489 [INFO]   Returning to search...
+2026-03-19 09:03:14,637 [INFO] --- Batch 3 ---
+2026-03-19 09:03:16,914 [INFO]   Found 10 new result links
+2026-03-19 09:03:20,382 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_01_12_3.pdf — Fort Worth Record-Telegram, 1916-01-12, p3
+2026-03-19 09:03:23,770 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_01_12_14.pdf — Fort Worth Record-Telegram, 1916-01-12, p14
+2026-03-19 09:03:27,391 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_01_13_5.pdf — Fort Worth Star-Telegram, 1916-01-13, p5
+2026-03-19 09:03:30,883 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_01_13_3.pdf — Fort Worth Record-Telegram, 1916-01-13, p3
+2026-03-19 09:03:34,395 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_01_13_4.pdf — Fort Worth Record-Telegram, 1916-01-13, p4
+2026-03-19 09:03:37,881 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_01_14_3.pdf — Fort Worth Record-Telegram, 1916-01-14, p3
+2026-03-19 09:03:41,433 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_01_14_4.pdf — Fort Worth Star-Telegram, 1916-01-14, p4
+2026-03-19 09:03:44,960 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_01_14_10.pdf — Fort Worth Star-Telegram, 1916-01-14, p10
+2026-03-19 09:03:48,411 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_01_14_5.pdf — Fort Worth Record-Telegram, 1916-01-14, p5
+2026-03-19 09:03:51,852 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_01_14_8.pdf — Fort Worth Star-Telegram, 1916-01-14, p8
+2026-03-19 09:03:51,853 [INFO]   Returning to search...
+2026-03-19 09:04:13,132 [INFO] --- Batch 4 ---
+2026-03-19 09:04:15,534 [INFO]   Found 10 new result links
+2026-03-19 09:04:19,092 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_01_15_4.pdf — Fort Worth Record-Telegram, 1916-01-15, p4
+2026-03-19 09:04:22,520 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_01_16_37.pdf — Fort Worth Star-Telegram, 1916-01-16, p37
+2026-03-19 09:04:26,439 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_01_16_20.pdf — Fort Worth Star-Telegram, 1916-01-16, p20
+2026-03-19 09:04:29,908 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_01_16_28.pdf — Fort Worth Star-Telegram, 1916-01-16, p28
+2026-03-19 09:04:33,357 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_01_16_39.pdf — Fort Worth Star-Telegram, 1916-01-16, p39
+2026-03-19 09:04:36,798 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_01_16_1.pdf — Fort Worth Record-Telegram, 1916-01-16, p1
+2026-03-19 09:04:40,222 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_01_16_13.pdf — Fort Worth Record-Telegram, 1916-01-16, p13
+2026-03-19 09:04:43,696 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_01_16_21.pdf — Fort Worth Record-Telegram, 1916-01-16, p21
+2026-03-19 09:04:47,093 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_01_18_5.pdf — Fort Worth Star-Telegram, 1916-01-18, p5
+2026-03-19 09:04:50,520 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_01_18_6.pdf — Fort Worth Star-Telegram, 1916-01-18, p6
+2026-03-19 09:04:50,520 [INFO]   Returning to search...
+2026-03-19 09:05:12,060 [INFO] --- Batch 5 ---
+2026-03-19 09:05:14,524 [INFO]   Found 10 new result links
+2026-03-19 09:05:18,006 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_01_18_7.pdf — Fort Worth Record-Telegram, 1916-01-18, p7
+2026-03-19 09:05:21,403 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_01_19_2.pdf — Fort Worth Star-Telegram, 1916-01-19, p2
+2026-03-19 09:05:25,144 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_01_19_6.pdf — Fort Worth Star-Telegram, 1916-01-19, p6
+2026-03-19 09:05:28,640 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_01_20_8.pdf — Fort Worth Star-Telegram, 1916-01-20, p8
+2026-03-19 09:05:32,147 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_01_20_11.pdf — Fort Worth Star-Telegram, 1916-01-20, p11
+2026-03-19 09:05:35,552 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_01_20_1.pdf — Fort Worth Record-Telegram, 1916-01-20, p1
+2026-03-19 09:05:39,038 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_01_20_3.pdf — Fort Worth Record-Telegram, 1916-01-20, p3
+2026-03-19 09:05:42,743 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_01_21_1.pdf — Fort Worth Record-Telegram, 1916-01-21, p1
+2026-03-19 09:05:46,502 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_01_21_6.pdf — Fort Worth Record-Telegram, 1916-01-21, p6
+2026-03-19 09:05:51,293 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_01_21_14.pdf — Fort Worth Star-Telegram, 1916-01-21, p14
+2026-03-19 09:05:51,293 [INFO]   Returning to search...
+2026-03-19 09:06:13,250 [INFO] --- Batch 6 ---
+2026-03-19 09:06:15,791 [INFO]   Found 10 new result links
+2026-03-19 09:06:19,842 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_01_21_3.pdf — Fort Worth Record-Telegram, 1916-01-21, p3
+2026-03-19 09:06:23,267 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_01_22_1.pdf — Fort Worth Star-Telegram, 1916-01-22, p1
+2026-03-19 09:06:26,710 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_01_22_2.pdf — Fort Worth Star-Telegram, 1916-01-22, p2
+2026-03-19 09:06:30,154 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_01_22_1.pdf — Fort Worth Record-Telegram, 1916-01-22, p1
+2026-03-19 09:06:33,838 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_01_23_8.pdf — Fort Worth Record-Telegram, 1916-01-23, p8
+2026-03-19 09:06:37,488 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_01_23_9.pdf — Fort Worth Star-Telegram, 1916-01-23, p9
+2026-03-19 09:06:40,966 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_01_23_5.pdf — Fort Worth Record-Telegram, 1916-01-23, p5
+2026-03-19 09:06:44,410 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_01_25_13.pdf — Fort Worth Star-Telegram, 1916-01-25, p13
+2026-03-19 09:06:48,148 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_01_25_2.pdf — Fort Worth Star-Telegram, 1916-01-25, p2
+2026-03-19 09:06:51,565 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_01_26_5.pdf — Fort Worth Star-Telegram, 1916-01-26, p5
+2026-03-19 09:06:51,566 [INFO]   Returning to search...
+2026-03-19 09:07:14,020 [INFO] --- Batch 7 ---
+2026-03-19 09:07:16,826 [INFO]   Found 10 new result links
+2026-03-19 09:07:20,510 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_01_26_6.pdf — Fort Worth Record-Telegram, 1916-01-26, p6
+2026-03-19 09:07:23,998 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_01_26_11.pdf — Fort Worth Star-Telegram, 1916-01-26, p11
+2026-03-19 09:07:27,569 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_01_27_8.pdf — Fort Worth Star-Telegram, 1916-01-27, p8
+2026-03-19 09:07:31,046 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_01_27_1.pdf — Fort Worth Record-Telegram, 1916-01-27, p1
+2026-03-19 09:07:34,602 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_01_27_10.pdf — Fort Worth Star-Telegram, 1916-01-27, p10
+2026-03-19 09:07:38,121 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_01_27_7.pdf — Fort Worth Record-Telegram, 1916-01-27, p7
+2026-03-19 09:07:41,774 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_01_28_5.pdf — Fort Worth Record-Telegram, 1916-01-28, p5
+2026-03-19 09:07:45,210 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_01_28_10.pdf — Fort Worth Star-Telegram, 1916-01-28, p10
+2026-03-19 09:07:48,711 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_01_29_6.pdf — Fort Worth Record-Telegram, 1916-01-29, p6
+2026-03-19 09:07:52,183 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_01_31_1.pdf — Fort Worth Star-Telegram, 1916-01-31, p1
+2026-03-19 09:07:52,183 [INFO]   Returning to search...
+2026-03-19 09:08:15,251 [INFO] --- Batch 8 ---
+2026-03-19 09:08:17,965 [INFO]   Found 10 new result links
+2026-03-19 09:08:21,603 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_01_31_2.pdf — Fort Worth Star-Telegram, 1916-01-31, p2
+2026-03-19 09:08:25,097 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_02_01_1.pdf — Fort Worth Star-Telegram, 1916-02-01, p1
+2026-03-19 09:08:28,563 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_02_01_7.pdf — Fort Worth Star-Telegram, 1916-02-01, p7
+2026-03-19 09:08:32,024 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_02_01_14.pdf — Fort Worth Star-Telegram, 1916-02-01, p14
+2026-03-19 09:08:35,461 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_02_01_4.pdf — Fort Worth Record-Telegram, 1916-02-01, p4
+2026-03-19 09:08:38,935 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_02_02_10.pdf — Fort Worth Record-Telegram, 1916-02-02, p10
+2026-03-19 09:08:42,420 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_02_02_5.pdf — Fort Worth Star-Telegram, 1916-02-02, p5
+2026-03-19 09:08:45,847 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_02_02_1.pdf — Fort Worth Star-Telegram, 1916-02-02, p1
+2026-03-19 09:08:49,610 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_02_02_7.pdf — Fort Worth Record-Telegram, 1916-02-02, p7
+2026-03-19 09:08:53,135 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_02_03_7.pdf — Fort Worth Record-Telegram, 1916-02-03, p7
+2026-03-19 09:08:53,135 [INFO]   Returning to search...
+2026-03-19 09:09:32,601 [INFO] --- Batch 9 ---
+2026-03-19 09:09:35,474 [INFO]   Found 10 new result links
+2026-03-19 09:09:39,131 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_02_03_11.pdf — Fort Worth Record-Telegram, 1916-02-03, p11
+2026-03-19 09:09:42,548 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_02_03_12.pdf — Fort Worth Star-Telegram, 1916-02-03, p12
+2026-03-19 09:09:46,167 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_02_04_11.pdf — Fort Worth Star-Telegram, 1916-02-04, p11
+2026-03-19 09:09:49,650 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_02_04_6.pdf — Fort Worth Record-Telegram, 1916-02-04, p6
+2026-03-19 09:09:53,185 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_02_05_7.pdf — Fort Worth Record-Telegram, 1916-02-05, p7
+2026-03-19 09:09:56,622 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_02_05_10.pdf — Fort Worth Record-Telegram, 1916-02-05, p10
+2026-03-19 09:10:00,107 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_02_05_6.pdf — Fort Worth Star-Telegram, 1916-02-05, p6
+2026-03-19 09:10:03,665 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_02_06_34.pdf — Fort Worth Star-Telegram, 1916-02-06, p34
+2026-03-19 09:10:07,230 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_02_07_1.pdf — Fort Worth Star-Telegram, 1916-02-07, p1
+2026-03-19 09:10:10,785 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_02_07_8.pdf — Fort Worth Star-Telegram, 1916-02-07, p8
+2026-03-19 09:10:10,786 [INFO]   Returning to search...
+2026-03-19 09:10:34,900 [INFO] --- Batch 10 ---
+2026-03-19 09:10:37,899 [INFO]   Found 10 new result links
+2026-03-19 09:10:41,407 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_02_08_12.pdf — Fort Worth Star-Telegram, 1916-02-08, p12
+2026-03-19 09:10:44,849 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_02_08_4.pdf — Fort Worth Record-Telegram, 1916-02-08, p4
+2026-03-19 09:10:48,311 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_02_09_8.pdf — Fort Worth Record-Telegram, 1916-02-09, p8
+2026-03-19 09:10:52,317 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_02_10_2.pdf — Fort Worth Star-Telegram, 1916-02-10, p2
+2026-03-19 09:10:56,241 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_02_10_6.pdf — Fort Worth Record-Telegram, 1916-02-10, p6
+2026-03-19 09:10:59,654 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_02_11_3.pdf — Fort Worth Record-Telegram, 1916-02-11, p3
+2026-03-19 09:11:03,167 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_02_13_9.pdf — Fort Worth Record-Telegram, 1916-02-13, p9
+2026-03-19 09:11:06,592 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_02_16_1.pdf — Fort Worth Record-Telegram, 1916-02-16, p1
+2026-03-19 09:11:09,980 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_02_18_1.pdf — Fort Worth Record-Telegram, 1916-02-18, p1
+2026-03-19 09:11:13,458 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_02_18_9.pdf — Fort Worth Star-Telegram, 1916-02-18, p9
+2026-03-19 09:11:13,458 [INFO]   Returning to search...
+2026-03-19 09:11:37,338 [INFO] --- Batch 11 ---
+2026-03-19 09:11:40,312 [INFO]   Found 10 new result links
+2026-03-19 09:11:45,468 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_02_18_16.pdf — Fort Worth Star-Telegram, 1916-02-18, p16
+2026-03-19 09:11:45,468 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-19 09:11:45,468 [INFO]   Session 2: 100 new, 1 skipped (running total: 200 new)
+2026-03-19 09:11:45,468 [INFO]   Restarting in 3 seconds...
+2026-03-19 09:11:48,469 [INFO] 
+>>> SESSION 3
+2026-03-19 09:11:48,473 [INFO] ============================================================
+2026-03-19 09:11:48,473 [INFO]   Starting session from: 1916-02-18
+2026-03-19 09:11:48,473 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1916-02-18&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-19 09:11:48,473 [INFO] ============================================================
+2026-03-19 09:11:50,855 [INFO] Opening Newspapers.com...
+2026-03-19 09:11:57,893 [INFO] Loading search results...
+2026-03-19 09:12:03,337 [INFO] --- Batch 1 ---
+2026-03-19 09:12:05,491 [INFO]   Found 10 new result links
+2026-03-19 09:12:09,184 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1916_02_18_1.pdf
+2026-03-19 09:12:12,685 [INFO]   [2] Exists: Fort_Worth_Star_Telegram_1916_02_18_9.pdf
+2026-03-19 09:12:16,279 [INFO]   [3] Exists: Fort_Worth_Star_Telegram_1916_02_18_16.pdf
+2026-03-19 09:12:19,799 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_02_19_8.pdf — Fort Worth Star-Telegram, 1916-02-19, p8
+2026-03-19 09:12:23,373 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_02_20_17.pdf — Fort Worth Star-Telegram, 1916-02-20, p17
+2026-03-19 09:12:27,052 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_02_20_38.pdf — Fort Worth Star-Telegram, 1916-02-20, p38
+2026-03-19 09:12:30,683 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_02_20_29.pdf — Fort Worth Record-Telegram, 1916-02-20, p29
+2026-03-19 09:12:34,173 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_02_20_30.pdf — Fort Worth Record-Telegram, 1916-02-20, p30
+2026-03-19 09:12:37,923 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_02_20_43.pdf — Fort Worth Record-Telegram, 1916-02-20, p43
+2026-03-19 09:12:41,442 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_02_21_3.pdf — Fort Worth Record-Telegram, 1916-02-21, p3
+2026-03-19 09:12:41,443 [INFO]   Returning to search...
+2026-03-19 09:13:03,072 [INFO] --- Batch 2 ---
+2026-03-19 09:13:05,281 [INFO]   Found 10 new result links
+2026-03-19 09:13:08,867 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_02_22_14.pdf — Fort Worth Star-Telegram, 1916-02-22, p14
+2026-03-19 09:13:12,320 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_02_22_3.pdf — Fort Worth Star-Telegram, 1916-02-22, p3
+2026-03-19 09:13:15,888 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_02_22_1.pdf — Fort Worth Record-Telegram, 1916-02-22, p1
+2026-03-19 09:13:19,362 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_02_22_16.pdf — Fort Worth Record-Telegram, 1916-02-22, p16
+2026-03-19 09:13:22,853 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_02_23_3.pdf — Fort Worth Record-Telegram, 1916-02-23, p3
+2026-03-19 09:13:26,366 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_02_23_2.pdf — Fort Worth Star-Telegram, 1916-02-23, p2
+2026-03-19 09:13:29,931 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_02_23_16.pdf — Fort Worth Star-Telegram, 1916-02-23, p16
+2026-03-19 09:13:33,416 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_02_23_12.pdf — Fort Worth Record-Telegram, 1916-02-23, p12
+2026-03-19 09:13:36,937 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_02_23_14.pdf — Fort Worth Record-Telegram, 1916-02-23, p14
+2026-03-19 09:13:40,380 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_02_24_19.pdf — Fort Worth Record-Telegram, 1916-02-24, p19
+2026-03-19 09:13:40,380 [INFO]   Returning to search...
+2026-03-19 09:14:01,776 [INFO] --- Batch 3 ---
+2026-03-19 09:14:04,061 [INFO]   Found 10 new result links
+2026-03-19 09:14:07,514 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_02_24_1.pdf — Fort Worth Star-Telegram, 1916-02-24, p1
+2026-03-19 09:14:10,933 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_02_25_1.pdf — Fort Worth Star-Telegram, 1916-02-25, p1
+2026-03-19 09:14:14,384 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_02_26_15.pdf — Fort Worth Record-Telegram, 1916-02-26, p15
+2026-03-19 09:14:17,872 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_02_27_1.pdf — Fort Worth Star-Telegram, 1916-02-27, p1
+2026-03-19 09:14:21,297 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_02_27_15.pdf — Fort Worth Record-Telegram, 1916-02-27, p15
+2026-03-19 09:14:24,740 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_02_29_10.pdf — Fort Worth Record-Telegram, 1916-02-29, p10
+2026-03-19 09:14:28,139 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_03_03_5.pdf — Fort Worth Star-Telegram, 1916-03-03, p5
+2026-03-19 09:14:31,841 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_03_03_14.pdf — Fort Worth Record-Telegram, 1916-03-03, p14
+2026-03-19 09:14:35,232 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_03_04_12.pdf — Fort Worth Record-Telegram, 1916-03-04, p12
+2026-03-19 09:14:38,719 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_03_05_1.pdf — Fort Worth Record-Telegram, 1916-03-05, p1
+2026-03-19 09:14:38,719 [INFO]   Returning to search...
+2026-03-19 09:15:00,087 [INFO] --- Batch 4 ---
+2026-03-19 09:15:02,442 [INFO]   Found 10 new result links
+2026-03-19 09:15:06,037 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_03_07_2.pdf — Fort Worth Star-Telegram, 1916-03-07, p2
+2026-03-19 09:15:09,525 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_03_12_30.pdf — Fort Worth Star-Telegram, 1916-03-12, p30
+2026-03-19 09:15:13,035 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_03_14_13.pdf — Fort Worth Star-Telegram, 1916-03-14, p13
+2026-03-19 09:15:16,549 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_03_15_10.pdf — Fort Worth Star-Telegram, 1916-03-15, p10
+2026-03-19 09:15:20,003 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_03_15_23.pdf — Fort Worth Star-Telegram, 1916-03-15, p23
+2026-03-19 09:15:23,414 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_03_16_13.pdf — Fort Worth Star-Telegram, 1916-03-16, p13
+2026-03-19 09:15:26,867 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_03_16_14.pdf — Fort Worth Star-Telegram, 1916-03-16, p14
+2026-03-19 09:15:30,661 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_03_17_17.pdf — Fort Worth Star-Telegram, 1916-03-17, p17
+2026-03-19 09:15:34,332 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_03_18_5.pdf — Fort Worth Star-Telegram, 1916-03-18, p5
+2026-03-19 09:15:38,099 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_03_19_8.pdf — Fort Worth Star-Telegram, 1916-03-19, p8
+2026-03-19 09:15:38,100 [INFO]   Returning to search...
+2026-03-19 09:16:05,231 [INFO] --- Batch 5 ---
+2026-03-19 09:16:07,707 [INFO]   Found 10 new result links
+2026-03-19 09:16:11,572 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_03_19_39.pdf — Fort Worth Star-Telegram, 1916-03-19, p39
+2026-03-19 09:16:15,411 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_03_20_10.pdf — Fort Worth Record-Telegram, 1916-03-20, p10
+2026-03-19 09:16:19,488 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_03_20_7.pdf — Fort Worth Star-Telegram, 1916-03-20, p7
+2026-03-19 09:16:23,583 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_03_21_14.pdf — Fort Worth Record-Telegram, 1916-03-21, p14
+2026-03-19 09:16:27,108 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_03_21_2.pdf — Fort Worth Star-Telegram, 1916-03-21, p2
+2026-03-19 09:16:30,488 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_03_21_15.pdf — Fort Worth Star-Telegram, 1916-03-21, p15
+2026-03-19 09:16:33,962 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_03_22_5.pdf — Fort Worth Record-Telegram, 1916-03-22, p5
+2026-03-19 09:16:37,380 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_03_23_8.pdf — Fort Worth Star-Telegram, 1916-03-23, p8
+2026-03-19 09:16:40,861 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_03_23_10.pdf — Fort Worth Record-Telegram, 1916-03-23, p10
+2026-03-19 09:16:44,958 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_03_24_15.pdf — Fort Worth Star-Telegram, 1916-03-24, p15
+2026-03-19 09:16:44,958 [INFO]   Returning to search...
+2026-03-19 09:17:07,037 [INFO] --- Batch 6 ---
+2026-03-19 09:17:09,578 [INFO]   Found 10 new result links
+2026-03-19 09:17:13,180 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_03_24_12.pdf — Fort Worth Record-Telegram, 1916-03-24, p12
+2026-03-19 09:17:16,603 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_03_24_14.pdf — Fort Worth Record-Telegram, 1916-03-24, p14
+2026-03-19 09:17:20,089 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_03_25_11.pdf — Fort Worth Record-Telegram, 1916-03-25, p11
+2026-03-19 09:17:23,528 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_03_25_3.pdf — Fort Worth Star-Telegram, 1916-03-25, p3
+2026-03-19 09:17:27,066 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_03_25_8.pdf — Fort Worth Star-Telegram, 1916-03-25, p8
+2026-03-19 09:17:30,530 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_03_26_26.pdf — Fort Worth Record-Telegram, 1916-03-26, p26
+2026-03-19 09:17:34,047 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_03_26_13.pdf — Fort Worth Record-Telegram, 1916-03-26, p13
+2026-03-19 09:17:37,454 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_03_27_9.pdf — Fort Worth Record-Telegram, 1916-03-27, p9
+2026-03-19 09:17:40,942 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_03_28_14.pdf — Fort Worth Record-Telegram, 1916-03-28, p14
+2026-03-19 09:17:44,337 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_03_29_10.pdf — Fort Worth Record-Telegram, 1916-03-29, p10
+2026-03-19 09:17:44,337 [INFO]   Returning to search...
+2026-03-19 09:18:07,094 [INFO] --- Batch 7 ---
+2026-03-19 09:18:09,743 [INFO]   Found 10 new result links
+2026-03-19 09:18:13,229 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_03_29_12.pdf — Fort Worth Record-Telegram, 1916-03-29, p12
+2026-03-19 09:18:16,730 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_03_30_1.pdf — Fort Worth Star-Telegram, 1916-03-30, p1
+2026-03-19 09:18:20,149 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_03_31_13.pdf — Fort Worth Record-Telegram, 1916-03-31, p13
+2026-03-19 09:18:23,604 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_03_31_1.pdf — Fort Worth Star-Telegram, 1916-03-31, p1
+2026-03-19 09:18:26,992 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_03_31_10.pdf — Fort Worth Star-Telegram, 1916-03-31, p10
+2026-03-19 09:18:30,584 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_04_01_1.pdf — Fort Worth Star-Telegram, 1916-04-01, p1
+2026-03-19 09:18:34,173 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_04_01_9.pdf — Fort Worth Record-Telegram, 1916-04-01, p9
+2026-03-19 09:18:37,679 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_04_02_1.pdf — Fort Worth Star-Telegram, 1916-04-02, p1
+2026-03-19 09:18:41,590 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_04_02_7.pdf — Fort Worth Record-Telegram, 1916-04-02, p7
+2026-03-19 09:18:45,172 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_04_02_19.pdf — Fort Worth Record-Telegram, 1916-04-02, p19
+2026-03-19 09:18:45,172 [INFO]   Returning to search...
+2026-03-19 09:19:08,098 [INFO] --- Batch 8 ---
+2026-03-19 09:19:10,810 [INFO]   Found 10 new result links
+2026-03-19 09:19:14,546 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_04_03_3.pdf — Fort Worth Star-Telegram, 1916-04-03, p3
+2026-03-19 09:19:18,136 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_04_04_5.pdf — Fort Worth Star-Telegram, 1916-04-04, p5
+2026-03-19 09:19:21,597 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_04_04_6.pdf — Fort Worth Star-Telegram, 1916-04-04, p6
+2026-03-19 09:19:25,245 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_04_04_14.pdf — Fort Worth Star-Telegram, 1916-04-04, p14
+2026-03-19 09:19:28,786 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_04_05_8.pdf — Fort Worth Record-Telegram, 1916-04-05, p8
+2026-03-19 09:19:32,231 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_04_06_7.pdf — Fort Worth Record-Telegram, 1916-04-06, p7
+2026-03-19 09:19:35,778 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_04_06_9.pdf — Fort Worth Star-Telegram, 1916-04-06, p9
+2026-03-19 09:19:39,229 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_04_07_1.pdf — Fort Worth Record-Telegram, 1916-04-07, p1
+2026-03-19 09:19:42,699 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_04_07_14.pdf — Fort Worth Record-Telegram, 1916-04-07, p14
+2026-03-19 09:19:46,120 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_04_08_8.pdf — Fort Worth Star-Telegram, 1916-04-08, p8
+2026-03-19 09:19:46,121 [INFO]   Returning to search...
+2026-03-19 09:20:08,893 [INFO] --- Batch 9 ---
+2026-03-19 09:20:11,711 [INFO]   Found 10 new result links
+2026-03-19 09:20:15,323 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_04_08_2.pdf — Fort Worth Star-Telegram, 1916-04-08, p2
+2026-03-19 09:20:18,822 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_04_09_4.pdf — Fort Worth Record-Telegram, 1916-04-09, p4
+2026-03-19 09:20:22,477 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_04_09_24.pdf — Fort Worth Record-Telegram, 1916-04-09, p24
+2026-03-19 09:20:26,000 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_04_09_5.pdf — Fort Worth Star-Telegram, 1916-04-09, p5
+2026-03-19 09:20:29,458 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_04_10_5.pdf — Fort Worth Record-Telegram, 1916-04-10, p5
+2026-03-19 09:20:32,865 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_04_11_9.pdf — Fort Worth Record-Telegram, 1916-04-11, p9
+2026-03-19 09:20:36,529 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_04_13_12.pdf — Fort Worth Star-Telegram, 1916-04-13, p12
+2026-03-19 09:20:39,950 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_04_14_1.pdf — Fort Worth Record-Telegram, 1916-04-14, p1
+2026-03-19 09:20:43,419 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_04_14_1.pdf — Fort Worth Star-Telegram, 1916-04-14, p1
+2026-03-19 09:20:46,934 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_04_14_2.pdf — Fort Worth Star-Telegram, 1916-04-14, p2
+2026-03-19 09:20:46,934 [INFO]   Returning to search...
+2026-03-19 09:21:09,958 [INFO] --- Batch 10 ---
+2026-03-19 09:21:12,838 [INFO]   Found 10 new result links
+2026-03-19 09:21:16,705 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_04_15_5.pdf — Fort Worth Star-Telegram, 1916-04-15, p5
+2026-03-19 09:21:20,560 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_04_15_14.pdf — Fort Worth Record-Telegram, 1916-04-15, p14
+2026-03-19 09:21:24,230 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_04_15_1.pdf — Fort Worth Star-Telegram, 1916-04-15, p1
+2026-03-19 09:21:27,787 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_04_16_4.pdf — Fort Worth Record-Telegram, 1916-04-16, p4
+2026-03-19 09:21:31,234 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_04_16_1.pdf — Fort Worth Star-Telegram, 1916-04-16, p1
+2026-03-19 09:21:34,692 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_04_16_9.pdf — Fort Worth Star-Telegram, 1916-04-16, p9
+2026-03-19 09:21:38,705 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_04_17_7.pdf — Fort Worth Star-Telegram, 1916-04-17, p7
+2026-03-19 09:21:42,181 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_04_17_6.pdf — Fort Worth Star-Telegram, 1916-04-17, p6
+2026-03-19 09:21:45,602 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_04_18_7.pdf — Fort Worth Record-Telegram, 1916-04-18, p7
+2026-03-19 09:21:49,045 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_04_18_1.pdf — Fort Worth Star-Telegram, 1916-04-18, p1
+2026-03-19 09:21:49,045 [INFO]   Returning to search...
+2026-03-19 09:22:12,940 [INFO] --- Batch 11 ---
+2026-03-19 09:22:15,993 [INFO]   Found 10 new result links
+2026-03-19 09:22:19,611 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_04_18_2.pdf — Fort Worth Star-Telegram, 1916-04-18, p2
+2026-03-19 09:22:23,299 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_04_19_7.pdf — Fort Worth Record-Telegram, 1916-04-19, p7
+2026-03-19 09:22:26,781 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_04_19_10.pdf — Fort Worth Record-Telegram, 1916-04-19, p10
+2026-03-19 09:22:26,781 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-19 09:22:26,783 [INFO]   Session 3: 100 new, 3 skipped (running total: 300 new)
+2026-03-19 09:22:26,784 [INFO]   Restarting in 3 seconds...
+2026-03-19 09:22:29,785 [INFO] 
+>>> SESSION 4
+2026-03-19 09:22:29,788 [INFO] ============================================================
+2026-03-19 09:22:29,788 [INFO]   Starting session from: 1916-04-19
+2026-03-19 09:22:29,789 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1916-04-19&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-19 09:22:29,789 [INFO] ============================================================
+2026-03-19 09:22:30,954 [INFO] Opening Newspapers.com...
+2026-03-19 09:22:37,421 [INFO] Loading search results...
+2026-03-19 09:22:42,631 [INFO] --- Batch 1 ---
+2026-03-19 09:22:44,765 [INFO]   Found 10 new result links
+2026-03-19 09:22:48,467 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1916_04_19_7.pdf
+2026-03-19 09:22:51,908 [INFO]   [2] Exists: Fort_Worth_Record_Telegram_1916_04_19_10.pdf
+2026-03-19 09:22:55,467 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_04_19_1.pdf — Fort Worth Star-Telegram, 1916-04-19, p1
+2026-03-19 09:22:59,010 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_04_19_5.pdf — Fort Worth Star-Telegram, 1916-04-19, p5
+2026-03-19 09:23:03,012 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_04_20_10.pdf — Fort Worth Record-Telegram, 1916-04-20, p10
+2026-03-19 09:23:06,599 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_04_20_1.pdf — Fort Worth Star-Telegram, 1916-04-20, p1
+2026-03-19 09:23:10,270 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_04_20_14.pdf — Fort Worth Record-Telegram, 1916-04-20, p14
+2026-03-19 09:23:14,986 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_04_20_3.pdf — Fort Worth Star-Telegram, 1916-04-20, p3
+2026-03-19 09:23:18,528 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_04_21_11.pdf — Fort Worth Star-Telegram, 1916-04-21, p11
+2026-03-19 09:23:22,037 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_04_21_19.pdf — Fort Worth Star-Telegram, 1916-04-21, p19
+2026-03-19 09:23:22,037 [INFO]   Returning to search...
+2026-03-19 09:23:43,054 [INFO] --- Batch 2 ---
+2026-03-19 09:23:45,251 [INFO]   Found 10 new result links
+2026-03-19 09:23:48,687 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_04_22_4.pdf — Fort Worth Star-Telegram, 1916-04-22, p4
+2026-03-19 09:23:52,126 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_04_22_8.pdf — Fort Worth Star-Telegram, 1916-04-22, p8
+2026-03-19 09:23:55,566 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_04_23_17.pdf — Fort Worth Star-Telegram, 1916-04-23, p17
+2026-03-19 09:23:59,248 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_04_23_29.pdf — Fort Worth Record-Telegram, 1916-04-23, p29
+2026-03-19 09:24:02,743 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_04_24_1.pdf — Fort Worth Star-Telegram, 1916-04-24, p1
+2026-03-19 09:24:06,272 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_04_24_10.pdf — Fort Worth Star-Telegram, 1916-04-24, p10
+2026-03-19 09:24:09,784 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_04_25_12.pdf — Fort Worth Record-Telegram, 1916-04-25, p12
+2026-03-19 09:24:13,295 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_04_25_8.pdf — Fort Worth Star-Telegram, 1916-04-25, p8
+2026-03-19 09:24:16,958 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_04_29_5.pdf — Fort Worth Star-Telegram, 1916-04-29, p5
+2026-03-19 09:24:20,443 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_04_30_3.pdf — Fort Worth Record-Telegram, 1916-04-30, p3
+2026-03-19 09:24:20,443 [INFO]   Returning to search...
+2026-03-19 09:24:41,720 [INFO] --- Batch 3 ---
+2026-03-19 09:24:43,993 [INFO]   Found 10 new result links
+2026-03-19 09:24:47,581 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_05_02_8.pdf — Fort Worth Record-Telegram, 1916-05-02, p8
+2026-03-19 09:24:51,032 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_05_03_12.pdf — Fort Worth Record-Telegram, 1916-05-03, p12
+2026-03-19 09:24:54,510 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_05_04_1.pdf — Fort Worth Star-Telegram, 1916-05-04, p1
+2026-03-19 09:24:57,966 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_05_04_1.pdf — Fort Worth Record-Telegram, 1916-05-04, p1
+2026-03-19 09:25:01,588 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_05_04_16.pdf — Fort Worth Star-Telegram, 1916-05-04, p16
+2026-03-19 09:25:05,157 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_05_05_3.pdf — Fort Worth Record-Telegram, 1916-05-05, p3
+2026-03-19 09:25:08,726 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_05_05_5.pdf — Fort Worth Record-Telegram, 1916-05-05, p5
+2026-03-19 09:25:12,428 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_05_05_14.pdf — Fort Worth Record-Telegram, 1916-05-05, p14
+2026-03-19 09:25:17,256 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_05_08_6.pdf — Fort Worth Star-Telegram, 1916-05-08, p6
+2026-03-19 09:25:20,786 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_05_08_1.pdf — Fort Worth Star-Telegram, 1916-05-08, p1
+2026-03-19 09:25:20,786 [INFO]   Returning to search...
+2026-03-19 09:25:42,212 [INFO] --- Batch 4 ---
+2026-03-19 09:25:44,578 [INFO]   Found 10 new result links
+2026-03-19 09:25:48,220 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_05_09_12.pdf — Fort Worth Record-Telegram, 1916-05-09, p12
+2026-03-19 09:25:51,644 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_05_09_6.pdf — Fort Worth Star-Telegram, 1916-05-09, p6
+2026-03-19 09:25:55,065 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_05_09_14.pdf — Fort Worth Star-Telegram, 1916-05-09, p14
+2026-03-19 09:25:58,527 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_05_10_3.pdf — Fort Worth Star-Telegram, 1916-05-10, p3
+2026-03-19 09:26:01,988 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_05_11_4.pdf — Fort Worth Record-Telegram, 1916-05-11, p4
+2026-03-19 09:26:05,402 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_05_11_5.pdf — Fort Worth Star-Telegram, 1916-05-11, p5
+2026-03-19 09:26:08,955 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_05_11_9.pdf — Fort Worth Star-Telegram, 1916-05-11, p9
+2026-03-19 09:26:12,453 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_05_11_11.pdf — Fort Worth Star-Telegram, 1916-05-11, p11
+2026-03-19 09:26:15,926 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_05_12_5.pdf — Fort Worth Record-Telegram, 1916-05-12, p5
+2026-03-19 09:26:19,814 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_05_12_1.pdf — Fort Worth Star-Telegram, 1916-05-12, p1
+2026-03-19 09:26:19,814 [INFO]   Returning to search...
+2026-03-19 09:26:42,631 [INFO] --- Batch 5 ---
+2026-03-19 09:26:45,074 [INFO]   Found 10 new result links
+2026-03-19 09:26:49,008 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_05_12_8.pdf — Fort Worth Star-Telegram, 1916-05-12, p8
+2026-03-19 09:26:52,476 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_05_13_5.pdf — Fort Worth Star-Telegram, 1916-05-13, p5
+2026-03-19 09:26:55,890 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_05_14_15.pdf — Fort Worth Record-Telegram, 1916-05-14, p15
+2026-03-19 09:26:59,298 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_05_14_23.pdf — Fort Worth Record-Telegram, 1916-05-14, p23
+2026-03-19 09:27:02,794 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_05_14_35.pdf — Fort Worth Record-Telegram, 1916-05-14, p35
+2026-03-19 09:27:06,270 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_05_14_32.pdf — Fort Worth Star-Telegram, 1916-05-14, p32
+2026-03-19 09:27:09,717 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_05_15_3.pdf — Fort Worth Record-Telegram, 1916-05-15, p3
+2026-03-19 09:27:13,256 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_05_15_4.pdf — Fort Worth Record-Telegram, 1916-05-15, p4
+2026-03-19 09:27:16,683 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_05_16_1.pdf — Fort Worth Star-Telegram, 1916-05-16, p1
+2026-03-19 09:27:20,188 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_05_16_8.pdf — Fort Worth Record-Telegram, 1916-05-16, p8
+2026-03-19 09:27:20,188 [INFO]   Returning to search...
+2026-03-19 09:27:42,114 [INFO] --- Batch 6 ---
+2026-03-19 09:27:44,641 [INFO]   Found 10 new result links
+2026-03-19 09:27:48,036 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_05_16_9.pdf — Fort Worth Record-Telegram, 1916-05-16, p9
+2026-03-19 09:27:51,653 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_05_17_8.pdf — Fort Worth Star-Telegram, 1916-05-17, p8
+2026-03-19 09:27:55,140 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_05_17_14.pdf — Fort Worth Record-Telegram, 1916-05-17, p14
+2026-03-19 09:27:58,861 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_05_18_4.pdf — Fort Worth Star-Telegram, 1916-05-18, p4
+2026-03-19 09:28:02,363 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_05_18_11.pdf — Fort Worth Star-Telegram, 1916-05-18, p11
+2026-03-19 09:28:05,802 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_05_21_9.pdf — Fort Worth Record-Telegram, 1916-05-21, p9
+2026-03-19 09:28:09,486 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_05_21_8.pdf — Fort Worth Record-Telegram, 1916-05-21, p8
+2026-03-19 09:28:12,964 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_05_22_6.pdf — Fort Worth Record-Telegram, 1916-05-22, p6
+2026-03-19 09:28:16,414 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_05_23_13.pdf — Fort Worth Record-Telegram, 1916-05-23, p13
+2026-03-19 09:28:19,955 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_05_24_9.pdf — Fort Worth Star-Telegram, 1916-05-24, p9
+2026-03-19 09:28:19,955 [INFO]   Returning to search...
+2026-03-19 09:28:42,352 [INFO] --- Batch 7 ---
+2026-03-19 09:28:44,969 [INFO]   Found 10 new result links
+2026-03-19 09:28:48,503 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_05_27_14.pdf — Fort Worth Record-Telegram, 1916-05-27, p14
+2026-03-19 09:28:51,988 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_05_28_2.pdf — Fort Worth Record-Telegram, 1916-05-28, p2
+2026-03-19 09:28:55,410 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_05_29_3.pdf — Fort Worth Star-Telegram, 1916-05-29, p3
+2026-03-19 09:28:58,842 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_05_31_5.pdf — Fort Worth Record-Telegram, 1916-05-31, p5
+2026-03-19 09:29:02,439 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_05_31_7.pdf — Fort Worth Record-Telegram, 1916-05-31, p7
+2026-03-19 09:29:06,118 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_06_01_8.pdf — Fort Worth Star-Telegram, 1916-06-01, p8
+2026-03-19 09:29:09,631 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_06_03_7.pdf — Fort Worth Star-Telegram, 1916-06-03, p7
+2026-03-19 09:29:13,090 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_06_03_8.pdf — Fort Worth Record-Telegram, 1916-06-03, p8
+2026-03-19 09:29:16,648 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_06_04_10.pdf — Fort Worth Star-Telegram, 1916-06-04, p10
+2026-03-19 09:29:20,085 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_06_04_31.pdf — Fort Worth Star-Telegram, 1916-06-04, p31
+2026-03-19 09:29:20,086 [INFO]   Returning to search...
+2026-03-19 09:29:42,692 [INFO] --- Batch 8 ---
+2026-03-19 09:29:45,407 [INFO]   Found 10 new result links
+2026-03-19 09:29:49,035 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_06_04_18.pdf — Fort Worth Star-Telegram, 1916-06-04, p18
+2026-03-19 09:29:52,505 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_06_06_9.pdf — Fort Worth Record-Telegram, 1916-06-06, p9
+2026-03-19 09:29:56,010 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_06_08_8.pdf — Fort Worth Record-Telegram, 1916-06-08, p8
+2026-03-19 09:29:59,450 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_06_08_11.pdf — Fort Worth Star-Telegram, 1916-06-08, p11
+2026-03-19 09:30:02,923 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_06_11_16.pdf — Fort Worth Star-Telegram, 1916-06-11, p16
+2026-03-19 09:30:06,579 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_06_11_23.pdf — Fort Worth Star-Telegram, 1916-06-11, p23
+2026-03-19 09:30:10,072 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_06_11_39.pdf — Fort Worth Star-Telegram, 1916-06-11, p39
+2026-03-19 09:30:13,556 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_06_12_12.pdf — Fort Worth Star-Telegram, 1916-06-12, p12
+2026-03-19 09:30:17,118 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_06_13_6.pdf — Fort Worth Record-Telegram, 1916-06-13, p6
+2026-03-19 09:30:20,744 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_06_13_7.pdf — Fort Worth Record-Telegram, 1916-06-13, p7
+2026-03-19 09:30:20,745 [INFO]   Returning to search...
+2026-03-19 09:30:43,714 [INFO] --- Batch 9 ---
+2026-03-19 09:30:46,512 [INFO]   Found 10 new result links
+2026-03-19 09:30:49,923 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_06_13_1.pdf — Fort Worth Star-Telegram, 1916-06-13, p1
+2026-03-19 09:30:53,330 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_06_13_14.pdf — Fort Worth Star-Telegram, 1916-06-13, p14
+2026-03-19 09:30:56,706 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_06_14_1.pdf — Fort Worth Record-Telegram, 1916-06-14, p1
+2026-03-19 09:31:00,252 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_06_14_13.pdf — Fort Worth Star-Telegram, 1916-06-14, p13
+2026-03-19 09:31:04,040 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_06_14_7.pdf — Fort Worth Record-Telegram, 1916-06-14, p7
+2026-03-19 09:31:07,456 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_06_14_1.pdf — Fort Worth Star-Telegram, 1916-06-14, p1
+2026-03-19 09:31:11,135 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_06_15_1.pdf — Fort Worth Record-Telegram, 1916-06-15, p1
+2026-03-19 09:31:14,638 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_06_15_4.pdf — Fort Worth Record-Telegram, 1916-06-15, p4
+2026-03-19 09:31:18,118 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_06_15_8.pdf — Fort Worth Record-Telegram, 1916-06-15, p8
+2026-03-19 09:31:22,442 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_06_17_4.pdf — Fort Worth Record-Telegram, 1916-06-17, p4
+2026-03-19 09:31:22,442 [INFO]   Returning to search...
+2026-03-19 09:31:45,640 [INFO] --- Batch 10 ---
+2026-03-19 09:31:48,526 [INFO]   Found 10 new result links
+2026-03-19 09:31:52,469 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_06_18_10.pdf — Fort Worth Star-Telegram, 1916-06-18, p10
+2026-03-19 09:31:56,027 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_06_18_14.pdf — Fort Worth Record-Telegram, 1916-06-18, p14
+2026-03-19 09:31:59,600 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_06_18_25.pdf — Fort Worth Star-Telegram, 1916-06-18, p25
+2026-03-19 09:32:03,143 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_06_18_10.pdf — Fort Worth Record-Telegram, 1916-06-18, p10
+2026-03-19 09:32:06,807 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_06_18_21.pdf — Fort Worth Record-Telegram, 1916-06-18, p21
+2026-03-19 09:32:10,281 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_06_18_8.pdf — Fort Worth Star-Telegram, 1916-06-18, p8
+2026-03-19 09:32:14,006 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_06_18_26.pdf — Fort Worth Star-Telegram, 1916-06-18, p26
+2026-03-19 09:32:17,437 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_06_18_29.pdf — Fort Worth Star-Telegram, 1916-06-18, p29
+2026-03-19 09:32:20,989 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_06_19_9.pdf — Fort Worth Star-Telegram, 1916-06-19, p9
+2026-03-19 09:32:24,452 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_06_19_11.pdf — Fort Worth Star-Telegram, 1916-06-19, p11
+2026-03-19 09:32:24,452 [INFO]   Returning to search...
+2026-03-19 09:32:48,339 [INFO] --- Batch 11 ---
+2026-03-19 09:32:51,297 [INFO]   Found 10 new result links
+2026-03-19 09:32:54,790 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_06_20_5.pdf — Fort Worth Record-Telegram, 1916-06-20, p5
+2026-03-19 09:32:59,109 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_06_20_12.pdf — Fort Worth Record-Telegram, 1916-06-20, p12
+2026-03-19 09:32:59,109 [INFO]   100 new entries — restarting browser from latest date...
+2026-03-19 09:32:59,110 [INFO]   Session 4: 100 new, 2 skipped (running total: 400 new)
+2026-03-19 09:32:59,110 [INFO]   Restarting in 3 seconds...
+2026-03-19 09:33:02,111 [INFO] 
+>>> SESSION 5
+2026-03-19 09:33:02,116 [INFO] ============================================================
+2026-03-19 09:33:02,116 [INFO]   Starting session from: 1916-06-20
+2026-03-19 09:33:02,116 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1916-06-20&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-19 09:33:02,116 [INFO] ============================================================
+2026-03-19 09:33:03,460 [INFO] Opening Newspapers.com...
+2026-03-19 09:33:10,234 [INFO] Loading search results...
+2026-03-19 09:33:15,599 [INFO] --- Batch 1 ---
+2026-03-19 09:33:17,718 [INFO]   Found 10 new result links
+2026-03-19 09:33:21,310 [INFO]   [1] Exists: Fort_Worth_Record_Telegram_1916_06_20_5.pdf
+2026-03-19 09:33:25,065 [INFO]   [2] Exists: Fort_Worth_Record_Telegram_1916_06_20_12.pdf
+2026-03-19 09:33:28,593 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_06_20_9.pdf — Fort Worth Star-Telegram, 1916-06-20, p9
+2026-03-19 09:33:32,091 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_06_25_6.pdf — Fort Worth Star-Telegram, 1916-06-25, p6
+2026-03-19 09:33:35,632 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_06_29_9.pdf — Fort Worth Star-Telegram, 1916-06-29, p9
+2026-03-19 09:33:39,050 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_06_29_14.pdf — Fort Worth Star-Telegram, 1916-06-29, p14
+2026-03-19 09:33:42,498 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_06_30_3.pdf — Fort Worth Record-Telegram, 1916-06-30, p3
+2026-03-19 09:33:45,945 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_06_30_10.pdf — Fort Worth Star-Telegram, 1916-06-30, p10
+2026-03-19 09:33:49,660 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_07_03_9.pdf — Fort Worth Star-Telegram, 1916-07-03, p9
+2026-03-19 09:33:53,128 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_07_04_12.pdf — Fort Worth Star-Telegram, 1916-07-04, p12
+2026-03-19 09:33:53,128 [INFO]   Returning to search...
+2026-03-19 09:34:13,643 [INFO] --- Batch 2 ---
+2026-03-19 09:34:15,843 [INFO]   Found 10 new result links
+2026-03-19 09:34:19,298 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_07_04_5.pdf — Fort Worth Record-Telegram, 1916-07-04, p5
+2026-03-19 09:34:22,769 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_07_05_3.pdf — Fort Worth Star-Telegram, 1916-07-05, p3
+2026-03-19 09:34:26,209 [INFO]   [3] NEW: Fort_Worth_Record_Telegram_1916_07_05_4.pdf — Fort Worth Record-Telegram, 1916-07-05, p4
+2026-03-19 09:34:29,835 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_07_06_11.pdf — Fort Worth Star-Telegram, 1916-07-06, p11
+2026-03-19 09:34:33,309 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_07_07_5.pdf — Fort Worth Record-Telegram, 1916-07-07, p5
+2026-03-19 09:34:37,081 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_07_07_4.pdf — Fort Worth Record-Telegram, 1916-07-07, p4
+2026-03-19 09:34:40,541 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_07_09_10.pdf — Fort Worth Record-Telegram, 1916-07-09, p10
+2026-03-19 09:34:44,149 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_07_09_14.pdf — Fort Worth Record-Telegram, 1916-07-09, p14
+2026-03-19 09:34:47,577 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_07_09_19.pdf — Fort Worth Record-Telegram, 1916-07-09, p19
+2026-03-19 09:34:51,020 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_07_09_33.pdf — Fort Worth Star-Telegram, 1916-07-09, p33
+2026-03-19 09:34:51,020 [INFO]   Returning to search...
+2026-03-19 09:35:12,489 [INFO] --- Batch 3 ---
+2026-03-19 09:35:14,764 [INFO]   Found 10 new result links
+2026-03-19 09:35:18,224 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_07_10_1.pdf — Fort Worth Record-Telegram, 1916-07-10, p1
+2026-03-19 09:35:21,672 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_07_10_1.pdf — Fort Worth Star-Telegram, 1916-07-10, p1
+2026-03-19 09:35:25,118 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_07_10_9.pdf — Fort Worth Star-Telegram, 1916-07-10, p9
+2026-03-19 09:35:28,705 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_07_13_5.pdf — Fort Worth Star-Telegram, 1916-07-13, p5
+2026-03-19 09:35:32,200 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_07_14_2.pdf — Fort Worth Star-Telegram, 1916-07-14, p2
+2026-03-19 09:35:35,731 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_07_14_13.pdf — Fort Worth Star-Telegram, 1916-07-14, p13
+2026-03-19 09:35:39,219 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_07_15_5.pdf — Fort Worth Record-Telegram, 1916-07-15, p5
+2026-03-19 09:35:42,808 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_07_15_1.pdf — Fort Worth Star-Telegram, 1916-07-15, p1
+2026-03-19 09:35:46,274 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_07_16_13.pdf — Fort Worth Record-Telegram, 1916-07-16, p13
+2026-03-19 09:35:49,713 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_07_16_25.pdf — Fort Worth Star-Telegram, 1916-07-16, p25
+2026-03-19 09:35:49,714 [INFO]   Returning to search...
+2026-03-19 09:36:10,765 [INFO] --- Batch 4 ---
+2026-03-19 09:36:13,120 [INFO]   Found 10 new result links
+2026-03-19 09:36:16,536 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_07_16_6.pdf — Fort Worth Record-Telegram, 1916-07-16, p6
+2026-03-19 09:36:19,952 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_07_16_17.pdf — Fort Worth Record-Telegram, 1916-07-16, p17
+2026-03-19 09:36:23,751 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_07_16_9.pdf — Fort Worth Star-Telegram, 1916-07-16, p9
+2026-03-19 09:36:27,730 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_07_16_27.pdf — Fort Worth Star-Telegram, 1916-07-16, p27
+2026-03-19 09:36:31,248 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_07_16_10.pdf — Fort Worth Record-Telegram, 1916-07-16, p10
+2026-03-19 09:36:34,671 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_07_17_8.pdf — Fort Worth Record-Telegram, 1916-07-17, p8
+2026-03-19 09:36:38,172 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_07_17_7.pdf — Fort Worth Star-Telegram, 1916-07-17, p7
+2026-03-19 09:36:41,752 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_07_17_11.pdf — Fort Worth Star-Telegram, 1916-07-17, p11
+2026-03-19 09:36:45,241 [INFO]   [9] NEW: Fort_Worth_Record_Telegram_1916_07_18_12.pdf — Fort Worth Record-Telegram, 1916-07-18, p12
+2026-03-19 09:36:48,770 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_07_18_5.pdf — Fort Worth Record-Telegram, 1916-07-18, p5
+2026-03-19 09:36:48,771 [INFO]   Returning to search...
+2026-03-19 09:37:10,565 [INFO] --- Batch 5 ---
+2026-03-19 09:37:13,082 [INFO]   Found 10 new result links
+2026-03-19 09:37:16,484 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_07_18_9.pdf — Fort Worth Star-Telegram, 1916-07-18, p9
+2026-03-19 09:37:20,060 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_07_19_5.pdf — Fort Worth Record-Telegram, 1916-07-19, p5
+2026-03-19 09:37:23,444 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_07_19_13.pdf — Fort Worth Star-Telegram, 1916-07-19, p13
+2026-03-19 09:37:26,904 [INFO]   [4] NEW: Fort_Worth_Record_Telegram_1916_07_20_5.pdf — Fort Worth Record-Telegram, 1916-07-20, p5
+2026-03-19 09:37:30,363 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_07_20_3.pdf — Fort Worth Star-Telegram, 1916-07-20, p3
+2026-03-19 09:37:33,847 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_07_21_11.pdf — Fort Worth Star-Telegram, 1916-07-21, p11
+2026-03-19 09:37:37,256 [INFO]   [7] NEW: Fort_Worth_Star_Telegram_1916_07_23_17.pdf — Fort Worth Star-Telegram, 1916-07-23, p17
+2026-03-19 09:37:40,747 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_07_23_6.pdf — Fort Worth Record-Telegram, 1916-07-23, p6
+2026-03-19 09:37:44,165 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_07_23_15.pdf — Fort Worth Star-Telegram, 1916-07-23, p15
+2026-03-19 09:37:47,683 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_07_23_16.pdf — Fort Worth Star-Telegram, 1916-07-23, p16
+2026-03-19 09:37:47,684 [INFO]   Returning to search...
+2026-03-19 09:38:09,385 [INFO] --- Batch 6 ---
+2026-03-19 09:38:11,922 [INFO]   Found 10 new result links
+2026-03-19 09:38:16,341 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_07_26_1.pdf — Fort Worth Record-Telegram, 1916-07-26, p1
+2026-03-19 09:38:20,009 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_07_26_7.pdf — Fort Worth Record-Telegram, 1916-07-26, p7
+2026-03-19 09:38:23,749 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_07_26_8.pdf — Fort Worth Star-Telegram, 1916-07-26, p8
+2026-03-19 09:38:27,409 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_07_26_12.pdf — Fort Worth Star-Telegram, 1916-07-26, p12
+2026-03-19 09:38:30,875 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_07_27_5.pdf — Fort Worth Record-Telegram, 1916-07-27, p5
+2026-03-19 09:38:34,480 [INFO]   [6] NEW: Fort_Worth_Star_Telegram_1916_07_27_5.pdf — Fort Worth Star-Telegram, 1916-07-27, p5
+2026-03-19 09:38:37,966 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_07_28_5.pdf — Fort Worth Record-Telegram, 1916-07-28, p5
+2026-03-19 09:38:41,390 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_07_29_6.pdf — Fort Worth Star-Telegram, 1916-07-29, p6
+2026-03-19 09:38:44,901 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_07_30_16.pdf — Fort Worth Star-Telegram, 1916-07-30, p16
+2026-03-19 09:38:48,330 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_07_30_17.pdf — Fort Worth Record-Telegram, 1916-07-30, p17
+2026-03-19 09:38:48,330 [INFO]   Returning to search...
+2026-03-19 09:39:10,522 [INFO] --- Batch 7 ---
+2026-03-19 09:39:13,144 [INFO]   Found 10 new result links
+2026-03-19 09:39:16,610 [INFO]   [1] NEW: Fort_Worth_Star_Telegram_1916_07_30_12.pdf — Fort Worth Star-Telegram, 1916-07-30, p12
+2026-03-19 09:39:20,126 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_07_30_14.pdf — Fort Worth Star-Telegram, 1916-07-30, p14
+2026-03-19 09:39:24,171 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_07_30_17.pdf — Fort Worth Star-Telegram, 1916-07-30, p17
+2026-03-19 09:39:27,622 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_07_31_9.pdf — Fort Worth Star-Telegram, 1916-07-31, p9
+2026-03-19 09:39:31,170 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_08_01_5.pdf — Fort Worth Star-Telegram, 1916-08-01, p5
+2026-03-19 09:39:35,029 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_08_01_1.pdf — Fort Worth Record-Telegram, 1916-08-01, p1
+2026-03-19 09:39:38,590 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_08_01_3.pdf — Fort Worth Record-Telegram, 1916-08-01, p3
+2026-03-19 09:39:42,082 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_08_02_7.pdf — Fort Worth Record-Telegram, 1916-08-02, p7
+2026-03-19 09:39:45,594 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_08_02_1.pdf — Fort Worth Star-Telegram, 1916-08-02, p1
+2026-03-19 09:39:49,199 [INFO]   [10] NEW: Fort_Worth_Record_Telegram_1916_08_02_1.pdf — Fort Worth Record-Telegram, 1916-08-02, p1
+2026-03-19 09:39:49,199 [INFO]   Returning to search...
+2026-03-19 09:40:11,782 [INFO] --- Batch 8 ---
+2026-03-19 09:40:14,488 [INFO]   Found 10 new result links
+2026-03-19 09:40:17,929 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_08_02_5.pdf — Fort Worth Record-Telegram, 1916-08-02, p5
+2026-03-19 09:40:21,407 [INFO]   [2] NEW: Fort_Worth_Record_Telegram_1916_08_03_1.pdf — Fort Worth Record-Telegram, 1916-08-03, p1
+2026-03-19 09:40:24,814 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_08_03_2.pdf — Fort Worth Star-Telegram, 1916-08-03, p2
+2026-03-19 09:40:28,271 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_08_03_12.pdf — Fort Worth Star-Telegram, 1916-08-03, p12
+2026-03-19 09:40:31,705 [INFO]   [5] NEW: Fort_Worth_Record_Telegram_1916_08_03_4.pdf — Fort Worth Record-Telegram, 1916-08-03, p4
+2026-03-19 09:40:35,202 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_08_04_1.pdf — Fort Worth Record-Telegram, 1916-08-04, p1
+2026-03-19 09:40:38,675 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_08_04_3.pdf — Fort Worth Record-Telegram, 1916-08-04, p3
+2026-03-19 09:40:42,133 [INFO]   [8] NEW: Fort_Worth_Record_Telegram_1916_08_04_10.pdf — Fort Worth Record-Telegram, 1916-08-04, p10
+2026-03-19 09:40:45,871 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_08_04_4.pdf — Fort Worth Star-Telegram, 1916-08-04, p4
+2026-03-19 09:40:49,435 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_08_04_5.pdf — Fort Worth Star-Telegram, 1916-08-04, p5
+2026-03-19 09:40:49,435 [INFO]   Returning to search...
+2026-03-19 09:41:12,026 [INFO] --- Batch 9 ---
+2026-03-19 09:41:14,849 [INFO]   Found 10 new result links
+2026-03-19 09:41:18,535 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_08_05_7.pdf — Fort Worth Record-Telegram, 1916-08-05, p7
+2026-03-19 09:41:22,051 [INFO]   [2] NEW: Fort_Worth_Star_Telegram_1916_08_05_2.pdf — Fort Worth Star-Telegram, 1916-08-05, p2
+2026-03-19 09:41:25,909 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_08_06_1.pdf — Fort Worth Star-Telegram, 1916-08-06, p1
+2026-03-19 09:41:29,771 [INFO]   [4] NEW: Fort_Worth_Star_Telegram_1916_08_06_36.pdf — Fort Worth Star-Telegram, 1916-08-06, p36
+2026-03-19 09:41:33,250 [INFO]   [5] NEW: Fort_Worth_Star_Telegram_1916_08_06_19.pdf — Fort Worth Star-Telegram, 1916-08-06, p19
+2026-03-19 09:41:36,743 [INFO]   [6] NEW: Fort_Worth_Record_Telegram_1916_08_06_3.pdf — Fort Worth Record-Telegram, 1916-08-06, p3
+2026-03-19 09:41:40,190 [INFO]   [7] NEW: Fort_Worth_Record_Telegram_1916_08_06_27.pdf — Fort Worth Record-Telegram, 1916-08-06, p27
+2026-03-19 09:41:43,700 [INFO]   [8] NEW: Fort_Worth_Star_Telegram_1916_08_06_6.pdf — Fort Worth Star-Telegram, 1916-08-06, p6
+2026-03-19 09:41:47,268 [INFO]   [9] NEW: Fort_Worth_Star_Telegram_1916_08_06_7.pdf — Fort Worth Star-Telegram, 1916-08-06, p7
+2026-03-19 09:41:50,679 [INFO]   [10] NEW: Fort_Worth_Star_Telegram_1916_08_06_8.pdf — Fort Worth Star-Telegram, 1916-08-06, p8
+2026-03-19 09:41:50,679 [INFO]   Returning to search...
+2026-03-19 09:42:14,142 [INFO] --- Batch 10 ---
+2026-03-19 09:42:17,023 [INFO]   Found 10 new result links
+2026-03-19 09:43:07,527 [INFO]   [1] NEW: Fort_Worth_Record_Telegram_1916_08_07_8.pdf — Fort Worth Record-Telegram, 1916-08-07, p8
+2026-03-19 09:43:20,685 [WARNING]   [2] Could not parse: 504 Gateway Time-out
+2026-03-19 09:43:20,685 [ERROR] PARSE_FAIL | https://star-telegram.newspapers.com/image/634401767/?match=1&terms=%22lake%20worth%22 | title: 504 Gateway Time-out
+2026-03-19 09:43:43,176 [INFO]   [3] NEW: Fort_Worth_Star_Telegram_1916_08_07_7.pdf — Fort Worth Star-Telegram, 1916-08-07, p7
+2026-03-19 09:43:56,322 [WARNING]   [4] Could not parse: 504 Gateway Time-out
+2026-03-19 09:43:56,322 [ERROR] PARSE_FAIL | https://star-telegram.newspapers.com/image/634401844/?match=1&terms=%22lake%20worth%22 | title: 504 Gateway Time-out
+2026-03-19 09:44:09,460 [WARNING]   [5] Page load error: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.160); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x130d4e
+	0x14f895
+	0x1b52ec
+	0x1cb0d9
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,460 [ERROR] PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634385122/?match=1&terms=%22lake%20worth%22 | Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.160); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x130d4e
+	0x14f895
+	0x1b52ec
+	0x1cb0d9
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,463 [WARNING]   [6] Page load error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,463 [ERROR] PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634401855/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,464 [WARNING]   [7] Page load error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,464 [ERROR] PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634401867/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,465 [WARNING]   [8] Page load error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,465 [ERROR] PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634401953/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,466 [WARNING]   [9] Page load error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,467 [ERROR] PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634402136/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,468 [WARNING]   [10] Page load error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,468 [ERROR] PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634385341/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,468 [INFO]   Returning to search...
+2026-03-19 09:44:09,469 [ERROR] Session error: Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,469 [ERROR] SESSION_CRASH | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,470 [INFO]   Session 5: 90 new, 2 skipped (running total: 490 new)
+2026-03-19 09:44:09,470 [INFO]   Restarting in 3 seconds...
+2026-03-19 09:44:12,470 [INFO] 
+>>> SESSION 6
+2026-03-19 09:44:12,479 [INFO] ============================================================
+2026-03-19 09:44:12,480 [INFO]   Starting session from: 1916-08-07
+2026-03-19 09:44:12,480 [INFO]   Search URL: https://star-telegram.newspapers.com/search/results/?date-end=1925-12-31&date-start=1916-08-07&keyword=%22lake+worth%22&sort=paper-date-asc
+2026-03-19 09:44:12,480 [INFO] ============================================================
+2026-03-19 09:44:13,735 [INFO] Opening Newspapers.com...
+2026-03-19 09:44:29,055 [INFO] Loading search results...
+2026-03-19 09:44:43,298 [INFO] --- Batch 1 ---
+2026-03-19 09:45:16,457 [INFO] No more results.
+2026-03-19 09:45:16,458 [INFO]   Session 6: 0 new, 0 skipped (running total: 490 new)
+2026-03-19 09:45:16,458 [INFO]   All results collected.
+2026-03-19 09:45:16,458 [INFO] ============================================================
+2026-03-19 09:45:16,458 [INFO] DONE
+2026-03-19 09:45:16,458 [INFO]   Sessions: 6
+2026-03-19 09:45:16,458 [INFO]   Total new entries: 490
+2026-03-19 09:45:16,458 [INFO]   Total skipped: 12
+2026-03-19 09:45:16,458 [INFO]   Error log: c:\lake_worth\collector_logs\errors_20260319_085018.log
+2026-03-19 09:45:16,458 [INFO] ============================================================

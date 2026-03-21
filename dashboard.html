@@ -64,7 +64,26 @@
     padding: 15px;
     margin-bottom: 12px;
     border-left: 3px solid #e0c97f;
+    display: flex;
+    gap: 12px;
   }
+  .article-card .pdf-btn {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background: #1a3a5c;
+    border: 1px solid #e0c97f;
+    border-radius: 6px;
+    color: #e0c97f;
+    font-size: 0.75em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .article-card .pdf-btn:hover { background: #e0c97f; color: #1a1a2e; }
+  .article-card .article-content { flex: 1; min-width: 0; }
   .article-card h3 { color: #e0c97f; margin-bottom: 6px; font-size: 1.05em; }
   .article-meta { color: #888; font-size: 0.85em; margin-bottom: 8px; }
   .article-text { font-size: 0.9em; line-height: 1.6; color: #ccc; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
@@ -114,6 +133,44 @@
     width: 300px;
     font-size: 0.9em;
   }
+
+  .drop-zone {
+    border: 2px dashed #1a3a5c;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color: #888;
+    margin-bottom: 15px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .drop-zone.drag-over {
+    border-color: #e0c97f;
+    background: #1a2a3e;
+    color: #e0c97f;
+  }
+  .drop-zone.success {
+    border-color: #4caf50;
+    background: #1a2e1a;
+    color: #4caf50;
+  }
+  .drop-zone.error {
+    border-color: #f44336;
+    background: #2e1a1a;
+    color: #f44336;
+  }
+  .drop-zone .drop-title { font-size: 1.1em; margin-bottom: 5px; }
+  .drop-zone .drop-hint { font-size: 0.8em; }
+  .import-log {
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 0.85em;
+    margin-bottom: 15px;
+  }
+  .import-log .log-entry { padding: 4px 8px; border-bottom: 1px solid #2a2a4a; }
+  .import-log .log-ok { color: #4caf50; }
+  .import-log .log-err { color: #f44336; }
+  .import-log .log-info { color: #e0c97f; }
 </style>
 </head>
 <body>
@@ -122,24 +179,59 @@
 <p class="subtitle">Fort Worth Star-Telegram & Record-Telegram, 1914–1925</p>
 <p class="refresh-info">Auto-refreshes every 10 seconds | Last updated: <span id="lastUpdate">—</span></p>
 
+<div style="display:flex;gap:15px;margin-bottom:20px">
+  <div style="flex:1;min-width:0;background:#16213e;border-radius:10px;padding:12px 15px;border:1px solid #1a3a5c;overflow:hidden">
+    <div style="font-size:0.8em;color:#888;margin-bottom:6px">References by Month</div>
+    <div id="monthlyBars" style="display:flex;align-items:flex-end;gap:1px;min-height:100px"></div>
+  </div>
+  <div style="flex:0 0 220px;background:#16213e;border-radius:10px;padding:12px 15px;border:1px solid #1a3a5c;overflow:hidden">
+    <div style="font-size:0.8em;color:#888;margin-bottom:6px">References by Year</div>
+    <div id="yearlyBars" style="display:flex;align-items:flex-end;gap:2px;min-height:100px"></div>
+  </div>
+</div>
+
 <div class="stats-grid">
-  <div class="stat-card"><div class="number" id="statProcessed">—</div><div class="label">PDFs Processed</div></div>
+  <div class="stat-card"><div class="number" id="statProcessed">—</div><div class="label">References Captured</div></div>
   <div class="stat-card"><div class="number" id="statTotal">—</div><div class="label">Total PDFs</div></div>
   <div class="stat-card"><div class="number" id="statArticles">—</div><div class="label">Articles Found</div></div>
   <div class="stat-card"><div class="number" id="statQuotes">—</div><div class="label">Quotes Captured</div></div>
   <div class="stat-card"><div class="number" id="statPeople">—</div><div class="label">People Found</div></div>
   <div class="stat-card"><div class="number" id="statImages">—</div><div class="label">Images Found</div></div>
+  <div class="stat-card"><div class="number" id="statNoArticles">—</div><div class="label">No Articles</div></div>
 </div>
 
 <div class="progress-bar-outer">
   <div class="progress-bar-inner" id="progressBar" style="width: 0%">0%</div>
 </div>
 
+<div class="drop-zone" id="dropZoneMain"
+     ondragover="dropOver(event)" ondragleave="dropLeave(event)" ondrop="dropClip(event)">
+  <div class="drop-title">Drop clip URL here to import</div>
+  <div class="drop-hint">Drag a newspapers.com clip URL — new articles are created, existing ones are upgraded</div>
+</div>
+<div style="display:flex;align-items:center;gap:15px;margin-bottom:15px">
+  <div style="font-size:0.85em;color:#888">
+    <span style="color:#e0c97f">Bookmarklet:</span> Drag to bookmarks bar:
+    <a id="bookmarkletLink"
+       style="background:#1a3a5c;color:#e0c97f;padding:4px 10px;border-radius:6px;text-decoration:none;cursor:grab"
+       onclick="event.preventDefault();alert('Drag this link to your bookmarks bar, then click it when viewing a clip on newspapers.com')">
+      Import Clip
+    </a>
+  </div>
+</div>
+<script>
+// Build bookmarklet href via JS to avoid HTML entity issues
+document.getElementById('bookmarkletLink').href = `javascript:void(function(){try{var s=document.querySelector('script[type="application/ld+json"]');if(!s){alert('No article data found on this page');return}var d=JSON.parse(s.textContent);var p=d.publisher;var img=document.querySelector('img[src*="img.newspapers.com"]');var imgUrl=img?img.src:'';var clipMatch=location.pathname.match(/\\/(\\d+)\\/?$/);var data={date:d.datePublished||'',page:parseInt(d.pageStart||0),newspaper:typeof p==='object'?(p.legalName||p.name||''):String(p||''),headline:d.headline||'',text:d.text||'',url:location.href,clip_id:clipMatch?clipMatch[1]:'',image_url:imgUrl};fetch('http://localhost:8765/api/import-clip-data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json()}).then(function(r){if(r.error){alert('Error: '+r.error)}else{if(window.opener){window.opener.postMessage({type:'clip-imported',result:{clip:data}},'*')}window.close()}}).catch(function(e){alert('Error: '+e.message)})}catch(e){alert('Error: '+e.message)}}())`;
+</script>
+<div class="import-log" id="importLog"></div>
+
 <div class="tabs">
   <div class="tab active" onclick="showTab('articles')">Articles</div>
   <div class="tab" onclick="showTab('quotes')">Quotes</div>
   <div class="tab" onclick="showTab('people')">People</div>
+  <div class="tab" onclick="showTab('noarticles')">No Articles</div>
   <div class="tab" onclick="showTab('log')">Processing Log</div>
+  <div class="tab" onclick="showTab('dbviewer')">DB Viewer</div>
 </div>
 
 <div id="tab-articles" class="section">
@@ -157,6 +249,16 @@
   <div class="people-list" id="peopleList"></div>
 </div>
 
+<div id="tab-noarticles" class="section" style="display:none">
+  <h2>Processed PDFs — No Articles Found (<span id="noArticlesCount">0</span>)</h2>
+  <div id="noarticles-table-container" style="max-height:500px;overflow-y:auto">
+    <table>
+      <thead><tr><th>#</th><th>Date</th><th>Page</th><th>Newspaper</th><th>View</th></tr></thead>
+      <tbody id="noArticlesBody"></tbody>
+    </table>
+  </div>
+</div>
+
 <div id="tab-log" class="section" style="display:none">
   <div id="log-table-container">
     <table>
@@ -166,14 +268,220 @@
   </div>
 </div>
 
+<div id="tab-dbviewer" class="section" style="display:none">
+  <h2>Database Viewer</h2>
+  <div style="margin-bottom:10px">
+    <button onclick="loadDbViewer()" style="padding:8px 16px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:6px;cursor:pointer">Load / Refresh</button>
+    <select id="dbTableSelect" onchange="renderDbTable()" style="padding:8px;background:#16213e;color:#e0e0e0;border:1px solid #333;border-radius:6px;margin-left:10px">
+      <option value="">Select table...</option>
+    </select>
+    <span id="dbTableCount" style="color:#888;margin-left:10px"></span>
+    <input type="text" id="dbFilter" placeholder="Filter rows..." oninput="renderDbTable()" style="padding:8px;background:#16213e;color:#e0e0e0;border:1px solid #333;border-radius:6px;margin-left:10px;width:200px">
+  </div>
+  <div id="db-table-container" style="max-height:500px;overflow:auto">
+    <table>
+      <thead id="dbHead"></thead>
+      <tbody id="dbBody"></tbody>
+    </table>
+  </div>
+</div>
+
 <script>
 let allData = { stats: {}, articles: [], quotes: [], people: [], log: [] };
+
+// Prevent browser from navigating when anything is dropped on the page
+document.addEventListener('dragover', function(e) { e.preventDefault(); });
+document.addEventListener('drop', function(e) { e.preventDefault(); });
+
+function dropOver(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  e.currentTarget.classList.add('drag-over');
+}
+function dropLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function extractUrl(text) {
+  text = text.trim();
+  // Handle dropped HTML links
+  const hrefMatch = text.match(/href="([^"]*newspapers\.com[^"]*)"/);
+  if (hrefMatch) return hrefMatch[1];
+  // Handle plain URL
+  const urlMatch = text.match(/(https?:\/\/[^\s]*newspapers\.com[^\s]*)/);
+  if (urlMatch) return urlMatch[1];
+  return text;
+}
+
+async function dropClip(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const zone = e.currentTarget;
+  zone.classList.remove('drag-over');
+
+  // Try to get URL from various data types
+  let url = '';
+  if (e.dataTransfer.types.includes('text/uri-list')) {
+    url = e.dataTransfer.getData('text/uri-list').trim();
+  }
+  if (!url || !url.includes('newspapers.com')) {
+    const html = e.dataTransfer.getData('text/html');
+    if (html) url = extractUrl(html);
+  }
+  if (!url || !url.includes('newspapers.com')) {
+    url = extractUrl(e.dataTransfer.getData('text/plain') || '');
+  }
+
+  if (!url || !url.includes('newspapers.com')) {
+    zone.classList.add('error');
+    zone.querySelector('.drop-title').textContent = 'Not a valid newspapers.com URL';
+    setTimeout(() => { resetDropZone(zone); }, 3000);
+    return;
+  }
+
+  const logDiv = document.getElementById('importLog');
+
+  zone.querySelector('.drop-title').textContent = 'Opening clip...';
+  zone.querySelector('.drop-hint').textContent = 'Click the "Import Clip" bookmarklet on the opened page';
+
+  // Open clip in a new tab — the user's browser is already logged in
+  const clipTab = window.open(url, '_blank');
+  logDiv.innerHTML = `<div class="log-entry" style="color:#e0c97f">Opened: ${esc(url)} — click bookmarklet to import</div>` + logDiv.innerHTML;
+
+  // Listen for the bookmarklet to send data back via postMessage
+  function onClipMessage(evt) {
+    if (evt.data && evt.data.type === 'clip-imported') {
+      window.removeEventListener('message', onClipMessage);
+      const r = evt.data.result;
+      if (r && r.error) {
+        zone.classList.add('error');
+        zone.querySelector('.drop-title').textContent = 'Error: ' + r.error;
+        zone.querySelector('.drop-hint').textContent = '';
+        logDiv.innerHTML = `<div class="log-entry log-err">FAIL: ${esc(r.error)}</div>` + logDiv.innerHTML;
+      } else {
+        zone.classList.add('success');
+        const clip = (r && r.clip) || {};
+        const headline = clip.headline || 'Untitled';
+        zone.querySelector('.drop-title').textContent = 'Success!';
+        zone.querySelector('.drop-hint').textContent = `${headline} — ${clip.newspaper || ''}, ${clip.date || ''}, p${clip.page || ''}`;
+        logDiv.innerHTML = `<div class="log-entry log-ok">Imported: ${esc(headline)} (${clip.date}, p${clip.page})</div>` + logDiv.innerHTML;
+        refresh();
+      }
+      setTimeout(() => { resetDropZone(zone); }, 3000);
+    }
+  }
+  window.addEventListener('message', onClipMessage);
+
+  // Reset zone after 60s if bookmarklet never fires
+  setTimeout(() => {
+    window.removeEventListener('message', onClipMessage);
+    resetDropZone(zone);
+  }, 60000);
+}
+
+let clickedWww = new Set(JSON.parse(localStorage.getItem('clickedWww') || '[]'));
+
+function openRight(url, filename) {
+  const w = Math.round(screen.width * 0.4);
+  const h = screen.height;
+  const left = screen.width - w;
+  window.open(url, 'newspapers', `width=${w},height=${h},left=${left},top=0`);
+  if (filename) {
+    clickedWww.add(filename);
+    localStorage.setItem('clickedWww', JSON.stringify([...clickedWww]));
+    const row = document.getElementById('noart-' + filename);
+    if (row) row.style.background = '#1e2d4a';
+  }
+}
+
+async function deleteArticle(id) {
+  const article = allData.articles.find(a => a.id === id);
+  const headline = article ? (article.headline || 'Untitled') : 'Unknown';
+  if (!confirm(`Delete article #${id}: "${headline}"?\n\nThis cannot be undone.`)) return;
+  try {
+    const resp = await fetch('http://localhost:8765/api/delete-article', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ id: id })
+    });
+    const result = await resp.json();
+    if (result.ok) refresh();
+    else if (result.error) alert('Error: ' + result.error);
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
+}
+
+async function dismissEntry(filename) {
+  if (!confirm('Delete this entry?\n\nThis cannot be undone.')) return;
+  try {
+    const resp = await fetch('http://localhost:8765/api/dismiss-entry', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ filename: filename })
+    });
+    const result = await resp.json();
+    if (result.ok) refresh();
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
+}
+
+function resetDropZone(zone) {
+  zone.classList.remove('success', 'error');
+  zone.querySelector('.drop-title').textContent = 'Drop clip URL here to import';
+  zone.querySelector('.drop-hint').textContent = 'Drag a newspapers.com clip URL from your browser address bar';
+}
 
 function showTab(name) {
   document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).style.display = 'block';
   event.target.classList.add('active');
+}
+
+function renderMonthlyChart() {
+  const monthly = allData.monthly || [];
+  const container = document.getElementById('monthlyBars');
+  if (!monthly.length) { container.innerHTML = '<span style="color:#666;font-size:0.8em">No data</span>'; return; }
+
+  const max = Math.max(...monthly.map(m => m[1]));
+  const n = monthly.length;
+
+  container.innerHTML = monthly.map(([month, count]) => {
+    const h = Math.max(2, Math.round((count / max) * 80));
+    const label = month.substring(2, 4) + '/' + month.substring(5);
+    return `<div style="display:flex;flex-direction:column;align-items:center;flex:1 1 0;min-width:0" title="${month}: ${count} references">
+      <div style="font-size:0.55em;color:#888;margin-bottom:1px;overflow:hidden">${n < 60 ? count : ''}</div>
+      <div style="width:100%;height:${h}px;background:linear-gradient(180deg,#e0c97f,#c9a84c);border-radius:${n < 30 ? '2px 2px' : '1px 1px'} 0 0"></div>
+      <div style="font-size:0.5em;color:#666;margin-top:2px;white-space:nowrap;overflow:hidden">${n < 40 ? label : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderYearlyChart() {
+  const monthly = allData.monthly || [];
+  const container = document.getElementById('yearlyBars');
+  if (!monthly.length) { container.innerHTML = '<span style="color:#666;font-size:0.8em">No data</span>'; return; }
+
+  // Aggregate monthly into yearly
+  const yearMap = {};
+  monthly.forEach(([month, count]) => {
+    const year = month.substring(0, 4);
+    yearMap[year] = (yearMap[year] || 0) + count;
+  });
+  const years = Object.keys(yearMap).sort();
+  const max = Math.max(...years.map(y => yearMap[y]));
+
+  container.innerHTML = years.map(year => {
+    const count = yearMap[year];
+    const h = Math.max(2, Math.round((count / max) * 80));
+    return `<div style="display:flex;flex-direction:column;align-items:center;flex:1 1 0;min-width:0" title="${year}: ${count} references">
+      <div style="font-size:0.6em;color:#888;margin-bottom:1px">${count}</div>
+      <div style="width:100%;height:${h}px;background:linear-gradient(180deg,#7fb8e0,#4c8ac9);border-radius:2px 2px 0 0"></div>
+      <div style="font-size:0.6em;color:#666;margin-top:2px;white-space:nowrap">${year.substring(2)}</div>
+    </div>`;
+  }).join('');
 }
 
 function renderArticles() {
@@ -184,19 +492,36 @@ function renderArticles() {
     (a.headline || '').toLowerCase().includes(filter) ||
     (a.full_text || '').toLowerCase().includes(filter) ||
     (a.newspaper || '').toLowerCase().includes(filter)
-  );
+  ).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
   container.innerHTML = filtered.map((a, i) => {
     const quotes = (a.quotes || []).map(q =>
       `<div class="quote-block">"${esc(q.quote_text)}"<div class="quote-speaker">— ${esc(q.speaker)}${q.speaker_role ? ', ' + esc(q.speaker_role) : ''}</div></div>`
     ).join('');
 
+    const clipImg = a.clip_image ? '/clip_images/' + encodeURIComponent(a.clip_image) : '';
+    const pdfUrl = a.pdf_filename ? '/pdfs/' + encodeURIComponent(a.pdf_filename) : '';
+    const imgBtnUrl = clipImg || pdfUrl || '#';
+    const imgBtnLabel = clipImg ? 'IMG' : 'PDF';
+    const imgBtnTitle = clipImg ? 'View clip image' : 'View local PDF';
+    const dateParts = (a.date || '').split('-');
+    const searchTerm = encodeURIComponent('"' + (a.search_term || 'lake worth') + '"');
+    const searchUrl = dateParts.length === 3
+      ? 'https://star-telegram.newspapers.com/search/results/?date-start=' + a.date + '&date-end=' + a.date + '&keyword=' + searchTerm
+      : '#';
     return `<div class="article-card">
-      <h3>${esc(a.headline || 'Untitled')}</h3>
-      <div class="article-meta">${esc(a.newspaper)} — ${a.date} — Page ${a.page} — ${a.pdf_filename}</div>
-      <div class="article-text" id="text-${i}">${esc(a.full_text || '')}</div>
-      <span class="expand-btn" onclick="toggleText(${i})">Show more/less</span>
-      ${quotes}
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <button class="pdf-btn" title="${imgBtnTitle}" onclick="window.open('${imgBtnUrl}', '_blank')">${imgBtnLabel}</button>
+        <button class="pdf-btn" title="View on Newspapers.com" onclick="openRight('${searchUrl}', '${esc(a.pdf_filename)}')">WWW</button>
+        <button class="pdf-btn" title="Delete article" onclick="deleteArticle(${a.id})" style="border-color:#f44336;color:#f44336;font-size:0.7em">DEL</button>
+      </div>
+      <div class="article-content">
+        <h3>${esc(a.headline || 'Untitled')}</h3>
+        <div class="article-meta">${esc(a.newspaper)} — ${a.date} — Page ${a.page} — ${a.pdf_filename}</div>
+        <div class="article-text" id="text-${i}">${esc(a.full_text || '')}</div>
+        <span class="expand-btn" onclick="toggleText(${i})">Show more/less</span>
+        ${quotes}
+      </div>
     </div>`;
   }).join('');
 }
@@ -239,6 +564,33 @@ function renderLog() {
   }).join('');
 }
 
+function renderNoArticles() {
+  const items = allData.no_articles || [];
+  document.getElementById('noArticlesCount').textContent = items.length;
+  const tbody = document.getElementById('noArticlesBody');
+  tbody.innerHTML = items.map((r, i) => {
+    const searchTerm = encodeURIComponent('"' + (r.search_term || 'lake worth') + '"');
+    const searchUrl = r.date && r.date !== '?'
+      ? 'https://star-telegram.newspapers.com/search/results/?date-start=' + r.date + '&date-end=' + r.date + '&keyword=' + searchTerm
+      : '#';
+    const directUrl = r.url || '';
+    const wwwUrl = directUrl || searchUrl;
+    const pdfUrl = '/pdfs/' + encodeURIComponent(r.filename);
+    const visited = clickedWww.has(r.filename);
+    return `<tr id="noart-${esc(r.filename)}" style="${visited ? 'background:#1e2d4a' : ''}">
+      <td>${i + 1}</td>
+      <td>${r.date}</td>
+      <td>${r.page}</td>
+      <td>${esc(r.newspaper)}</td>
+      <td style="white-space:nowrap">
+        <button class="pdf-btn" title="View on Newspapers.com" onclick="openRight('${wwwUrl}', '${esc(r.filename)}')" style="display:inline-flex">WWW</button>
+        <button class="pdf-btn" title="View local PDF" onclick="window.open('${pdfUrl}', '_blank')" style="display:inline-flex;margin-left:4px">PDF</button>
+        <button class="pdf-btn" title="Dismiss entry" onclick="dismissEntry('${esc(r.filename)}')" style="display:inline-flex;margin-left:4px;border-color:#f44336;color:#f44336;font-size:0.7em">DEL</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
 function esc(s) {
   if (!s) return '';
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -255,6 +607,7 @@ async function refresh() {
     document.getElementById('statQuotes').textContent = allData.stats.quotes || 0;
     document.getElementById('statPeople').textContent = allData.stats.people || 0;
     document.getElementById('statImages').textContent = allData.stats.images || 0;
+    document.getElementById('statNoArticles').textContent = (allData.no_articles || []).length;
 
     const pct = allData.stats.total_pdfs ? Math.round(100 * allData.stats.processed / allData.stats.total_pdfs) : 0;
     const bar = document.getElementById('progressBar');
@@ -263,9 +616,12 @@ async function refresh() {
 
     document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
 
+    renderMonthlyChart();
+    renderYearlyChart();
     renderArticles();
     renderQuotes();
     renderPeople();
+    renderNoArticles();
     renderLog();
   } catch(e) {
     document.getElementById('lastUpdate').textContent = 'Connection error - is dashboard_server.py running?';
@@ -274,6 +630,71 @@ async function refresh() {
 
 refresh();
 setInterval(refresh, 10000);
+
+// === DB Viewer ===
+var _dbData = null;
+
+async function loadDbViewer() {
+  try {
+    const resp = await fetch('/api/db-viewer');
+    _dbData = await resp.json();
+    const sel = document.getElementById('dbTableSelect');
+    sel.innerHTML = '<option value="">Select table...</option>';
+    for (const name of Object.keys(_dbData).sort()) {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name + ' (' + _dbData[name].count + ' rows)';
+      sel.appendChild(opt);
+    }
+    // Default to articles table
+    if (_dbData.articles) { sel.value = 'articles'; renderDbTable(); }
+  } catch(e) {
+    document.getElementById('dbBody').innerHTML = '<tr><td>Error loading: ' + e + '</td></tr>';
+  }
+}
+
+function renderDbTable() {
+  if (!_dbData) return;
+  const name = document.getElementById('dbTableSelect').value;
+  if (!name || !_dbData[name]) { document.getElementById('dbBody').innerHTML = ''; return; }
+
+  const tbl = _dbData[name];
+  const filter = (document.getElementById('dbFilter').value || '').toLowerCase();
+  document.getElementById('dbTableCount').textContent = tbl.count + ' total rows (showing up to 100 recent)';
+
+  // Header
+  const head = document.getElementById('dbHead');
+  head.innerHTML = '<tr>' + tbl.columns.map(c => '<th style="position:sticky;top:0;background:#16213e;cursor:pointer;white-space:nowrap">' + c + '</th>').join('') + '</tr>';
+
+  // Rows
+  const body = document.getElementById('dbBody');
+  let html = '';
+  let shown = 0;
+  for (const row of tbl.rows) {
+    if (filter) {
+      const vals = Object.values(row).map(v => (v === null ? '' : String(v)).toLowerCase()).join(' ');
+      if (!vals.includes(filter)) continue;
+    }
+    html += '<tr>';
+    for (const col of tbl.columns) {
+      let val = row[col];
+      if (val === null) val = '<span style="color:#555">NULL</span>';
+      else {
+        val = String(val);
+        // Truncate long text
+        if (val.length > 120) val = val.substring(0, 120) + '...';
+        // Make URLs clickable
+        if (val.startsWith('http')) val = '<a href="' + val + '" target="_blank" style="color:#6db3f2">' + val.substring(0,60) + '...</a>';
+        val = val.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+      html += '<td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:4px 8px">' + val + '</td>';
+    }
+    html += '</tr>';
+    shown++;
+    if (shown >= 100) break;
+  }
+  body.innerHTML = html || '<tr><td colspan="' + tbl.columns.length + '">No matching rows</td></tr>';
+}
 </script>
 </body>
 </html>

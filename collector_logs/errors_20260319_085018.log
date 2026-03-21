@@ -1,0 +1,186 @@
+2026-03-19 09:43:20,685 PARSE_FAIL | https://star-telegram.newspapers.com/image/634401767/?match=1&terms=%22lake%20worth%22 | title: 504 Gateway Time-out
+2026-03-19 09:43:56,322 PARSE_FAIL | https://star-telegram.newspapers.com/image/634401844/?match=1&terms=%22lake%20worth%22 | title: 504 Gateway Time-out
+2026-03-19 09:44:09,460 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634385122/?match=1&terms=%22lake%20worth%22 | Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=145.0.7632.160); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141db0
+	0x130d4e
+	0x14f895
+	0x1b52ec
+	0x1cb0d9
+	0x1ae7d6
+	0x180049
+	0x180e04
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x340648
+	0x340812
+	0x32a21a
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,463 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634401855/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,464 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634401867/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,465 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634401953/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,467 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634402136/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,468 PAGE_LOAD_FAIL | https://star-telegram.newspapers.com/image/634385341/?match=1&terms=%22lake%20worth%22 | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+
+2026-03-19 09:44:09,469 SESSION_CRASH | Message: invalid session id; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#invalidsessionidexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x337dd3
+	0x337e14
+	0x141bee
+	0x17f2d5
+	0x1ae8f6
+	0x1aa491
+	0x1a9ab2
+	0x11500e
+	0x1155ae
+	0x115a8d
+	0x596924
+	0x591bf7
+	0x5af5a0
+	0x350f58
+	0x35891d
+	0x114c69
+	0x1142b0
+	0x6f876f
+	0x75cbfcc9
+	0x77db809e
+	0x77db806e
+	(nil)
+

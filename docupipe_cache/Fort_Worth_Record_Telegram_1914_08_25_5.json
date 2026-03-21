@@ -1,0 +1,301 @@
+{
+  "newspaperName": "Fort Worth Record-Telegram",
+  "publicationDate": "1914-08-25",
+  "pageNumber": 5,
+  "location": "Fort Worth, Texas",
+  "headlines": [
+    {
+      "title": "PAYS PRETTY GIRL TO \"PLAY\" HIS WIFE",
+      "subtitle": "Ludicrous Incidents Follow Effort of Young Insurance Clerk to Induce His Employer to Promote Him to Branch Agency.",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "Arrive in Haven of Matrimony After Trip Filled With Adventure",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "POSTOFFICE EXHIBIT MAY BE INSTALLED",
+      "subtitle": "Postmaster Obtains Permission to Place Model Parcel Post Exhibit in Coliseum During Fat Stock and Horse Show.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "Eastland Man Here Working on Mystery Surrounding Two Boys",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": "County Clerk Joe Burkett of Eastland county has been in Fort Worth"
+    },
+    {
+      "title": "MATE KILLS CAPTAIN OF FISHING SCHOONER",
+      "subtitle": "Murder Grew Out of Mate's Jealousy Over Captain's Daughter-Kindness of Girl Brings Reformation of an Outlaw.",
+      "topic": "Other",
+      "fullText": null
+    },
+    {
+      "title": "BUSINESS SUSPENDS DURING FUNERAL",
+      "subtitle": "Two Victims of Drowning Accident Below Spillway of Lake Worth Are Laid in Last Resting Place.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "D. O. K. K. ORGANIZE UNIFORM PATROL",
+      "subtitle": "J. J. Langever Elected Major General in Command of New Drill Team of Dramatic Order of Knights of Khorrassan.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "DEFER ACTION ON TRAFFIC ORDINANCE",
+      "subtitle": "Commissioners Blanke and Grant Attend Funeral of H. W. Kendrick, Who Was Drowned Last Friday-Special Meeting Postponed.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "VETERANS WILL BE WELL CARED FOR",
+      "subtitle": "Captain George B. Holland of Company B. Confederate Grays, Is Busy Preparing to Entertain Visitors at Confederate Park.",
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "REACH AGREEMENT ON CLASSIFICATION",
+      "subtitle": "Representatives of Live Stock Firms, Cattle Shippers and Railroads Hold Conference on North Side Monday.",
+      "topic": "Business",
+      "fullText": null
+    },
+    {
+      "title": "GRAND JURY RETURNS SEVENTY INDICTMENTS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "EDWARD MYERS IS SOUGHT BY MOTHER",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "HOW I MADE MY HAIR GROW",
+      "subtitle": null,
+      "topic": "Health",
+      "fullText": null
+    },
+    {
+      "title": "WOMAN ASKS DAMAGES FROM PULLMAN COMPANY",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    },
+    {
+      "title": "CRACK IN BRIDGE IS NOT THOUGHT SERIOUS",
+      "subtitle": null,
+      "topic": "Local News",
+      "fullText": null
+    }
+  ],
+  "advertisements": [
+    {
+      "productOrBusiness": "Clark's",
+      "description": "Great Reduction Sale. Supply your need now and save from one-third to one-half on all purchases. In order to make room for our big fall stock, which is already arriving on every express and freight, we are going to give the people some of the greatest values ever known. All summer merchandise must go regardless of cost. High prices are on vacation in this store, Don't take our word for it but come and see for yourself. No old mussed-up goods but all this season's high class merchandise. Clark's guarantee stands behind every dollar's worth you buy. And if not satisfactory, we will exchange it or your money cheerfully refunded. Extra help in all departments. You don't have to wait to be served at Clark's, Quick service and courteous treatment to all, is our motto:",
+      "price": null
+    },
+    {
+      "productOrBusiness": "White Dresses",
+      "description": "25 fine White Dresses in lawns, voiles and nets, elaborately trimmed and neat models ; values to $10.00; final clearance.",
+      "price": "$3.95"
+    },
+    {
+      "productOrBusiness": "TAILORED SUITS",
+      "description": "$25.00 to $30.00 values, made in lengths that are in vogue this fall ; final cleanup",
+      "price": "$9.95"
+    },
+    {
+      "productOrBusiness": "WHITE WAISTS",
+      "description": "A table of choice White Waists, made of fine lingerie and voile materials, worth $1.00; final cleanup, each",
+      "price": "50c"
+    },
+    {
+      "productOrBusiness": "UNDERWEAR",
+      "description": "A counter of choice underwear in muslin, nainsook and crepe, consisting of gowns, petticoats, corset covers, drawers, etc. values to $1.00; final cleanup, garment",
+      "price": "50c"
+    },
+    {
+      "productOrBusiness": "TAILORED SKIRTS",
+      "description": "An opportunity to buy the best Tailored Skirt ever offered in all the new solid colors and mixtures : some have the long tunic effect, worth up to $10,00; final cleanup, each",
+      "price": "$5.00"
+    },
+    {
+      "productOrBusiness": "CORSETS",
+      "description": "$1.50 to $2.00 Corsets, broken sizes, final cleanup, each",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "APRONS",
+      "description": "Allover Gingham Aprons, 35c; final cleanup, each",
+      "price": "19c"
+    },
+    {
+      "productOrBusiness": "DRESSES",
+      "description": "One hundred Dresses in tissues, lingeries, batiste, etc., values to $5.00; cleanup special, each",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "White Madras Shirting",
+      "description": "roc White Madras Shirting, final cleanup, yard",
+      "price": "10c"
+    },
+    {
+      "productOrBusiness": "Nainsook",
+      "description": "10-yard bolt 38-inch Soft Finished Nainsook, $2.25 value ; final cleanup, bols",
+      "price": "$1.50"
+    },
+    {
+      "productOrBusiness": "Linen Cluny Lace",
+      "description": "15c value Linen Cluny Lace; final cleanup, yard.",
+      "price": "10c"
+    },
+    {
+      "productOrBusiness": "Initial Linen Handkerchiefs",
+      "description": "Six Initial Linen Handkerchiefs in box, extra special, box",
+      "price": "29c"
+    },
+    {
+      "productOrBusiness": "Initial Embroidered Handkerchief",
+      "description": "Another lot all pure linen Initial Embroidered Handkerchief toc each, 3 for",
+      "price": "25c"
+    },
+    {
+      "productOrBusiness": "Minurette Girdle",
+      "description": "Minurette Girdles in white, blue and pink; the $2.00 values, go for",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "Minurette Girdles",
+      "description": "$3.00 Minurette Girdles, in white, blue and pink, go for",
+      "price": "$1.50"
+    },
+    {
+      "productOrBusiness": "CREPE TOILET PAPER",
+      "description": "8 rolls Crepe Toilet Paper",
+      "price": "25c"
+    },
+    {
+      "productOrBusiness": "Moire Taffetas Ribbons",
+      "description": "Big assortment 15c Moire Taffetas Ribbons, special, yd.",
+      "price": "10c"
+    },
+    {
+      "productOrBusiness": "fancy Taffetas, Moires, Stripes, Plaids and Persian Designs",
+      "description": "Another lot fancy Taffetas, Moires, Stripes, Plaids and Persian Designs, yard 25c, 35c, 50c, 60c and 75c. Worth one-third more.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "Silk Gloves",
+      "description": "Special in 16-button Silk Gloves, heavy double finger tips and reinforced clasps, to cleanup, pair",
+      "price": "47c"
+    },
+    {
+      "productOrBusiness": "Reps, Ratines and Tissues",
+      "description": "27-inch Reps, Ratines and Tissues, sold up to 35c; final cleanup, yard",
+      "price": "10c"
+    },
+    {
+      "productOrBusiness": "Voiles, Crepes and Rice Cloth",
+      "description": "Table of 36-inch Voiles, Crepes and Rice Cloth, sold up to 35c; final cleanup, yard",
+      "price": "15c"
+    },
+    {
+      "productOrBusiness": "Silk Crepes",
+      "description": "One lot Silk Crepes, 27 inches wide, soc values ; cleanup yard",
+      "price": "25c"
+    },
+    {
+      "productOrBusiness": "Colored Linen",
+      "description": "One lot Colored Linen, 45 inches wide, extra heavy, sold for soc ; final cleanup, yard",
+      "price": "35c"
+    },
+    {
+      "productOrBusiness": "Tissue Ginghams",
+      "description": "One lot 27-inch Tissue Ginghams in plaids, very thing for children's school dresses, asc values, yard",
+      "price": "18c"
+    },
+    {
+      "productOrBusiness": "Zephyr Dress Ginghams",
+      "description": "12 1/2c and 15c Zephyr Dress Ginghams, to cleanup, yard",
+      "price": "8 1/2c"
+    },
+    {
+      "productOrBusiness": "Sheets",
+      "description": "50c Sheets, 72x90, 3 for",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "Bleached Domestic",
+      "description": "50c 36-inch wide soft finished Bleached Domestic, 15 yards",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "Figured Lawns",
+      "description": "Big lot Figured Lawns, 10 yards",
+      "price": "25c"
+    },
+    {
+      "productOrBusiness": "Mercerized Damask Table Linen",
+      "description": "72x64 Mercerized Damask Table Linen, 8gc and $1.00 value, sale price, yard",
+      "price": "75c"
+    },
+    {
+      "productOrBusiness": "German Table Linen",
+      "description": "72-inch extra heavy German Table Linen, $1.25 value, yard",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "Cotton Bats",
+      "description": "40c 3-pound Cotton Bats, special, 3 for",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "Scarfs and Table Covers",
+      "description": "50c Scarfs and Table Covers, 35c. 3 for",
+      "price": "$1.00"
+    },
+    {
+      "productOrBusiness": "Turkish Bath Towels",
+      "description": "20x45 extra heavy Turkish Bath Towels, each",
+      "price": "22 1/2c"
+    },
+    {
+      "productOrBusiness": "Turkish Bath Towels",
+      "description": "18x36 Turkish Bath Towels, each",
+      "price": "12 1/2c"
+    },
+    {
+      "productOrBusiness": "white Crocheted Quilts",
+      "description": "$1.25 white Crocheted Quilts, full size, each",
+      "price": ".89c"
+    },
+    {
+      "productOrBusiness": "white Crocheted Quilts",
+      "description": "$2.00 white Crocheted Quilts, full size, each",
+      "price": "$1.45"
+    },
+    {
+      "productOrBusiness": "Standard \"C\" Canvas",
+      "description": "Two more bales Standard \"C\" Canvas, yard",
+      "price": "3c"
+    },
+    {
+      "productOrBusiness": "BerlinBlack",
+      "description": "THE HOUSE OF VALUES. SECOND. HOUSTON & MAIN.",
+      "price": null
+    },
+    {
+      "productOrBusiness": "MAJESTIC",
+      "description": "Frank Keenan - VINDICATION. McConnell & Simpson -BLUFFING. Burns & Kissen - BONGS AND CONICALITTER. 4-Other Star Acts-4",
+      "price": null
+    }
+  ],
+  "events": []
+}

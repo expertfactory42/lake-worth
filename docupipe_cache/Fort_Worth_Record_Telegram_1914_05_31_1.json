@@ -1,0 +1,101 @@
+{
+  "standardizationId": "sIx4HbrH",
+  "documentId": "DUaurjuw",
+  "data": {
+    "newspaperName": "Fort Worth Record-Telegram",
+    "publicationDate": "1914-05-31",
+    "pageNumber": 1,
+    "location": "Fort Worth, Texas",
+    "headlines": [
+      {
+        "title": "Captain of Empress of Ireland Tells Tragic Story of Great Disaster",
+        "subtitle": "300 BODIES RECOVERED FROM WATERS OF RIVER",
+        "topic": "International",
+        "fullText": null
+      },
+      {
+        "title": "Fort Worth Man Is Selected Director Of Regional Bank",
+        "subtitle": "Marion Sansom Receives the Largest Number of Votes Cast for Class B Director: Frank Keil of Wichita Falls Also Is Chosen.",
+        "topic": "Business",
+        "fullText": null
+      },
+      {
+        "title": "New Albanian King, Whose Throne Totters",
+        "subtitle": null,
+        "topic": "International",
+        "fullText": null
+      },
+      {
+        "title": "FRENCHMEN CAPTURE ALL AUTO PRIZES",
+        "subtitle": "Thomas, Winner, Sets a New Mark; Goes 500 Miles at the Rate of 82.47 Miles an Hour; Oldfield Is Fifth.",
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "CAPTAIN OF LOST LINER SAW STORSTAD 2 MILES AWAY BEFORE THE CRASH",
+        "subtitle": "\"My Ship Has Stopped and Has No Way Upon Her,\" He Told the Advancing Boat by Whistles. Captain Kendall Bitterly Laments Failure of Collier to Keep Her Bow in Rent in Empress' Side.",
+        "topic": "International",
+        "fullText": null
+      },
+      {
+        "title": "Police Order People Out of Lowlands as Trinity River Rises",
+        "subtitle": "Heavy Rains Swell Both Forks of River and Authorities Are Apprehensive; Streams Are Rising Rapidly.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "FATE OF ROME IS A WARNING",
+        "subtitle": "Guglielmo Ferrero Warns the Americans Against Cankers Which Destroyed Historic Nation and Its Civilization.",
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "CRISIS IS REACHED BY MEDIATORS",
+        "subtitle": "Injection of Carranza Note Places New Complexion on Conference; No Word From Huerta.",
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "\"Women and Children First,\" Shouted Captain As Liner Went Down",
+        "subtitle": null,
+        "topic": "International",
+        "fullText": null
+      },
+      {
+        "title": "EDITOR PERKINS GIVEN A WITHERING REBUKE",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "\"Pinch of Poverty\" Is Roosevelt Slogan in Attack on President",
+        "subtitle": null,
+        "topic": "Politics",
+        "fullText": null
+      },
+      {
+        "title": "KEEPING THE RECORD STRAIGHT",
+        "subtitle": null,
+        "topic": "Other",
+        "fullText": null
+      },
+      {
+        "title": "This Is a Fine Mascot, If It Arrives in Time!",
+        "subtitle": "WASHINGTON, May 30,-An amulet for President Huerta of Mexico, the gift of a Washington woman, warranted to bring him safely through his difficulties, was sent on its way today to the federal dictator from the Spanish embassy here. The charm, a moonstone, inclosed in an embroidered satchel, was sent to the wnbassy with a letter ry-questing that it be forwarded to General Huerta, with thy word that so long as he wore it next to his person, success would attend all his efforts.",
+        "topic": "Politics",
+        "fullText": null
+      }
+    ],
+    "advertisements": [],
+    "events": []
+  },
+  "schemaId": "BQNNnBPR",
+  "schemaName": "Historical Newspaper Page V2",
+  "jobId": "iFOIIeuK",
+  "dataset": "unassigned",
+  "filename": "Fort_Worth_Record_Telegram_1914_05_31_1",
+  "displayMode": "auto",
+  "timestamp": "2026-03-17T04:36:20.242000Z",
+  "metadata": null,
+  "fieldMetadata": null
+}

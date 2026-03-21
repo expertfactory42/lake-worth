@@ -1,0 +1,1005 @@
+2026/03/20-17:28:07.479 9e9c Reusing MANIFEST c:\lake_worth\chrome_temp_profile_clipper\Default\Local Storage\leveldb/MANIFEST-000001
+2026/03/20-17:28:07.496 9e9c Recovering log #36
+2026/03/20-17:28:07.501 9e9c Reusing old log c:\lake_worth\chrome_temp_profile_clipper\Default\Local Storage\leveldb/000036.log 
+2026/03/20-17:33:09.653 bcac Level-0 table #40: started
+2026/03/20-17:33:09.660 bcac Level-0 table #40: 18022 bytes OK
+2026/03/20-17:33:09.663 bcac Delete type=0 #36
+2026/03/20-17:33:09.664 bcac Compacting 4@0 + 1@1 files
+2026/03/20-17:33:09.671 bcac Generated table #41@0: 62 keys, 8987 bytes
+2026/03/20-17:33:09.672 bcac Compacted 4@0 + 1@1 files => 8987 bytes
+2026/03/20-17:33:09.674 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-17:33:09.675 bcac Delete type=2 #31
+2026/03/20-17:33:09.675 bcac Delete type=2 #33
+2026/03/20-17:33:09.676 bcac Delete type=2 #35
+2026/03/20-17:33:09.676 bcac Delete type=2 #37
+2026/03/20-17:33:09.676 bcac Delete type=2 #40
+2026/03/20-17:46:09.062 bcac Level-0 table #43: started
+2026/03/20-17:46:09.067 bcac Level-0 table #43: 17886 bytes OK
+2026/03/20-17:46:09.070 bcac Delete type=0 #39
+2026/03/20-17:57:09.071 bcac Level-0 table #45: started
+2026/03/20-17:57:09.077 bcac Level-0 table #45: 17324 bytes OK
+2026/03/20-17:57:09.080 bcac Delete type=0 #42
+2026/03/20-18:08:56.200 bcac Level-0 table #47: started
+2026/03/20-18:08:56.206 bcac Level-0 table #47: 15569 bytes OK
+2026/03/20-18:08:56.210 bcac Delete type=0 #44
+2026/03/20-18:20:09.067 bcac Level-0 table #49: started
+2026/03/20-18:20:09.072 bcac Level-0 table #49: 12909 bytes OK
+2026/03/20-18:20:09.076 bcac Delete type=0 #46
+2026/03/20-18:20:09.078 bcac Compacting 4@0 + 1@1 files
+2026/03/20-18:20:09.089 bcac Generated table #50@0: 62 keys, 9854 bytes
+2026/03/20-18:20:09.089 bcac Compacted 4@0 + 1@1 files => 9854 bytes
+2026/03/20-18:20:09.092 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-18:20:09.094 bcac Delete type=2 #41
+2026/03/20-18:20:09.094 bcac Delete type=2 #43
+2026/03/20-18:20:09.094 bcac Delete type=2 #45
+2026/03/20-18:20:09.094 bcac Delete type=2 #47
+2026/03/20-18:20:09.094 bcac Delete type=2 #49
+2026/03/20-18:33:09.060 bcac Level-0 table #52: started
+2026/03/20-18:33:09.065 bcac Level-0 table #52: 15552 bytes OK
+2026/03/20-18:33:09.070 bcac Delete type=0 #48
+2026/03/20-18:44:09.653 bcac Level-0 table #54: started
+2026/03/20-18:44:09.660 bcac Level-0 table #54: 15264 bytes OK
+2026/03/20-18:44:09.663 bcac Delete type=0 #51
+2026/03/20-18:59:48.963 bcac Level-0 table #56: started
+2026/03/20-18:59:48.971 bcac Level-0 table #56: 15289 bytes OK
+2026/03/20-18:59:48.976 bcac Delete type=0 #53
+2026/03/20-19:09:09.069 bcac Level-0 table #58: started
+2026/03/20-19:09:09.074 bcac Level-0 table #58: 16396 bytes OK
+2026/03/20-19:09:09.077 bcac Delete type=0 #55
+2026/03/20-19:09:09.077 bcac Compacting 4@0 + 1@1 files
+2026/03/20-19:09:09.083 bcac Generated table #59@0: 62 keys, 10288 bytes
+2026/03/20-19:09:09.083 bcac Compacted 4@0 + 1@1 files => 10288 bytes
+2026/03/20-19:09:09.086 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-19:09:09.087 bcac Delete type=2 #50
+2026/03/20-19:09:09.087 bcac Delete type=2 #52
+2026/03/20-19:09:09.087 bcac Delete type=2 #54
+2026/03/20-19:09:09.087 bcac Delete type=2 #56
+2026/03/20-19:09:09.087 bcac Delete type=2 #58
+2026/03/20-19:21:09.059 bcac Level-0 table #61: started
+2026/03/20-19:21:09.065 bcac Level-0 table #61: 18059 bytes OK
+2026/03/20-19:21:09.068 bcac Delete type=0 #57
+2026/03/20-19:30:37.642 bcac Level-0 table #63: started
+2026/03/20-19:30:37.647 bcac Level-0 table #63: 15158 bytes OK
+2026/03/20-19:30:37.650 bcac Delete type=0 #60
+2026/03/20-19:40:09.070 bcac Level-0 table #65: started
+2026/03/20-19:40:09.075 bcac Level-0 table #65: 14093 bytes OK
+2026/03/20-19:40:09.079 bcac Delete type=0 #62
+2026/03/20-19:50:09.061 9e9c Level-0 table #67: started
+2026/03/20-19:50:09.067 9e9c Level-0 table #67: 14933 bytes OK
+2026/03/20-19:50:09.072 9e9c Delete type=0 #64
+2026/03/20-19:50:09.072 9e9c Compacting 4@0 + 1@1 files
+2026/03/20-19:50:09.077 9e9c Generated table #68@0: 63 keys, 12241 bytes
+2026/03/20-19:50:09.077 9e9c Compacted 4@0 + 1@1 files => 12241 bytes
+2026/03/20-19:50:09.080 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-19:50:09.081 9e9c Delete type=2 #59
+2026/03/20-19:50:09.081 9e9c Delete type=2 #61
+2026/03/20-19:50:09.081 9e9c Delete type=2 #63
+2026/03/20-19:50:09.081 9e9c Delete type=2 #65
+2026/03/20-19:50:09.081 9e9c Delete type=2 #67
+2026/03/20-20:01:00.888 bcac Level-0 table #70: started
+2026/03/20-20:01:00.893 bcac Level-0 table #70: 15980 bytes OK
+2026/03/20-20:01:00.896 bcac Delete type=0 #66
+2026/03/20-20:12:09.058 bcac Level-0 table #72: started
+2026/03/20-20:12:09.066 bcac Level-0 table #72: 18119 bytes OK
+2026/03/20-20:12:09.070 bcac Delete type=0 #69
+2026/03/20-20:23:52.962 bcac Level-0 table #74: started
+2026/03/20-20:23:52.967 bcac Level-0 table #74: 15295 bytes OK
+2026/03/20-20:23:52.970 bcac Delete type=0 #71
+2026/03/20-20:34:09.070 bcac Level-0 table #76: started
+2026/03/20-20:34:09.080 bcac Level-0 table #76: 20166 bytes OK
+2026/03/20-20:34:09.085 bcac Delete type=0 #73
+2026/03/20-20:34:09.086 bcac Compacting 4@0 + 1@1 files
+2026/03/20-20:34:09.092 bcac Generated table #77@0: 63 keys, 12083 bytes
+2026/03/20-20:34:09.092 bcac Compacted 4@0 + 1@1 files => 12083 bytes
+2026/03/20-20:34:09.095 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-20:34:09.095 bcac Delete type=2 #68
+2026/03/20-20:34:09.095 bcac Delete type=2 #70
+2026/03/20-20:34:09.096 bcac Delete type=2 #72
+2026/03/20-20:34:09.096 bcac Delete type=2 #74
+2026/03/20-20:34:09.096 bcac Delete type=2 #76
+2026/03/20-20:44:45.622 bcac Level-0 table #79: started
+2026/03/20-20:44:45.627 bcac Level-0 table #79: 15213 bytes OK
+2026/03/20-20:44:45.630 bcac Delete type=0 #75
+2026/03/20-20:56:09.058 bcac Level-0 table #81: started
+2026/03/20-20:56:09.070 bcac Level-0 table #81: 17697 bytes OK
+2026/03/20-20:56:09.075 bcac Delete type=0 #78
+2026/03/20-21:05:53.061 bcac Level-0 table #83: started
+2026/03/20-21:05:53.066 bcac Level-0 table #83: 15303 bytes OK
+2026/03/20-21:05:53.069 bcac Delete type=0 #80
+2026/03/20-21:15:08.381 bcac Level-0 table #85: started
+2026/03/20-21:15:08.386 bcac Level-0 table #85: 16313 bytes OK
+2026/03/20-21:15:08.389 bcac Delete type=0 #82
+2026/03/20-21:15:08.389 bcac Compacting 4@0 + 1@1 files
+2026/03/20-21:15:08.395 bcac Generated table #86@0: 62 keys, 10264 bytes
+2026/03/20-21:15:08.395 bcac Compacted 4@0 + 1@1 files => 10264 bytes
+2026/03/20-21:15:08.398 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-21:15:08.398 bcac Delete type=2 #77
+2026/03/20-21:15:08.399 bcac Delete type=2 #79
+2026/03/20-21:15:08.399 bcac Delete type=2 #81
+2026/03/20-21:15:08.399 bcac Delete type=2 #83
+2026/03/20-21:15:08.399 bcac Delete type=2 #85
+2026/03/20-21:23:09.069 bcac Level-0 table #88: started
+2026/03/20-21:23:09.074 bcac Level-0 table #88: 15376 bytes OK
+2026/03/20-21:23:09.078 bcac Delete type=0 #84
+2026/03/20-21:32:09.060 bcac Level-0 table #90: started
+2026/03/20-21:32:09.066 bcac Level-0 table #90: 114586 bytes OK
+2026/03/20-21:32:09.069 bcac Delete type=0 #87
+2026/03/20-21:43:30.273 9e9c Level-0 table #92: started
+2026/03/20-21:43:30.278 9e9c Level-0 table #92: 14737 bytes OK
+2026/03/20-21:43:30.282 9e9c Delete type=0 #89
+2026/03/20-21:54:24.540 9e9c Level-0 table #94: started
+2026/03/20-21:54:24.545 9e9c Level-0 table #94: 15499 bytes OK
+2026/03/20-21:54:24.548 9e9c Delete type=0 #91
+2026/03/20-21:54:24.549 9e9c Compacting 4@0 + 1@1 files
+2026/03/20-21:54:24.556 9e9c Generated table #95@0: 62 keys, 10300 bytes
+2026/03/20-21:54:24.556 9e9c Compacted 4@0 + 1@1 files => 10300 bytes
+2026/03/20-21:54:24.559 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-21:54:24.560 9e9c Delete type=2 #86
+2026/03/20-21:54:24.560 9e9c Delete type=2 #88
+2026/03/20-21:54:24.560 9e9c Delete type=2 #90
+2026/03/20-21:54:24.560 9e9c Delete type=2 #92
+2026/03/20-21:54:24.560 9e9c Delete type=2 #94
+2026/03/20-21:56:53.822 bcac Level-0 table #97: started
+2026/03/20-21:56:53.831 bcac Level-0 table #97: 113649 bytes OK
+2026/03/20-21:56:53.835 bcac Delete type=0 #93
+2026/03/20-22:08:09.071 bcac Level-0 table #99: started
+2026/03/20-22:08:09.084 bcac Level-0 table #99: 16916 bytes OK
+2026/03/20-22:08:09.089 bcac Delete type=0 #96
+2026/03/20-22:16:09.057 bcac Level-0 table #101: started
+2026/03/20-22:16:09.063 bcac Level-0 table #101: 15105 bytes OK
+2026/03/20-22:16:09.066 bcac Delete type=0 #98
+2026/03/20-22:28:21.972 bcac Level-0 table #103: started
+2026/03/20-22:28:21.979 bcac Level-0 table #103: 15139 bytes OK
+2026/03/20-22:28:21.982 bcac Delete type=0 #100
+2026/03/20-22:28:21.983 bcac Compacting 4@0 + 1@1 files
+2026/03/20-22:28:21.989 bcac Generated table #104@0: 62 keys, 10286 bytes
+2026/03/20-22:28:21.989 bcac Compacted 4@0 + 1@1 files => 10286 bytes
+2026/03/20-22:28:21.992 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-22:28:21.992 bcac Delete type=2 #95
+2026/03/20-22:28:21.992 bcac Delete type=2 #97
+2026/03/20-22:28:21.992 bcac Delete type=2 #99
+2026/03/20-22:28:21.992 bcac Delete type=2 #101
+2026/03/20-22:28:21.993 bcac Delete type=2 #103
+2026/03/20-22:40:09.069 bcac Level-0 table #106: started
+2026/03/20-22:40:09.075 bcac Level-0 table #106: 15629 bytes OK
+2026/03/20-22:40:09.079 bcac Delete type=0 #102
+2026/03/20-22:52:09.061 bcac Level-0 table #108: started
+2026/03/20-22:52:09.066 bcac Level-0 table #108: 15376 bytes OK
+2026/03/20-22:52:09.069 bcac Delete type=0 #105
+2026/03/20-23:02:09.654 bcac Level-0 table #110: started
+2026/03/20-23:02:09.662 bcac Level-0 table #110: 14815 bytes OK
+2026/03/20-23:02:09.667 bcac Delete type=0 #107
+2026/03/20-23:12:09.059 9e9c Level-0 table #112: started
+2026/03/20-23:12:09.067 9e9c Level-0 table #112: 14203 bytes OK
+2026/03/20-23:12:09.073 9e9c Delete type=0 #109
+2026/03/20-23:12:09.073 9e9c Compacting 4@0 + 1@1 files
+2026/03/20-23:12:09.078 9e9c Generated table #113@0: 62 keys, 10281 bytes
+2026/03/20-23:12:09.078 9e9c Compacted 4@0 + 1@1 files => 10281 bytes
+2026/03/20-23:12:09.081 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:12:09.081 9e9c Delete type=2 #104
+2026/03/20-23:12:09.081 9e9c Delete type=2 #106
+2026/03/20-23:12:09.081 9e9c Delete type=2 #108
+2026/03/20-23:12:09.082 9e9c Delete type=2 #110
+2026/03/20-23:12:09.082 9e9c Delete type=2 #112
+2026/03/20-23:22:09.065 bcac Level-0 table #115: started
+2026/03/20-23:22:09.071 bcac Level-0 table #115: 17257 bytes OK
+2026/03/20-23:22:09.074 bcac Delete type=0 #111
+2026/03/20-23:32:05.676 cb50 Level-0 table #117: started
+2026/03/20-23:32:05.685 cb50 Level-0 table #117: 116708 bytes OK
+2026/03/20-23:32:05.690 cb50 Delete type=0 #114
+2026/03/20-23:33:00.048 bcac Level-0 table #119: started
+2026/03/20-23:33:00.059 bcac Level-0 table #119: 110601 bytes OK
+2026/03/20-23:33:00.063 bcac Delete type=0 #116
+2026/03/20-23:33:09.066 bcac Level-0 table #121: started
+2026/03/20-23:33:09.074 bcac Level-0 table #121: 107348 bytes OK
+2026/03/20-23:33:09.078 bcac Delete type=0 #118
+2026/03/20-23:33:09.078 bcac Compacting 4@0 + 1@1 files
+2026/03/20-23:33:09.087 bcac Generated table #122@0: 62 keys, 113238 bytes
+2026/03/20-23:33:09.088 bcac Compacted 4@0 + 1@1 files => 113238 bytes
+2026/03/20-23:33:09.090 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:33:09.091 bcac Delete type=2 #113
+2026/03/20-23:33:09.091 bcac Delete type=2 #115
+2026/03/20-23:33:09.091 bcac Delete type=2 #117
+2026/03/20-23:33:09.091 bcac Delete type=2 #119
+2026/03/20-23:33:09.091 bcac Delete type=2 #121
+2026/03/20-23:34:07.727 bcac Level-0 table #124: started
+2026/03/20-23:34:07.734 bcac Level-0 table #124: 106990 bytes OK
+2026/03/20-23:34:07.738 bcac Delete type=0 #120
+2026/03/20-23:34:09.059 bcac Level-0 table #126: started
+2026/03/20-23:34:09.067 bcac Level-0 table #126: 160621 bytes OK
+2026/03/20-23:34:09.070 bcac Delete type=0 #123
+2026/03/20-23:35:09.057 bcac Level-0 table #128: started
+2026/03/20-23:35:09.066 bcac Level-0 table #128: 108294 bytes OK
+2026/03/20-23:35:09.070 bcac Delete type=0 #125
+2026/03/20-23:35:51.524 bcac Level-0 table #130: started
+2026/03/20-23:35:51.530 bcac Level-0 table #130: 107515 bytes OK
+2026/03/20-23:35:51.533 bcac Delete type=0 #127
+2026/03/20-23:35:51.534 bcac Compacting 4@0 + 1@1 files
+2026/03/20-23:35:51.542 bcac Generated table #131@0: 62 keys, 113699 bytes
+2026/03/20-23:35:51.542 bcac Compacted 4@0 + 1@1 files => 113699 bytes
+2026/03/20-23:35:51.544 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:35:51.545 bcac Delete type=2 #122
+2026/03/20-23:35:51.545 bcac Delete type=2 #124
+2026/03/20-23:35:51.545 bcac Delete type=2 #126
+2026/03/20-23:35:51.545 bcac Delete type=2 #128
+2026/03/20-23:35:51.545 bcac Delete type=2 #130
+2026/03/20-23:36:09.057 bcac Level-0 table #133: started
+2026/03/20-23:36:09.064 bcac Level-0 table #133: 107954 bytes OK
+2026/03/20-23:36:09.067 bcac Delete type=0 #129
+2026/03/20-23:36:44.980 bcac Level-0 table #135: started
+2026/03/20-23:36:44.986 bcac Level-0 table #135: 107589 bytes OK
+2026/03/20-23:36:44.990 bcac Delete type=0 #132
+2026/03/20-23:37:09.060 bcac Level-0 table #137: started
+2026/03/20-23:37:09.066 bcac Level-0 table #137: 107027 bytes OK
+2026/03/20-23:37:09.069 bcac Delete type=0 #134
+2026/03/20-23:37:09.649 bcac Level-0 table #139: started
+2026/03/20-23:37:09.656 bcac Level-0 table #139: 108152 bytes OK
+2026/03/20-23:37:09.660 bcac Delete type=0 #136
+2026/03/20-23:37:09.660 bcac Compacting 4@0 + 1@1 files
+2026/03/20-23:37:09.670 bcac Generated table #140@0: 62 keys, 114426 bytes
+2026/03/20-23:37:09.670 bcac Compacted 4@0 + 1@1 files => 114426 bytes
+2026/03/20-23:37:09.673 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:37:09.674 bcac Delete type=2 #131
+2026/03/20-23:37:09.674 bcac Delete type=2 #133
+2026/03/20-23:37:09.674 bcac Delete type=2 #135
+2026/03/20-23:37:09.674 bcac Delete type=2 #137
+2026/03/20-23:37:09.674 bcac Delete type=2 #139
+2026/03/20-23:42:42.739 bcac Level-0 table #142: started
+2026/03/20-23:42:42.744 bcac Level-0 table #142: 20381 bytes OK
+2026/03/20-23:42:42.748 bcac Delete type=0 #138
+2026/03/20-23:43:09.064 bcac Level-0 table #144: started
+2026/03/20-23:43:09.072 bcac Level-0 table #144: 106721 bytes OK
+2026/03/20-23:43:09.077 bcac Delete type=0 #141
+2026/03/20-23:43:37.373 bcac Level-0 table #146: started
+2026/03/20-23:43:37.379 bcac Level-0 table #146: 107187 bytes OK
+2026/03/20-23:43:37.382 bcac Delete type=0 #143
+2026/03/20-23:44:04.885 bcac Level-0 table #148: started
+2026/03/20-23:44:04.891 bcac Level-0 table #148: 107399 bytes OK
+2026/03/20-23:44:04.894 bcac Delete type=0 #145
+2026/03/20-23:44:04.895 bcac Compacting 4@0 + 1@1 files
+2026/03/20-23:44:04.903 bcac Generated table #149@0: 64 keys, 113454 bytes
+2026/03/20-23:44:04.903 bcac Compacted 4@0 + 1@1 files => 113454 bytes
+2026/03/20-23:44:04.905 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:44:04.906 bcac Delete type=2 #140
+2026/03/20-23:44:04.906 bcac Delete type=2 #142
+2026/03/20-23:44:04.906 bcac Delete type=2 #144
+2026/03/20-23:44:04.906 bcac Delete type=2 #146
+2026/03/20-23:44:04.906 bcac Delete type=2 #148
+2026/03/20-23:44:09.063 bcac Level-0 table #151: started
+2026/03/20-23:44:09.070 bcac Level-0 table #151: 106834 bytes OK
+2026/03/20-23:44:09.074 bcac Delete type=0 #147
+2026/03/20-23:45:05.287 9e9c Level-0 table #153: started
+2026/03/20-23:45:05.294 9e9c Level-0 table #153: 106603 bytes OK
+2026/03/20-23:45:05.299 9e9c Delete type=0 #150
+2026/03/20-23:45:58.627 bcac Level-0 table #155: started
+2026/03/20-23:45:58.633 bcac Level-0 table #155: 109720 bytes OK
+2026/03/20-23:45:58.636 bcac Delete type=0 #152
+2026/03/20-23:46:09.063 bcac Level-0 table #157: started
+2026/03/20-23:46:09.070 bcac Level-0 table #157: 107952 bytes OK
+2026/03/20-23:46:09.074 bcac Delete type=0 #154
+2026/03/20-23:46:09.075 bcac Compacting 4@0 + 1@1 files
+2026/03/20-23:46:09.082 bcac Generated table #158@0: 64 keys, 114243 bytes
+2026/03/20-23:46:09.082 bcac Compacted 4@0 + 1@1 files => 114243 bytes
+2026/03/20-23:46:09.085 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:46:09.086 bcac Delete type=2 #149
+2026/03/20-23:46:09.086 bcac Delete type=2 #151
+2026/03/20-23:46:09.086 bcac Delete type=2 #153
+2026/03/20-23:46:09.086 bcac Delete type=2 #155
+2026/03/20-23:46:09.086 bcac Delete type=2 #157
+2026/03/20-23:46:52.027 bcac Level-0 table #160: started
+2026/03/20-23:46:52.034 bcac Level-0 table #160: 107703 bytes OK
+2026/03/20-23:46:52.037 bcac Delete type=0 #156
+2026/03/20-23:47:09.065 bcac Level-0 table #162: started
+2026/03/20-23:47:09.074 bcac Level-0 table #162: 107505 bytes OK
+2026/03/20-23:47:09.078 bcac Delete type=0 #159
+2026/03/20-23:47:46.569 bcac Level-0 table #164: started
+2026/03/20-23:47:46.575 bcac Level-0 table #164: 107514 bytes OK
+2026/03/20-23:47:46.578 bcac Delete type=0 #161
+2026/03/20-23:48:09.064 cb50 Level-0 table #166: started
+2026/03/20-23:48:09.073 cb50 Level-0 table #166: 108178 bytes OK
+2026/03/20-23:48:09.078 cb50 Delete type=0 #163
+2026/03/20-23:48:09.078 cb50 Compacting 4@0 + 1@1 files
+2026/03/20-23:48:09.087 cb50 Generated table #167@0: 64 keys, 114267 bytes
+2026/03/20-23:48:09.088 cb50 Compacted 4@0 + 1@1 files => 114267 bytes
+2026/03/20-23:48:09.090 cb50 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:48:09.091 cb50 Delete type=2 #158
+2026/03/20-23:48:09.091 cb50 Delete type=2 #160
+2026/03/20-23:48:09.091 cb50 Delete type=2 #162
+2026/03/20-23:48:09.091 cb50 Delete type=2 #164
+2026/03/20-23:48:09.091 cb50 Delete type=2 #166
+2026/03/20-23:48:39.860 bcac Level-0 table #169: started
+2026/03/20-23:48:39.867 bcac Level-0 table #169: 107644 bytes OK
+2026/03/20-23:48:39.871 bcac Delete type=0 #165
+2026/03/20-23:49:07.612 bcac Level-0 table #171: started
+2026/03/20-23:49:07.619 bcac Level-0 table #171: 106908 bytes OK
+2026/03/20-23:49:07.622 bcac Delete type=0 #168
+2026/03/20-23:49:56.150 9e9c Level-0 table #173: started
+2026/03/20-23:49:56.156 9e9c Level-0 table #173: 107631 bytes OK
+2026/03/20-23:49:56.159 9e9c Delete type=0 #170
+2026/03/20-23:50:09.067 bcac Level-0 table #175: started
+2026/03/20-23:50:09.078 bcac Level-0 table #175: 214273 bytes OK
+2026/03/20-23:50:09.082 bcac Delete type=0 #172
+2026/03/20-23:50:09.082 bcac Compacting 4@0 + 1@1 files
+2026/03/20-23:50:09.091 bcac Generated table #176@0: 66 keys, 220006 bytes
+2026/03/20-23:50:09.091 bcac Compacted 4@0 + 1@1 files => 220006 bytes
+2026/03/20-23:50:09.094 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:50:09.095 bcac Delete type=2 #167
+2026/03/20-23:50:09.095 bcac Delete type=2 #169
+2026/03/20-23:50:09.095 bcac Delete type=2 #171
+2026/03/20-23:50:09.095 bcac Delete type=2 #173
+2026/03/20-23:50:09.095 bcac Delete type=2 #175
+2026/03/20-23:50:49.982 bcac Level-0 table #178: started
+2026/03/20-23:50:49.989 bcac Level-0 table #178: 106935 bytes OK
+2026/03/20-23:50:49.992 bcac Delete type=0 #174
+2026/03/20-23:51:09.068 bcac Level-0 table #180: started
+2026/03/20-23:51:09.076 bcac Level-0 table #180: 107839 bytes OK
+2026/03/20-23:51:09.080 bcac Delete type=0 #177
+2026/03/20-23:51:43.481 bcac Level-0 table #182: started
+2026/03/20-23:51:43.488 bcac Level-0 table #182: 108017 bytes OK
+2026/03/20-23:51:43.491 bcac Delete type=0 #179
+2026/03/20-23:52:09.067 cb50 Level-0 table #184: started
+2026/03/20-23:52:09.077 cb50 Level-0 table #184: 108013 bytes OK
+2026/03/20-23:52:09.082 cb50 Delete type=0 #181
+2026/03/20-23:52:09.082 cb50 Compacting 4@0 + 1@1 files
+2026/03/20-23:52:09.090 cb50 Generated table #185@0: 64 keys, 114073 bytes
+2026/03/20-23:52:09.090 cb50 Compacted 4@0 + 1@1 files => 114073 bytes
+2026/03/20-23:52:09.093 cb50 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:52:09.093 cb50 Delete type=2 #176
+2026/03/20-23:52:09.093 cb50 Delete type=2 #178
+2026/03/20-23:52:09.093 cb50 Delete type=2 #180
+2026/03/20-23:52:09.093 cb50 Delete type=2 #182
+2026/03/20-23:52:09.094 cb50 Delete type=2 #184
+2026/03/20-23:53:09.071 bcac Level-0 table #187: started
+2026/03/20-23:53:09.081 bcac Level-0 table #187: 109300 bytes OK
+2026/03/20-23:53:09.084 bcac Delete type=0 #183
+2026/03/20-23:53:52.020 bcac Level-0 table #189: started
+2026/03/20-23:53:52.026 bcac Level-0 table #189: 106633 bytes OK
+2026/03/20-23:53:52.029 bcac Delete type=0 #186
+2026/03/20-23:54:09.070 bcac Level-0 table #191: started
+2026/03/20-23:54:09.079 bcac Level-0 table #191: 107561 bytes OK
+2026/03/20-23:54:09.083 bcac Delete type=0 #188
+2026/03/20-23:54:52.371 bcac Level-0 table #193: started
+2026/03/20-23:54:52.378 bcac Level-0 table #193: 106867 bytes OK
+2026/03/20-23:54:52.383 bcac Delete type=0 #190
+2026/03/20-23:54:52.383 bcac Compacting 4@0 + 1@1 files
+2026/03/20-23:54:52.391 bcac Generated table #194@0: 64 keys, 112969 bytes
+2026/03/20-23:54:52.391 bcac Compacted 4@0 + 1@1 files => 112969 bytes
+2026/03/20-23:54:52.393 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:54:52.394 bcac Delete type=2 #185
+2026/03/20-23:54:52.394 bcac Delete type=2 #187
+2026/03/20-23:54:52.394 bcac Delete type=2 #189
+2026/03/20-23:54:52.394 bcac Delete type=2 #191
+2026/03/20-23:54:52.394 bcac Delete type=2 #193
+2026/03/20-23:55:45.776 bcac Level-0 table #196: started
+2026/03/20-23:55:45.783 bcac Level-0 table #196: 110981 bytes OK
+2026/03/20-23:55:45.785 bcac Delete type=0 #192
+2026/03/20-23:56:09.067 cb50 Level-0 table #198: started
+2026/03/20-23:56:09.074 cb50 Level-0 table #198: 108229 bytes OK
+2026/03/20-23:56:09.079 cb50 Delete type=0 #195
+2026/03/20-23:56:39.882 bcac Level-0 table #200: started
+2026/03/20-23:56:39.888 bcac Level-0 table #200: 107394 bytes OK
+2026/03/20-23:56:39.892 bcac Delete type=0 #197
+2026/03/20-23:57:06.611 9e9c Level-0 table #202: started
+2026/03/20-23:57:06.618 9e9c Level-0 table #202: 106836 bytes OK
+2026/03/20-23:57:06.624 9e9c Delete type=0 #199
+2026/03/20-23:57:06.625 9e9c Compacting 4@0 + 1@1 files
+2026/03/20-23:57:06.634 9e9c Generated table #203@0: 64 keys, 113157 bytes
+2026/03/20-23:57:06.634 9e9c Compacted 4@0 + 1@1 files => 113157 bytes
+2026/03/20-23:57:06.638 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:57:06.639 9e9c Delete type=2 #194
+2026/03/20-23:57:06.640 9e9c Delete type=2 #196
+2026/03/20-23:57:06.640 9e9c Delete type=2 #198
+2026/03/20-23:57:06.640 9e9c Delete type=2 #200
+2026/03/20-23:57:06.640 9e9c Delete type=2 #202
+2026/03/20-23:57:09.054 bcac Level-0 table #205: started
+2026/03/20-23:57:09.060 bcac Level-0 table #205: 107046 bytes OK
+2026/03/20-23:57:09.064 bcac Delete type=0 #201
+2026/03/20-23:58:00.815 23c8 Level-0 table #207: started
+2026/03/20-23:58:00.822 23c8 Level-0 table #207: 107931 bytes OK
+2026/03/20-23:58:00.827 23c8 Delete type=0 #204
+2026/03/20-23:58:09.056 bcac Level-0 table #209: started
+2026/03/20-23:58:09.065 bcac Level-0 table #209: 106451 bytes OK
+2026/03/20-23:58:09.070 bcac Delete type=0 #206
+2026/03/20-23:58:54.537 9e9c Level-0 table #211: started
+2026/03/20-23:58:54.543 9e9c Level-0 table #211: 106394 bytes OK
+2026/03/20-23:58:54.548 9e9c Delete type=0 #208
+2026/03/20-23:58:54.549 9e9c Compacting 4@0 + 1@1 files
+2026/03/20-23:58:54.557 9e9c Generated table #212@0: 64 keys, 112414 bytes
+2026/03/20-23:58:54.557 9e9c Compacted 4@0 + 1@1 files => 112414 bytes
+2026/03/20-23:58:54.559 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/20-23:58:54.560 9e9c Delete type=2 #203
+2026/03/20-23:58:54.560 9e9c Delete type=2 #205
+2026/03/20-23:58:54.560 9e9c Delete type=2 #207
+2026/03/20-23:58:54.560 9e9c Delete type=2 #209
+2026/03/20-23:58:54.560 9e9c Delete type=2 #211
+2026/03/20-23:59:09.072 bcac Level-0 table #214: started
+2026/03/20-23:59:09.080 bcac Level-0 table #214: 106915 bytes OK
+2026/03/20-23:59:09.084 bcac Delete type=0 #210
+2026/03/21-00:00:09.056 bcac Level-0 table #216: started
+2026/03/21-00:00:09.063 bcac Level-0 table #216: 110504 bytes OK
+2026/03/21-00:00:09.066 bcac Delete type=0 #213
+2026/03/21-00:00:49.925 bcac Level-0 table #218: started
+2026/03/21-00:00:49.932 bcac Level-0 table #218: 107910 bytes OK
+2026/03/21-00:00:49.937 bcac Delete type=0 #215
+2026/03/21-00:01:09.058 bcac Level-0 table #220: started
+2026/03/21-00:01:09.066 bcac Level-0 table #220: 106765 bytes OK
+2026/03/21-00:01:09.069 bcac Delete type=0 #217
+2026/03/21-00:01:09.070 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:01:09.079 bcac Generated table #221@0: 64 keys, 112872 bytes
+2026/03/21-00:01:09.079 bcac Compacted 4@0 + 1@1 files => 112872 bytes
+2026/03/21-00:01:09.081 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:01:09.082 bcac Delete type=2 #212
+2026/03/21-00:01:09.082 bcac Delete type=2 #214
+2026/03/21-00:01:09.082 bcac Delete type=2 #216
+2026/03/21-00:01:09.082 bcac Delete type=2 #218
+2026/03/21-00:01:09.082 bcac Delete type=2 #220
+2026/03/21-00:01:43.320 9e9c Level-0 table #223: started
+2026/03/21-00:01:43.330 9e9c Level-0 table #223: 107231 bytes OK
+2026/03/21-00:01:43.334 9e9c Delete type=0 #219
+2026/03/21-00:02:09.060 bcac Level-0 table #225: started
+2026/03/21-00:02:09.070 bcac Level-0 table #225: 106463 bytes OK
+2026/03/21-00:02:09.073 bcac Delete type=0 #222
+2026/03/21-00:02:38.620 23c8 Level-0 table #227: started
+2026/03/21-00:02:38.627 23c8 Level-0 table #227: 107290 bytes OK
+2026/03/21-00:02:38.637 23c8 Delete type=0 #224
+2026/03/21-00:03:09.058 bcac Level-0 table #229: started
+2026/03/21-00:03:09.065 bcac Level-0 table #229: 108007 bytes OK
+2026/03/21-00:03:09.069 bcac Delete type=0 #226
+2026/03/21-00:03:09.070 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:03:09.078 bcac Generated table #230@0: 62 keys, 111986 bytes
+2026/03/21-00:03:09.078 bcac Compacted 4@0 + 1@1 files => 111986 bytes
+2026/03/21-00:03:09.081 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:03:09.081 bcac Delete type=2 #221
+2026/03/21-00:03:09.081 bcac Delete type=2 #223
+2026/03/21-00:03:09.082 bcac Delete type=2 #225
+2026/03/21-00:03:09.082 bcac Delete type=2 #227
+2026/03/21-00:03:09.082 bcac Delete type=2 #229
+2026/03/21-00:04:06.548 9e9c Level-0 table #232: started
+2026/03/21-00:04:06.555 9e9c Level-0 table #232: 106338 bytes OK
+2026/03/21-00:04:06.558 9e9c Delete type=0 #228
+2026/03/21-00:05:00.650 bcac Level-0 table #234: started
+2026/03/21-00:05:00.657 bcac Level-0 table #234: 111384 bytes OK
+2026/03/21-00:05:00.660 bcac Delete type=0 #231
+2026/03/21-00:05:54.058 bcac Level-0 table #236: started
+2026/03/21-00:05:54.063 bcac Level-0 table #236: 111880 bytes OK
+2026/03/21-00:05:54.067 bcac Delete type=0 #233
+2026/03/21-00:06:09.061 bcac Level-0 table #238: started
+2026/03/21-00:06:09.069 bcac Level-0 table #238: 107397 bytes OK
+2026/03/21-00:06:09.075 bcac Delete type=0 #235
+2026/03/21-00:06:09.076 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:06:09.087 bcac Generated table #239@0: 62 keys, 112914 bytes
+2026/03/21-00:06:09.087 bcac Compacted 4@0 + 1@1 files => 112914 bytes
+2026/03/21-00:06:09.090 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:06:09.091 bcac Delete type=2 #230
+2026/03/21-00:06:09.091 bcac Delete type=2 #232
+2026/03/21-00:06:09.091 bcac Delete type=2 #234
+2026/03/21-00:06:09.091 bcac Delete type=2 #236
+2026/03/21-00:06:09.091 bcac Delete type=2 #238
+2026/03/21-00:06:47.866 9e9c Level-0 table #241: started
+2026/03/21-00:06:47.871 9e9c Level-0 table #241: 107432 bytes OK
+2026/03/21-00:06:47.874 9e9c Delete type=0 #237
+2026/03/21-00:07:09.064 cb50 Level-0 table #243: started
+2026/03/21-00:07:09.076 cb50 Level-0 table #243: 106724 bytes OK
+2026/03/21-00:07:09.080 cb50 Delete type=0 #240
+2026/03/21-00:07:41.120 bcac Level-0 table #245: started
+2026/03/21-00:07:41.126 bcac Level-0 table #245: 107342 bytes OK
+2026/03/21-00:07:41.129 bcac Delete type=0 #242
+2026/03/21-00:08:07.678 9e9c Level-0 table #247: started
+2026/03/21-00:08:07.685 9e9c Level-0 table #247: 107652 bytes OK
+2026/03/21-00:08:07.690 9e9c Delete type=0 #244
+2026/03/21-00:08:07.690 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:08:07.699 bcac Generated table #248@0: 62 keys, 113137 bytes
+2026/03/21-00:08:07.699 bcac Compacted 4@0 + 1@1 files => 113137 bytes
+2026/03/21-00:08:07.703 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:08:07.703 bcac Delete type=2 #239
+2026/03/21-00:08:07.703 bcac Delete type=2 #241
+2026/03/21-00:08:07.703 bcac Delete type=2 #243
+2026/03/21-00:08:07.703 bcac Delete type=2 #245
+2026/03/21-00:08:07.703 bcac Delete type=2 #247
+2026/03/21-00:08:42.168 bcac Level-0 table #250: started
+2026/03/21-00:08:42.176 bcac Level-0 table #250: 107194 bytes OK
+2026/03/21-00:08:42.179 bcac Delete type=0 #246
+2026/03/21-00:09:35.395 bcac Level-0 table #252: started
+2026/03/21-00:09:35.400 bcac Level-0 table #252: 111282 bytes OK
+2026/03/21-00:09:35.404 bcac Delete type=0 #249
+2026/03/21-00:10:02.106 bcac Level-0 table #254: started
+2026/03/21-00:10:02.114 bcac Level-0 table #254: 106877 bytes OK
+2026/03/21-00:10:02.118 bcac Delete type=0 #251
+2026/03/21-00:10:09.063 bcac Level-0 table #256: started
+2026/03/21-00:10:09.069 bcac Level-0 table #256: 107730 bytes OK
+2026/03/21-00:10:09.073 bcac Delete type=0 #253
+2026/03/21-00:10:09.074 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:10:09.082 bcac Generated table #257@0: 62 keys, 113157 bytes
+2026/03/21-00:10:09.082 bcac Compacted 4@0 + 1@1 files => 113157 bytes
+2026/03/21-00:10:09.084 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:10:09.085 bcac Delete type=2 #248
+2026/03/21-00:10:09.085 bcac Delete type=2 #250
+2026/03/21-00:10:09.085 bcac Delete type=2 #252
+2026/03/21-00:10:09.085 bcac Delete type=2 #254
+2026/03/21-00:10:09.085 bcac Delete type=2 #256
+2026/03/21-00:10:55.811 9e9c Level-0 table #259: started
+2026/03/21-00:10:55.817 9e9c Level-0 table #259: 106968 bytes OK
+2026/03/21-00:10:55.822 9e9c Delete type=0 #255
+2026/03/21-00:11:09.068 bcac Level-0 table #261: started
+2026/03/21-00:11:09.075 bcac Level-0 table #261: 107471 bytes OK
+2026/03/21-00:11:09.079 bcac Delete type=0 #258
+2026/03/21-00:11:48.805 bcac Level-0 table #263: started
+2026/03/21-00:11:48.811 bcac Level-0 table #263: 107858 bytes OK
+2026/03/21-00:11:48.816 bcac Delete type=0 #260
+2026/03/21-00:12:09.064 bcac Level-0 table #265: started
+2026/03/21-00:12:09.070 bcac Level-0 table #265: 106986 bytes OK
+2026/03/21-00:12:09.073 bcac Delete type=0 #262
+2026/03/21-00:12:09.074 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:12:09.084 bcac Generated table #266@0: 62 keys, 112803 bytes
+2026/03/21-00:12:09.084 bcac Compacted 4@0 + 1@1 files => 112803 bytes
+2026/03/21-00:12:09.087 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:12:09.088 bcac Delete type=2 #257
+2026/03/21-00:12:09.088 bcac Delete type=2 #259
+2026/03/21-00:12:09.088 bcac Delete type=2 #261
+2026/03/21-00:12:09.088 bcac Delete type=2 #263
+2026/03/21-00:12:09.088 bcac Delete type=2 #265
+2026/03/21-00:12:43.960 bcac Level-0 table #268: started
+2026/03/21-00:12:43.966 bcac Level-0 table #268: 107915 bytes OK
+2026/03/21-00:12:43.970 bcac Delete type=0 #264
+2026/03/21-00:13:09.065 bcac Level-0 table #270: started
+2026/03/21-00:13:09.072 bcac Level-0 table #270: 107772 bytes OK
+2026/03/21-00:13:09.076 bcac Delete type=0 #267
+2026/03/21-00:13:20.890 cb50 Level-0 table #272: started
+2026/03/21-00:13:20.898 cb50 Level-0 table #272: 107595 bytes OK
+2026/03/21-00:13:20.903 cb50 Delete type=0 #269
+2026/03/21-00:14:09.065 bcac Level-0 table #274: started
+2026/03/21-00:14:09.072 bcac Level-0 table #274: 109531 bytes OK
+2026/03/21-00:14:09.075 bcac Delete type=0 #271
+2026/03/21-00:14:09.076 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:14:09.084 bcac Generated table #275@0: 62 keys, 112212 bytes
+2026/03/21-00:14:09.084 bcac Compacted 4@0 + 1@1 files => 112212 bytes
+2026/03/21-00:14:09.087 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:14:09.088 bcac Delete type=2 #266
+2026/03/21-00:14:09.088 bcac Delete type=2 #268
+2026/03/21-00:14:09.088 bcac Delete type=2 #270
+2026/03/21-00:14:09.088 bcac Delete type=2 #272
+2026/03/21-00:14:09.088 bcac Delete type=2 #274
+2026/03/21-00:14:41.807 bcac Level-0 table #277: started
+2026/03/21-00:14:41.813 bcac Level-0 table #277: 105875 bytes OK
+2026/03/21-00:14:41.816 bcac Delete type=0 #273
+2026/03/21-00:15:08.718 bcac Level-0 table #279: started
+2026/03/21-00:15:08.724 bcac Level-0 table #279: 104962 bytes OK
+2026/03/21-00:15:08.727 bcac Delete type=0 #276
+2026/03/21-00:15:35.531 bcac Level-0 table #281: started
+2026/03/21-00:15:35.537 bcac Level-0 table #281: 105950 bytes OK
+2026/03/21-00:15:35.541 bcac Delete type=0 #278
+2026/03/21-00:16:02.241 9e9c Level-0 table #283: started
+2026/03/21-00:16:02.247 9e9c Level-0 table #283: 106341 bytes OK
+2026/03/21-00:16:02.250 9e9c Delete type=0 #280
+2026/03/21-00:16:02.251 9e9c Compacting 4@0 + 1@1 files
+2026/03/21-00:16:02.260 9e9c Generated table #284@0: 62 keys, 112570 bytes
+2026/03/21-00:16:02.260 9e9c Compacted 4@0 + 1@1 files => 112570 bytes
+2026/03/21-00:16:02.263 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:16:02.263 9e9c Delete type=2 #275
+2026/03/21-00:16:02.263 9e9c Delete type=2 #277
+2026/03/21-00:16:02.263 9e9c Delete type=2 #279
+2026/03/21-00:16:02.263 9e9c Delete type=2 #281
+2026/03/21-00:16:02.263 9e9c Delete type=2 #283
+2026/03/21-00:16:09.071 bcac Level-0 table #286: started
+2026/03/21-00:16:09.082 bcac Level-0 table #286: 105758 bytes OK
+2026/03/21-00:16:09.086 bcac Delete type=0 #282
+2026/03/21-00:16:55.926 bcac Level-0 table #288: started
+2026/03/21-00:16:55.933 bcac Level-0 table #288: 106848 bytes OK
+2026/03/21-00:16:55.936 bcac Delete type=0 #285
+2026/03/21-00:17:09.068 bcac Level-0 table #290: started
+2026/03/21-00:17:09.075 bcac Level-0 table #290: 105879 bytes OK
+2026/03/21-00:17:09.078 bcac Delete type=0 #287
+2026/03/21-00:17:58.347 9e9c Level-0 table #292: started
+2026/03/21-00:17:58.352 9e9c Level-0 table #292: 105843 bytes OK
+2026/03/21-00:17:58.356 9e9c Delete type=0 #289
+2026/03/21-00:17:58.356 9e9c Compacting 4@0 + 1@1 files
+2026/03/21-00:17:58.364 9e9c Generated table #293@0: 62 keys, 112298 bytes
+2026/03/21-00:17:58.364 9e9c Compacted 4@0 + 1@1 files => 112298 bytes
+2026/03/21-00:17:58.366 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:17:58.367 9e9c Delete type=2 #284
+2026/03/21-00:17:58.367 9e9c Delete type=2 #286
+2026/03/21-00:17:58.367 9e9c Delete type=2 #288
+2026/03/21-00:17:58.367 9e9c Delete type=2 #290
+2026/03/21-00:17:58.367 9e9c Delete type=2 #292
+2026/03/21-00:18:51.985 bcac Level-0 table #295: started
+2026/03/21-00:18:51.991 bcac Level-0 table #295: 110218 bytes OK
+2026/03/21-00:18:51.995 bcac Delete type=0 #291
+2026/03/21-00:19:09.072 bcac Level-0 table #297: started
+2026/03/21-00:19:09.083 bcac Level-0 table #297: 107031 bytes OK
+2026/03/21-00:19:09.087 bcac Delete type=0 #294
+2026/03/21-00:19:45.508 9e9c Level-0 table #299: started
+2026/03/21-00:19:45.515 9e9c Level-0 table #299: 107940 bytes OK
+2026/03/21-00:19:45.519 9e9c Delete type=0 #296
+2026/03/21-00:20:09.069 cb50 Level-0 table #301: started
+2026/03/21-00:20:09.077 cb50 Level-0 table #301: 107898 bytes OK
+2026/03/21-00:20:09.082 cb50 Delete type=0 #298
+2026/03/21-00:20:09.082 cb50 Compacting 4@0 + 1@1 files
+2026/03/21-00:20:09.090 cb50 Generated table #302@0: 62 keys, 114178 bytes
+2026/03/21-00:20:09.090 cb50 Compacted 4@0 + 1@1 files => 114178 bytes
+2026/03/21-00:20:09.092 cb50 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:20:09.093 cb50 Delete type=2 #293
+2026/03/21-00:20:09.093 cb50 Delete type=2 #295
+2026/03/21-00:20:09.093 cb50 Delete type=2 #297
+2026/03/21-00:20:09.093 cb50 Delete type=2 #299
+2026/03/21-00:20:09.093 cb50 Delete type=2 #301
+2026/03/21-00:21:05.657 9e9c Level-0 table #304: started
+2026/03/21-00:21:05.664 9e9c Level-0 table #304: 110285 bytes OK
+2026/03/21-00:21:05.669 9e9c Delete type=0 #300
+2026/03/21-00:21:09.057 bcac Level-0 table #306: started
+2026/03/21-00:21:09.069 bcac Level-0 table #306: 106764 bytes OK
+2026/03/21-00:21:09.074 bcac Delete type=0 #303
+2026/03/21-00:21:59.782 bcac Level-0 table #308: started
+2026/03/21-00:21:59.790 bcac Level-0 table #308: 107641 bytes OK
+2026/03/21-00:21:59.796 bcac Delete type=0 #305
+2026/03/21-00:22:09.070 bcac Level-0 table #310: started
+2026/03/21-00:22:09.078 bcac Level-0 table #310: 106577 bytes OK
+2026/03/21-00:22:09.082 bcac Delete type=0 #307
+2026/03/21-00:22:09.082 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:22:09.091 bcac Generated table #311@0: 62 keys, 113139 bytes
+2026/03/21-00:22:09.091 bcac Compacted 4@0 + 1@1 files => 113139 bytes
+2026/03/21-00:22:09.094 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:22:09.095 bcac Delete type=2 #302
+2026/03/21-00:22:09.095 bcac Delete type=2 #304
+2026/03/21-00:22:09.095 bcac Delete type=2 #306
+2026/03/21-00:22:09.095 bcac Delete type=2 #308
+2026/03/21-00:22:09.095 bcac Delete type=2 #310
+2026/03/21-00:23:09.071 bcac Level-0 table #313: started
+2026/03/21-00:23:09.078 bcac Level-0 table #313: 110073 bytes OK
+2026/03/21-00:23:09.082 bcac Delete type=0 #309
+2026/03/21-00:23:55.954 bcac Level-0 table #315: started
+2026/03/21-00:23:55.961 bcac Level-0 table #315: 107569 bytes OK
+2026/03/21-00:23:55.964 bcac Delete type=0 #312
+2026/03/21-00:24:09.057 bcac Level-0 table #317: started
+2026/03/21-00:24:09.068 bcac Level-0 table #317: 106344 bytes OK
+2026/03/21-00:24:09.072 bcac Delete type=0 #314
+2026/03/21-00:25:09.059 bcac Level-0 table #319: started
+2026/03/21-00:25:09.069 bcac Level-0 table #319: 111129 bytes OK
+2026/03/21-00:25:09.073 bcac Delete type=0 #316
+2026/03/21-00:25:09.074 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:25:09.084 bcac Generated table #320@0: 62 keys, 111854 bytes
+2026/03/21-00:25:09.084 bcac Compacted 4@0 + 1@1 files => 111854 bytes
+2026/03/21-00:25:09.087 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:25:09.088 bcac Delete type=2 #311
+2026/03/21-00:25:09.088 bcac Delete type=2 #313
+2026/03/21-00:25:09.088 bcac Delete type=2 #315
+2026/03/21-00:25:09.088 bcac Delete type=2 #317
+2026/03/21-00:25:09.088 bcac Delete type=2 #319
+2026/03/21-00:25:45.978 bcac Level-0 table #322: started
+2026/03/21-00:25:45.986 bcac Level-0 table #322: 107449 bytes OK
+2026/03/21-00:25:45.990 bcac Delete type=0 #318
+2026/03/21-00:26:09.056 9e9c Level-0 table #324: started
+2026/03/21-00:26:09.063 9e9c Level-0 table #324: 106739 bytes OK
+2026/03/21-00:26:09.066 9e9c Delete type=0 #321
+2026/03/21-00:26:39.550 bcac Level-0 table #326: started
+2026/03/21-00:26:39.555 bcac Level-0 table #326: 106897 bytes OK
+2026/03/21-00:26:39.558 bcac Delete type=0 #323
+2026/03/21-00:27:09.060 bcac Level-0 table #328: started
+2026/03/21-00:27:09.067 bcac Level-0 table #328: 107468 bytes OK
+2026/03/21-00:27:09.072 bcac Delete type=0 #325
+2026/03/21-00:27:09.072 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:27:09.081 bcac Generated table #329@0: 62 keys, 112986 bytes
+2026/03/21-00:27:09.081 bcac Compacted 4@0 + 1@1 files => 112986 bytes
+2026/03/21-00:27:09.085 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:27:09.086 bcac Delete type=2 #320
+2026/03/21-00:27:09.086 bcac Delete type=2 #322
+2026/03/21-00:27:09.086 bcac Delete type=2 #324
+2026/03/21-00:27:09.086 bcac Delete type=2 #326
+2026/03/21-00:27:09.086 bcac Delete type=2 #328
+2026/03/21-00:27:14.707 bcac Level-0 table #331: started
+2026/03/21-00:27:14.714 bcac Level-0 table #331: 105634 bytes OK
+2026/03/21-00:27:14.719 bcac Delete type=0 #327
+2026/03/21-00:28:09.058 bcac Level-0 table #333: started
+2026/03/21-00:28:09.064 bcac Level-0 table #333: 110537 bytes OK
+2026/03/21-00:28:09.068 bcac Delete type=0 #330
+2026/03/21-00:28:36.960 bcac Level-0 table #335: started
+2026/03/21-00:28:36.966 bcac Level-0 table #335: 107142 bytes OK
+2026/03/21-00:28:36.971 bcac Delete type=0 #332
+2026/03/21-00:29:03.396 bcac Level-0 table #337: started
+2026/03/21-00:29:03.403 bcac Level-0 table #337: 106865 bytes OK
+2026/03/21-00:29:03.406 bcac Delete type=0 #334
+2026/03/21-00:29:03.407 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:29:03.416 bcac Generated table #338@0: 62 keys, 112774 bytes
+2026/03/21-00:29:03.417 bcac Compacted 4@0 + 1@1 files => 112774 bytes
+2026/03/21-00:29:03.419 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:29:03.420 bcac Delete type=2 #329
+2026/03/21-00:29:03.420 bcac Delete type=2 #331
+2026/03/21-00:29:03.420 bcac Delete type=2 #333
+2026/03/21-00:29:03.420 bcac Delete type=2 #335
+2026/03/21-00:29:03.420 bcac Delete type=2 #337
+2026/03/21-00:29:09.058 bcac Level-0 table #340: started
+2026/03/21-00:29:09.065 bcac Level-0 table #340: 108041 bytes OK
+2026/03/21-00:29:09.068 bcac Delete type=0 #336
+2026/03/21-00:29:56.908 9e9c Level-0 table #342: started
+2026/03/21-00:29:56.914 9e9c Level-0 table #342: 107350 bytes OK
+2026/03/21-00:29:56.917 9e9c Delete type=0 #339
+2026/03/21-00:30:09.063 bcac Level-0 table #344: started
+2026/03/21-00:30:09.075 bcac Level-0 table #344: 107387 bytes OK
+2026/03/21-00:30:09.079 bcac Delete type=0 #341
+2026/03/21-00:30:49.675 bcac Level-0 table #346: started
+2026/03/21-00:30:49.681 bcac Level-0 table #346: 107575 bytes OK
+2026/03/21-00:30:49.685 bcac Delete type=0 #343
+2026/03/21-00:30:49.685 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:30:49.693 bcac Generated table #347@0: 62 keys, 113673 bytes
+2026/03/21-00:30:49.693 bcac Compacted 4@0 + 1@1 files => 113673 bytes
+2026/03/21-00:30:49.696 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:30:49.697 bcac Delete type=2 #338
+2026/03/21-00:30:49.697 bcac Delete type=2 #340
+2026/03/21-00:30:49.697 bcac Delete type=2 #342
+2026/03/21-00:30:49.697 bcac Delete type=2 #344
+2026/03/21-00:30:49.697 bcac Delete type=2 #346
+2026/03/21-00:31:09.060 bcac Level-0 table #349: started
+2026/03/21-00:31:09.067 bcac Level-0 table #349: 106977 bytes OK
+2026/03/21-00:31:09.072 bcac Delete type=0 #345
+2026/03/21-00:31:50.628 bcac Level-0 table #351: started
+2026/03/21-00:31:50.635 bcac Level-0 table #351: 107664 bytes OK
+2026/03/21-00:31:50.638 bcac Delete type=0 #348
+2026/03/21-00:32:43.767 9e9c Level-0 table #353: started
+2026/03/21-00:32:43.773 9e9c Level-0 table #353: 109599 bytes OK
+2026/03/21-00:32:43.776 9e9c Delete type=0 #350
+2026/03/21-00:33:09.061 bcac Level-0 table #355: started
+2026/03/21-00:33:09.068 bcac Level-0 table #355: 106313 bytes OK
+2026/03/21-00:33:09.073 bcac Delete type=0 #352
+2026/03/21-00:33:09.073 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:33:09.081 bcac Generated table #356@0: 62 keys, 112453 bytes
+2026/03/21-00:33:09.081 bcac Compacted 4@0 + 1@1 files => 112453 bytes
+2026/03/21-00:33:09.083 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:33:09.084 bcac Delete type=2 #347
+2026/03/21-00:33:09.084 bcac Delete type=2 #349
+2026/03/21-00:33:09.084 bcac Delete type=2 #351
+2026/03/21-00:33:09.084 bcac Delete type=2 #353
+2026/03/21-00:33:09.084 bcac Delete type=2 #355
+2026/03/21-00:33:37.171 bcac Level-0 table #358: started
+2026/03/21-00:33:37.177 bcac Level-0 table #358: 106198 bytes OK
+2026/03/21-00:33:37.180 bcac Delete type=0 #354
+2026/03/21-00:34:03.933 bcac Level-0 table #360: started
+2026/03/21-00:34:03.940 bcac Level-0 table #360: 106219 bytes OK
+2026/03/21-00:34:03.945 bcac Delete type=0 #357
+2026/03/21-00:34:09.062 bcac Level-0 table #362: started
+2026/03/21-00:34:09.069 bcac Level-0 table #362: 107092 bytes OK
+2026/03/21-00:34:09.072 bcac Delete type=0 #359
+2026/03/21-00:34:58.339 9e9c Level-0 table #364: started
+2026/03/21-00:34:58.346 9e9c Level-0 table #364: 106782 bytes OK
+2026/03/21-00:34:58.351 9e9c Delete type=0 #361
+2026/03/21-00:34:58.352 9e9c Compacting 4@0 + 1@1 files
+2026/03/21-00:34:58.359 9e9c Generated table #365@0: 62 keys, 112277 bytes
+2026/03/21-00:34:58.359 9e9c Compacted 4@0 + 1@1 files => 112277 bytes
+2026/03/21-00:34:58.362 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:34:58.362 9e9c Delete type=2 #356
+2026/03/21-00:34:58.362 9e9c Delete type=2 #358
+2026/03/21-00:34:58.362 9e9c Delete type=2 #360
+2026/03/21-00:34:58.362 9e9c Delete type=2 #362
+2026/03/21-00:34:58.362 9e9c Delete type=2 #364
+2026/03/21-00:35:09.062 bcac Level-0 table #367: started
+2026/03/21-00:35:09.068 bcac Level-0 table #367: 107155 bytes OK
+2026/03/21-00:35:09.072 bcac Delete type=0 #363
+2026/03/21-00:35:51.265 9e9c Level-0 table #369: started
+2026/03/21-00:35:51.271 9e9c Level-0 table #369: 105965 bytes OK
+2026/03/21-00:35:51.276 9e9c Delete type=0 #366
+2026/03/21-00:36:09.064 bcac Level-0 table #371: started
+2026/03/21-00:36:09.071 bcac Level-0 table #371: 106247 bytes OK
+2026/03/21-00:36:09.074 bcac Delete type=0 #368
+2026/03/21-00:37:09.063 bcac Level-0 table #373: started
+2026/03/21-00:37:09.069 bcac Level-0 table #373: 109144 bytes OK
+2026/03/21-00:37:09.073 bcac Delete type=0 #370
+2026/03/21-00:37:09.074 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:37:09.082 bcac Generated table #374@0: 62 keys, 111698 bytes
+2026/03/21-00:37:09.082 bcac Compacted 4@0 + 1@1 files => 111698 bytes
+2026/03/21-00:37:09.084 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:37:09.085 bcac Delete type=2 #365
+2026/03/21-00:37:09.085 bcac Delete type=2 #367
+2026/03/21-00:37:09.085 bcac Delete type=2 #369
+2026/03/21-00:37:09.085 bcac Delete type=2 #371
+2026/03/21-00:37:09.085 bcac Delete type=2 #373
+2026/03/21-00:37:44.023 bcac Level-0 table #376: started
+2026/03/21-00:37:44.029 bcac Level-0 table #376: 106960 bytes OK
+2026/03/21-00:37:44.035 bcac Delete type=0 #372
+2026/03/21-00:38:09.065 9e9c Level-0 table #378: started
+2026/03/21-00:38:09.071 9e9c Level-0 table #378: 106642 bytes OK
+2026/03/21-00:38:09.074 9e9c Delete type=0 #375
+2026/03/21-00:38:37.196 bcac Level-0 table #380: started
+2026/03/21-00:38:37.202 bcac Level-0 table #380: 105881 bytes OK
+2026/03/21-00:38:37.206 bcac Delete type=0 #377
+2026/03/21-00:39:03.822 9e9c Level-0 table #382: started
+2026/03/21-00:39:03.829 9e9c Level-0 table #382: 106235 bytes OK
+2026/03/21-00:39:03.832 9e9c Delete type=0 #379
+2026/03/21-00:39:03.833 9e9c Compacting 4@0 + 1@1 files
+2026/03/21-00:39:03.842 9e9c Generated table #383@0: 62 keys, 111658 bytes
+2026/03/21-00:39:03.842 9e9c Compacted 4@0 + 1@1 files => 111658 bytes
+2026/03/21-00:39:03.844 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:39:03.845 9e9c Delete type=2 #374
+2026/03/21-00:39:03.845 9e9c Delete type=2 #376
+2026/03/21-00:39:03.845 9e9c Delete type=2 #378
+2026/03/21-00:39:03.845 9e9c Delete type=2 #380
+2026/03/21-00:39:03.845 9e9c Delete type=2 #382
+2026/03/21-00:39:09.064 bcac Level-0 table #385: started
+2026/03/21-00:39:09.073 bcac Level-0 table #385: 105162 bytes OK
+2026/03/21-00:39:09.080 bcac Delete type=0 #381
+2026/03/21-00:39:56.731 bcac Level-0 table #387: started
+2026/03/21-00:39:56.737 bcac Level-0 table #387: 106795 bytes OK
+2026/03/21-00:39:56.741 bcac Delete type=0 #384
+2026/03/21-00:40:09.065 bcac Level-0 table #389: started
+2026/03/21-00:40:09.073 bcac Level-0 table #389: 106370 bytes OK
+2026/03/21-00:40:09.077 bcac Delete type=0 #386
+2026/03/21-00:40:56.946 9e9c Level-0 table #391: started
+2026/03/21-00:40:56.952 9e9c Level-0 table #391: 106994 bytes OK
+2026/03/21-00:40:56.955 9e9c Delete type=0 #388
+2026/03/21-00:40:56.956 9e9c Compacting 4@0 + 1@1 files
+2026/03/21-00:40:56.964 9e9c Generated table #392@0: 62 keys, 112440 bytes
+2026/03/21-00:40:56.964 9e9c Compacted 4@0 + 1@1 files => 112440 bytes
+2026/03/21-00:40:56.967 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:40:56.967 9e9c Delete type=2 #383
+2026/03/21-00:40:56.967 9e9c Delete type=2 #385
+2026/03/21-00:40:56.967 9e9c Delete type=2 #387
+2026/03/21-00:40:56.967 9e9c Delete type=2 #389
+2026/03/21-00:40:56.967 9e9c Delete type=2 #391
+2026/03/21-00:41:50.469 bcac Level-0 table #394: started
+2026/03/21-00:41:50.476 bcac Level-0 table #394: 110506 bytes OK
+2026/03/21-00:41:50.479 bcac Delete type=0 #390
+2026/03/21-00:42:09.067 bcac Level-0 table #396: started
+2026/03/21-00:42:09.075 bcac Level-0 table #396: 106866 bytes OK
+2026/03/21-00:42:09.079 bcac Delete type=0 #393
+2026/03/21-00:42:43.324 bcac Level-0 table #398: started
+2026/03/21-00:42:43.330 bcac Level-0 table #398: 107068 bytes OK
+2026/03/21-00:42:43.333 bcac Delete type=0 #395
+2026/03/21-00:43:09.068 9e9c Level-0 table #400: started
+2026/03/21-00:43:09.075 9e9c Level-0 table #400: 107346 bytes OK
+2026/03/21-00:43:09.080 9e9c Delete type=0 #397
+2026/03/21-00:43:09.080 9e9c Compacting 4@0 + 1@1 files
+2026/03/21-00:43:09.091 9e9c Generated table #401@0: 62 keys, 113121 bytes
+2026/03/21-00:43:09.091 9e9c Compacted 4@0 + 1@1 files => 113121 bytes
+2026/03/21-00:43:09.094 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:43:09.095 9e9c Delete type=2 #392
+2026/03/21-00:43:09.095 9e9c Delete type=2 #394
+2026/03/21-00:43:09.095 9e9c Delete type=2 #396
+2026/03/21-00:43:09.095 9e9c Delete type=2 #398
+2026/03/21-00:43:09.095 9e9c Delete type=2 #400
+2026/03/21-00:43:36.598 bcac Level-0 table #403: started
+2026/03/21-00:43:36.603 bcac Level-0 table #403: 107354 bytes OK
+2026/03/21-00:43:36.607 bcac Delete type=0 #399
+2026/03/21-00:44:03.342 9e9c Level-0 table #405: started
+2026/03/21-00:44:03.349 9e9c Level-0 table #405: 106521 bytes OK
+2026/03/21-00:44:03.353 9e9c Delete type=0 #402
+2026/03/21-00:44:09.067 bcac Level-0 table #407: started
+2026/03/21-00:44:09.074 bcac Level-0 table #407: 106764 bytes OK
+2026/03/21-00:44:09.078 bcac Delete type=0 #404
+2026/03/21-00:44:57.133 23c8 Level-0 table #409: started
+2026/03/21-00:44:57.139 23c8 Level-0 table #409: 107713 bytes OK
+2026/03/21-00:44:57.143 23c8 Delete type=0 #406
+2026/03/21-00:44:57.144 23c8 Compacting 4@0 + 1@1 files
+2026/03/21-00:44:57.152 23c8 Generated table #410@0: 62 keys, 113319 bytes
+2026/03/21-00:44:57.152 23c8 Compacted 4@0 + 1@1 files => 113319 bytes
+2026/03/21-00:44:57.155 23c8 compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:44:57.156 23c8 Delete type=2 #401
+2026/03/21-00:44:57.156 23c8 Delete type=2 #403
+2026/03/21-00:44:57.156 23c8 Delete type=2 #405
+2026/03/21-00:44:57.156 23c8 Delete type=2 #407
+2026/03/21-00:44:57.156 23c8 Delete type=2 #409
+2026/03/21-00:45:09.074 bcac Level-0 table #412: started
+2026/03/21-00:45:09.080 bcac Level-0 table #412: 106430 bytes OK
+2026/03/21-00:45:09.084 bcac Delete type=0 #408
+2026/03/21-00:46:09.072 bcac Level-0 table #414: started
+2026/03/21-00:46:09.084 bcac Level-0 table #414: 110166 bytes OK
+2026/03/21-00:46:09.088 bcac Delete type=0 #411
+2026/03/21-00:46:51.737 cb50 Level-0 table #416: started
+2026/03/21-00:46:51.745 cb50 Level-0 table #416: 107394 bytes OK
+2026/03/21-00:46:51.750 cb50 Delete type=0 #413
+2026/03/21-00:47:47.129 9e9c Level-0 table #418: started
+2026/03/21-00:47:47.135 9e9c Level-0 table #418: 110182 bytes OK
+2026/03/21-00:47:47.140 9e9c Delete type=0 #415
+2026/03/21-00:47:47.140 9e9c Compacting 4@0 + 1@1 files
+2026/03/21-00:47:47.147 9e9c Generated table #419@0: 61 keys, 111143 bytes
+2026/03/21-00:47:47.147 9e9c Compacted 4@0 + 1@1 files => 111143 bytes
+2026/03/21-00:47:47.150 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:47:47.150 9e9c Delete type=2 #410
+2026/03/21-00:47:47.150 9e9c Delete type=2 #412
+2026/03/21-00:47:47.150 9e9c Delete type=2 #414
+2026/03/21-00:47:47.150 9e9c Delete type=2 #416
+2026/03/21-00:47:47.150 9e9c Delete type=2 #418
+2026/03/21-00:48:09.071 bcac Level-0 table #421: started
+2026/03/21-00:48:09.078 bcac Level-0 table #421: 107419 bytes OK
+2026/03/21-00:48:09.081 bcac Delete type=0 #417
+2026/03/21-00:49:08.308 bcac Level-0 table #423: started
+2026/03/21-00:49:08.313 bcac Level-0 table #423: 110563 bytes OK
+2026/03/21-00:49:08.316 bcac Delete type=0 #420
+2026/03/21-00:49:34.654 9e9c Level-0 table #425: started
+2026/03/21-00:49:34.661 9e9c Level-0 table #425: 106178 bytes OK
+2026/03/21-00:49:34.666 9e9c Delete type=0 #422
+2026/03/21-00:50:08.961 bcac Level-0 table #427: started
+2026/03/21-00:50:08.967 bcac Level-0 table #427: 106746 bytes OK
+2026/03/21-00:50:08.971 bcac Delete type=0 #424
+2026/03/21-00:50:08.971 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:50:08.980 bcac Generated table #428@0: 62 keys, 112425 bytes
+2026/03/21-00:50:08.980 bcac Compacted 4@0 + 1@1 files => 112425 bytes
+2026/03/21-00:50:08.983 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:50:08.984 bcac Delete type=2 #419
+2026/03/21-00:50:08.984 bcac Delete type=2 #421
+2026/03/21-00:50:08.984 bcac Delete type=2 #423
+2026/03/21-00:50:08.984 bcac Delete type=2 #425
+2026/03/21-00:50:08.984 bcac Delete type=2 #427
+2026/03/21-00:51:02.298 bcac Level-0 table #430: started
+2026/03/21-00:51:02.306 bcac Level-0 table #430: 111121 bytes OK
+2026/03/21-00:51:02.309 bcac Delete type=0 #426
+2026/03/21-00:51:09.057 bcac Level-0 table #432: started
+2026/03/21-00:51:09.065 bcac Level-0 table #432: 107370 bytes OK
+2026/03/21-00:51:09.068 bcac Delete type=0 #429
+2026/03/21-00:51:56.636 bcac Level-0 table #434: started
+2026/03/21-00:51:56.642 bcac Level-0 table #434: 107708 bytes OK
+2026/03/21-00:51:56.646 bcac Delete type=0 #431
+2026/03/21-00:52:09.062 bcac Level-0 table #436: started
+2026/03/21-00:52:09.069 bcac Level-0 table #436: 108250 bytes OK
+2026/03/21-00:52:09.072 bcac Delete type=0 #433
+2026/03/21-00:52:09.073 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:52:09.081 bcac Generated table #437@0: 62 keys, 113349 bytes
+2026/03/21-00:52:09.081 bcac Compacted 4@0 + 1@1 files => 113349 bytes
+2026/03/21-00:52:09.084 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:52:09.085 bcac Delete type=2 #428
+2026/03/21-00:52:09.085 bcac Delete type=2 #430
+2026/03/21-00:52:09.085 bcac Delete type=2 #432
+2026/03/21-00:52:09.085 bcac Delete type=2 #434
+2026/03/21-00:52:09.085 bcac Delete type=2 #436
+2026/03/21-00:52:50.525 9e9c Level-0 table #439: started
+2026/03/21-00:52:50.530 9e9c Level-0 table #439: 107207 bytes OK
+2026/03/21-00:52:50.534 9e9c Delete type=0 #435
+2026/03/21-00:53:09.057 bcac Level-0 table #441: started
+2026/03/21-00:53:09.064 bcac Level-0 table #441: 108218 bytes OK
+2026/03/21-00:53:09.068 bcac Delete type=0 #438
+2026/03/21-00:53:43.867 9e9c Level-0 table #443: started
+2026/03/21-00:53:43.873 9e9c Level-0 table #443: 107343 bytes OK
+2026/03/21-00:53:43.876 9e9c Delete type=0 #440
+2026/03/21-00:54:09.059 9e9c Level-0 table #445: started
+2026/03/21-00:54:09.065 9e9c Level-0 table #445: 106985 bytes OK
+2026/03/21-00:54:09.070 9e9c Delete type=0 #442
+2026/03/21-00:54:09.070 9e9c Compacting 4@0 + 1@1 files
+2026/03/21-00:54:09.079 9e9c Generated table #446@0: 62 keys, 112779 bytes
+2026/03/21-00:54:09.079 9e9c Compacted 4@0 + 1@1 files => 112779 bytes
+2026/03/21-00:54:09.082 9e9c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:54:09.083 9e9c Delete type=2 #437
+2026/03/21-00:54:09.083 9e9c Delete type=2 #439
+2026/03/21-00:54:09.083 9e9c Delete type=2 #441
+2026/03/21-00:54:09.083 9e9c Delete type=2 #443
+2026/03/21-00:54:09.083 9e9c Delete type=2 #445
+2026/03/21-00:54:45.645 9e9c Level-0 table #448: started
+2026/03/21-00:54:45.650 9e9c Level-0 table #448: 106490 bytes OK
+2026/03/21-00:54:45.653 9e9c Delete type=0 #444
+2026/03/21-00:56:05.164 9e9c Level-0 table #450: started
+2026/03/21-00:56:05.171 9e9c Level-0 table #450: 113334 bytes OK
+2026/03/21-00:56:05.176 9e9c Delete type=0 #447
+2026/03/21-00:56:09.063 bcac Level-0 table #452: started
+2026/03/21-00:56:09.069 bcac Level-0 table #452: 106231 bytes OK
+2026/03/21-00:56:09.073 bcac Delete type=0 #449
+2026/03/21-00:56:59.305 bcac Level-0 table #454: started
+2026/03/21-00:56:59.312 bcac Level-0 table #454: 107079 bytes OK
+2026/03/21-00:56:59.316 bcac Delete type=0 #451
+2026/03/21-00:56:59.317 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:56:59.324 bcac Generated table #455@0: 62 keys, 112753 bytes
+2026/03/21-00:56:59.324 bcac Compacted 4@0 + 1@1 files => 112753 bytes
+2026/03/21-00:56:59.326 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:56:59.327 bcac Delete type=2 #446
+2026/03/21-00:56:59.327 bcac Delete type=2 #448
+2026/03/21-00:56:59.327 bcac Delete type=2 #450
+2026/03/21-00:56:59.327 bcac Delete type=2 #452
+2026/03/21-00:56:59.327 bcac Delete type=2 #454
+2026/03/21-00:57:09.060 bcac Level-0 table #457: started
+2026/03/21-00:57:09.068 bcac Level-0 table #457: 107037 bytes OK
+2026/03/21-00:57:09.071 bcac Delete type=0 #453
+2026/03/21-00:57:52.728 9e9c Level-0 table #459: started
+2026/03/21-00:57:52.735 9e9c Level-0 table #459: 106490 bytes OK
+2026/03/21-00:57:52.739 9e9c Delete type=0 #456
+2026/03/21-00:58:09.061 bcac Level-0 table #461: started
+2026/03/21-00:58:09.068 bcac Level-0 table #461: 107185 bytes OK
+2026/03/21-00:58:09.072 bcac Delete type=0 #458
+2026/03/21-00:59:09.062 bcac Level-0 table #463: started
+2026/03/21-00:59:09.068 bcac Level-0 table #463: 109074 bytes OK
+2026/03/21-00:59:09.071 bcac Delete type=0 #460
+2026/03/21-00:59:09.071 bcac Compacting 4@0 + 1@1 files
+2026/03/21-00:59:09.080 bcac Generated table #464@0: 62 keys, 112671 bytes
+2026/03/21-00:59:09.080 bcac Compacted 4@0 + 1@1 files => 112671 bytes
+2026/03/21-00:59:09.083 bcac compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/03/21-00:59:09.084 bcac Delete type=2 #455
+2026/03/21-00:59:09.084 bcac Delete type=2 #457
+2026/03/21-00:59:09.084 bcac Delete type=2 #459
+2026/03/21-00:59:09.084 bcac Delete type=2 #461
+2026/03/21-00:59:09.084 bcac Delete type=2 #463
+2026/03/21-01:00:09.062 bcac Level-0 table #466: started
+2026/03/21-01:00:09.069 bcac Level-0 table #466: 110462 bytes OK
+2026/03/21-01:00:09.073 bcac Delete type=0 #462

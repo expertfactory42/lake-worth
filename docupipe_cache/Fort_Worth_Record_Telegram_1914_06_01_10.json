@@ -1,0 +1,149 @@
+{
+  "standardizationId": "IeGYwFxl",
+  "documentId": "eegl3nSv",
+  "data": {
+    "newspaperName": "Fort Worth Record-Telegram",
+    "publicationDate": "1914-06-01",
+    "pageNumber": 10,
+    "location": "Fort Worth, Texas",
+    "headlines": [
+      {
+        "title": "TRINITY RIVER IS FALLING SLOWLY",
+        "subtitle": "West Fork Reaches Stand at 3 o'Clock Sunday Afternoon, Then Recedes: Clear Fork Reaching Normal Stage.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "DUKE TEMPLETON. ENGINEER, KILLED",
+        "subtitle": "Hanriley Citizen, Formerly of Fort Worth, Meets Death in Wreck on the Santa Fe Near Ardmore. Okla.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "THIEVES GET BUSY ON THE SOUTH SIDE",
+        "subtitle": "Six Robberies Are Reported, Five Being in the Immediate Vicinity of South Main Street and Terrell Avenue.",
+        "topic": "Local News",
+        "fullText": null
+      },
+      {
+        "title": "LAKE COMO CONCERT DRAWS A BIG CROWD",
+        "subtitle": "Between 1,500 and 2,000 Persons Attend Initial Park Concert of the Fort Worth Symphony Orchestra.",
+        "topic": "Entertainment",
+        "fullText": null
+      }
+    ],
+    "advertisements": [
+      {
+        "productOrBusiness": "The Fort Worth State Bank",
+        "description": "Bank offering interest on time deposits. Lists its growth from 1909 to 1914.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "Summer Toilet Necessities",
+        "description": "Covey & Martin Co. Drug Merchants selling toilet articles like soaps, toilet waters, talcum, sunburn lotion, perfumes, etc.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "LEYHE PIANO CO.",
+        "description": "Pianos for rent, tuning and repairing.",
+        "price": "$1.40 per month and up"
+      },
+      {
+        "productOrBusiness": "Agee Screen Co.",
+        "description": "Screens for flies. 'When You See A Pesky Fly Think of Agee and Write or Phone'.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "FORT WORTH RELIEF, ASSOCIATION",
+        "description": "Advertisement for the Fort Worth Relief Association.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "WESTERN UNION MONEYGRAM",
+        "description": "Service to send money at a distance. Payments made to the person or firm addressed.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "TOM SNODGRASS TAXICABS",
+        "description": "Taxicab service located at Mecca Cafe Stand, Seventh & Main.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "MECCA CAFE",
+        "description": "Cafe with popular prices and special tables for ladies.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "Yard Ornaments",
+        "description": "Every variety of yard ornaments. Molded of Cement. Located at 111 So. Jennings, Near Viaduct.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "BLESSING",
+        "description": "Films and all requisites for amateurs. Finishing at prices on applications.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "I. CARB & SON",
+        "description": "Loans on choice real estate.",
+        "price": "$100,000 to LOAN"
+      },
+      {
+        "productOrBusiness": "NORTH TEXAS FEMALE COLLEGE and KIDD-KEY CONSERVATORY",
+        "description": "Leading College for Ladies in the Southwest.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "Workmen's Compensation Insurance",
+        "description": "Vera, Reynolds & Co. offering insurance and bonds at new rates.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "The Record",
+        "description": "Get a free fly swatter by taking the ad to the business office of The Record.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "The Úme Way Launderers Dry Cleaners",
+        "description": "Family washing, dry cleaning, and parcel post service.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "J.P. Scott Co.",
+        "description": "We kill the germs in carpets and rugs.",
+        "price": null
+      },
+      {
+        "productOrBusiness": "D. H. KEENE",
+        "description": "Watch repairing and diamond setting.",
+        "price": null
+      }
+    ],
+    "events": [
+      {
+        "eventName": "THE ADVENTURES OF KATHLYN NO. 2.",
+        "date": "TODAY",
+        "venue": "THE ODEON"
+      },
+      {
+        "eventName": "THE KING'S WILL",
+        "date": "TODAY",
+        "venue": "THE ODEON"
+      },
+      {
+        "eventName": "HEARST-SELIG NEWS",
+        "date": null,
+        "venue": "PHILLIPS THEATER"
+      }
+    ]
+  },
+  "schemaId": "BQNNnBPR",
+  "schemaName": "Historical Newspaper Page V2",
+  "jobId": "0SdO56Ee",
+  "dataset": "unassigned",
+  "filename": "Fort_Worth_Record_Telegram_1914_06_01_10",
+  "displayMode": "auto",
+  "timestamp": "2026-03-17T04:37:36.609000Z",
+  "metadata": null,
+  "fieldMetadata": null
+}

@@ -39,6 +39,7 @@ BASE_DIR = Path(r"C:\lake_worth")
 PDF_DIR = BASE_DIR / "pdfs"
 IMAGE_DIR = BASE_DIR / "images"
 DB_PATH = BASE_DIR / "lake_worth.db"
+CACHE_DIR = BASE_DIR / "docupipe_cache"
 
 CLAUDE_MODEL = "claude-sonnet-4-20250514"
 MAX_TOKENS = 8192
@@ -175,14 +176,18 @@ def docupipe_upload_and_parse(pdf_path: Path, api_key: str) -> str:
     return doc_id
 
 
-def docupipe_standardize(doc_id: str, api_key: str) -> dict:
+def docupipe_standardize(doc_id: str, api_key: str, display_mode: str = None) -> dict:
     """Run standardization on a parsed document, return structured data."""
     headers = {"X-API-Key": api_key, "Content-Type": "application/json"}
+
+    payload = {"schemaId": DOCUPIPE_SCHEMA, "documentIds": [doc_id]}
+    if display_mode:
+        payload["displayMode"] = display_mode
 
     resp = requests.post(
         f"{DOCUPIPE_BASE}/v2/standardize/batch",
         headers=headers,
-        json={"schemaId": DOCUPIPE_SCHEMA, "documentIds": [doc_id]},
+        json=payload,
         timeout=60,
     )
     resp.raise_for_status()
@@ -207,8 +212,22 @@ def docupipe_standardize(doc_id: str, api_key: str) -> dict:
     return sr.json().get("data", {})
 
 
-def find_lake_worth_articles(std_data: dict) -> list[dict]:
-    """Filter standardized articles that mention Lake Worth."""
+def _is_garbled(text: str) -> bool:
+    """Detect if article text has significant OCR garbling."""
+    words = re.findall(r'[a-zA-Z]+', text)
+    if len(words) < 10:
+        return False
+    # Words with no vowels (>3 chars)
+    no_vowel = sum(1 for w in words if len(w) > 3 and not re.search(r'[aeiouAEIOU]', w))
+    # Words with 5+ consecutive consonants
+    garbled = sum(1 for w in words if re.search(r'[bcdfghjklmnpqrstvwxz]{5,}', w, re.IGNORECASE))
+    bad_ratio = (no_vowel + garbled) / len(words)
+    return bad_ratio > 0.05
+
+
+def find_matching_articles(std_data: dict, search_term: str) -> list[dict]:
+    """Filter standardized articles that mention the search term."""
+    term = search_term.lower()
     matches = []
     for article in std_data.get("headlines", []):
         title = article.get("title", "") or ""
@@ -216,7 +235,7 @@ def find_lake_worth_articles(std_data: dict) -> list[dict]:
         full_text = article.get("fullText", "") or ""
         topic = article.get("topic", "") or ""
         combined = f"{title} {subtitle} {full_text} {topic}".lower()
-        if "lake worth" in combined:
+        if term in combined:
             matches.append(article)
     return matches
 
@@ -335,6 +354,110 @@ Only include actual photographs/illustrations, not text."""
 
 
 # ---------------------------------------------------------------------------
+# Claude vision: find ALL mentions of search term on page
+# ---------------------------------------------------------------------------
+
+MENTION_FINDER_PROMPT = """\
+This is a scanned newspaper page from {newspaper}, {date}, page {page}.
+
+Find EVERY mention of "{search_term}" on this page. Include:
+- Full articles with headlines
+- Short blurbs, notices, and briefs (even 1-2 sentences)
+- Items WITHOUT headlines (classified ads, social notes, meeting notices, etc.)
+- Partial articles that continue from or to another page
+
+For each mention, return:
+- "headline": the headline IF one exists, otherwise null
+- "text_on_page": the visible text on THIS page related to the mention (transcribe it)
+- "item_type": one of "article", "brief", "notice", "ad", "social", "legal", "sports_score", "continuation", "other"
+
+Return JSON:
+{{"mentions": [{{"headline": "...", "text_on_page": "...", "item_type": "..."}}]}}
+
+If no mentions of "{search_term}" are found, return: {{"mentions": []}}
+
+IMPORTANT: Transcribe text carefully from the scan. Include ALL mentions, no matter how small."""
+
+
+def find_mentions_via_vision(client: anthropic.Anthropic, page_img: Image.Image,
+                              newspaper: str, date_str: str, page: int,
+                              search_term: str) -> list[dict]:
+    """Use Claude vision to find all mentions of search term on the page."""
+    img_b64 = image_to_base64(page_img)
+    prompt = MENTION_FINDER_PROMPT.format(
+        newspaper=newspaper, date=date_str, page=page, search_term=search_term
+    )
+
+    try:
+        response = client.messages.create(
+            model=CLAUDE_MODEL, max_tokens=MAX_TOKENS,
+            messages=[{"role": "user", "content": [
+                {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": img_b64}},
+                {"type": "text", "text": prompt},
+            ]}],
+        )
+        text = response.content[0].text
+        json_match = re.search(r"\{.*\}", text, re.DOTALL)
+        if json_match:
+            return json.loads(json_match.group(0)).get("mentions", [])
+    except Exception as e:
+        log.warning("  Vision mention finder error: %s", e)
+    return []
+
+
+def merge_docupipe_and_vision(docupipe_articles: list[dict], vision_mentions: list[dict],
+                                search_term: str) -> list[dict]:
+    """Merge DocuPipe articles with vision-found mentions, deduplicating."""
+    # Start with DocuPipe articles (they have structured fullText)
+    merged = []
+    seen_headlines = set()
+
+    for art in docupipe_articles:
+        headline = (art.get("title", "") or "").strip().lower()
+        if headline:
+            seen_headlines.add(headline)
+        merged.append({
+            "headline": art.get("title", "") or "",
+            "subtitle": art.get("subtitle", "") or "",
+            "full_text": art.get("fullText", "") or "",
+            "item_type": "article",
+            "source": "docupipe",
+        })
+
+    # Add vision mentions that DocuPipe missed
+    for mention in vision_mentions:
+        headline = (mention.get("headline") or "").strip().lower()
+        text = (mention.get("text_on_page") or "").strip()
+        if not text:
+            continue
+
+        # Skip if DocuPipe already found this (fuzzy match on headline)
+        if headline and any(headline in h or h in headline for h in seen_headlines if h):
+            continue
+
+        # Skip if the text is substantially contained in an existing article
+        text_lower = text.lower()[:100]
+        already_found = False
+        for existing in merged:
+            existing_text = (existing.get("full_text") or "").lower()
+            if text_lower and len(text_lower) > 20 and text_lower in existing_text:
+                already_found = True
+                break
+        if already_found:
+            continue
+
+        merged.append({
+            "headline": mention.get("headline") or "",
+            "subtitle": "",
+            "full_text": text,
+            "item_type": mention.get("item_type", "other"),
+            "source": "vision",
+        })
+
+    return merged
+
+
+# ---------------------------------------------------------------------------
 # Image cropping
 # ---------------------------------------------------------------------------
 
@@ -360,16 +483,17 @@ def crop_and_save_image(page_img: Image.Image, bbox_pct: list,
 # ---------------------------------------------------------------------------
 
 
-def store_results(conn, articles, newspaper, date_str, page, pdf_filename, page_img):
+def store_results(conn, articles, newspaper, date_str, page, pdf_filename, page_img,
+                  search_term="lake worth"):
     img_counter = 0
     for art in articles:
         has_image = bool(art.get("images"))
         cur = conn.execute(
             """INSERT INTO articles (date, newspaper, page, headline, full_text,
-                                     pdf_filename, has_image)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                                     pdf_filename, has_image, search_term)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             (date_str, newspaper, page, art.get("headline", ""),
-             art.get("full_text", ""), pdf_filename, has_image),
+             art.get("full_text", ""), pdf_filename, has_image, search_term),
         )
         article_id = cur.lastrowid
 
@@ -426,8 +550,9 @@ def store_results(conn, articles, newspaper, date_str, page, pdf_filename, page_
 # ---------------------------------------------------------------------------
 
 
-def process_pdf(pdf_path, docupipe_key, claude_client, newspaper, date_str, page):
-    """DocuPipe standardize → filter Lake Worth → Claude enrich."""
+def process_pdf(pdf_path, docupipe_key, claude_client, newspaper, date_str, page,
+                search_term="lake worth"):
+    """DocuPipe standardize → filter by search term → vision mention finder → Claude enrich."""
 
     # Step 1: Upload and parse
     log.info("  DocuPipe upload + parse...")
@@ -436,25 +561,71 @@ def process_pdf(pdf_path, docupipe_key, claude_client, newspaper, date_str, page
     # Step 2: Standardize
     log.info("  DocuPipe standardize...")
     std_data = docupipe_standardize(doc_id, docupipe_key)
+
+    # Cache raw standardization result
+    CACHE_DIR.mkdir(exist_ok=True)
+    cache_name = Path(pdf_path).stem + ".json"
+    with open(CACHE_DIR / cache_name, "w", encoding="utf-8") as f:
+        json.dump(std_data, f, indent=2, ensure_ascii=False)
+
     total_articles = len(std_data.get("headlines", []))
     log.info("  Found %d total articles on page", total_articles)
 
-    # Step 3: Filter for Lake Worth
-    lw_articles = find_lake_worth_articles(std_data)
-    log.info("  %d article(s) mention Lake Worth", len(lw_articles))
+    # Step 3: Filter by search term
+    dp_articles = find_matching_articles(std_data, search_term)
+    log.info("  %d article(s) from DocuPipe mention '%s'", len(dp_articles), search_term)
 
-    if not lw_articles:
-        return {"articles": []}
+    # Step 3b: Retry garbled articles with image mode
+    for i, art in enumerate(dp_articles):
+        text = art.get("fullText", "") or ""
+        if text and _is_garbled(text):
+            log.info("  Garbled text detected, retrying with image mode...")
+            img_data = docupipe_standardize(doc_id, docupipe_key, display_mode="image")
+            img_articles = find_matching_articles(img_data, search_term)
+            headline = (art.get("title", "") or "").lower()
+            for img_art in img_articles:
+                img_text = img_art.get("fullText", "") or ""
+                img_title = (img_art.get("title", "") or "").lower()
+                if img_text and img_title and headline and img_title in headline or headline in img_title:
+                    log.info("  Image mode produced better text (%d chars)", len(img_text))
+                    dp_articles[i] = img_art
+                    break
+            break  # only retry once per page
 
-    # Step 4: Enrich each Lake Worth article with Claude
+    # Step 4: Vision pass — find ALL mentions including blurbs DocuPipe missed
+    page_img = pdf_page_to_image(pdf_path)
+    log.info("  Vision mention finder for '%s'...", search_term)
+    vision_mentions = find_mentions_via_vision(
+        claude_client, page_img, newspaper, date_str, page, search_term
+    )
+    log.info("  Vision found %d mention(s)", len(vision_mentions))
+
+    # Step 5: Merge DocuPipe + vision results
+    merged = merge_docupipe_and_vision(dp_articles, vision_mentions, search_term)
+    log.info("  %d total items after merge (%d from DocuPipe, %d new from vision)",
+             len(merged), len(dp_articles), len(merged) - len(dp_articles))
+
+    if not merged:
+        return {"articles": [], "page_img": page_img}
+
+    # Step 6: Enrich each item with Claude
     enriched = []
-    for art in lw_articles:
-        headline = art.get("title", "") or ""
-        subtitle = art.get("subtitle", "") or ""
-        full_text = art.get("fullText", "") or ""
+    for item in merged:
+        headline = item.get("headline", "") or ""
+        subtitle = item.get("subtitle", "") or ""
+        full_text = item.get("full_text", "") or ""
 
-        log.info("  Enriching: %s", headline[:60])
-        extra = claude_enrich(claude_client, art, newspaper, date_str, page)
+        display_name = headline[:60] if headline else f"[{item.get('item_type', 'item')}] {full_text[:50]}"
+        log.info("  Enriching: %s", display_name)
+
+        # Build a pseudo-article dict for the enrich prompt
+        art_for_enrich = {
+            "title": headline,
+            "subtitle": subtitle,
+            "topic": item.get("item_type", ""),
+            "fullText": full_text,
+        }
+        extra = claude_enrich(claude_client, art_for_enrich, newspaper, date_str, page)
 
         enriched.append({
             "headline": f"{headline} — {subtitle}".strip(" —") if subtitle else headline,
@@ -465,8 +636,7 @@ def process_pdf(pdf_path, docupipe_key, claude_client, newspaper, date_str, page
             "images": [],
         })
 
-    # Step 5: Check for photos/illustrations
-    page_img = pdf_page_to_image(pdf_path)
+    # Step 7: Check for photos/illustrations
     images = detect_images_on_page(claude_client, page_img)
     if images and enriched:
         enriched[0]["images"] = images
@@ -497,10 +667,28 @@ def already_processed(conn):
     return {r[0] for r in conn.execute("SELECT pdf_filename FROM processed_pdfs").fetchall()}
 
 
-def mark_processed(conn, filename, articles_found=0):
+def get_search_term(conn, filename: str) -> str:
+    """Look up the search term for a PDF. Defaults to 'lake worth'."""
+    row = conn.execute(
+        "SELECT search_term FROM processed_pdfs WHERE pdf_filename = ?", (filename,)
+    ).fetchone()
+    if row and row[0]:
+        return row[0]
+    # Infer from filename date
+    parsed = parse_filename(filename)
+    if parsed:
+        _, date_str, _ = parsed
+        if date_str[:4] == "1909":
+            return "fire"
+        if "1913-07-04" <= date_str <= "1913-12-06":
+            return "minnetonka"
+    return "lake worth"
+
+
+def mark_processed(conn, filename, articles_found=0, search_term="lake worth"):
     conn.execute(
-        "INSERT OR REPLACE INTO processed_pdfs (pdf_filename, articles_found) VALUES (?, ?)",
-        (filename, articles_found),
+        "INSERT OR REPLACE INTO processed_pdfs (pdf_filename, articles_found, search_term) VALUES (?, ?, ?)",
+        (filename, articles_found, search_term),
     )
     conn.commit()
 
@@ -541,10 +729,11 @@ def main():
             continue
 
         newspaper, date_str, page = parsed
+        search_term = get_search_term(conn, filename)
 
         try:
             result = process_pdf(pdf_path, docupipe_key, claude_client,
-                                 newspaper, date_str, page)
+                                 newspaper, date_str, page, search_term)
 
             articles = result.get("articles", [])
             page_img = result.get("page_img")
@@ -553,8 +742,8 @@ def main():
             np_ = sum(len(a.get("people", [])) for a in articles)
             ni = sum(len(a.get("images", [])) for a in articles)
 
-            store_results(conn, articles, newspaper, date_str, page, filename, page_img)
-            mark_processed(conn, filename, na)
+            store_results(conn, articles, newspaper, date_str, page, filename, page_img, search_term)
+            mark_processed(conn, filename, na, search_term)
 
             total_articles += na
             total_quotes += nq
