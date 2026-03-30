@@ -110,18 +110,29 @@ def ensure_columns(conn):
 
 
 def get_start_date(conn):
-    """Find the date just after the latest manually clipped entry."""
-    # Start after the latest entry that has an image (user already clipped)
+    """Read the clipper date counter from DB. Defaults to 1914-01-01."""
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS clipper_state (
+            key TEXT PRIMARY KEY,
+            value TEXT
+        )
+    """)
+    conn.commit()
     row = conn.execute(
-        "SELECT MAX(date) FROM articles WHERE has_image = 1 AND search_term = ?",
-        (SEARCH_TERM,)
+        "SELECT value FROM clipper_state WHERE key = 'current_date'"
     ).fetchone()
     if row and row[0]:
-        # Start the day after the latest clipped date
-        from datetime import timedelta
-        dt = datetime.strptime(row[0], "%Y-%m-%d") + timedelta(days=1)
-        return dt.strftime("%Y-%m-%d")
-    return "1913-07-01"
+        return row[0]
+    return "1914-01-01"
+
+
+def save_start_date(conn, date_str):
+    """Update the clipper date counter in DB."""
+    conn.execute("""
+        INSERT INTO clipper_state (key, value) VALUES ('current_date', ?)
+        ON CONFLICT(key) DO UPDATE SET value = ?
+    """, (date_str, date_str))
+    conn.commit()
 
 
 def needs_clipping(conn, pdf_filename):
@@ -145,6 +156,31 @@ def needs_clipping(conn, pdf_filename):
         return False
 
     return True
+
+
+def backfill_page_url(conn, pdf_filename, url):
+    """Store the original page URL for an already-processed entry.
+
+    If the entry exists in processed_pdfs but has no URL, fill it in.
+    If the entry doesn't exist (old extraction path), create it with clipped=1.
+    """
+    row = conn.execute(
+        "SELECT url FROM processed_pdfs WHERE pdf_filename = ?", (pdf_filename,)
+    ).fetchone()
+    if row is None:
+        # Entry doesn't exist — create it but don't mark as clipped yet
+        conn.execute(
+            "INSERT INTO processed_pdfs (pdf_filename, url, clipped, search_term) VALUES (?, ?, 0, ?)",
+            (pdf_filename, url, SEARCH_TERM)
+        )
+        conn.commit()
+    elif not row[0]:
+        # Entry exists but URL is missing — fill it in
+        conn.execute(
+            "UPDATE processed_pdfs SET url = ? WHERE pdf_filename = ?",
+            (url, pdf_filename)
+        )
+        conn.commit()
 
 
 def save_clip_data(conn, pdf_filename, url, clip_url, ocr_text):
@@ -183,11 +219,40 @@ def save_articles(conn, pdf_filename, articles, search_term, clip_url=""):
         has_photo = 1 if photo_desc else 0
         if not headline and not text:
             continue
-        conn.execute(
-            """INSERT INTO articles (date, newspaper, page, headline, full_text, pdf_filename, search_term, has_image, clip_id, has_photo, photo_description)
-               VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)""",
-            (date_str, newspaper, page, headline, text, pdf_filename, search_term, clip_id or None, has_photo, photo_desc or None)
-        )
+
+        # Dedup check: skip if substantially same text already exists for this date+page
+        from difflib import SequenceMatcher
+        existing = conn.execute(
+            "SELECT id, full_text FROM articles WHERE date = ? AND page = ?",
+            (date_str, page)
+        ).fetchall()
+        is_dupe = False
+        replace_id = None
+        for ex_id, ex_text in existing:
+            ex_text = (ex_text or "")
+            ratio = SequenceMatcher(None, text[:500].lower(), ex_text[:500].lower()).ratio()
+            if ratio > 0.5:
+                if len(text) > len(ex_text):
+                    replace_id = ex_id
+                    log.info(f"    Replacing shorter duplicate (id={ex_id}, {ratio:.0%} match)")
+                else:
+                    is_dupe = True
+                    log.info(f"    Skipping duplicate (id={ex_id}, {ratio:.0%} match)")
+                break
+        if is_dupe:
+            continue
+        if replace_id:
+            conn.execute(
+                """UPDATE articles SET headline=?, full_text=?, pdf_filename=?, search_term=?, clip_id=?, has_photo=?, photo_description=?
+                   WHERE id=?""",
+                (headline, text, pdf_filename, search_term, clip_id or None, has_photo, photo_desc or None, replace_id)
+            )
+        else:
+            conn.execute(
+                """INSERT INTO articles (date, newspaper, page, headline, full_text, pdf_filename, search_term, has_image, clip_id, has_photo, photo_description)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)""",
+                (date_str, newspaper, page, headline, text, pdf_filename, search_term, clip_id or None, has_photo, photo_desc or None)
+            )
         if has_photo:
             log.info(f"    >>> PHOTO: {photo_desc[:60]}")
         count += 1
@@ -305,7 +370,11 @@ def setup_driver():
 # === SEARCH RESULTS ===
 
 def collect_search_results(driver):
-    """Collect result links from current search results page."""
+    """Collect result links and metadata from current search results page.
+
+    Returns list of dicts: {"url": ..., "text": ..., "date": ..., "page": ..., "pdf_filename": ...}
+    The text/date/page are parsed from the search result listing (no click needed).
+    """
     results = []
     try:
         WebDriverWait(driver, WAIT_TIMEOUT).until(
@@ -313,15 +382,27 @@ def collect_search_results(driver):
         )
         time.sleep(ACTION_DELAY)
         links = driver.find_elements(By.CSS_SELECTOR, "a[href*='/image/']")
-        seen = set()
+        # Collect all links, preferring ones with text (two links per result: image + text)
+        url_data = {}  # href -> best text
         for link in links:
             try:
                 href = link.get_attribute("href")
-                if href and href not in seen and "/image/" in href:
-                    seen.add(href)
-                    results.append(href)
+                if href and "/image/" in href:
+                    text = link.text.strip()
+                    # Keep the version with the most text
+                    if href not in url_data or len(text) > len(url_data[href]):
+                        url_data[href] = text
             except StaleElementReferenceException:
                 continue
+        for href, text in url_data.items():
+            meta = parse_page_title(text, href)
+            results.append({
+                "url": href,
+                "text": text,
+                "date": meta["date"],
+                "page": meta["page"],
+                "pdf_filename": meta["pdf_filename"],
+            })
     except TimeoutException:
         log.info("  No results found on page.")
     return results
@@ -651,76 +732,117 @@ def navigate_to_clip_page(driver):
     return False
 
 
+def _click_ocr_button(driver):
+    """Click the 'Show Article Text (OCR)' button. Returns True if clicked."""
+    for attempt in range(5):
+        try:
+            elements = driver.find_elements(By.XPATH, "//*[contains(text(), 'Article Text')]")
+            for el in elements:
+                el_text = (el.text or "").strip().lower()
+                if el.is_displayed() and "show" in el_text and "hide" not in el_text:
+                    el.click()
+                    log.info(f"    Clicked: {el.text.strip()[:40]}")
+                    return True
+        except Exception:
+            pass
+        time.sleep(1)
+    return False
+
+
+def _wait_for_ocr_text(driver):
+    """Wait for OCR text to stabilize, then extract it. Returns text string."""
+    time.sleep(3)
+    prev_len = 0
+    stable_count = 0
+    for wait in range(30):  # up to 30 seconds
+        body_text = driver.execute_script("""
+            var main = document.querySelector('main, [role="main"]');
+            return main ? main.innerText : document.body.innerText;
+        """) or ""
+        cur_len = len(body_text)
+        if cur_len == prev_len:
+            stable_count += 1
+            if stable_count >= 3 and cur_len > 2000:
+                break
+            if stable_count >= 5:
+                break
+        else:
+            stable_count = 0
+        prev_len = cur_len
+        time.sleep(1)
+
+    # Extract the OCR text from specific selectors
+    text = ""
+    selectors = [
+        "[class*='ocr']",
+        "[class*='transcription']",
+        "[class*='article-text']",
+        "[class*='clip-text']",
+        "[class*='text-content']",
+        "pre",
+    ]
+    for sel in selectors:
+        elements = driver.find_elements(By.CSS_SELECTOR, sel)
+        for el in elements:
+            t = el.text.strip()
+            if len(t) > len(text):
+                text = t
+
+    # Fallback: grab main content text
+    if len(text) < 500:
+        text = driver.execute_script("""
+            var main = document.querySelector('main, [role="main"]');
+            if (main) return main.innerText;
+            return document.body.innerText;
+        """) or ""
+
+    return text.strip()
+
+
 def extract_ocr_text(driver):
     """Extract OCR text from the clip viewing page.
 
-    The page has a 'Show Article Text (OCR)' button that must be clicked first.
+    Clicks the OCR button, waits for text. If text is under 2000 chars,
+    re-clicks the OCR button up to 4 times to get better results.
     """
     text = ""
     try:
-        # Wait for and click "Show Article Text (OCR)" button — retry up to 15s
-        ocr_clicked = False
-        for attempt in range(15):
-            for xpath in [
-                "//*[contains(text(), 'Show Article Text')]",
-                "//*[contains(text(), 'Article Text (OCR)')]",
-                "//*[contains(text(), 'OCR')]",
-            ]:
-                try:
-                    elements = driver.find_elements(By.XPATH, xpath)
-                    for el in elements:
-                        if el.is_displayed():
-                            el.click()
-                            log.info(f"    Clicked: {el.text.strip()[:40]}")
-                            ocr_clicked = True
-                            break
-                except Exception:
-                    continue
-                if ocr_clicked:
+        # Check if OCR text is already visible (button may have auto-expanded)
+        already_visible = False
+        try:
+            for sel in ["[class*='ocr']", "[class*='transcription']"]:
+                els = driver.find_elements(By.CSS_SELECTOR, sel)
+                for el in els:
+                    if el.is_displayed() and len(el.text.strip()) > 200:
+                        already_visible = True
+                        break
+                if already_visible:
                     break
-            if ocr_clicked:
+        except Exception:
+            pass
+
+        if already_visible:
+            log.info("    OCR text already visible")
+        else:
+            if not _click_ocr_button(driver):
+                log.warning("    Could not find Show Article Text (OCR) button")
+
+        # First attempt to get OCR text
+        text = _wait_for_ocr_text(driver)
+        word_count = len(text.split())
+        log.info(f"    OCR attempt 1: {len(text)} chars, {word_count} words")
+
+        # If text is too short, re-click the OCR button up to 4 more times
+        for retry in range(4):
+            if len(text) >= 2000:
                 break
-            time.sleep(1)
-
-        if not ocr_clicked:
-            log.warning("    Could not find Show Article Text (OCR) button")
-
-        # Wait for OCR text to fully load — poll until text stabilizes
-        time.sleep(3)
-        prev_len = 0
-        for wait in range(30):  # up to 30 seconds
-            body_text = driver.execute_script("""
-                var main = document.querySelector('main, [role="main"]');
-                return main ? main.innerText : document.body.innerText;
-            """) or ""
-            if len(body_text) > 1000 and len(body_text) == prev_len:
-                break  # text has stabilized
-            prev_len = len(body_text)
-            time.sleep(1)
-
-        # Extract the OCR text
-        selectors = [
-            "[class*='ocr']",
-            "[class*='transcription']",
-            "[class*='article-text']",
-            "[class*='clip-text']",
-            "[class*='text-content']",
-            "pre",
-        ]
-        for sel in selectors:
-            elements = driver.find_elements(By.CSS_SELECTOR, sel)
-            for el in elements:
-                t = el.text.strip()
-                if len(t) > len(text):
-                    text = t
-
-        # Fallback: grab main content text
-        if len(text) < 500:
-            text = driver.execute_script("""
-                var main = document.querySelector('main, [role="main"]');
-                if (main) return main.innerText;
-                return document.body.innerText;
-            """) or ""
+            log.info(f"    OCR text too short ({len(text)} chars). Re-clicking OCR button (retry {retry + 1}/4)...")
+            _click_ocr_button(driver)
+            new_text = _wait_for_ocr_text(driver)
+            new_word_count = len(new_text.split())
+            log.info(f"    OCR attempt {retry + 2}: {len(new_text)} chars, {new_word_count} words")
+            if len(new_text) > len(text):
+                text = new_text
 
     except Exception as e:
         log.warning(f"    Error extracting OCR: {e}")
@@ -755,8 +877,9 @@ def extract_articles_with_ai(ocr_text, date_str, newspaper, page):
     if not ocr_text or len(ocr_text) < 20:
         return []
 
-    # Check if "lake worth" even appears in the text
-    if "lake worth" not in ocr_text.lower():
+    # Check if "lake worth" appears in the text (allow OCR artifacts like "Lake. Worth", "Lake- Worth")
+    import re as _re
+    if not _re.search(r'(?i)lake[\s.\-,;:]+worth', ocr_text):
         return []
 
     try:
@@ -775,9 +898,11 @@ For each article found, provide:
 Rules:
 - Include the full text of each article, not a summary
 - If the headline isn't clear, use the first meaningful phrase
-- Skip ads, classifieds, and mere passing mentions (e.g. "Lake Worth road" in an address)
-- Include articles where Lake Worth is a meaningful part of the content
-- Preserve the original text as closely as possible
+- If "Lake Worth" appears ANYWHERE in an article, extract the ENTIRE article — even if Lake Worth is not the main topic. A city commission article that mentions Lake Worth once must be extracted in full.
+- Include EVERY article, notice, classified, legal notice, or item that mentions Lake Worth in any way — even brief mentions, addresses, road references, event listings, or passing references
+- Do NOT skip anything. If "Lake Worth" appears in it, extract it. Zero tolerance for omissions.
+- Preserve the original text as closely as possible, BUT fix obvious OCR errors: broken words (e.g. "com- munity" → "community"), garbled letters (e.g. "tlie" → "the", "liave" → "have"), stray punctuation from scan noise, and clearly misspelled common words. Do NOT change period language, unusual proper nouns, or anything that might be intentional early-1900s spelling.
+- This is OCR text — expect artifacts like "Lake. Worth", "Lake- Worth", "Lake Worth", "Iake Worth", "Lnke Worth" etc. These all refer to Lake Worth.
 
 Return JSON array: [{{"headline": "...", "text": "...", "photo_description": ""}}]
 If no Lake Worth articles found, return: []
@@ -817,8 +942,49 @@ OCR TEXT:
 
 # === MAIN CLIPPING LOOP ===
 
-def clip_page(driver, url, conn):
+def build_clipped_image_ids(conn):
+    """Build a set of image IDs that are already clipped, for fast lookup."""
+    ids = set()
+    # From processed_pdfs where clipped=1 and URL exists
+    rows = conn.execute(
+        "SELECT url FROM processed_pdfs WHERE clipped = 1 AND url IS NOT NULL"
+    ).fetchall()
+    for row in rows:
+        m = re.search(r'/image/(\d+)', row[0])
+        if m:
+            ids.add(m.group(1))
+    # From articles table — these filenames were processed even if not in processed_pdfs
+    art_files = conn.execute(
+        "SELECT DISTINCT pdf_filename FROM articles"
+    ).fetchall()
+    # Store filenames too for a secondary check
+    done_filenames = set(row[0] for row in art_files if row[0])
+    # From processed_pdfs clipped entries
+    pp_files = conn.execute(
+        "SELECT pdf_filename FROM processed_pdfs WHERE clipped = 1"
+    ).fetchall()
+    for row in pp_files:
+        if row[0]:
+            done_filenames.add(row[0])
+    log.info(f"  Pre-loaded {len(ids)} clipped image IDs, {len(done_filenames)} done filenames")
+    return ids, done_filenames
+
+
+def is_url_clipped(url, clipped_image_ids):
+    """Check if a URL's image ID is in the pre-loaded clipped set."""
+    m = re.search(r'/image/(\d+)', url)
+    if not m:
+        return False
+    return m.group(1) in clipped_image_ids
+
+
+def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     """Visit a page, clip it, extract OCR, return (pdf_filename, clip_url, ocr_text, articles)."""
+
+    # Skip if URL already clipped — no need to navigate
+    if clipped_image_ids and is_url_clipped(url, clipped_image_ids):
+        log.info(f"    Skip (no nav): {url[:60]}")
+        return "skipped"
 
     # Navigate to the page
     track_view()
@@ -834,7 +1000,7 @@ def clip_page(driver, url, conn):
 
     pdf_filename = meta["pdf_filename"]
 
-    # Skip if already clipped
+    # Skip if already clipped (by filename — belt and suspenders)
     if not needs_clipping(conn, pdf_filename):
         log.info(f"    Already clipped: {pdf_filename}")
         return "skipped"
@@ -852,15 +1018,42 @@ def clip_page(driver, url, conn):
 
     time.sleep(2)
 
-    # Step 3: Drag corners to cover full page
-    if not drag_clip_corners(driver):
-        log.warning(f"    Could not drag clip corners for {pdf_filename}")
+    # Step 3: Drag corners to cover full page — retry clip button up to 5 times
+    handle_ok = drag_clip_corners(driver)
+    if not handle_ok:
+        for retry in range(5):
+            log.warning(f"    Clip handle retry {retry + 1}/5 — re-clicking Clip button...")
+            time.sleep(2)
+            click_clip_button(driver)
+            time.sleep(2)
+            if drag_clip_corners(driver):
+                handle_ok = True
+                log.info(f"    Clip handles found on retry {retry + 1}")
+                break
+    if not handle_ok:
+        log.warning(f"    Could not drag clip corners for {pdf_filename} after 5 retries. Skipping.")
         return None
+
 
     # Step 4: Save
     if not click_save_button(driver):
         log.warning(f"    Could not find Save button for {pdf_filename}")
         return None
+
+    # Check for throttle message
+    try:
+        page_text = driver.execute_script("return document.body.innerText || '';")
+        if "unable to create your clipping" in page_text.lower():
+            log.warning("    THROTTLED: 'unable to create your clipping' detected. Stopping.")
+            driver.execute_script("""
+                var d = document.createElement('div');
+                d.style.cssText = 'position:fixed;top:0;left:0;right:0;padding:20px;background:red;color:white;font-size:24px;font-weight:bold;z-index:999999;text-align:center';
+                d.textContent = 'THROTTLED — Unable to create clipping. Account limit reached.';
+                document.body.appendChild(d);
+            """)
+            return "stop"
+    except Exception:
+        pass
 
     # Step 5: Navigate to clip page
     if not navigate_to_clip_page(driver):
@@ -869,17 +1062,50 @@ def clip_page(driver, url, conn):
 
     time.sleep(2)
 
-    # Step 6: Extract OCR text
-    ocr_text = extract_ocr_text(driver)
+    # Step 6: Check clip image size — if too small, cursor was moved during clipping. Re-clip.
     clip_url = get_clip_url(driver)
     track_view()  # Count the clip view page too
+    try:
+        clip_img = driver.find_element(By.CSS_SELECTOR, "img[src*='clip'], img[src*='clipping'], img.article-image, main img")
+        img_width = clip_img.get_attribute("naturalWidth") or clip_img.get_attribute("width")
+        img_height = clip_img.get_attribute("naturalHeight") or clip_img.get_attribute("height")
+        img_width = int(img_width or 0)
+        img_height = int(img_height or 0)
+        log.info(f"    Clip image size: {img_width}x{img_height}")
+        if img_width > 0 and img_height > 0 and (img_width < 750 or img_height < 800):
+            log.warning(f"    Clip too small ({img_width}x{img_height}). Re-clipping...")
+            track_view()
+            driver.get(url)
+            time.sleep(3)
+            zoom_out(driver)
+            time.sleep(1)
+            if click_clip_button(driver):
+                time.sleep(2)
+                if drag_clip_corners(driver):
+                    if click_save_button(driver):
+                        if navigate_to_clip_page(driver):
+                            time.sleep(2)
+                            clip_url = get_clip_url(driver)
+                            track_view()
+                            # Verify re-clip size
+                            try:
+                                clip_img2 = driver.find_element(By.CSS_SELECTOR, "img[src*='clip'], img[src*='clipping'], img.article-image, main img")
+                                w2 = int(clip_img2.get_attribute("naturalWidth") or clip_img2.get_attribute("width") or 0)
+                                h2 = int(clip_img2.get_attribute("naturalHeight") or clip_img2.get_attribute("height") or 0)
+                                log.info(f"    Re-clip image size: {w2}x{h2}")
+                            except Exception:
+                                pass
+    except Exception as e:
+        log.info(f"    Could not check clip size: {e}")
 
+    # Step 7: Extract OCR text (last step — after size is verified)
+    ocr_text = extract_ocr_text(driver)
     log.info(f"    OCR text: {len(ocr_text)} chars, clip: {clip_url[:60]}...")
 
-    # Step 7: Save to DB
+    # Save to DB
     save_clip_data(conn, pdf_filename, url, clip_url, ocr_text)
 
-    # Step 8: Extract articles with AI
+    # Extract articles with AI
     articles = extract_articles_with_ai(
         ocr_text, meta["date"], meta["newspaper"], meta["page"]
     )
@@ -909,6 +1135,7 @@ def main(max_pages=0):
     ).fetchone()["c"]
 
     start_date = get_start_date(conn)
+    clipped_image_ids, done_filenames = build_clipped_image_ids(conn)
 
     log.info("=" * 60)
     log.info("Full-Page Clipper + Article Extractor")
@@ -924,22 +1151,23 @@ def main(max_pages=0):
     errors = 0
     total_articles = 0
     driver = None
+    keep_browser_open = False
 
     try:
         driver = setup_driver()
-        driver.get("https://star-telegram.newspapers.com/")
-        time.sleep(5)
 
         current_date = start_date
 
         while current_date <= DATE_END:
+            if keep_browser_open:
+                break
             if max_pages and clipped >= max_pages:
                 log.info(f"  Reached max_pages limit ({max_pages})")
                 break
 
-            # Build search URL for a 30-day window
-            window_end_dt = datetime.strptime(current_date, "%Y-%m-%d") + timedelta(days=30)
-            window_end = min(window_end_dt.strftime("%Y-%m-%d"), DATE_END)
+            # Build search URL — full range from current position to end
+            window_end_dt = datetime.strptime(DATE_END, "%Y-%m-%d")
+            window_end = DATE_END
 
             encoded_term = SEARCH_TERM.replace(" ", "+")
             search_url = (
@@ -962,33 +1190,111 @@ def main(max_pages=0):
                 # No results — jump ahead by 6 months instead of 30 days
                 jump = datetime.strptime(current_date, "%Y-%m-%d") + timedelta(days=180)
                 current_date = jump.strftime("%Y-%m-%d")
+                save_start_date(conn, current_date)
                 log.info(f"  No results, jumping ahead to {current_date}")
                 continue
 
-            # Track the last date we processed so we can resume from it
-            last_date_processed = None
             window_done = False
 
-            while not window_done:
+            seen_urls = set()
+            batch_clips = 0
+
+            while True:
                 if max_pages and clipped >= max_pages:
                     break
 
-                # Process current batch of URLs
-                for url in page_urls:
+                # Filter batch: skip seen and already-done results (no navigation needed)
+                new_results = []
+                for r in page_urls:
+                    url = r["url"]
+                    if url in seen_urls:
+                        continue
+                    seen_urls.add(url)
+                    # Skip by filename (parsed from search result text)
+                    if r["pdf_filename"] in done_filenames:
+                        # Backfill the page URL even though we're skipping
+                        backfill_page_url(conn, r["pdf_filename"], url)
+                        skipped += 1
+                        continue
+                    # Skip by image ID
+                    if is_url_clipped(url, clipped_image_ids):
+                        backfill_page_url(conn, r["pdf_filename"], url)
+                        skipped += 1
+                        continue
+                    new_results.append(r)
+                if new_results:
+                    log.info(f"  {len(new_results)} to clip this batch (skipped {skipped})")
+                if not new_results:
+                    # No new results — click Show More repeatedly to find more
+                    found_new = False
+                    while click_show_more(driver):
+                        track_view()
+                        time.sleep(3)
+                        page_urls = collect_search_results(driver)
+                        new_results = []
+                        for r in page_urls:
+                            url = r["url"]
+                            if url in seen_urls:
+                                continue
+                            seen_urls.add(url)
+                            if r["pdf_filename"] in done_filenames:
+                                backfill_page_url(conn, r["pdf_filename"], url)
+                                skipped += 1
+                                continue
+                            if is_url_clipped(url, clipped_image_ids):
+                                backfill_page_url(conn, r["pdf_filename"], url)
+                                skipped += 1
+                                continue
+                            new_results.append(r)
+                        if new_results:
+                            log.info(f"  Show More: {len(new_results)} to clip")
+                            found_new = True
+                            break
+                    if not found_new:
+                        # All results exhausted — advance date past the last result we saw
+                        if page_urls:
+                            last_date = max(r["date"] for r in page_urls if r["date"])
+                            if last_date and last_date >= current_date:
+                                next_date = (datetime.strptime(last_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+                                log.info(f"  All results done through {last_date}. Advancing to {next_date}")
+                                current_date = next_date
+                                save_start_date(conn, current_date)
+                            else:
+                                log.info(f"  No more results. Done.")
+                        else:
+                            log.info(f"  No more results. Done.")
+                        break
+
+                for r in new_results:
+                    url = r["url"]
                     if max_pages and clipped >= max_pages:
                         break
 
                     try:
-                        result = clip_page(driver, url, conn)
+                        result = clip_page(driver, url, conn, clipped_image_ids, done_filenames)
                         if result == "skipped":
                             skipped += 1
+                        elif result == "throttled":
+                            log.info("  Resuming after throttle wait...")
+                        elif result == "stop":
+                            log.warning("  Failure — browser left open for inspection. Exiting.")
+                            keep_browser_open = True
+                            break
                         elif result is None:
                             errors += 1
                         else:
                             clipped += 1
+                            batch_clips += 1
                             total_articles += result.get("articles", 0)
+                            # Add to clipped sets so future batches skip this URL
+                            m = re.search(r'/image/(\d+)', url)
+                            if m:
+                                clipped_image_ids.add(m.group(1))
+                            if result.get("pdf_filename"):
+                                done_filenames.add(result["pdf_filename"])
+                            # Increment date counter to this page's date
                             if result.get("date"):
-                                last_date_processed = result["date"]
+                                save_start_date(conn, result["date"])
                             log.info(f"  Progress: {clipped} clipped, {total_articles} articles, {errors} errors")
                     except (WebDriverException, InvalidSessionIdException) as e:
                         log.error(f"    Session error: {e}")
@@ -1004,41 +1310,52 @@ def main(max_pages=0):
                         log.error(f"    Clip error: {e}")
                         errors += 1
 
-                    # Every 100 clips, close and reopen browser
-                    if clipped > 0 and clipped % 100 == 0:
+                    if keep_browser_open:
+                        break
+
+                    # Every 100 clips, restart browser and rebuild search from current date
+                    if batch_clips >= 100:
                         log.info(f"  === 100-clip checkpoint. Restarting browser. ===")
                         try:
                             driver.quit()
                         except Exception:
                             pass
                         driver = setup_driver()
+                        # Rebuild search URL from saved date counter
+                        current_date = get_start_date(conn)
+                        encoded_term = SEARCH_TERM.replace(" ", "+")
+                        search_url = (
+                            "https://star-telegram.newspapers.com/search/results/"
+                            f"?date-end={DATE_END}&date-start={current_date}"
+                            f"&keyword=%22{encoded_term}%22"
+                            "&sort=paper-date-asc"
+                        )
+                        log.info(f"  Rebuilt search from {current_date}")
+                        track_view()
+                        driver.get(search_url)
+                        time.sleep(4)
+                        page_urls = collect_search_results(driver)
+                        seen_urls.clear()
+                        batch_clips = 0
+                        break  # break out of for loop, continue while loop
+
+                if keep_browser_open:
+                    break
 
                 # Return to search page and click Show More for next batch
                 track_view()
                 driver.get(search_url)
                 time.sleep(4)
-                # Re-collect (already-clipped pages will be skipped by needs_clipping)
                 page_urls = collect_search_results(driver)
-                if not click_show_more(driver):
-                    window_done = True  # no more Show More — done with this window
-                else:
-                    track_view()
-                    page_urls = collect_search_results(driver)
-                    new_count = len(page_urls)
-                    log.info(f"  Show More: now {new_count} results")
-
-            # Advance: use last processed date or move past window
-            if last_date_processed:
-                current_date = last_date_processed
-            else:
-                current_date = (window_end_dt + timedelta(days=1)).strftime("%Y-%m-%d")
 
     except KeyboardInterrupt:
         log.info("\nStopped by user.")
+    except SystemExit:
+        pass  # clean exit with browser left open
     except Exception as e:
         log.error(f"Fatal error: {e}", exc_info=True)
     finally:
-        if driver:
+        if driver and not keep_browser_open:
             try:
                 driver.quit()
             except Exception:

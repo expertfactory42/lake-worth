@@ -52,7 +52,7 @@ def get_dashboard_data():
 
     # Articles with their quotes
     article_rows = conn.execute(
-        "SELECT * FROM articles ORDER BY date, page"
+        "SELECT a.*, pp.url AS page_url, pp.clip_url FROM articles a LEFT JOIN processed_pdfs pp ON a.pdf_filename = pp.pdf_filename ORDER BY a.date, a.page"
     ).fetchall()
 
     article_list = []
@@ -130,7 +130,7 @@ def get_dashboard_data():
 
     # Processed PDFs with no articles found
     no_article_rows = conn.execute("""
-        SELECT pp.pdf_filename, pp.processed_at, pp.search_term, pp.url
+        SELECT pp.pdf_filename, pp.processed_at, pp.search_term, pp.url, pp.clip_url
         FROM processed_pdfs pp
         LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
         WHERE a.id IS NULL AND pp.articles_found != -1
@@ -160,6 +160,7 @@ def get_dashboard_data():
             "newspaper": newspaper,
             "search_term": row["search_term"],
             "url": row["url"] if "url" in row.keys() else "",
+            "clip_url": row["clip_url"] if "clip_url" in row.keys() else "",
         })
 
     no_articles_list.sort(key=lambda x: x["date"], reverse=True)
@@ -176,6 +177,14 @@ def get_dashboard_data():
             monthly[m] = monthly.get(m, 0) + 1
     monthly_sorted = sorted(monthly.items())
 
+    # Articles by year
+    articles_by_year = {}
+    for a in article_list:
+        if a.get("date") and len(a["date"]) >= 4:
+            y = a["date"][:4]
+            articles_by_year[y] = articles_by_year.get(y, 0) + 1
+    articles_by_year_sorted = sorted(articles_by_year.items())
+
     conn.close()
 
     return {
@@ -186,6 +195,7 @@ def get_dashboard_data():
         "log": log_list,
         "no_articles": no_articles_list,
         "monthly": monthly_sorted,
+        "articles_by_year": articles_by_year_sorted,
     }
 
 
