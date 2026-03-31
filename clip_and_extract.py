@@ -28,6 +28,9 @@ import json
 import sqlite3
 import logging
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
