@@ -342,7 +342,7 @@ def setup_driver():
     temp_profile = r"c:\lake_worth\chrome_temp_profile_clipper"
     os.makedirs(temp_profile, exist_ok=True)
     options.add_argument(f"--user-data-dir={temp_profile}")
-    driver = uc.Chrome(options=options, version_main=145)
+    driver = uc.Chrome(options=options, version_main=146)
     driver.set_window_size(1920, 1080)
     driver.implicitly_wait(5)
 
@@ -990,6 +990,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         return "skipped"
 
     # Navigate to the page
+    page_start_time = time.time()
     track_view()
     driver.get(url)
     time.sleep(3)
@@ -1118,6 +1119,9 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         log.info(f"    Found {count} articles")
     else:
         log.info(f"    No Lake Worth articles found in OCR")
+
+    elapsed = time.time() - page_start_time
+    log.info(f"    Page: {pdf_filename} — {elapsed:.1f}s ({len(articles)} articles)")
 
     return {
         "pdf_filename": pdf_filename,

@@ -19,3 +19,8 @@ resized_test/
 collector_logs/
 docupipe_cache/
 .env
+chrome_temp_profile_fixurls/
+thumbnails/
+lake_worth.db-shm
+lake_worth.db-wal
+.claude/

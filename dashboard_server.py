@@ -130,7 +130,7 @@ def get_dashboard_data():
 
     # Processed PDFs with no articles found
     no_article_rows = conn.execute("""
-        SELECT pp.pdf_filename, pp.processed_at, pp.search_term, pp.url, pp.clip_url
+        SELECT pp.pdf_filename, pp.processed_at, pp.search_term, pp.url, pp.clip_url, pp.thumbnail_path, pp.ignored, pp.highlighted
         FROM processed_pdfs pp
         LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
         WHERE a.id IS NULL AND pp.articles_found != -1
@@ -161,6 +161,9 @@ def get_dashboard_data():
             "search_term": row["search_term"],
             "url": row["url"] if "url" in row.keys() else "",
             "clip_url": row["clip_url"] if "clip_url" in row.keys() else "",
+            "thumbnail": row["thumbnail_path"] if "thumbnail_path" in row.keys() else "",
+            "ignored": row["ignored"] if "ignored" in row.keys() else 0,
+            "highlighted": row["highlighted"] if "highlighted" in row.keys() else 0,
         })
 
     no_articles_list.sort(key=lambda x: x["date"], reverse=True)
@@ -185,6 +188,14 @@ def get_dashboard_data():
             articles_by_year[y] = articles_by_year.get(y, 0) + 1
     articles_by_year_sorted = sorted(articles_by_year.items())
 
+    # No articles by year
+    no_articles_by_year = {}
+    for na in no_articles_list:
+        if na.get("date") and len(na["date"]) >= 4 and na["date"] != "?":
+            y = na["date"][:4]
+            no_articles_by_year[y] = no_articles_by_year.get(y, 0) + 1
+    no_articles_by_year_sorted = sorted(no_articles_by_year.items())
+
     conn.close()
 
     return {
@@ -196,6 +207,7 @@ def get_dashboard_data():
         "no_articles": no_articles_list,
         "monthly": monthly_sorted,
         "articles_by_year": articles_by_year_sorted,
+        "no_articles_by_year": no_articles_by_year_sorted,
     }
 
 
@@ -608,6 +620,61 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 conn.commit()
                 conn.close()
                 self.wfile.write(json.dumps({"ok": True, "dismissed": filename}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+
+        elif self.path == "/api/toggle-highlight":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            table = body.get("table", "")
+            identifier = body.get("identifier", "")
+            highlighted = 1 if body.get("highlighted") else 0
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+
+            if not identifier or table not in ("articles", "processed_pdfs"):
+                self.wfile.write(json.dumps({"error": "Invalid params"}).encode())
+                return
+
+            try:
+                conn = get_db()
+                if table == "articles":
+                    conn.execute("UPDATE articles SET highlighted = ? WHERE id = ?", (highlighted, identifier))
+                else:
+                    conn.execute("UPDATE processed_pdfs SET highlighted = ? WHERE pdf_filename = ?", (highlighted, identifier))
+                conn.commit()
+                conn.close()
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+
+        elif self.path == "/api/toggle-ignore":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            filename = body.get("filename", "")
+            ignored = 1 if body.get("ignored") else 0
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+
+            if not filename:
+                self.wfile.write(json.dumps({"error": "No filename"}).encode())
+                return
+
+            try:
+                conn = get_db()
+                conn.execute(
+                    "UPDATE processed_pdfs SET ignored = ? WHERE pdf_filename = ?",
+                    (ignored, filename)
+                )
+                conn.commit()
+                conn.close()
+                self.wfile.write(json.dumps({"ok": True, "filename": filename, "ignored": ignored}).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
 

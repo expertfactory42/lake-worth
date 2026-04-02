@@ -188,6 +188,14 @@
     <div style="font-size:0.8em;color:#888;margin-bottom:6px">References by Year</div>
     <div id="yearlyBars" style="display:flex;align-items:flex-end;gap:2px;min-height:100px"></div>
   </div>
+  <div style="flex:0 0 220px;background:#16213e;border-radius:10px;padding:12px 15px;border:1px solid #1a3a5c;overflow:hidden">
+    <div style="font-size:0.8em;color:#888;margin-bottom:6px">Articles by Year</div>
+    <div id="articleYearBars" style="display:flex;align-items:flex-end;gap:2px;min-height:100px"></div>
+  </div>
+  <div style="flex:0 0 220px;background:#16213e;border-radius:10px;padding:12px 15px;border:1px solid #1a3a5c;overflow:hidden">
+    <div style="font-size:0.8em;color:#888;margin-bottom:6px">No Articles by Year</div>
+    <div id="noArticleYearBars" style="display:flex;align-items:flex-end;gap:2px;min-height:100px"></div>
+  </div>
 </div>
 
 <div class="stats-grid">
@@ -221,7 +229,7 @@
 </div>
 <script>
 // Build bookmarklet href via JS to avoid HTML entity issues
-document.getElementById('bookmarkletLink').href = `javascript:void(function(){try{var s=document.querySelector('script[type="application/ld+json"]');if(!s){alert('No article data found on this page');return}var d=JSON.parse(s.textContent);var p=d.publisher;var img=document.querySelector('img[src*="img.newspapers.com"]');var imgUrl=img?img.src:'';var clipMatch=location.pathname.match(/\\/(\\d+)\\/?$/);var data={date:d.datePublished||'',page:parseInt(d.pageStart||0),newspaper:typeof p==='object'?(p.legalName||p.name||''):String(p||''),headline:d.headline||'',text:d.text||'',url:location.href,clip_id:clipMatch?clipMatch[1]:'',image_url:imgUrl};fetch('http://localhost:8765/api/import-clip-data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json()}).then(function(r){if(r.error){alert('Error: '+r.error)}else{if(window.opener){window.opener.postMessage({type:'clip-imported',result:{clip:data}},'*')}window.close()}}).catch(function(e){alert('Error: '+e.message)})}catch(e){alert('Error: '+e.message)}}())`;
+document.getElementById('bookmarkletLink').href = `javascript:void(function(){try{var s=document.querySelector('script[type="application/ld+json"]');if(!s){alert('No article data found on this page');return}var d=JSON.parse(s.textContent);var p=d.publisher;var img=document.querySelector('img[src*="img.newspapers.com"]');var imgUrl=img?img.src:'';var clipMatch=location.pathname.match(/\\/(\\d+)\\/?$/);var data={date:d.datePublished||'',page:parseInt(d.pageStart||0),newspaper:typeof p==='object'?(p.legalName||p.name||''):String(p||''),headline:d.headline||'',text:d.text||'',url:location.href,clip_id:clipMatch?clipMatch[1]:'',image_url:imgUrl};fetch('/api/import-clip-data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json()}).then(function(r){if(r.error){alert('Error: '+r.error)}else{if(window.opener){window.opener.postMessage({type:'clip-imported',result:{clip:data}},'*')}window.close()}}).catch(function(e){alert('Error: '+e.message)})}catch(e){alert('Error: '+e.message)}}())`;
 </script>
 <div class="import-log" id="importLog"></div>
 
@@ -251,9 +259,14 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
 
 <div id="tab-noarticles" class="section" style="display:none">
   <h2>Processed PDFs — No Articles Found (<span id="noArticlesCount">0</span>)</h2>
+  <div style="margin-bottom:8px">
+    <button onclick="sortNoArticles('asc')" style="margin-right:4px;padding:4px 12px;background:#1a1a2e;color:#e0e0e0;border:1px solid #555;border-radius:4px;cursor:pointer">Date Asc</button>
+    <button onclick="sortNoArticles('desc')" style="padding:4px 12px;background:#1a1a2e;color:#e0e0e0;border:1px solid #555;border-radius:4px;cursor:pointer">Date Desc</button>
+    <button onclick="refresh()" style="margin-left:8px;padding:4px 12px;background:#1a1a2e;color:#4fc3f7;border:1px solid #4fc3f7;border-radius:4px;cursor:pointer">Refresh</button>
+  </div>
   <div id="noarticles-table-container" style="max-height:500px;overflow-y:auto">
     <table>
-      <thead><tr><th>#</th><th>Date</th><th>Page</th><th>Newspaper</th><th>View</th></tr></thead>
+      <thead><tr><th>#</th><th>Date</th><th>Page</th><th>Newspaper</th><th>Highlight</th><th>Ignore</th><th>Thumb</th><th>View</th></tr></thead>
       <tbody id="noArticlesBody"></tbody>
     </table>
   </div>
@@ -288,6 +301,14 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
 
 <script>
 let allData = { stats: {}, articles: [], quotes: [], people: [], log: [] };
+let _prevArticlesJson = '';
+let _prevQuotesJson = '';
+let _prevPeopleJson = '';
+let _prevLogJson = '';
+let _prevNoArticlesJson = '';
+let _prevMonthlyJson = '';
+let _prevYearlyJson = '';
+let _prevNoArtYearlyJson = '';
 
 // Prevent browser from navigating when anything is dropped on the page
 document.addEventListener('dragover', function(e) { e.preventDefault(); });
@@ -399,7 +420,7 @@ async function deleteArticle(id) {
   const headline = article ? (article.headline || 'Untitled') : 'Unknown';
   if (!confirm(`Delete article #${id}: "${headline}"?\n\nThis cannot be undone.`)) return;
   try {
-    const resp = await fetch('http://localhost:8765/api/delete-article', {
+    const resp = await fetch('/api/delete-article', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ id: id })
@@ -415,7 +436,7 @@ async function deleteArticle(id) {
 async function dismissEntry(filename) {
   if (!confirm('Delete this entry?\n\nThis cannot be undone.')) return;
   try {
-    const resp = await fetch('http://localhost:8765/api/dismiss-entry', {
+    const resp = await fetch('/api/dismiss-entry', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ filename: filename })
@@ -484,6 +505,40 @@ function renderYearlyChart() {
   }).join('');
 }
 
+function renderArticleYearChart() {
+  const data = allData.articles_by_year || [];
+  const container = document.getElementById('articleYearBars');
+  if (!data.length) { container.innerHTML = '<span style="color:#666;font-size:0.8em">No data</span>'; return; }
+
+  const max = Math.max(...data.map(d => d[1]));
+
+  container.innerHTML = data.map(([year, count]) => {
+    const h = Math.max(2, Math.round((count / max) * 80));
+    return `<div style="display:flex;flex-direction:column;align-items:center;flex:1 1 0;min-width:0" title="${year}: ${count} articles">
+      <div style="font-size:0.6em;color:#888;margin-bottom:1px">${count}</div>
+      <div style="width:100%;height:${h}px;background:linear-gradient(180deg,#4caf50,#2e7d32);border-radius:2px 2px 0 0"></div>
+      <div style="font-size:0.6em;color:#666;margin-top:2px;white-space:nowrap">${year.substring(2)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderNoArticleYearChart() {
+  const data = allData.no_articles_by_year || [];
+  const container = document.getElementById('noArticleYearBars');
+  if (!data.length) { container.innerHTML = '<span style="color:#666;font-size:0.8em">No data</span>'; return; }
+
+  const max = Math.max(...data.map(d => d[1]));
+
+  container.innerHTML = data.map(([year, count]) => {
+    const h = Math.max(2, Math.round((count / max) * 80));
+    return `<div style="display:flex;flex-direction:column;align-items:center;flex:1 1 0;min-width:0" title="${year}: ${count} pages">
+      <div style="font-size:0.6em;color:#888;margin-bottom:1px">${count}</div>
+      <div style="width:100%;height:${h}px;background:linear-gradient(180deg,#ff9800,#e65100);border-radius:2px 2px 0 0"></div>
+      <div style="font-size:0.6em;color:#666;margin-top:2px;white-space:nowrap">${year.substring(2)}</div>
+    </div>`;
+  }).join('');
+}
+
 function renderArticles() {
   const filter = document.getElementById('articleFilter').value.toLowerCase();
   const container = document.getElementById('articlesList');
@@ -509,16 +564,20 @@ function renderArticles() {
     const searchUrl = dateParts.length === 3
       ? 'https://star-telegram.newspapers.com/search/results/?date-start=' + a.date + '&date-end=' + a.date + '&keyword=' + searchTerm
       : '#';
-    return `<div class="article-card">
-      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+    const wwwUrl = a.page_url || searchUrl;
+    const clipUrl = a.clip_url || '';
+    return `<div class="article-card" style="${a.highlighted ? 'border-left:3px solid #ffd700;' : ''}">
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;align-items:center">
+        <label style="font-size:0.65em;color:#888;cursor:pointer"><input type="checkbox" ${a.highlighted ? 'checked' : ''} onchange="toggleHighlight('articles',${a.id},this.checked)"> Highlight</label>
         <button class="pdf-btn" title="${imgBtnTitle}" onclick="window.open('${imgBtnUrl}', '_blank')">${imgBtnLabel}</button>
-        <button class="pdf-btn" title="View on Newspapers.com" onclick="openRight('${searchUrl}', '${esc(a.pdf_filename)}')">WWW</button>
+        <button class="pdf-btn" title="View original search result page" onclick="openRight('${wwwUrl}', '${esc(a.pdf_filename)}')">WWW</button>
+        ${clipUrl ? `<button class="pdf-btn" title="View clip on Newspapers.com" onclick="openRight('${clipUrl}', '${esc(a.pdf_filename)}')" style="border-color:#4fc3f7;color:#4fc3f7">CLIP</button>` : ''}
         <button class="pdf-btn" title="Delete article" onclick="deleteArticle(${a.id})" style="border-color:#f44336;color:#f44336;font-size:0.7em">DEL</button>
       </div>
       <div class="article-content">
         <h3>${esc(a.headline || 'Untitled')}</h3>
         <div class="article-meta">${esc(a.newspaper)} — ${a.date} — Page ${a.page} — ${a.pdf_filename}</div>
-        <div class="article-text" id="text-${i}">${esc(a.full_text || '')}</div>
+        <div class="article-text" id="text-${i}">${hlLW(esc(a.full_text || ''))}</div>
         <span class="expand-btn" onclick="toggleText(${i})">Show more/less</span>
         ${quotes}
       </div>
@@ -564,8 +623,17 @@ function renderLog() {
   }).join('');
 }
 
+let noArticlesSortOrder = 'desc';
+function sortNoArticles(order) {
+  noArticlesSortOrder = order;
+  renderNoArticles();
+}
+
 function renderNoArticles() {
-  const items = allData.no_articles || [];
+  const items = [...(allData.no_articles || [])];
+  items.sort((a, b) => noArticlesSortOrder === 'asc'
+    ? (a.date || '').localeCompare(b.date || '')
+    : (b.date || '').localeCompare(a.date || ''));
   document.getElementById('noArticlesCount').textContent = items.length;
   const tbody = document.getElementById('noArticlesBody');
   tbody.innerHTML = items.map((r, i) => {
@@ -573,17 +641,22 @@ function renderNoArticles() {
     const searchUrl = r.date && r.date !== '?'
       ? 'https://star-telegram.newspapers.com/search/results/?date-start=' + r.date + '&date-end=' + r.date + '&keyword=' + searchTerm
       : '#';
-    const directUrl = r.url || '';
-    const wwwUrl = directUrl || searchUrl;
+    const wwwUrl = r.url || searchUrl;
+    const clipUrl = r.clip_url || '';
     const pdfUrl = '/pdfs/' + encodeURIComponent(r.filename);
     const visited = clickedWww.has(r.filename);
-    return `<tr id="noart-${esc(r.filename)}" style="${visited ? 'background:#1e2d4a' : ''}">
+    const thumbUrl = r.thumbnail ? '/' + r.thumbnail : '';
+    return `<tr id="noart-${esc(r.filename)}" style="${r.highlighted ? 'background:#2d2a1e;' : ''}${visited ? 'background:#1e2d4a;' : ''}">
       <td>${i + 1}</td>
       <td>${r.date}</td>
       <td>${r.page}</td>
       <td>${esc(r.newspaper)}</td>
+      <td style="text-align:center"><input type="checkbox" ${r.highlighted ? 'checked' : ''} onchange="toggleHighlight('processed_pdfs','${esc(r.filename)}',this.checked)"></td>
+      <td style="text-align:center"><input type="checkbox" data-filename="${esc(r.filename)}" class="ignore-check" ${r.ignored ? 'checked' : ''} onchange="toggleIgnore(this)"></td>
+      <td>${thumbUrl ? `<img src="${thumbUrl}" style="width:80px;height:48px;object-fit:cover;border-radius:3px;cursor:pointer" onclick="window.open('${thumbUrl}','_blank')" title="Click to enlarge">` : ''}</td>
       <td style="white-space:nowrap">
-        <button class="pdf-btn" title="View on Newspapers.com" onclick="openRight('${wwwUrl}', '${esc(r.filename)}')" style="display:inline-flex">WWW</button>
+        <button class="pdf-btn" title="View original search result page" onclick="openRight('${wwwUrl}', '${esc(r.filename)}')" style="display:inline-flex">WWW</button>
+        ${clipUrl ? `<button class="pdf-btn" title="View clip" onclick="openRight('${clipUrl}', '${esc(r.filename)}')" style="display:inline-flex;margin-left:4px;border-color:#4fc3f7;color:#4fc3f7">CLIP</button>` : ''}
         <button class="pdf-btn" title="View local PDF" onclick="window.open('${pdfUrl}', '_blank')" style="display:inline-flex;margin-left:4px">PDF</button>
         <button class="pdf-btn" title="Dismiss entry" onclick="dismissEntry('${esc(r.filename)}')" style="display:inline-flex;margin-left:4px;border-color:#f44336;color:#f44336;font-size:0.7em">DEL</button>
       </td>
@@ -591,14 +664,44 @@ function renderNoArticles() {
   }).join('');
 }
 
+async function toggleHighlight(table, identifier, highlighted) {
+  try {
+    await fetch('/api/toggle-highlight', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({table, identifier, highlighted})
+    });
+  } catch(e) {
+    console.error('Toggle highlight failed:', e);
+  }
+}
+
+async function toggleIgnore(cb) {
+  const filename = cb.dataset.filename;
+  const ignored = cb.checked;
+  try {
+    await fetch('/api/toggle-ignore', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({filename, ignored})
+    });
+  } catch(e) {
+    console.error('Toggle ignore failed:', e);
+    cb.checked = !cb.checked;
+  }
+}
+
 function esc(s) {
   if (!s) return '';
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+function hlLW(s) {
+  return s.replace(/lake[\s.\-,;:]+worth/gi, m => '<span style="background:#b8860b;color:#fff;border-radius:2px;padding:0 2px">' + m + '</span>');
+}
 
 async function refresh() {
   try {
-    const resp = await fetch('http://localhost:8765/api/data');
+    const resp = await fetch('/api/data');
     allData = await resp.json();
 
     document.getElementById('statProcessed').textContent = allData.stats.processed || 0;
@@ -616,13 +719,22 @@ async function refresh() {
 
     document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
 
-    renderMonthlyChart();
-    renderYearlyChart();
-    renderArticles();
-    renderQuotes();
-    renderPeople();
-    renderNoArticles();
-    renderLog();
+    const articlesJson = JSON.stringify(allData.articles);
+    const quotesJson = JSON.stringify(allData.quotes);
+    const peopleJson = JSON.stringify(allData.people);
+    const logJson = JSON.stringify(allData.log);
+    const noArticlesJson = JSON.stringify(allData.no_articles);
+    const monthlyJson = JSON.stringify(allData.monthly);
+    const yearlyJson = JSON.stringify(allData.articles_by_year);
+
+    if (monthlyJson !== _prevMonthlyJson) { renderMonthlyChart(); _prevMonthlyJson = monthlyJson; }
+    const noArtYearlyJson = JSON.stringify(allData.no_articles_by_year);
+    if (yearlyJson !== _prevYearlyJson || noArtYearlyJson !== _prevNoArtYearlyJson) { renderYearlyChart(); renderArticleYearChart(); renderNoArticleYearChart(); _prevYearlyJson = yearlyJson; _prevNoArtYearlyJson = noArtYearlyJson; }
+    if (articlesJson !== _prevArticlesJson) { renderArticles(); _prevArticlesJson = articlesJson; }
+    if (quotesJson !== _prevQuotesJson) { renderQuotes(); _prevQuotesJson = quotesJson; }
+    if (peopleJson !== _prevPeopleJson) { renderPeople(); _prevPeopleJson = peopleJson; }
+    if (noArticlesJson !== _prevNoArticlesJson) { renderNoArticles(); _prevNoArticlesJson = noArticlesJson; }
+    if (logJson !== _prevLogJson) { renderLog(); _prevLogJson = logJson; }
   } catch(e) {
     document.getElementById('lastUpdate').textContent = 'Connection error - is dashboard_server.py running?';
   }
