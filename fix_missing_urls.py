@@ -58,6 +58,17 @@ ACTION_DELAY = 2
 THUMB_DIR = r"c:\lake_worth\thumbnails"
 os.makedirs(THUMB_DIR, exist_ok=True)
 
+# === STOP FLAG ===
+STOP_FLAG_FILE = r"c:\lake_worth\stop_fixurls"
+
+
+def check_stop_flag():
+    """Check if stop flag file exists. Returns True if script should stop."""
+    if os.path.exists(STOP_FLAG_FILE):
+        log.info("  Stop flag detected — exiting gracefully.")
+        return True
+    return False
+
 
 def get_db():
     conn = sqlite3.connect(DB_PATH, timeout=10)
@@ -74,6 +85,7 @@ def get_missing_url_entries(conn):
         SELECT pdf_filename, search_term
         FROM processed_pdfs
         WHERE (url IS NULL OR url = '')
+        AND (ignored IS NULL OR ignored = 0)
     """).fetchall()
 
     groups = defaultdict(set)
@@ -349,6 +361,11 @@ def main(max_searches=0):
         log.info("Nothing to fix.")
         return
 
+    # Clear stop flag from previous runs
+    if os.path.exists(STOP_FLAG_FILE):
+        os.remove(STOP_FLAG_FILE)
+        log.info("  Cleared old stop flag.")
+
     driver = setup_driver()
 
     searches_done = 0
@@ -358,6 +375,8 @@ def main(max_searches=0):
 
     try:
         for date_str, term in sorted_keys:
+            if check_stop_flag():
+                break
             if max_searches and searches_done >= max_searches:
                 log.info(f"Reached max_searches limit ({max_searches})")
                 break

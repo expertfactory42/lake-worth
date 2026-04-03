@@ -49,7 +49,6 @@ DB_PATH = r"c:\lake_worth\lake_worth.db"
 LOG_DIR = r"c:\lake_worth\collector_logs"
 DATE_END = "1925-12-31"
 SEARCH_TERM = "lake worth"
-VIEWS_PER_HOUR = 450  # Stay under 500 to be safe
 ZOOM_OUT_TIMES = 9
 WAIT_TIMEOUT = 15
 ACTION_DELAY = 2
@@ -145,8 +144,10 @@ def needs_clipping(conn, pdf_filename):
     clipped it (has_image=1 in articles table).
     """
     row = conn.execute(
-        "SELECT clipped FROM processed_pdfs WHERE pdf_filename = ?", (pdf_filename,)
+        "SELECT clipped, ignored FROM processed_pdfs WHERE pdf_filename = ?", (pdf_filename,)
     ).fetchone()
+    if row is not None and row["ignored"]:
+        return False
     if row is not None and row["clipped"] == 1:
         return False
 
@@ -309,30 +310,60 @@ def parse_page_title(title, url):
     }
 
 
-# === RATE LIMITING ===
 
-_view_times = []
+# === STOP FLAG ===
+
+STOP_FLAG_FILE = r"c:\lake_worth\stop_clipper"
 
 
-def track_view():
-    """Record a page view and pause if we've hit the hourly limit."""
-    now = time.time()
-    _view_times.append(now)
-    cutoff = now - 3600
-    while _view_times and _view_times[0] < cutoff:
-        _view_times.pop(0)
+def check_stop_flag():
+    """Check if stop flag file exists. Returns True if script should stop."""
+    if os.path.exists(STOP_FLAG_FILE):
+        log.info("  Stop flag detected — exiting gracefully.")
+        return True
+    return False
 
-    if len(_view_times) >= VIEWS_PER_HOUR:
-        oldest = _view_times[0]
-        wait_until = oldest + 3600
-        wait_secs = wait_until - now
-        if wait_secs > 0:
-            log.info(f"  >>> THROTTLE: {len(_view_times)} views/hr. Pausing {int(wait_secs)}s...")
-            time.sleep(wait_secs)
-            now2 = time.time()
-            cutoff2 = now2 - 3600
-            while _view_times and _view_times[0] < cutoff2:
-                _view_times.pop(0)
+
+# === RESILIENT BROWSER RESTART ===
+
+RESTART_DELAYS = [180, 120, 60, 60, 60]  # 3min, 2min, 1min, 1min, 1min
+
+
+def resilient_setup_driver():
+    """Try setup_driver() with retries on failure.
+    First 5 attempts use RESTART_DELAYS, then retries every 10 minutes indefinitely.
+    """
+    attempt = 0
+    while True:
+        try:
+            check_internet_pause()
+            return setup_driver()
+        except Exception as e:
+            attempt += 1
+            if attempt <= len(RESTART_DELAYS):
+                delay = RESTART_DELAYS[attempt - 1]
+                log.warning(f"    setup_driver() attempt {attempt}/{len(RESTART_DELAYS)} failed: {e}")
+            else:
+                delay = 600
+                log.warning(f"    setup_driver() attempt {attempt} failed: {e}")
+            log.info(f"    Waiting {delay}s before retry...")
+            time.sleep(delay)
+            if check_stop_flag():
+                return None
+
+
+# === INTERNET RESET PAUSE ===
+
+def check_internet_pause():
+    """Pause during the nightly internet reset window (12:58 AM - 1:10 AM)."""
+    now = datetime.now()
+    pause_start = now.replace(hour=0, minute=58, second=0, microsecond=0)
+    pause_end = now.replace(hour=1, minute=10, second=0, microsecond=0)
+    if pause_start <= now < pause_end:
+        wait_seconds = (pause_end - now).total_seconds()
+        log.info(f"  Internet reset window — pausing until 1:10 AM ({wait_seconds:.0f}s)")
+        time.sleep(wait_seconds)
+        log.info(f"  Resuming after internet reset pause.")
 
 
 # === BROWSER SETUP ===
@@ -991,7 +1022,6 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
 
     # Navigate to the page
     page_start_time = time.time()
-    track_view()
     driver.get(url)
     time.sleep(3)
 
@@ -1052,7 +1082,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
             driver.execute_script("""
                 var d = document.createElement('div');
                 d.style.cssText = 'position:fixed;top:0;left:0;right:0;padding:20px;background:red;color:white;font-size:24px;font-weight:bold;z-index:999999;text-align:center';
-                d.textContent = 'THROTTLED — Unable to create clipping. Account limit reached.';
+                d.textContent = 'THROTTLED — Unable to create clipping. Server rejected request.';
                 document.body.appendChild(d);
             """)
             return "stop"
@@ -1078,7 +1108,6 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         log.info(f"    Clip image size: {img_width}x{img_height}")
         if img_width > 0 and img_height > 0 and (img_width < 750 or img_height < 800):
             log.warning(f"    Clip too small ({img_width}x{img_height}). Re-clipping...")
-            track_view()
             driver.get(url)
             time.sleep(3)
             zoom_out(driver)
@@ -1090,8 +1119,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
                         if navigate_to_clip_page(driver):
                             time.sleep(2)
                             clip_url = get_clip_url(driver)
-                            track_view()
-                            # Verify re-clip size
+                                                    # Verify re-clip size
                             try:
                                 clip_img2 = driver.find_element(By.CSS_SELECTOR, "img[src*='clip'], img[src*='clipping'], img.article-image, main img")
                                 w2 = int(clip_img2.get_attribute("naturalWidth") or clip_img2.get_attribute("width") or 0)
@@ -1132,233 +1160,140 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     }
 
 
-def main(max_pages=0):
+def get_unclipped_queue(conn, date_start=None, date_end=None):
+    """Get unclipped, non-ignored entries that have a URL, sorted by date."""
+    sql = """
+        SELECT pp.pdf_filename, pp.url, pp.date_str
+        FROM processed_pdfs pp
+        LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+        WHERE (pp.clipped = 0 OR pp.clipped IS NULL)
+        AND a.id IS NULL
+        AND (pp.ignored IS NULL OR pp.ignored = 0)
+        AND pp.url IS NOT NULL AND pp.url != ''
+    """
+    params = []
+    if date_start:
+        sql += " AND pp.date_str >= ?"
+        params.append(date_start)
+    if date_end:
+        sql += " AND pp.date_str <= ?"
+        params.append(date_end)
+    sql += " ORDER BY pp.date_str, pp.pdf_filename"
+    return conn.execute(sql, params).fetchall()
+
+
+def main(max_pages=0, date_start=None, date_end=None):
     conn = get_db()
     ensure_columns(conn)
 
-    unclipped = conn.execute(
-        "SELECT COUNT(*) as c FROM processed_pdfs WHERE clipped = 0 AND search_term = ?",
-        (SEARCH_TERM,)
-    ).fetchone()["c"]
-
-    start_date = get_start_date(conn)
+    queue = get_unclipped_queue(conn, date_start, date_end)
     clipped_image_ids, done_filenames = build_clipped_image_ids(conn)
 
     log.info("=" * 60)
-    log.info("Full-Page Clipper + Article Extractor")
+    log.info("Clip & Extract — Direct URL Mode")
     log.info("=" * 60)
-    log.info(f"  Unclipped entries: {unclipped}")
-    log.info(f"  Starting from: {start_date}")
+    log.info(f"  Queue: {len(queue)} unclipped pages")
+    if date_start or date_end:
+        log.info(f"  Date range: {date_start or 'start'} to {date_end or 'end'}")
     log.info(f"  Max pages: {max_pages or 'unlimited'}")
-    log.info(f"  Throttle: {VIEWS_PER_HOUR} views/hour")
     log.info(f"  Log: {log_filename}")
+
+    if not queue:
+        log.info("Nothing to clip.")
+        conn.close()
+        return
 
     clipped = 0
     skipped = 0
     errors = 0
     total_articles = 0
+    batch_clips = 0
     driver = None
     keep_browser_open = False
 
+    # Clear stop flag from previous runs
+    if os.path.exists(STOP_FLAG_FILE):
+        os.remove(STOP_FLAG_FILE)
+        log.info("  Cleared old stop flag.")
+
     try:
-        driver = setup_driver()
+        driver = resilient_setup_driver()
+        if not driver:
+            log.error("  Could not start browser. Exiting.")
+            return
 
-        current_date = start_date
-
-        while current_date <= DATE_END:
+        for row in queue:
             if keep_browser_open:
+                break
+            if check_stop_flag():
                 break
             if max_pages and clipped >= max_pages:
                 log.info(f"  Reached max_pages limit ({max_pages})")
                 break
 
-            # Build search URL — full range from current position to end
-            window_end_dt = datetime.strptime(DATE_END, "%Y-%m-%d")
-            window_end = DATE_END
+            url = row["url"]
+            pdf_filename = row["pdf_filename"]
 
-            encoded_term = SEARCH_TERM.replace(" ", "+")
-            search_url = (
-                "https://star-telegram.newspapers.com/search/results/"
-                f"?date-end={window_end}&date-start={current_date}"
-                f"&keyword=%22{encoded_term}%22"
-                "&sort=paper-date-asc"
-            )
+            log.info(f"\n  [{clipped + 1}/{len(queue)}] {pdf_filename}")
 
-            log.info(f"\n>>> Searching {current_date} to {window_end}")
-            track_view()
-            driver.get(search_url)
-            time.sleep(4)
-
-            # Collect first batch of result URLs
-            page_urls = collect_search_results(driver)
-            log.info(f"  Found {len(page_urls)} results")
-
-            if not page_urls:
-                # No results — jump ahead by 6 months instead of 30 days
-                jump = datetime.strptime(current_date, "%Y-%m-%d") + timedelta(days=180)
-                current_date = jump.strftime("%Y-%m-%d")
-                save_start_date(conn, current_date)
-                log.info(f"  No results, jumping ahead to {current_date}")
-                continue
-
-            window_done = False
-
-            seen_urls = set()
-            batch_clips = 0
-
-            while True:
-                if max_pages and clipped >= max_pages:
+            try:
+                check_internet_pause()
+                result = clip_page(driver, url, conn, clipped_image_ids, done_filenames)
+                if result == "skipped":
+                    skipped += 1
+                elif result == "throttled":
+                    log.info("  Resuming after throttle wait...")
+                elif result == "stop":
+                    log.warning("  Failure — browser left open for inspection. Exiting.")
+                    keep_browser_open = True
                     break
-
-                # Filter batch: skip seen and already-done results (no navigation needed)
-                new_results = []
-                for r in page_urls:
-                    url = r["url"]
-                    if url in seen_urls:
-                        continue
-                    seen_urls.add(url)
-                    # Skip by filename (parsed from search result text)
-                    if r["pdf_filename"] in done_filenames:
-                        # Backfill the page URL even though we're skipping
-                        backfill_page_url(conn, r["pdf_filename"], url)
-                        skipped += 1
-                        continue
-                    # Skip by image ID
-                    if is_url_clipped(url, clipped_image_ids):
-                        backfill_page_url(conn, r["pdf_filename"], url)
-                        skipped += 1
-                        continue
-                    new_results.append(r)
-                if new_results:
-                    log.info(f"  {len(new_results)} to clip this batch (skipped {skipped})")
-                if not new_results:
-                    # No new results — click Show More repeatedly to find more
-                    found_new = False
-                    while click_show_more(driver):
-                        track_view()
-                        time.sleep(3)
-                        page_urls = collect_search_results(driver)
-                        new_results = []
-                        for r in page_urls:
-                            url = r["url"]
-                            if url in seen_urls:
-                                continue
-                            seen_urls.add(url)
-                            if r["pdf_filename"] in done_filenames:
-                                backfill_page_url(conn, r["pdf_filename"], url)
-                                skipped += 1
-                                continue
-                            if is_url_clipped(url, clipped_image_ids):
-                                backfill_page_url(conn, r["pdf_filename"], url)
-                                skipped += 1
-                                continue
-                            new_results.append(r)
-                        if new_results:
-                            log.info(f"  Show More: {len(new_results)} to clip")
-                            found_new = True
-                            break
-                    if not found_new:
-                        # All results exhausted — advance date past the last result we saw
-                        if page_urls:
-                            last_date = max(r["date"] for r in page_urls if r["date"])
-                            if last_date and last_date >= current_date:
-                                next_date = (datetime.strptime(last_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
-                                log.info(f"  All results done through {last_date}. Advancing to {next_date}")
-                                current_date = next_date
-                                save_start_date(conn, current_date)
-                            else:
-                                log.info(f"  No more results. Done.")
-                        else:
-                            log.info(f"  No more results. Done.")
-                        break
-
-                for r in new_results:
-                    url = r["url"]
-                    if max_pages and clipped >= max_pages:
-                        break
-
-                    try:
-                        result = clip_page(driver, url, conn, clipped_image_ids, done_filenames)
-                        if result == "skipped":
-                            skipped += 1
-                        elif result == "throttled":
-                            log.info("  Resuming after throttle wait...")
-                        elif result == "stop":
-                            log.warning("  Failure — browser left open for inspection. Exiting.")
-                            keep_browser_open = True
-                            break
-                        elif result is None:
-                            errors += 1
-                        else:
-                            clipped += 1
-                            batch_clips += 1
-                            total_articles += result.get("articles", 0)
-                            # Add to clipped sets so future batches skip this URL
-                            m = re.search(r'/image/(\d+)', url)
-                            if m:
-                                clipped_image_ids.add(m.group(1))
-                            if result.get("pdf_filename"):
-                                done_filenames.add(result["pdf_filename"])
-                            # Increment date counter to this page's date
-                            if result.get("date"):
-                                save_start_date(conn, result["date"])
-                            log.info(f"  Progress: {clipped} clipped, {total_articles} articles, {errors} errors")
-                    except (WebDriverException, InvalidSessionIdException) as e:
-                        log.error(f"    Session error: {e}")
-                        errors += 1
-                        try:
-                            driver.quit()
-                        except Exception:
-                            pass
-                        log.info("    Restarting browser session...")
-                        driver = setup_driver()
-                        log.info("    Session recovered.")
-                    except Exception as e:
-                        log.error(f"    Clip error: {e}")
-                        errors += 1
-
-                    if keep_browser_open:
-                        break
-
-                    # Every 100 clips, restart browser and rebuild search from current date
-                    if batch_clips >= 100:
-                        log.info(f"  === 100-clip checkpoint. Restarting browser. ===")
-                        try:
-                            driver.quit()
-                        except Exception:
-                            pass
-                        driver = setup_driver()
-                        # Rebuild search URL from saved date counter
-                        current_date = get_start_date(conn)
-                        encoded_term = SEARCH_TERM.replace(" ", "+")
-                        search_url = (
-                            "https://star-telegram.newspapers.com/search/results/"
-                            f"?date-end={DATE_END}&date-start={current_date}"
-                            f"&keyword=%22{encoded_term}%22"
-                            "&sort=paper-date-asc"
-                        )
-                        log.info(f"  Rebuilt search from {current_date}")
-                        track_view()
-                        driver.get(search_url)
-                        time.sleep(4)
-                        page_urls = collect_search_results(driver)
-                        seen_urls.clear()
-                        batch_clips = 0
-                        break  # break out of for loop, continue while loop
-
-                if keep_browser_open:
+                elif result is None:
+                    errors += 1
+                else:
+                    clipped += 1
+                    batch_clips += 1
+                    total_articles += result.get("articles", 0)
+                    m = re.search(r'/image/(\d+)', url)
+                    if m:
+                        clipped_image_ids.add(m.group(1))
+                    if result.get("pdf_filename"):
+                        done_filenames.add(result["pdf_filename"])
+                    log.info(f"  Progress: {clipped} clipped, {total_articles} articles, {errors} errors")
+            except (WebDriverException, InvalidSessionIdException) as e:
+                log.error(f"    Session error: {e}")
+                errors += 1
+                try:
+                    driver.quit()
+                except Exception:
+                    pass
+                log.info("    Restarting browser session...")
+                driver = resilient_setup_driver()
+                if not driver:
+                    log.error("    Could not recover browser. Exiting.")
                     break
+                batch_clips = 0
+                log.info("    Session recovered.")
+            except Exception as e:
+                log.error(f"    Clip error: {e}")
+                errors += 1
 
-                # Return to search page and click Show More for next batch
-                track_view()
-                driver.get(search_url)
-                time.sleep(4)
-                page_urls = collect_search_results(driver)
+            # Every 100 clips, restart browser to stay fresh
+            if batch_clips >= 100:
+                log.info(f"  === 100-clip checkpoint. Restarting browser. ===")
+                try:
+                    driver.quit()
+                except Exception:
+                    pass
+                driver = resilient_setup_driver()
+                if not driver:
+                    log.error("    Could not restart browser. Exiting.")
+                    break
+                batch_clips = 0
 
     except KeyboardInterrupt:
         log.info("\nStopped by user.")
     except SystemExit:
-        pass  # clean exit with browser left open
+        pass
     except Exception as e:
         log.error(f"Fatal error: {e}", exc_info=True)
     finally:
@@ -1379,5 +1314,12 @@ def main(max_pages=0):
 
 
 if __name__ == "__main__":
+    # Usage: python clip_and_extract.py [max_pages] [date_start] [date_end]
+    # Examples:
+    #   python clip_and_extract.py              # all unclipped
+    #   python clip_and_extract.py 10           # first 10
+    #   python clip_and_extract.py 0 1914-01-01 1915-12-31  # 1914-1915 only
     limit = int(sys.argv[1]) if len(sys.argv) > 1 else 0
-    main(max_pages=limit)
+    ds = sys.argv[2] if len(sys.argv) > 2 else None
+    de = sys.argv[3] if len(sys.argv) > 3 else None
+    main(max_pages=limit, date_start=ds, date_end=de)

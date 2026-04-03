@@ -33,6 +33,17 @@ from clip_and_extract import (
 MIN_CLIP_WIDTH = 750
 MIN_CLIP_HEIGHT = 800
 
+# === STOP FLAG ===
+STOP_FLAG_FILE = r"c:\lake_worth\stop_reprocessor"
+
+
+def check_stop_flag():
+    """Check if stop flag file exists. Returns True if script should stop."""
+    if os.path.exists(STOP_FLAG_FILE):
+        log.info("  Stop flag detected — exiting gracefully.")
+        return True
+    return False
+
 # === LOGGING ===
 LOG_DIR = r"c:\lake_worth\collector_logs"
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -62,6 +73,7 @@ def get_pages_to_reprocess(conn):
         FROM processed_pdfs pp
         LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
         WHERE a.id IS NULL AND pp.articles_found != -1 AND pp.clipped = 1
+        AND (pp.ignored IS NULL OR pp.ignored = 0)
         AND (pp.ocr_text IS NULL OR length(pp.ocr_text) <= 1000)
         AND pp.clip_url IS NOT NULL AND pp.clip_url != ''
         ORDER BY pp.pdf_filename
@@ -131,6 +143,11 @@ def main(max_pages=0):
         log.info("Nothing to reprocess.")
         return
 
+    # Clear stop flag from previous runs
+    if os.path.exists(STOP_FLAG_FILE):
+        os.remove(STOP_FLAG_FILE)
+        log.info("  Cleared old stop flag.")
+
     driver = setup_driver()
 
     processed = 0
@@ -141,6 +158,8 @@ def main(max_pages=0):
 
     try:
         for row in pages:
+            if check_stop_flag():
+                break
             if max_pages and processed >= max_pages:
                 log.info(f"Reached max_pages limit ({max_pages})")
                 break

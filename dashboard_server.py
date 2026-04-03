@@ -128,73 +128,52 @@ def get_dashboard_data():
             "status": "OK" if row["article_count"] > 0 else "ok(0)",
         })
 
-    # Processed PDFs with no articles found
-    no_article_rows = conn.execute("""
-        SELECT pp.pdf_filename, pp.processed_at, pp.search_term, pp.url, pp.clip_url, pp.thumbnail_path, pp.ignored, pp.highlighted
-        FROM processed_pdfs pp
+    # No-articles count (for stats)
+    no_articles_count = conn.execute("""
+        SELECT COUNT(*) as c FROM processed_pdfs pp
         LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
         WHERE a.id IS NULL AND pp.articles_found != -1
-        ORDER BY pp.pdf_filename
+    """).fetchone()["c"]
+
+    # No-articles filenames for aggregation
+    na_fnames = conn.execute("""
+        SELECT pp.pdf_filename FROM processed_pdfs pp
+        LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+        WHERE a.id IS NULL AND pp.articles_found != -1
     """).fetchall()
 
-    no_articles_list = []
-    for row in no_article_rows:
-        fname = row["pdf_filename"]
-        m = re.match(
-            r"^(?P<paper>.+)_(?P<year>\d{4})_(?P<month>\d{2})_(?P<day>\d{2})_(?P<page>\d+)\.pdf$",
-            fname, re.IGNORECASE
-        )
+    # Parse dates from filenames for monthly/yearly counts
+    na_monthly = {}
+    na_yearly = {}
+    for row in na_fnames:
+        m = re.search(r'_(\d{4})_(\d{2})_(\d{2})_\d+\.pdf$', row["pdf_filename"])
         if m:
-            newspaper = m.group("paper").replace("_", " ")
-            date_str = f"{m.group('year')}-{m.group('month')}-{m.group('day')}"
-            page = int(m.group("page"))
-        else:
-            newspaper = fname
-            date_str = "?"
-            page = 0
+            ym = f"{m.group(1)}-{m.group(2)}"
+            y = m.group(1)
+            na_monthly[ym] = na_monthly.get(ym, 0) + 1
+            na_yearly[y] = na_yearly.get(y, 0) + 1
 
-        no_articles_list.append({
-            "filename": fname,
-            "date": date_str,
-            "page": page,
-            "newspaper": newspaper,
-            "search_term": row["search_term"],
-            "url": row["url"] if "url" in row.keys() else "",
-            "clip_url": row["clip_url"] if "clip_url" in row.keys() else "",
-            "thumbnail": row["thumbnail_path"] if "thumbnail_path" in row.keys() else "",
-            "ignored": row["ignored"] if "ignored" in row.keys() else 0,
-            "highlighted": row["highlighted"] if "highlighted" in row.keys() else 0,
-        })
-
-    no_articles_list.sort(key=lambda x: x["date"], reverse=True)
-
-    # Monthly reference counts (articles + no-articles combined)
-    monthly = {}
-    for a in article_list:
-        if a.get("date") and len(a["date"]) >= 7:
-            m = a["date"][:7]
-            monthly[m] = monthly.get(m, 0) + 1
-    for na in no_articles_list:
-        if na.get("date") and len(na["date"]) >= 7 and na["date"] != "?":
-            m = na["date"][:7]
-            monthly[m] = monthly.get(m, 0) + 1
+    # Monthly reference counts
+    monthly_rows = conn.execute("""
+        SELECT substr(date, 1, 7) as ym, COUNT(*) as c FROM articles
+        WHERE date IS NOT NULL AND length(date) >= 7
+        GROUP BY ym
+    """).fetchall()
+    monthly = {r["ym"]: r["c"] for r in monthly_rows}
+    for ym, c in na_monthly.items():
+        monthly[ym] = monthly.get(ym, 0) + c
     monthly_sorted = sorted(monthly.items())
 
     # Articles by year
-    articles_by_year = {}
-    for a in article_list:
-        if a.get("date") and len(a["date"]) >= 4:
-            y = a["date"][:4]
-            articles_by_year[y] = articles_by_year.get(y, 0) + 1
-    articles_by_year_sorted = sorted(articles_by_year.items())
+    articles_by_year_rows = conn.execute("""
+        SELECT substr(date, 1, 4) as y, COUNT(*) as c FROM articles
+        WHERE date IS NOT NULL AND length(date) >= 4
+        GROUP BY y ORDER BY y
+    """).fetchall()
+    articles_by_year_sorted = [(r["y"], r["c"]) for r in articles_by_year_rows]
 
     # No articles by year
-    no_articles_by_year = {}
-    for na in no_articles_list:
-        if na.get("date") and len(na["date"]) >= 4 and na["date"] != "?":
-            y = na["date"][:4]
-            no_articles_by_year[y] = no_articles_by_year.get(y, 0) + 1
-    no_articles_by_year_sorted = sorted(no_articles_by_year.items())
+    no_articles_by_year_sorted = sorted(na_yearly.items())
 
     conn.close()
 
@@ -204,10 +183,92 @@ def get_dashboard_data():
         "quotes": quote_list,
         "people": people_list,
         "log": log_list,
-        "no_articles": no_articles_list,
+        "no_articles_count": no_articles_count,
         "monthly": monthly_sorted,
         "articles_by_year": articles_by_year_sorted,
         "no_articles_by_year": no_articles_by_year_sorted,
+    }
+
+
+def get_no_articles_page(page=1, per_page=100, sort="desc", filter_text=""):
+    """Return one page of no-articles entries, sorted by date."""
+    conn = get_db()
+    order = "DESC" if sort == "desc" else "ASC"
+    offset = (page - 1) * per_page
+
+    # Count total (with optional filter)
+    if filter_text:
+        like = f"%{filter_text}%"
+        total = conn.execute("""
+            SELECT COUNT(*) as c FROM processed_pdfs pp
+            LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+            WHERE a.id IS NULL AND pp.articles_found != -1
+            AND pp.pdf_filename LIKE ?
+        """, (like,)).fetchone()["c"]
+        rows = conn.execute(f"""
+            SELECT pp.pdf_filename, pp.search_term, pp.url, pp.clip_url,
+                   pp.thumbnail_path, pp.ignored, pp.highlighted, pp.has_photo
+            FROM processed_pdfs pp
+            LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+            WHERE a.id IS NULL AND pp.articles_found != -1
+            AND pp.pdf_filename LIKE ?
+            ORDER BY pp.date_str {order}, pp.pdf_filename {order}
+            LIMIT ? OFFSET ?
+        """, (like, per_page, offset)).fetchall()
+    else:
+        total = conn.execute("""
+            SELECT COUNT(*) as c FROM processed_pdfs pp
+            LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+            WHERE a.id IS NULL AND pp.articles_found != -1
+        """).fetchone()["c"]
+        rows = conn.execute(f"""
+            SELECT pp.pdf_filename, pp.search_term, pp.url, pp.clip_url,
+                   pp.thumbnail_path, pp.ignored, pp.highlighted, pp.has_photo
+            FROM processed_pdfs pp
+            LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+            WHERE a.id IS NULL AND pp.articles_found != -1
+            ORDER BY pp.date_str {order}, pp.pdf_filename {order}
+            LIMIT ? OFFSET ?
+        """, (per_page, offset)).fetchall()
+
+    items = []
+    for row in rows:
+        fname = row["pdf_filename"]
+        m = re.match(
+            r"^(?P<paper>.+)_(?P<year>\d{4})_(?P<month>\d{2})_(?P<day>\d{2})_(?P<page>\d+)\.pdf$",
+            fname, re.IGNORECASE
+        )
+        if m:
+            newspaper = m.group("paper").replace("_", " ")
+            date_str = f"{m.group('year')}-{m.group('month')}-{m.group('day')}"
+            pg = int(m.group("page"))
+        else:
+            newspaper = fname
+            date_str = "?"
+            pg = 0
+
+        items.append({
+            "filename": fname,
+            "date": date_str,
+            "page": pg,
+            "newspaper": newspaper,
+            "search_term": row["search_term"],
+            "url": row["url"] or "",
+            "clip_url": row["clip_url"] or "",
+            "thumbnail": row["thumbnail_path"] or "",
+            "ignored": row["ignored"] or 0,
+            "highlighted": row["highlighted"] or 0,
+            "has_photo": row["has_photo"] or 0,
+        })
+
+    conn.close()
+    total_pages = (total + per_page - 1) // per_page
+    return {
+        "items": items,
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "total_pages": total_pages,
     }
 
 
@@ -570,6 +631,22 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(data, default=str).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path.startswith("/api/no-articles"):
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                from urllib.parse import urlparse, parse_qs
+                params = parse_qs(urlparse(self.path).query)
+                page = int(params.get("page", [1])[0])
+                per_page = int(params.get("per_page", [100])[0])
+                sort = params.get("sort", ["desc"])[0]
+                filter_text = params.get("filter", [""])[0]
+                data = get_no_articles_page(page, per_page, sort, filter_text)
+                self.wfile.write(json.dumps(data, default=str).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
         elif self.path == "/api/db-viewer":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
@@ -675,6 +752,34 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 conn.commit()
                 conn.close()
                 self.wfile.write(json.dumps({"ok": True, "filename": filename, "ignored": ignored}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+
+        elif self.path == "/api/toggle-photo":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            table = body.get("table", "")
+            identifier = body.get("identifier", "")
+            has_photo = 1 if body.get("has_photo") else 0
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+
+            if not identifier or table not in ("articles", "processed_pdfs"):
+                self.wfile.write(json.dumps({"error": "Invalid params"}).encode())
+                return
+
+            try:
+                conn = get_db()
+                if table == "articles":
+                    conn.execute("UPDATE articles SET has_photo = ? WHERE id = ?", (has_photo, identifier))
+                else:
+                    conn.execute("UPDATE processed_pdfs SET has_photo = ? WHERE pdf_filename = ?", (has_photo, identifier))
+                conn.commit()
+                conn.close()
+                self.wfile.write(json.dumps({"ok": True}).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
 

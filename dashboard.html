@@ -262,14 +262,15 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
   <div style="margin-bottom:8px">
     <button onclick="sortNoArticles('asc')" style="margin-right:4px;padding:4px 12px;background:#1a1a2e;color:#e0e0e0;border:1px solid #555;border-radius:4px;cursor:pointer">Date Asc</button>
     <button onclick="sortNoArticles('desc')" style="padding:4px 12px;background:#1a1a2e;color:#e0e0e0;border:1px solid #555;border-radius:4px;cursor:pointer">Date Desc</button>
-    <button onclick="refresh()" style="margin-left:8px;padding:4px 12px;background:#1a1a2e;color:#4fc3f7;border:1px solid #4fc3f7;border-radius:4px;cursor:pointer">Refresh</button>
+    <button onclick="loadNoArticles()" style="margin-left:8px;padding:4px 12px;background:#1a1a2e;color:#4fc3f7;border:1px solid #4fc3f7;border-radius:4px;cursor:pointer">Refresh</button>
   </div>
   <div id="noarticles-table-container" style="max-height:500px;overflow-y:auto">
     <table>
-      <thead><tr><th>#</th><th>Date</th><th>Page</th><th>Newspaper</th><th>Highlight</th><th>Ignore</th><th>Thumb</th><th>View</th></tr></thead>
+      <thead><tr><th>#</th><th>Date</th><th>Page</th><th>Newspaper</th><th>Picture</th><th>Highlight</th><th>Ignore</th><th>Thumb</th><th>View</th></tr></thead>
       <tbody id="noArticlesBody"></tbody>
     </table>
   </div>
+  <div id="noArticlesPagination" style="margin-top:8px;text-align:center"></div>
 </div>
 
 <div id="tab-log" class="section" style="display:none">
@@ -305,7 +306,6 @@ let _prevArticlesJson = '';
 let _prevQuotesJson = '';
 let _prevPeopleJson = '';
 let _prevLogJson = '';
-let _prevNoArticlesJson = '';
 let _prevMonthlyJson = '';
 let _prevYearlyJson = '';
 let _prevNoArtYearlyJson = '';
@@ -568,6 +568,7 @@ function renderArticles() {
     const clipUrl = a.clip_url || '';
     return `<div class="article-card" style="${a.highlighted ? 'border-left:3px solid #ffd700;' : ''}">
       <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;align-items:center">
+        <label style="font-size:0.65em;color:#888;cursor:pointer"><input type="checkbox" ${a.has_photo ? 'checked' : ''} onchange="togglePhoto('articles',${a.id},this.checked)"> Picture</label>
         <label style="font-size:0.65em;color:#888;cursor:pointer"><input type="checkbox" ${a.highlighted ? 'checked' : ''} onchange="toggleHighlight('articles',${a.id},this.checked)"> Highlight</label>
         <button class="pdf-btn" title="${imgBtnTitle}" onclick="window.open('${imgBtnUrl}', '_blank')">${imgBtnLabel}</button>
         <button class="pdf-btn" title="View original search result page" onclick="openRight('${wwwUrl}', '${esc(a.pdf_filename)}')">WWW</button>
@@ -624,17 +625,34 @@ function renderLog() {
 }
 
 let noArticlesSortOrder = 'desc';
+let noArticlesPage = 1;
+let noArticlesPerPage = 100;
+let noArticlesTotal = 0;
+let noArticlesTotalPages = 0;
+
 function sortNoArticles(order) {
   noArticlesSortOrder = order;
-  renderNoArticles();
+  noArticlesPage = 1;
+  loadNoArticles();
 }
 
-function renderNoArticles() {
-  const items = [...(allData.no_articles || [])];
-  items.sort((a, b) => noArticlesSortOrder === 'asc'
-    ? (a.date || '').localeCompare(b.date || '')
-    : (b.date || '').localeCompare(a.date || ''));
-  document.getElementById('noArticlesCount').textContent = items.length;
+async function loadNoArticles(pg) {
+  if (pg !== undefined) noArticlesPage = pg;
+  try {
+    const resp = await fetch(`/api/no-articles?page=${noArticlesPage}&per_page=${noArticlesPerPage}&sort=${noArticlesSortOrder}`);
+    const data = await resp.json();
+    noArticlesTotal = data.total;
+    noArticlesTotalPages = data.total_pages;
+    renderNoArticles(data.items, data.page, data.total);
+  } catch(e) {
+    console.error('loadNoArticles failed:', e);
+  }
+}
+
+function renderNoArticles(items, page, total) {
+  document.getElementById('noArticlesCount').textContent = total;
+  document.getElementById('statNoArticles').textContent = total;
+  const startIdx = (page - 1) * noArticlesPerPage;
   const tbody = document.getElementById('noArticlesBody');
   tbody.innerHTML = items.map((r, i) => {
     const searchTerm = encodeURIComponent('"' + (r.search_term || 'lake worth') + '"');
@@ -647,13 +665,14 @@ function renderNoArticles() {
     const visited = clickedWww.has(r.filename);
     const thumbUrl = r.thumbnail ? '/' + r.thumbnail : '';
     return `<tr id="noart-${esc(r.filename)}" style="${r.highlighted ? 'background:#2d2a1e;' : ''}${visited ? 'background:#1e2d4a;' : ''}">
-      <td>${i + 1}</td>
+      <td>${startIdx + i + 1}</td>
       <td>${r.date}</td>
       <td>${r.page}</td>
       <td>${esc(r.newspaper)}</td>
+      <td style="text-align:center"><input type="checkbox" ${r.has_photo ? 'checked' : ''} onchange="togglePhoto('processed_pdfs','${esc(r.filename)}',this.checked)"></td>
       <td style="text-align:center"><input type="checkbox" ${r.highlighted ? 'checked' : ''} onchange="toggleHighlight('processed_pdfs','${esc(r.filename)}',this.checked)"></td>
       <td style="text-align:center"><input type="checkbox" data-filename="${esc(r.filename)}" class="ignore-check" ${r.ignored ? 'checked' : ''} onchange="toggleIgnore(this)"></td>
-      <td>${thumbUrl ? `<img src="${thumbUrl}" style="width:80px;height:48px;object-fit:cover;border-radius:3px;cursor:pointer" onclick="window.open('${thumbUrl}','_blank')" title="Click to enlarge">` : ''}</td>
+      <td>${thumbUrl ? `<img src="${thumbUrl}" style="width:120px;height:72px;object-fit:cover;border-radius:3px;cursor:pointer" onclick="window.open('${thumbUrl}','_blank')" title="Click to enlarge">` : ''}</td>
       <td style="white-space:nowrap">
         <button class="pdf-btn" title="View original search result page" onclick="openRight('${wwwUrl}', '${esc(r.filename)}')" style="display:inline-flex">WWW</button>
         ${clipUrl ? `<button class="pdf-btn" title="View clip" onclick="openRight('${clipUrl}', '${esc(r.filename)}')" style="display:inline-flex;margin-left:4px;border-color:#4fc3f7;color:#4fc3f7">CLIP</button>` : ''}
@@ -662,6 +681,36 @@ function renderNoArticles() {
       </td>
     </tr>`;
   }).join('');
+
+  // Render pagination controls
+  const pag = document.getElementById('noArticlesPagination');
+  if (pag) {
+    const maxBtns = 7;
+    let startPg = Math.max(1, page - Math.floor(maxBtns / 2));
+    let endPg = Math.min(noArticlesTotalPages, startPg + maxBtns - 1);
+    if (endPg - startPg < maxBtns - 1) startPg = Math.max(1, endPg - maxBtns + 1);
+    let html = `<span style="margin-right:8px;color:#888">Page ${page} of ${noArticlesTotalPages} (${total} entries)</span>`;
+    html += `<button onclick="loadNoArticles(1)" ${page <= 1 ? 'disabled' : ''} style="margin:0 2px">&laquo;</button>`;
+    html += `<button onclick="loadNoArticles(${page - 1})" ${page <= 1 ? 'disabled' : ''} style="margin:0 2px">&lsaquo;</button>`;
+    for (let p = startPg; p <= endPg; p++) {
+      html += `<button onclick="loadNoArticles(${p})" style="margin:0 2px;${p === page ? 'background:#4fc3f7;color:#000;font-weight:bold' : ''}">${p}</button>`;
+    }
+    html += `<button onclick="loadNoArticles(${page + 1})" ${page >= noArticlesTotalPages ? 'disabled' : ''} style="margin:0 2px">&rsaquo;</button>`;
+    html += `<button onclick="loadNoArticles(${noArticlesTotalPages})" ${page >= noArticlesTotalPages ? 'disabled' : ''} style="margin:0 2px">&raquo;</button>`;
+    pag.innerHTML = html;
+  }
+}
+
+async function togglePhoto(table, identifier, has_photo) {
+  try {
+    await fetch('/api/toggle-photo', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({table, identifier, has_photo})
+    });
+  } catch(e) {
+    console.error('Toggle photo failed:', e);
+  }
 }
 
 async function toggleHighlight(table, identifier, highlighted) {
@@ -710,7 +759,7 @@ async function refresh() {
     document.getElementById('statQuotes').textContent = allData.stats.quotes || 0;
     document.getElementById('statPeople').textContent = allData.stats.people || 0;
     document.getElementById('statImages').textContent = allData.stats.images || 0;
-    document.getElementById('statNoArticles').textContent = (allData.no_articles || []).length;
+    document.getElementById('statNoArticles').textContent = allData.no_articles_count || 0;
 
     const pct = allData.stats.total_pdfs ? Math.round(100 * allData.stats.processed / allData.stats.total_pdfs) : 0;
     const bar = document.getElementById('progressBar');
@@ -723,7 +772,6 @@ async function refresh() {
     const quotesJson = JSON.stringify(allData.quotes);
     const peopleJson = JSON.stringify(allData.people);
     const logJson = JSON.stringify(allData.log);
-    const noArticlesJson = JSON.stringify(allData.no_articles);
     const monthlyJson = JSON.stringify(allData.monthly);
     const yearlyJson = JSON.stringify(allData.articles_by_year);
 
@@ -733,7 +781,6 @@ async function refresh() {
     if (articlesJson !== _prevArticlesJson) { renderArticles(); _prevArticlesJson = articlesJson; }
     if (quotesJson !== _prevQuotesJson) { renderQuotes(); _prevQuotesJson = quotesJson; }
     if (peopleJson !== _prevPeopleJson) { renderPeople(); _prevPeopleJson = peopleJson; }
-    if (noArticlesJson !== _prevNoArticlesJson) { renderNoArticles(); _prevNoArticlesJson = noArticlesJson; }
     if (logJson !== _prevLogJson) { renderLog(); _prevLogJson = logJson; }
   } catch(e) {
     document.getElementById('lastUpdate').textContent = 'Connection error - is dashboard_server.py running?';
@@ -741,6 +788,7 @@ async function refresh() {
 }
 
 refresh();
+loadNoArticles();
 setInterval(refresh, 10000);
 
 // === DB Viewer ===
