@@ -1029,6 +1029,9 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     meta = parse_page_title(title, url)
 
     if not meta["date"]:
+        if "just a moment" in title.lower():
+            log.warning(f"    Cloudflare challenge detected. Stopping.")
+            return "stop"
         log.warning(f"    Could not parse title: {title[:60]}")
         return None
 
@@ -1098,7 +1101,6 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
 
     # Step 6: Check clip image size — if too small, cursor was moved during clipping. Re-clip.
     clip_url = get_clip_url(driver)
-    track_view()  # Count the clip view page too
     try:
         clip_img = driver.find_element(By.CSS_SELECTOR, "img[src*='clip'], img[src*='clipping'], img.article-image, main img")
         img_width = clip_img.get_attribute("naturalWidth") or clip_img.get_attribute("width")
@@ -1119,7 +1121,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
                         if navigate_to_clip_page(driver):
                             time.sleep(2)
                             clip_url = get_clip_url(driver)
-                                                    # Verify re-clip size
+                            # Verify re-clip size
                             try:
                                 clip_img2 = driver.find_element(By.CSS_SELECTOR, "img[src*='clip'], img[src*='clipping'], img.article-image, main img")
                                 w2 = int(clip_img2.get_attribute("naturalWidth") or clip_img2.get_attribute("width") or 0)
@@ -1130,9 +1132,43 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     except Exception as e:
         log.info(f"    Could not check clip size: {e}")
 
-    # Step 7: Extract OCR text (last step — after size is verified)
+    # Step 7: Check for OCR button before attempting extraction
+    ocr_btn_found = False
+    for _ in range(3):
+        try:
+            elements = driver.find_elements(By.XPATH, "//*[contains(text(), 'Article Text')]")
+            for el in elements:
+                if el.is_displayed():
+                    ocr_btn_found = True
+                    break
+        except Exception:
+            pass
+        if ocr_btn_found:
+            break
+        time.sleep(2)
+
+    if not ocr_btn_found:
+        log.warning(f"    NO OCR BUTTON — possible Cloudflare challenge. Stopping.")
+        return "stop"
+
+    # Step 8: Extract OCR text with retries
     ocr_text = extract_ocr_text(driver)
-    log.info(f"    OCR text: {len(ocr_text)} chars, clip: {clip_url[:60]}...")
+    log.info(f"    OCR: {len(ocr_text)} chars, clip: {clip_url[:60]}...")
+
+    # If still too short, refresh page and try 3 more times
+    if len(ocr_text) <= 1000:
+        log.info(f"    OCR too short after initial tries. Refreshing page...")
+        for refresh_try in range(3):
+            driver.refresh()
+            time.sleep(5)
+            ocr_text = extract_ocr_text(driver)
+            log.info(f"    OCR after refresh {refresh_try + 1}/3: {len(ocr_text)} chars")
+            if len(ocr_text) > 1000:
+                break
+
+    if len(ocr_text) <= 1000:
+        log.warning(f"    OCR still too short ({len(ocr_text)} chars). NOT marking as clipped — will retry later.")
+        return None
 
     # Save to DB
     save_clip_data(conn, pdf_filename, url, clip_url, ocr_text)
@@ -1144,6 +1180,11 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
 
     if articles:
         count = save_articles(conn, pdf_filename, articles, SEARCH_TERM, clip_url=clip_url)
+        conn.execute(
+            "UPDATE processed_pdfs SET articles_found = ? WHERE pdf_filename = ?",
+            (count, pdf_filename)
+        )
+        conn.commit()
         log.info(f"    Found {count} articles")
     else:
         log.info(f"    No Lake Worth articles found in OCR")
