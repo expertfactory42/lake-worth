@@ -99,6 +99,19 @@ def ensure_columns(conn):
         conn.execute("ALTER TABLE processed_pdfs ADD COLUMN clipped INTEGER DEFAULT 0")
         conn.commit()
         log.info("Added clipped column to processed_pdfs")
+    # Multi-instance page-claim columns (Step 1 / multi-instance plan)
+    if "claimed_by" not in cols:
+        conn.execute("ALTER TABLE processed_pdfs ADD COLUMN claimed_by TEXT")
+        conn.commit()
+        log.info("Added claimed_by column to processed_pdfs")
+    if "claimed_at" not in cols:
+        conn.execute("ALTER TABLE processed_pdfs ADD COLUMN claimed_at TEXT")
+        conn.commit()
+        log.info("Added claimed_at column to processed_pdfs")
+    if "claimed_pid" not in cols:
+        conn.execute("ALTER TABLE processed_pdfs ADD COLUMN claimed_pid INTEGER")
+        conn.commit()
+        log.info("Added claimed_pid column to processed_pdfs")
 
     # Articles table
     art_cols = {r[1] for r in conn.execute("PRAGMA table_info(articles)").fetchall()}
@@ -110,6 +123,42 @@ def ensure_columns(conn):
         conn.execute("ALTER TABLE articles ADD COLUMN photo_description TEXT")
         conn.commit()
         log.info("Added photo_description column to articles")
+
+    # Accounts table: multi-instance claim columns (Step 1 / multi-instance plan)
+    acct_tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='accounts'").fetchall()]
+    if acct_tables:
+        acct_cols = {r[1] for r in conn.execute("PRAGMA table_info(accounts)").fetchall()}
+        if "in_use_by" not in acct_cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN in_use_by TEXT")
+            conn.commit()
+            log.info("Added in_use_by column to accounts")
+        if "in_use_since" not in acct_cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN in_use_since TEXT")
+            conn.commit()
+            log.info("Added in_use_since column to accounts")
+        if "in_use_pid" not in acct_cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN in_use_pid INTEGER")
+            conn.commit()
+            log.info("Added in_use_pid column to accounts")
+
+    # Per-instance status table (Step 1 / multi-instance plan)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS clipper_instances (
+            slot_id        TEXT PRIMARY KEY,
+            pid            INTEGER,
+            account_email  TEXT,
+            status         TEXT,
+            current_date   TEXT,
+            current_page   INTEGER,
+            count_this_run INTEGER DEFAULT 0,
+            date_start     TEXT,
+            date_end       TEXT,
+            started_at     TEXT,
+            heartbeat_at   TEXT,
+            last_action    TEXT
+        )
+    """)
+    conn.commit()
 
 
 def get_start_date(conn):
@@ -350,6 +399,267 @@ def stoppable_sleep(seconds):
     return False
 
 
+# === MULTI-INSTANCE HELPERS ===
+#
+# Additive helpers for running N concurrent clipper workers against one queue
+# and one account pool. Single-instance runs do not call any of these — they
+# are only used when the worker is started with --slot-id.
+
+GLOBAL_STOP_FLAG_FILE = r"c:\lake_worth\stop_clipper_all"
+
+
+def instance_stop_flag_path(slot_id):
+    """Per-instance stop flag file path."""
+    return rf"c:\lake_worth\stop_clipper_{slot_id}"
+
+
+def check_instance_stop(slot_id):
+    """Return True if the global stop flag, the per-instance stop flag, or the
+    legacy single-instance stop flag is set. Legacy flag is honored so that
+    existing "Stop" UI still halts a slot-mode worker."""
+    if os.path.exists(GLOBAL_STOP_FLAG_FILE):
+        log.info("  Global stop flag detected — exiting gracefully.")
+        return True
+    if slot_id and os.path.exists(instance_stop_flag_path(slot_id)):
+        log.info(f"  Stop flag for slot {slot_id} detected — exiting gracefully.")
+        return True
+    if os.path.exists(STOP_FLAG_FILE):
+        log.info("  Stop flag detected — exiting gracefully.")
+        return True
+    return False
+
+
+def _now_str():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def claim_account(slot_id, pid):
+    """Atomically claim the next eligible account for this slot.
+
+    Eligibility matches get_next_account() exactly:
+      - active = 1
+      - not currently claimed by any slot (in_use_by IS NULL)
+      - not throttled within the last 24 hours
+    Ordered by coldest first: last_throttle_time ASC NULLS FIRST, total_clips ASC.
+
+    Returns a dict with account fields on success, or None if no account is
+    currently eligible. Uses BEGIN IMMEDIATE to serialize claims across workers.
+    """
+    conn = get_accounts_db()
+    try:
+        conn.isolation_level = None  # manual transaction control
+        conn.execute("BEGIN IMMEDIATE")
+        row = conn.execute(
+            """
+            SELECT * FROM accounts
+             WHERE active = 1
+               AND in_use_by IS NULL
+               AND (last_throttle_time IS NULL
+                    OR last_throttle_time < datetime('now','localtime','-24 hours'))
+             ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC
+             LIMIT 1
+            """
+        ).fetchone()
+        if not row:
+            conn.execute("COMMIT")
+            return None
+        now = _now_str()
+        conn.execute(
+            """UPDATE accounts
+                  SET in_use_by = ?, in_use_since = ?, in_use_pid = ?
+                WHERE id = ?""",
+            (slot_id, now, pid, row["id"]),
+        )
+        conn.execute("COMMIT")
+        return dict(row)
+    except Exception:
+        try:
+            conn.execute("ROLLBACK")
+        except Exception:
+            pass
+        raise
+    finally:
+        conn.close()
+
+
+def release_account(email, slot_id=None):
+    """Clear the claim on an account. If slot_id is given, only release if the
+    account is actually claimed by that slot (safety check)."""
+    if not email:
+        return
+    conn = get_accounts_db()
+    try:
+        if slot_id:
+            conn.execute(
+                """UPDATE accounts
+                      SET in_use_by = NULL, in_use_since = NULL, in_use_pid = NULL
+                    WHERE email = ? AND in_use_by = ?""",
+                (email, slot_id),
+            )
+        else:
+            conn.execute(
+                """UPDATE accounts
+                      SET in_use_by = NULL, in_use_since = NULL, in_use_pid = NULL
+                    WHERE email = ?""",
+                (email,),
+            )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def claim_next_page(conn, slot_id, pid, date_start=None, date_end=None):
+    """Atomically claim the next unclipped page in range for this slot.
+
+    Eligibility matches get_unclipped_queue() exactly:
+      - clipped = 0 (or NULL)
+      - no articles row for the pdf_filename
+      - not ignored
+      - has a non-empty url
+      - within date range (if provided)
+      - not currently claimed (claimed_by IS NULL)
+    Ordered by date_str, pdf_filename.
+
+    Returns a dict {pdf_filename, url, date_str} on success, or None.
+    Uses BEGIN IMMEDIATE.
+    """
+    sql_select = """
+        SELECT pp.rowid AS rid, pp.pdf_filename, pp.url, pp.date_str
+          FROM processed_pdfs pp
+          LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+         WHERE (pp.clipped = 0 OR pp.clipped IS NULL)
+           AND a.id IS NULL
+           AND (pp.ignored IS NULL OR pp.ignored = 0)
+           AND pp.url IS NOT NULL AND pp.url != ''
+           AND (pp.claimed_by IS NULL)
+    """
+    params = []
+    if date_start:
+        sql_select += " AND pp.date_str >= ?"
+        params.append(date_start)
+    if date_end:
+        sql_select += " AND pp.date_str <= ?"
+        params.append(date_end)
+    sql_select += " ORDER BY pp.date_str, pp.pdf_filename LIMIT 1"
+
+    prev_isolation = conn.isolation_level
+    try:
+        conn.isolation_level = None
+        conn.execute("BEGIN IMMEDIATE")
+        row = conn.execute(sql_select, params).fetchone()
+        if not row:
+            conn.execute("COMMIT")
+            return None
+        now = _now_str()
+        conn.execute(
+            """UPDATE processed_pdfs
+                  SET claimed_by = ?, claimed_at = ?, claimed_pid = ?
+                WHERE rowid = ?""",
+            (slot_id, now, pid, row["rid"]),
+        )
+        conn.execute("COMMIT")
+        return {
+            "pdf_filename": row["pdf_filename"],
+            "url": row["url"],
+            "date_str": row["date_str"],
+        }
+    except Exception:
+        try:
+            conn.execute("ROLLBACK")
+        except Exception:
+            pass
+        raise
+    finally:
+        conn.isolation_level = prev_isolation
+
+
+def release_page(conn, pdf_filename, slot_id=None):
+    """Clear the claim on a single page (without marking it clipped). Used when
+    a claimed page fails to clip so another instance can retry it."""
+    if not pdf_filename:
+        return
+    if slot_id:
+        conn.execute(
+            """UPDATE processed_pdfs
+                  SET claimed_by = NULL, claimed_at = NULL, claimed_pid = NULL
+                WHERE pdf_filename = ? AND claimed_by = ?""",
+            (pdf_filename, slot_id),
+        )
+    else:
+        conn.execute(
+            """UPDATE processed_pdfs
+                  SET claimed_by = NULL, claimed_at = NULL, claimed_pid = NULL
+                WHERE pdf_filename = ?""",
+            (pdf_filename,),
+        )
+    conn.commit()
+
+
+def release_all_pages_for_slot(conn, slot_id):
+    """Clear any page claims held by this slot that were never completed.
+    Called on graceful shutdown to make sure nothing stays stuck."""
+    if not slot_id:
+        return
+    conn.execute(
+        """UPDATE processed_pdfs
+              SET claimed_by = NULL, claimed_at = NULL, claimed_pid = NULL
+            WHERE claimed_by = ? AND (clipped = 0 OR clipped IS NULL)""",
+        (slot_id,),
+    )
+    conn.commit()
+
+
+def write_instance_status(slot_id, **fields):
+    """Upsert this slot's row in clipper_instances. Always bumps heartbeat_at.
+    Accepted fields: pid, account_email, status, current_date, current_page,
+    count_this_run, date_start, date_end, started_at, last_action."""
+    if not slot_id:
+        return
+    allowed = {
+        "pid", "account_email", "status", "current_date", "current_page",
+        "count_this_run", "date_start", "date_end", "started_at", "last_action",
+    }
+    fields = {k: v for k, v in fields.items() if k in allowed}
+    fields["heartbeat_at"] = _now_str()
+
+    conn = get_db()
+    try:
+        existing = conn.execute(
+            "SELECT slot_id FROM clipper_instances WHERE slot_id = ?", (slot_id,)
+        ).fetchone()
+        if existing:
+            if fields:
+                sets = ", ".join(f"{k} = ?" for k in fields.keys())
+                params = list(fields.values()) + [slot_id]
+                conn.execute(
+                    f"UPDATE clipper_instances SET {sets} WHERE slot_id = ?",
+                    params,
+                )
+        else:
+            cols = ["slot_id"] + list(fields.keys())
+            placeholders = ", ".join(["?"] * len(cols))
+            params = [slot_id] + list(fields.values())
+            conn.execute(
+                f"INSERT INTO clipper_instances ({', '.join(cols)}) VALUES ({placeholders})",
+                params,
+            )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def delete_instance_row(slot_id):
+    """Remove this slot's row from clipper_instances on shutdown."""
+    if not slot_id:
+        return
+    conn = get_db()
+    try:
+        conn.execute("DELETE FROM clipper_instances WHERE slot_id = ?", (slot_id,))
+        conn.commit()
+    finally:
+        conn.close()
+
+
 def get_daily_clip_limit():
     """Read daily_clip_limit from clipper_state table. Returns 0 (unlimited) if not set."""
     try:
@@ -368,7 +678,7 @@ def get_daily_clip_limit():
 RESTART_DELAYS = [180, 120, 60, 60, 60]  # 3min, 2min, 1min, 1min, 1min
 
 
-def resilient_setup_driver(preferred_account=None):
+def resilient_setup_driver(preferred_account=None, slot_id=None):
     """Try setup_driver() with retries on failure.
     First 5 attempts use RESTART_DELAYS, then retries every 10 minutes indefinitely.
     """
@@ -376,7 +686,7 @@ def resilient_setup_driver(preferred_account=None):
     while True:
         try:
             check_internet_pause()
-            return setup_driver(preferred_account=preferred_account)
+            return setup_driver(preferred_account=preferred_account, slot_id=slot_id)
         except Exception as e:
             attempt += 1
             if attempt <= len(RESTART_DELAYS):
@@ -909,8 +1219,13 @@ def switch_account(driver, exclude_email=None):
 
 # === BROWSER SETUP ===
 
-def setup_driver(preferred_account=None):
-    temp_profile = r"c:\lake_worth\chrome_temp_profile_clipper"
+def setup_driver(preferred_account=None, slot_id=None):
+    # In slot mode each worker gets its own Chrome profile so multiple
+    # browsers can run in parallel without colliding on the user-data-dir.
+    if slot_id:
+        temp_profile = rf"c:\lake_worth\chrome_temp_profile_clipper_{slot_id}"
+    else:
+        temp_profile = r"c:\lake_worth\chrome_temp_profile_clipper"
     os.makedirs(temp_profile, exist_ok=True)
     driver = Driver(uc=True, headed=True, user_data_dir=temp_profile)
     driver.set_window_size(1920, 1080)
@@ -2092,6 +2407,271 @@ def get_unclipped_queue(conn, date_start=None, date_end=None):
     return conn.execute(sql, params).fetchall()
 
 
+def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
+    """Multi-instance worker entry point.
+
+    Claims one eligible account at a time, clips pages one-at-a-time from the
+    shared queue via atomic page claims, and loops to the next account when
+    the current one is throttled. Exits when the queue is empty or a stop flag
+    is set. Guarantees that on any exit path, its page and account claims are
+    released and its clipper_instances row is removed.
+
+    Does not touch single-instance code paths.
+    """
+    global _current_account_email, _current_account_clips
+
+    pid = os.getpid()
+    started_at = _now_str()
+    log.info("=" * 60)
+    log.info(f"Clip & Extract — slot={slot_id} pid={pid}")
+    log.info("=" * 60)
+    log.info(f"  Date range: {date_start or 'start'} to {date_end or 'end'}")
+    log.info(f"  Max pages:  {max_pages or 'unlimited'}")
+    log.info(f"  Log: {log_filename}")
+
+    # Clear per-slot stop flag from previous runs (do not touch legacy/global).
+    try:
+        p = instance_stop_flag_path(slot_id)
+        if os.path.exists(p):
+            if os.path.isdir(p):
+                os.rmdir(p)
+            else:
+                os.remove(p)
+            log.info(f"  Cleared old stop flag for slot {slot_id}.")
+    except Exception:
+        pass
+
+    conn = get_db()
+    ensure_columns(conn)
+
+    write_instance_status(
+        slot_id, pid=pid, status="starting", date_start=date_start or "",
+        date_end=date_end or "", started_at=started_at, count_this_run=0,
+        last_action="boot",
+    )
+
+    driver = None
+    claimed_account_email = None
+    total_clipped = 0
+    total_articles = 0
+
+    def _release_all():
+        """Best-effort cleanup: release any outstanding claims."""
+        try:
+            release_all_pages_for_slot(conn, slot_id)
+        except Exception as e:
+            log.warning(f"  release_all_pages_for_slot failed: {e}")
+        if claimed_account_email:
+            try:
+                release_account(claimed_account_email, slot_id=slot_id)
+            except Exception as e:
+                log.warning(f"  release_account failed: {e}")
+
+    try:
+        while True:
+            if check_instance_stop(slot_id):
+                break
+
+            # Claim an eligible account. If none available, idle-wait for one.
+            acct = claim_account(slot_id, pid)
+            if not acct:
+                log.info("  No eligible account available — waiting 60s.")
+                write_instance_status(
+                    slot_id, status="waiting_for_account",
+                    account_email="", last_action="no eligible account",
+                )
+                if stoppable_sleep(60) or check_instance_stop(slot_id):
+                    break
+                continue
+
+            claimed_account_email = acct["email"]
+            _current_account_email = claimed_account_email
+            _current_account_clips = 0
+            log.info(f"  Claimed account: {claimed_account_email}")
+            write_instance_status(
+                slot_id, status="starting", account_email=claimed_account_email,
+                last_action="claimed account",
+            )
+
+            # Launch browser for this slot. The profile is slot-specific.
+            try:
+                driver = resilient_setup_driver(
+                    preferred_account=claimed_account_email, slot_id=slot_id
+                )
+            except Exception as e:
+                log.error(f"  setup_driver failed: {e}")
+                driver = None
+
+            if not driver:
+                log.error("  Could not start browser — releasing account and retrying.")
+                write_instance_status(slot_id, status="error", last_action="setup_driver failed")
+                release_account(claimed_account_email, slot_id=slot_id)
+                claimed_account_email = None
+                _current_account_email = None
+                if stoppable_sleep(30) or check_instance_stop(slot_id):
+                    break
+                continue
+
+            write_instance_status(slot_id, status="running", last_action="browser up")
+
+            clipped_image_ids, done_filenames = build_clipped_image_ids(conn)
+            account_exhausted = False
+
+            try:
+                while True:
+                    if check_instance_stop(slot_id):
+                        break
+                    if max_pages and total_clipped >= max_pages:
+                        log.info(f"  Reached max_pages limit ({max_pages})")
+                        break
+
+                    page = claim_next_page(conn, slot_id, pid, date_start, date_end)
+                    if not page:
+                        log.info("  Queue empty for this range — slot will exit.")
+                        write_instance_status(slot_id, status="queue_empty", last_action="queue empty")
+                        account_exhausted = True
+                        break
+
+                    pdf_filename = page["pdf_filename"]
+                    url = page["url"]
+                    log.info(f"\n  [slot {slot_id} #{total_clipped + 1}] {pdf_filename}")
+                    write_instance_status(
+                        slot_id, status="running",
+                        current_date=page.get("date_str") or "",
+                        current_page=total_clipped + 1,
+                        count_this_run=total_clipped,
+                        last_action=f"clip {pdf_filename}",
+                    )
+
+                    try:
+                        check_internet_pause()
+                        result = clip_page(driver, url, conn, clipped_image_ids, done_filenames)
+                    except (WebDriverException, InvalidSessionIdException) as e:
+                        log.error(f"    Session error: {e}")
+                        release_page(conn, pdf_filename, slot_id=slot_id)
+                        try:
+                            driver.quit()
+                        except Exception:
+                            pass
+                        driver = None
+                        if not wait_for_internet():
+                            log.error("    No internet — exiting slot.")
+                            break
+                        log.info("    Restarting browser session...")
+                        driver = resilient_setup_driver(
+                            preferred_account=claimed_account_email, slot_id=slot_id
+                        )
+                        if not driver:
+                            log.error("    Could not recover browser — releasing account.")
+                            break
+                        continue
+                    except Exception as e:
+                        log.error(f"    Clip error: {e}")
+                        release_page(conn, pdf_filename, slot_id=slot_id)
+                        if not is_internet_up() and not wait_for_internet():
+                            log.error("    No internet — exiting slot.")
+                            break
+                        continue
+
+                    if result == "skipped":
+                        # Not our work anymore; release the claim so nothing is stuck.
+                        release_page(conn, pdf_filename, slot_id=slot_id)
+                        continue
+                    if result == "throttled":
+                        log.info("  Throttle detected — releasing account and rotating.")
+                        # clip_page already waited; mark account throttled and rotate.
+                        update_account_stats(claimed_account_email, throttled=True)
+                        release_page(conn, pdf_filename, slot_id=slot_id)
+                        write_instance_status(slot_id, status="cooling", last_action="throttled")
+                        break
+                    if result == "stop":
+                        log.warning("  clip_page returned 'stop' — releasing and exiting slot.")
+                        release_page(conn, pdf_filename, slot_id=slot_id)
+                        write_instance_status(slot_id, status="error", last_action="clip_page stop")
+                        account_exhausted = True
+                        break
+                    if result is None:
+                        log.warning("  clip_page returned None — releasing and continuing.")
+                        release_page(conn, pdf_filename, slot_id=slot_id)
+                        continue
+
+                    # Success. clip_page already set clipped=1, which makes the
+                    # claim moot, but clear it explicitly for tidiness.
+                    release_page(conn, pdf_filename, slot_id=slot_id)
+                    total_clipped += 1
+                    _current_account_clips += 1
+                    pg_articles = result.get("articles", 0) if isinstance(result, dict) else 0
+                    total_articles += pg_articles
+                    m = re.search(r'/image/(\d+)', url)
+                    if m:
+                        clipped_image_ids.add(m.group(1))
+                    if isinstance(result, dict) and result.get("pdf_filename"):
+                        done_filenames.add(result["pdf_filename"])
+                    update_account_stats(
+                        claimed_account_email, clips_added=1, articles_added=pg_articles
+                    )
+
+                    # Daily limit check (same rule as single-instance main()).
+                    clip_limit = get_daily_clip_limit()
+                    if clip_limit:
+                        _acc_conn = get_accounts_db()
+                        try:
+                            _acc_row = _acc_conn.execute(
+                                "SELECT clips_this_session FROM accounts WHERE email = ?",
+                                (claimed_account_email,),
+                            ).fetchone()
+                            _session_total = _acc_row["clips_this_session"] if _acc_row else total_clipped
+                        finally:
+                            _acc_conn.close()
+                        if _session_total >= clip_limit:
+                            log.info(
+                                f"  Daily clip limit reached ({_session_total}/{clip_limit}) "
+                                f"for {claimed_account_email} — rotating."
+                            )
+                            update_account_stats(claimed_account_email, throttled=True)
+                            write_instance_status(slot_id, status="cooling", last_action="daily limit")
+                            break
+            finally:
+                try:
+                    if driver:
+                        driver.quit()
+                except Exception:
+                    pass
+                driver = None
+                # Release account so another slot (or later run) can use it.
+                release_account(claimed_account_email, slot_id=slot_id)
+                _current_account_email = None
+                claimed_account_email = None
+
+            if account_exhausted:
+                break  # queue empty or fatal — exit slot entirely
+
+            # Otherwise loop to claim the next eligible account.
+
+    except KeyboardInterrupt:
+        log.info("\n  Slot stopped by user (KeyboardInterrupt).")
+    except SystemExit:
+        pass
+    except Exception as e:
+        log.error(f"  Fatal slot error: {e}", exc_info=True)
+    finally:
+        # Final cleanup: release anything still held, remove instance row.
+        _release_all()
+        try:
+            delete_instance_row(slot_id)
+        except Exception as e:
+            log.warning(f"  delete_instance_row failed: {e}")
+        try:
+            conn.close()
+        except Exception:
+            pass
+        log.info("=" * 60)
+        log.info(f"DONE (slot {slot_id})")
+        log.info(f"  Pages clipped: {total_clipped}")
+        log.info(f"  Articles found: {total_articles}")
+        log.info("=" * 60)
+
+
 def main(max_pages=0, date_start=None, date_end=None, account_email=None):
     global _current_account_clips
     conn = get_db()
@@ -2278,14 +2858,46 @@ def main(max_pages=0, date_start=None, date_end=None, account_email=None):
 
 
 if __name__ == "__main__":
-    # Usage: python clip_and_extract.py [max_pages] [date_start] [date_end] [account_email]
+    # Usage (single-instance, backward compatible):
+    #   python clip_and_extract.py [max_pages] [date_start] [date_end] [account_email]
+    #
+    # Usage (multi-instance slot):
+    #   python clip_and_extract.py --slot-id=NAME [max_pages] [date_start] [date_end]
+    #     slot mode auto-claims an eligible account; account_email positional is ignored.
+    #
     # Examples:
-    #   python clip_and_extract.py              # all unclipped
-    #   python clip_and_extract.py 10           # first 10
-    #   python clip_and_extract.py 0 1916-01-01 1917-12-31  # date range
-    #   python clip_and_extract.py 0 1916-01-01 1917-12-31 user@example.com  # specific account
-    limit = int(sys.argv[1]) if len(sys.argv) > 1 else 0
-    ds = sys.argv[2] if len(sys.argv) > 2 else None
-    de = sys.argv[3] if len(sys.argv) > 3 else None
-    acct = sys.argv[4] if len(sys.argv) > 4 else None
-    main(max_pages=limit, date_start=ds, date_end=de, account_email=acct)
+    #   python clip_and_extract.py                                        # all unclipped
+    #   python clip_and_extract.py 10                                     # first 10
+    #   python clip_and_extract.py 0 1916-01-01 1917-12-31                # date range
+    #   python clip_and_extract.py 0 1916-01-01 1917-12-31 user@example.com
+    #   python clip_and_extract.py --slot-id=1 0 1916-01-01 1917-12-31    # slot mode
+
+    # Extract --slot-id=X from argv without disturbing positional parsing.
+    _slot_id = None
+    _argv = []
+    for _a in sys.argv[1:]:
+        if _a.startswith("--slot-id="):
+            _slot_id = _a.split("=", 1)[1].strip() or None
+        elif _a == "--slot-id":
+            # support "--slot-id X" form
+            continue
+        else:
+            _argv.append(_a)
+
+    limit = int(_argv[0]) if len(_argv) > 0 and _argv[0] else 0
+    ds = _argv[1] if len(_argv) > 1 and _argv[1] else None
+    de = _argv[2] if len(_argv) > 2 and _argv[2] else None
+    acct = _argv[3] if len(_argv) > 3 and _argv[3] else None
+
+    if _slot_id:
+        # Retag the logger with the slot id so each instance has its own log file.
+        _slot_log = os.path.join(
+            LOG_DIR, f"clipper_slot{_slot_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+        )
+        _fh = logging.FileHandler(_slot_log)
+        _fh.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+        log.addHandler(_fh)
+        log.info(f"  Slot log file: {_slot_log}")
+        main_slot(_slot_id, date_start=ds, date_end=de, max_pages=limit)
+    else:
+        main(max_pages=limit, date_start=ds, date_end=de, account_email=acct)

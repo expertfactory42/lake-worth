@@ -48,6 +48,119 @@ def _is_clipper_running():
         return False
 
 
+# === MULTI-INSTANCE SUPPORT ===
+
+GLOBAL_STOP_FLAG = BASE_DIR / "stop_clipper_all"
+
+
+def _instance_stop_flag(slot_id):
+    return BASE_DIR / f"stop_clipper_{slot_id}"
+
+
+def _pid_alive(pid):
+    """Return True if the given PID is currently running. PID-based only; no
+    time heuristics. Uses tasklist so we never accidentally signal a process."""
+    if not pid:
+        return False
+    try:
+        pid = int(pid)
+    except (TypeError, ValueError):
+        return False
+    try:
+        out = subprocess.run(
+            ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
+            capture_output=True, text=True, timeout=5,
+        )
+        return str(pid) in (out.stdout or "")
+    except Exception:
+        return False
+
+
+def _sweep_stale_claims():
+    """Conservative PID-based sweeper.
+
+    - Any row in clipper_instances whose pid is not alive → deleted.
+    - Any account whose in_use_pid is not alive → claim cleared.
+    - Any processed_pdfs row with claimed_pid not alive and clipped=0 → claim cleared.
+
+    A live PID is NEVER touched, regardless of how stale a heartbeat looks.
+    """
+    conn = get_db()
+    try:
+        rows = conn.execute(
+            "SELECT slot_id, pid FROM clipper_instances"
+        ).fetchall()
+        for r in rows:
+            if not _pid_alive(r["pid"]):
+                conn.execute(
+                    "DELETE FROM clipper_instances WHERE slot_id = ?", (r["slot_id"],)
+                )
+
+        rows = conn.execute(
+            "SELECT email, in_use_pid FROM accounts WHERE in_use_by IS NOT NULL"
+        ).fetchall()
+        for r in rows:
+            if not _pid_alive(r["in_use_pid"]):
+                conn.execute(
+                    """UPDATE accounts
+                          SET in_use_by = NULL, in_use_since = NULL, in_use_pid = NULL
+                        WHERE email = ?""",
+                    (r["email"],),
+                )
+
+        rows = conn.execute(
+            "SELECT pdf_filename, claimed_pid FROM processed_pdfs "
+            "WHERE claimed_by IS NOT NULL AND (clipped = 0 OR clipped IS NULL)"
+        ).fetchall()
+        for r in rows:
+            if not _pid_alive(r["claimed_pid"]):
+                conn.execute(
+                    """UPDATE processed_pdfs
+                          SET claimed_by = NULL, claimed_at = NULL, claimed_pid = NULL
+                        WHERE pdf_filename = ?""",
+                    (r["pdf_filename"],),
+                )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _next_free_slot_id():
+    """Pick the smallest positive integer slot id not currently in
+    clipper_instances. Returned as a string."""
+    conn = get_db()
+    try:
+        taken = set()
+        for r in conn.execute("SELECT slot_id FROM clipper_instances").fetchall():
+            try:
+                taken.add(int(r["slot_id"]))
+            except (TypeError, ValueError):
+                pass
+    finally:
+        conn.close()
+    i = 1
+    while i in taken:
+        i += 1
+    return str(i)
+
+
+def _list_instances():
+    """Return current clipper_instances rows as plain dicts (after sweep)."""
+    _sweep_stale_claims()
+    conn = get_db()
+    try:
+        rows = conn.execute(
+            """SELECT slot_id, pid, account_email, status, current_date, current_page,
+                      count_this_run, date_start, date_end, started_at, heartbeat_at,
+                      last_action
+                 FROM clipper_instances
+                ORDER BY CAST(slot_id AS INTEGER), slot_id"""
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
 def ensure_accounts_table():
     conn = get_db()
     conn.execute("""
@@ -913,6 +1026,19 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(settings, default=str).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/instances":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                instances = _list_instances()
+                self.wfile.write(json.dumps({
+                    "instances": instances,
+                    "global_stop": GLOBAL_STOP_FLAG.exists(),
+                }, default=str).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
         else:
             super().do_GET()
 
@@ -1274,6 +1400,102 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             try:
                 STOP_FLAG.mkdir(exist_ok=True)
                 self.wfile.write(json.dumps({"ok": True, "message": "Stop flag set. Clipper will stop after current page."}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/instances/add":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                _sweep_stale_claims()
+                date_start = (body.get("date_start") or "").strip()
+                date_end = (body.get("date_end") or "").strip()
+                max_pages = str(body.get("max_pages") or "0").strip() or "0"
+
+                slot_id = _next_free_slot_id()
+                # Clear any stale per-slot stop flag for this slot
+                flag = _instance_stop_flag(slot_id)
+                try:
+                    if flag.exists():
+                        if flag.is_dir():
+                            flag.rmdir()
+                        else:
+                            flag.unlink()
+                except Exception:
+                    pass
+
+                cmd = [
+                    "python", "clip_and_extract.py",
+                    f"--slot-id={slot_id}",
+                    max_pages,
+                ]
+                if date_start:
+                    cmd.append(date_start)
+                    cmd.append(date_end or "2025-12-31")
+
+                # Detach so the worker survives the dashboard closing.
+                proc = subprocess.Popen(
+                    cmd,
+                    cwd=str(BASE_DIR),
+                    creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+                )
+                self.wfile.write(json.dumps({
+                    "ok": True,
+                    "slot_id": slot_id,
+                    "pid": proc.pid,
+                    "cmd": cmd,
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/instances/stop":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                slot_id = str(body.get("slot_id", "")).strip()
+                if not slot_id:
+                    self.wfile.write(json.dumps({"error": "slot_id required"}).encode())
+                    return
+                flag = _instance_stop_flag(slot_id)
+                flag.mkdir(exist_ok=True)
+                self.wfile.write(json.dumps({
+                    "ok": True,
+                    "message": f"Stop flag set for slot {slot_id}. Instance will stop after current page.",
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/instances/stop_all":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                GLOBAL_STOP_FLAG.mkdir(exist_ok=True)
+                self.wfile.write(json.dumps({
+                    "ok": True,
+                    "message": "Global stop flag set. All instances will stop after current page.",
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/instances/clear_stop_all":
+            # Convenience: remove the global stop flag so new instances can start.
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                if GLOBAL_STOP_FLAG.exists():
+                    if GLOBAL_STOP_FLAG.is_dir():
+                        GLOBAL_STOP_FLAG.rmdir()
+                    else:
+                        GLOBAL_STOP_FLAG.unlink()
+                self.wfile.write(json.dumps({"ok": True}).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
         elif self.path == "/api/clipper/kill":

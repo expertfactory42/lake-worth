@@ -422,6 +422,26 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
       </script>
       <button id="clipperStartBtn" onclick="clipperStart()" style="padding:10px 24px;background:#2e7d32;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:1em;width:100%">Start Clipper</button>
     </div>
+    <!-- Instances -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:520px;flex:1">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <h3 style="margin:0;color:#e0c97f;font-size:1em">Clipper Instances</h3>
+        <div style="display:flex;gap:6px">
+          <button onclick="addInstance()" style="padding:6px 12px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">+ Add Instance</button>
+          <button onclick="stopAllInstances()" style="padding:6px 12px;background:#b71c1c;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Stop All</button>
+          <button onclick="clearStopAll()" id="clearStopAllBtn" style="padding:6px 12px;background:#555;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em;display:none">Clear Stop-All</button>
+        </div>
+      </div>
+      <div id="instancesGlobalStop" style="color:#ff8a65;font-size:0.8em;margin-bottom:6px;display:none">Global stop flag is set — new instances will exit immediately.</div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.82em">
+        <thead>
+          <tr style="color:#888;text-align:left;border-bottom:1px solid #333">
+            <th style="padding:4px">Slot</th><th style="padding:4px">PID</th><th style="padding:4px">Account</th><th style="padding:4px">Date/Page</th><th style="padding:4px">Clips</th><th style="padding:4px">Status</th><th style="padding:4px">Updated</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="instancesBody"><tr><td colspan="8" style="color:#666;padding:6px">No active instances.</td></tr></tbody>
+      </table>
+    </div>
     <!-- Account Eligibility -->
     <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
       <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Account Eligibility</h3>
@@ -955,6 +975,63 @@ async function clipperStart() {
   btn.textContent = 'Start Clipper';
   setTimeout(loadClipperSettings, 3000);
 }
+
+async function loadInstances() {
+  try {
+    const r = await fetch('/api/instances');
+    const d = await r.json();
+    const rows = d.instances || [];
+    const tbody = document.getElementById('instancesBody');
+    document.getElementById('instancesGlobalStop').style.display = d.global_stop ? '' : 'none';
+    document.getElementById('clearStopAllBtn').style.display = d.global_stop ? '' : 'none';
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="color:#666;padding:6px">No active instances.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map(r => {
+      const dp = [r.current_date, r.current_page].filter(Boolean).join(' p') || '—';
+      return `<tr style="border-bottom:1px solid #222">
+        <td style="padding:4px">${r.slot_id}</td>
+        <td style="padding:4px;color:#888">${r.pid||''}</td>
+        <td style="padding:4px">${r.account_email||'—'}</td>
+        <td style="padding:4px">${dp}</td>
+        <td style="padding:4px">${r.clips_this_run||0}</td>
+        <td style="padding:4px;color:#e0c97f">${r.status||''}</td>
+        <td style="padding:4px;color:#666">${r.last_update||''}</td>
+        <td style="padding:4px"><button onclick="stopInstance(${r.slot_id})" style="padding:3px 8px;background:#b71c1c;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:0.75em">Stop</button></td>
+      </tr>`;
+    }).join('');
+  } catch(e) { console.error('loadInstances failed', e); }
+}
+async function addInstance() {
+  const dateStart = document.getElementById('clipperDateStart').value.trim();
+  const dateEnd = document.getElementById('clipperDateEnd').value.trim();
+  localStorage.setItem('clipperDateStart', dateStart);
+  localStorage.setItem('clipperDateEnd', dateEnd);
+  if (!confirm(`Add a new clipper instance?\nDate range: ${dateStart||'all'} to ${dateEnd||'all'}`)) return;
+  try {
+    const r = await fetch('/api/instances/add', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date_start:dateStart,date_end:dateEnd})});
+    const d = await r.json();
+    if (!d.ok) alert('Error: '+(d.error||'unknown'));
+    else loadInstances();
+  } catch(e){ alert('Failed: '+e); }
+}
+async function stopInstance(slot) {
+  if (!confirm('Stop instance '+slot+'?')) return;
+  await fetch('/api/instances/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slot_id:slot})});
+  loadInstances();
+}
+async function stopAllInstances() {
+  if (!confirm('Stop ALL clipper instances?')) return;
+  await fetch('/api/instances/stop_all',{method:'POST'});
+  loadInstances();
+}
+async function clearStopAll() {
+  await fetch('/api/instances/clear_stop_all',{method:'POST'});
+  loadInstances();
+}
+setInterval(loadInstances, 3000);
+loadInstances();
 
 function renderMonthlyChart() {
   const monthly = allData.monthly || [];
