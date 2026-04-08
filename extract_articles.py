@@ -485,15 +485,24 @@ def crop_and_save_image(page_img: Image.Image, bbox_pct: list,
 
 def store_results(conn, articles, newspaper, date_str, page, pdf_filename, page_img,
                   search_term="lake worth"):
+    # Inherit page-level flags set by user on the "no articles" tab
+    pdf_row = conn.execute(
+        "SELECT highlighted, has_photo FROM processed_pdfs WHERE pdf_filename = ?",
+        (pdf_filename,)
+    ).fetchone()
+    pdf_highlighted = (pdf_row[0] or 0) if pdf_row else 0
+    pdf_has_photo = (pdf_row[1] or 0) if pdf_row else 0
+
     img_counter = 0
     for art in articles:
         has_image = bool(art.get("images"))
         cur = conn.execute(
             """INSERT INTO articles (date, newspaper, page, headline, full_text,
-                                     pdf_filename, has_image, search_term)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                                     pdf_filename, has_image, search_term, highlighted, has_photo)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (date_str, newspaper, page, art.get("headline", ""),
-             art.get("full_text", ""), pdf_filename, has_image, search_term),
+             art.get("full_text", ""), pdf_filename, has_image, search_term,
+             pdf_highlighted, pdf_has_photo),
         )
         article_id = cur.lastrowid
 

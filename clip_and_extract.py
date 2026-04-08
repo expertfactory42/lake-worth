@@ -25,6 +25,7 @@ import re
 import sys
 import time
 import json
+import socket
 import sqlite3
 import logging
 from datetime import datetime, timedelta
@@ -32,7 +33,7 @@ from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
-import undetected_chromedriver as uc
+from seleniumbase import Driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -189,11 +190,15 @@ def backfill_page_url(conn, pdf_filename, url):
 
 def save_clip_data(conn, pdf_filename, url, clip_url, ocr_text):
     """Save clip results to DB."""
+    # Ensure clipped_by column exists
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(processed_pdfs)").fetchall()]
+    if "clipped_by" not in cols:
+        conn.execute("ALTER TABLE processed_pdfs ADD COLUMN clipped_by TEXT")
     conn.execute(
         """UPDATE processed_pdfs
-           SET url = ?, clip_url = ?, ocr_text = ?, clipped = 1
+           SET url = ?, clip_url = ?, ocr_text = ?, clipped = 1, clipped_by = ?
            WHERE pdf_filename = ?""",
-        (url, clip_url, ocr_text, pdf_filename)
+        (url, clip_url, ocr_text, _current_account_email or "", pdf_filename)
     )
     conn.commit()
 
@@ -215,12 +220,20 @@ def save_articles(conn, pdf_filename, articles, search_term, clip_url=""):
         if cm:
             clip_id = cm.group(1)
 
+    # Inherit page-level flags set by user on the "no articles" tab
+    pdf_row = conn.execute(
+        "SELECT highlighted, has_photo FROM processed_pdfs WHERE pdf_filename = ?",
+        (pdf_filename,)
+    ).fetchone()
+    pdf_highlighted = (pdf_row[0] or 0) if pdf_row else 0
+    pdf_has_photo = (pdf_row[1] or 0) if pdf_row else 0
+
     count = 0
     for article in articles:
         headline = article.get("headline", "").strip()
         text = article.get("text", "").strip()
         photo_desc = (article.get("photo_description") or "").strip()
-        has_photo = 1 if photo_desc else 0
+        has_photo = 1 if (photo_desc or pdf_has_photo) else 0
         if not headline and not text:
             continue
 
@@ -247,15 +260,16 @@ def save_articles(conn, pdf_filename, articles, search_term, clip_url=""):
             continue
         if replace_id:
             conn.execute(
-                """UPDATE articles SET headline=?, full_text=?, pdf_filename=?, search_term=?, clip_id=?, has_photo=?, photo_description=?
+                """UPDATE articles SET headline=?, full_text=?, pdf_filename=?, search_term=?, clip_id=?, has_photo=?, photo_description=?,
+                                       highlighted = COALESCE(NULLIF(highlighted,0), ?)
                    WHERE id=?""",
-                (headline, text, pdf_filename, search_term, clip_id or None, has_photo, photo_desc or None, replace_id)
+                (headline, text, pdf_filename, search_term, clip_id or None, has_photo, photo_desc or None, pdf_highlighted, replace_id)
             )
         else:
             conn.execute(
-                """INSERT INTO articles (date, newspaper, page, headline, full_text, pdf_filename, search_term, has_image, clip_id, has_photo, photo_description)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)""",
-                (date_str, newspaper, page, headline, text, pdf_filename, search_term, clip_id or None, has_photo, photo_desc or None)
+                """INSERT INTO articles (date, newspaper, page, headline, full_text, pdf_filename, search_term, has_image, clip_id, has_photo, photo_description, highlighted)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?)""",
+                (date_str, newspaper, page, headline, text, pdf_filename, search_term, clip_id or None, has_photo, photo_desc or None, pdf_highlighted)
             )
         if has_photo:
             log.info(f"    >>> PHOTO: {photo_desc[:60]}")
@@ -324,12 +338,37 @@ def check_stop_flag():
     return False
 
 
+def stoppable_sleep(seconds):
+    """Sleep in 5-second chunks, checking stop flag between each. Returns True if stopped."""
+    remaining = seconds
+    while remaining > 0:
+        chunk = min(5, remaining)
+        time.sleep(chunk)
+        remaining -= chunk
+        if check_stop_flag():
+            return True
+    return False
+
+
+def get_daily_clip_limit():
+    """Read daily_clip_limit from clipper_state table. Returns 0 (unlimited) if not set."""
+    try:
+        conn = sqlite3.connect(DB_PATH, timeout=10)
+        row = conn.execute("SELECT value FROM clipper_state WHERE key = 'daily_clip_limit'").fetchone()
+        conn.close()
+        if row and row[0]:
+            return int(row[0])
+    except Exception:
+        pass
+    return 0
+
+
 # === RESILIENT BROWSER RESTART ===
 
 RESTART_DELAYS = [180, 120, 60, 60, 60]  # 3min, 2min, 1min, 1min, 1min
 
 
-def resilient_setup_driver():
+def resilient_setup_driver(preferred_account=None):
     """Try setup_driver() with retries on failure.
     First 5 attempts use RESTART_DELAYS, then retries every 10 minutes indefinitely.
     """
@@ -337,7 +376,7 @@ def resilient_setup_driver():
     while True:
         try:
             check_internet_pause()
-            return setup_driver()
+            return setup_driver(preferred_account=preferred_account)
         except Exception as e:
             attempt += 1
             if attempt <= len(RESTART_DELAYS):
@@ -347,15 +386,49 @@ def resilient_setup_driver():
                 delay = 600
                 log.warning(f"    setup_driver() attempt {attempt} failed: {e}")
             log.info(f"    Waiting {delay}s before retry...")
-            time.sleep(delay)
-            if check_stop_flag():
+            if stoppable_sleep(delay):
                 return None
 
 
 # === INTERNET RESET PAUSE ===
 
+def is_internet_up():
+    """Quick connectivity check — try to reach Cloudflare DNS."""
+    try:
+        socket.create_connection(("1.1.1.1", 443), timeout=5).close()
+        return True
+    except OSError:
+        return False
+
+
+def wait_for_internet(max_wait=600):
+    """Block until internet is available. Returns True if restored, False if timed out."""
+    if is_internet_up():
+        return True
+    log.warning("  Internet is DOWN — waiting for connectivity...")
+    start = time.time()
+    attempt = 0
+    while time.time() - start < max_wait:
+        attempt += 1
+        delay = min(15, 5 + attempt * 2)  # 7, 9, 11, 13, 15, 15, 15...
+        time.sleep(delay)
+        if check_stop_flag():
+            log.info("  Stop flag detected while waiting for internet.")
+            return False
+        if is_internet_up():
+            elapsed = time.time() - start
+            log.info(f"  Internet restored after {elapsed:.0f}s")
+            return True
+        if attempt % 4 == 0:
+            elapsed = time.time() - start
+            log.warning(f"  Still waiting for internet... ({elapsed:.0f}s elapsed)")
+    log.error(f"  Internet not restored after {max_wait}s — giving up.")
+    return False
+
+
 def check_internet_pause():
-    """Pause during the nightly internet reset window (12:58 AM - 1:10 AM)."""
+    """Pause during the nightly internet reset window (12:58 AM - 1:10 AM),
+    and verify internet is actually up before continuing."""
     now = datetime.now()
     pause_start = now.replace(hour=0, minute=58, second=0, microsecond=0)
     pause_end = now.replace(hour=1, minute=10, second=0, microsecond=0)
@@ -364,39 +437,609 @@ def check_internet_pause():
         log.info(f"  Internet reset window — pausing until 1:10 AM ({wait_seconds:.0f}s)")
         time.sleep(wait_seconds)
         log.info(f"  Resuming after internet reset pause.")
+    # Always verify connectivity before proceeding
+    wait_for_internet()
+
+
+# === CLOUDFLARE HANDLING ===
+
+def is_cloudflare(driver):
+    """Check if the current page is a Cloudflare challenge."""
+    try:
+        title = (driver.title or "").lower()
+        if "just a moment" in title:
+            return True
+        page_text = driver.execute_script("return document.body.innerText || '';").lower()
+        if "security verification" in page_text or "checking if the site connection is secure" in page_text:
+            return True
+    except Exception:
+        pass
+    return False
+
+
+def solve_cloudflare(driver, max_attempts=20):
+    """Detect and solve Cloudflare challenge. Returns True if solved or no challenge."""
+    if not is_cloudflare(driver):
+        return True
+    log.info("    Cloudflare challenge detected — solving...")
+    for attempt in range(max_attempts):
+        try:
+            driver.uc_gui_click_captcha()
+            time.sleep(3)
+            if not is_cloudflare(driver):
+                log.info(f"    Cloudflare solved (attempt {attempt + 1})")
+                return True
+            log.info(f"    Cloudflare still present after click {attempt + 1}/{max_attempts}")
+        except Exception as e:
+            log.warning(f"    Cloudflare solve error: {e}")
+        time.sleep(2)
+    log.warning(f"    Could not solve Cloudflare after {max_attempts} attempts")
+    return False
+
+
+def navigate(driver, url):
+    """Navigate to URL and handle Cloudflare if it appears."""
+    driver.get(url)
+    time.sleep(3)
+    if is_cloudflare(driver):
+        if not solve_cloudflare(driver):
+            return False
+    return True
+
+
+# === ACCOUNT MANAGEMENT ===
+
+_current_account_email = None
+_current_account_clips = 0
+
+
+def get_accounts_db():
+    """Get a connection to read/write accounts table."""
+    conn = sqlite3.connect(DB_PATH, timeout=10)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL")
+    return conn
+
+
+def get_next_account(exclude_email=None):
+    """Get the next active account to use. Excludes accounts throttled within 24 hours."""
+    conn = get_accounts_db()
+    try:
+        tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+        if "accounts" not in tables:
+            return None
+
+        sql = "SELECT * FROM accounts WHERE active = 1"
+        params = []
+        if exclude_email:
+            sql += " AND email != ?"
+            params.append(exclude_email)
+        # Exclude accounts throttled within the last 24 hours
+        sql += " AND (last_throttle_time IS NULL OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))"
+        # Prefer: never throttled first, then least recently throttled
+        sql += " ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC LIMIT 1"
+        row = conn.execute(sql, params).fetchone()
+        if row:
+            return dict(row)
+        # If all accounts are in cooldown, log it
+        log.warning("  All active accounts are in 24-hour cooldown.")
+        return None
+    finally:
+        conn.close()
+
+
+def get_all_active_accounts():
+    """Get all active accounts ordered by preference."""
+    conn = get_accounts_db()
+    try:
+        tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+        if "accounts" not in tables:
+            return []
+        rows = conn.execute(
+            "SELECT * FROM accounts WHERE active = 1 ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC"
+        ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def update_account_stats(email, clips_added=0, articles_added=0, throttled=False):
+    """Update account statistics after clipping or throttle."""
+    conn = get_accounts_db()
+    try:
+        tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+        if "accounts" not in tables:
+            return
+        # Ensure articles_this_session column exists
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(accounts)").fetchall()]
+        if "articles_this_session" not in cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN articles_this_session INTEGER DEFAULT 0")
+            conn.commit()
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if clips_added > 0:
+            conn.execute("""
+                UPDATE accounts SET
+                    total_clips = total_clips + ?,
+                    clips_this_session = clips_this_session + ?,
+                    last_clip_time = ?,
+                    updated_at = ?
+                WHERE email = ?
+            """, (clips_added, clips_added, now, now, email))
+        if articles_added > 0:
+            conn.execute("""
+                UPDATE accounts SET
+                    articles_this_session = articles_this_session + ?,
+                    updated_at = ?
+                WHERE email = ?
+            """, (articles_added, now, email))
+        if throttled:
+            # Update throttle stats and compute running average
+            row = conn.execute("SELECT throttle_count, avg_clips_before_throttle, clips_this_session FROM accounts WHERE email = ?", (email,)).fetchone()
+            if row:
+                old_count = row["throttle_count"] or 0
+                old_avg = row["avg_clips_before_throttle"] or 0
+                session_clips = row["clips_this_session"] or 0
+                new_count = old_count + 1
+                new_avg = ((old_avg * old_count) + session_clips) / new_count if new_count > 0 else session_clips
+                conn.execute("""
+                    UPDATE accounts SET
+                        last_throttle_time = ?,
+                        throttle_count = ?,
+                        avg_clips_before_throttle = ?,
+                        clips_this_session = 0,
+                        articles_this_session = 0,
+                        updated_at = ?
+                    WHERE email = ?
+                """, (now, new_count, round(new_avg, 1), now, email))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def update_account_login(email):
+    """Record login time for an account and reset per-session counters
+    so every new run for this account starts at zero."""
+    conn = get_accounts_db()
+    try:
+        tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+        if "accounts" not in tables:
+            return
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        conn.execute(
+            """UPDATE accounts SET last_login_time = ?, updated_at = ?,
+                                   clips_this_session = 0, articles_this_session = 0
+               WHERE email = ?""",
+            (now, now, email),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def update_account_logout(email):
+    """Record logout time for an account."""
+    conn = get_accounts_db()
+    try:
+        tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+        if "accounts" not in tables:
+            return
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        conn.execute("UPDATE accounts SET last_logout_time = ?, updated_at = ? WHERE email = ?", (now, now, email))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _detect_logged_in_account(driver):
+    """Try to detect which account is currently logged in by checking the page for user info."""
+    try:
+        # Navigate to account page to check email
+        driver.execute_script("window.location.href = 'https://www.newspapers.com/account/';")
+        time.sleep(3)
+        if is_cloudflare(driver):
+            solve_cloudflare(driver)
+            time.sleep(2)
+        page_text = driver.execute_script("return document.body.innerText || '';")
+        # Look for email addresses in the page text
+        import re as _re
+        emails = _re.findall(r'[\w.+-]+@[\w-]+\.[\w.-]+', page_text)
+        if emails:
+            log.info(f"    Detected logged-in account: {emails[0]}")
+            return emails[0]
+        log.info("    Could not detect logged-in account from page text.")
+    except Exception as e:
+        log.warning(f"    Error detecting account: {e}")
+    return None
+
+
+def do_logout(driver):
+    """Log out of newspapers.com by clearing cookies. Returns True if logged out."""
+    global _current_account_email, _current_account_clips
+    log.info("    Logging out of newspapers.com...")
+
+    try:
+        # Clear all cookies — this is the most reliable way to logout
+        driver.delete_all_cookies()
+        log.info("    Cookies cleared.")
+
+        # Navigate to homepage to verify logged out
+        try:
+            driver.uc_open_with_reconnect("https://www.newspapers.com/", 4)
+        except Exception:
+            driver.get("https://www.newspapers.com/")
+        time.sleep(5)
+
+        if is_cloudflare(driver):
+            solve_cloudflare(driver)
+            time.sleep(3)
+
+        page_text = driver.execute_script("return document.body.innerText || '';").lower()
+        if "sign in" in page_text or "log in" in page_text:
+            log.info("    Logged out successfully.")
+            if _current_account_email:
+                update_account_logout(_current_account_email)
+            _current_account_email = None
+            _current_account_clips = 0
+            return True
+
+        # If still not showing sign-in, try clearing cookies again with a fresh load
+        log.info("    Still appears logged in, clearing cookies again...")
+        driver.delete_all_cookies()
+        driver.execute_script("window.localStorage.clear(); window.sessionStorage.clear();")
+        driver.get("https://www.newspapers.com/")
+        time.sleep(5)
+        if is_cloudflare(driver):
+            solve_cloudflare(driver)
+            time.sleep(3)
+
+        page_text = driver.execute_script("return document.body.innerText || '';").lower()
+        if "sign in" in page_text or "log in" in page_text:
+            log.info("    Logged out successfully.")
+            if _current_account_email:
+                update_account_logout(_current_account_email)
+            _current_account_email = None
+            _current_account_clips = 0
+            return True
+
+        log.warning("    Could not confirm logout.")
+        return False
+    except Exception as e:
+        log.warning(f"    Logout error: {e}")
+        return False
+
+
+def do_login(driver, acct):
+    """Log in to newspapers.com with the given account dict. Returns True on success."""
+    global _current_account_email, _current_account_clips
+    email = acct["email"]
+    password = acct["password"]
+    log.info(f"    Logging in as: {email}")
+
+    # Navigate to sign-in page — use uc_open_with_reconnect for Cloudflare bypass
+    log.info("    Navigating to sign-in page...")
+    try:
+        driver.uc_open_with_reconnect("https://www.newspapers.com/signin/", 4)
+    except Exception:
+        driver.execute_script("window.location.href = 'https://www.newspapers.com/signin/';")
+    time.sleep(5)
+
+    # Handle full-page Cloudflare challenge (first gate)
+    if is_cloudflare(driver):
+        log.info("    Full-page Cloudflare on sign-in — solving...")
+        if not solve_cloudflare(driver):
+            log.warning("    Cloudflare on sign-in page could not be solved.")
+            return False
+        time.sleep(3)
+
+    # Wait for login form to render
+    has_form = False
+    for _ in range(15):
+        if len(driver.find_elements(By.CSS_SELECTOR, "input[type='password'], input[name='email']")) > 0:
+            has_form = True
+            break
+        # Check for Cloudflare again while waiting
+        if is_cloudflare(driver):
+            solve_cloudflare(driver)
+        time.sleep(1)
+
+    if not has_form:
+        # Maybe already logged in from cookies — but verify it's the right account
+        page_text = driver.execute_script("return document.body.innerText || '';").lower()
+        if "sign in" not in page_text and "log in" not in page_text:
+            # Verify this is actually the account we want
+            detected = _detect_logged_in_account(driver)
+            if detected and detected.lower() == email.lower():
+                log.info(f"    Already logged in as {email} (session restored).")
+                _current_account_email = email
+                _current_account_clips = 0
+                update_account_login(email)
+                return True
+            else:
+                log.warning(f"    Session found but logged in as {detected or 'unknown'}, not {email}.")
+                log.warning("    Logout may have failed — cannot login as requested account.")
+                return False
+        log.warning("    No login form found on sign-in page.")
+        return False
+
+    # Enter email
+    try:
+        email_field = None
+        for sel in ["input[name='email']", "input[id='email']", "input[type='email']", "input[type='text']"]:
+            fields = driver.find_elements(By.CSS_SELECTOR, sel)
+            for f in fields:
+                if f.is_displayed():
+                    email_field = f
+                    break
+            if email_field:
+                break
+        if not email_field:
+            log.warning("    Could not find email field.")
+            return False
+        email_field.clear()
+        email_field.send_keys(email)
+    except Exception as e:
+        log.warning(f"    Email entry failed: {e}")
+        return False
+
+    # Enter password
+    try:
+        pw_field = None
+        for sel in ["input[type='password']", "input[name='password']"]:
+            fields = driver.find_elements(By.CSS_SELECTOR, sel)
+            for f in fields:
+                if f.is_displayed():
+                    pw_field = f
+                    break
+            if pw_field:
+                break
+        if not pw_field:
+            log.warning("    Could not find password field.")
+            return False
+        pw_field.clear()
+        pw_field.send_keys(password)
+    except Exception as e:
+        log.warning(f"    Password entry failed: {e}")
+        return False
+
+    # Solve Cloudflare Turnstile on the login form (second gate)
+    # Always attempt — uc_gui_click_captcha scans for captcha iframes automatically
+    log.info("    Solving Turnstile on login form...")
+    time.sleep(2)
+    try:
+        driver.uc_gui_click_captcha()
+        time.sleep(5)
+        log.info("    Turnstile click done.")
+    except Exception as e:
+        log.info(f"    Turnstile click attempt: {e}")
+
+    # Click sign-in button
+    clicked = False
+    for sel in ["button[type='submit']", "input[type='submit']"]:
+        try:
+            btn = driver.find_element(By.CSS_SELECTOR, sel)
+            if btn.is_displayed():
+                btn.click()
+                clicked = True
+                break
+        except Exception:
+            pass
+    if not clicked:
+        try:
+            buttons = driver.find_elements(By.CSS_SELECTOR, "button")
+            for b in buttons:
+                if "sign in" in (b.text or "").lower():
+                    b.click()
+                    clicked = True
+                    break
+        except Exception:
+            pass
+    if not clicked:
+        log.warning("    Could not find sign-in button.")
+        return False
+
+    time.sleep(3)
+
+    # Handle Cloudflare after submission
+    if is_cloudflare(driver):
+        solve_cloudflare(driver)
+        time.sleep(3)
+
+    # Wait for redirect away from sign-in page
+    for _ in range(15):
+        if "signin" not in driver.current_url.lower():
+            break
+        if is_cloudflare(driver):
+            solve_cloudflare(driver)
+        time.sleep(1)
+
+    if "signin" in driver.current_url.lower():
+        log.warning("    LOGIN FAILED — still on sign-in page.")
+        return False
+
+    log.info(f"    LOGIN SUCCESS as {email}")
+    _current_account_email = email
+    _current_account_clips = 0
+    update_account_login(email)
+    return True
+
+
+def switch_account(driver, exclude_email=None):
+    """Log out current account and log into the next available one.
+    Returns True if switched successfully, False if no accounts available."""
+    global _current_account_email
+
+    # Mark current account as throttled
+    if _current_account_email:
+        update_account_stats(_current_account_email, throttled=True)
+
+    accounts = get_all_active_accounts()
+    if not accounts:
+        log.info("    No accounts configured — cannot switch.")
+        return False
+
+    # Filter out the excluded (throttled) account
+    candidates = [a for a in accounts if a["email"] != exclude_email]
+    if not candidates:
+        log.info("    No other active accounts available to switch to.")
+        return False
+
+    # Log out current session
+    do_logout(driver)
+
+    # Navigate back to newspapers.com for login
+    navigate(driver, "https://www.newspapers.com/")
+    time.sleep(2)
+
+    # Try each candidate account
+    for acct in candidates:
+        log.info(f"    Trying account: {acct['email']}")
+        if do_login(driver, acct):
+            # Navigate to the newspaper site we clip from
+            navigate(driver, "https://star-telegram.newspapers.com/")
+            time.sleep(2)
+            return True
+        else:
+            log.warning(f"    Failed to login as {acct['email']}, trying next...")
+            # Make sure we're logged out before trying next
+            do_logout(driver)
+
+    log.warning("    All account login attempts failed.")
+    return False
 
 
 # === BROWSER SETUP ===
 
-def setup_driver():
-    options = uc.ChromeOptions()
+def setup_driver(preferred_account=None):
     temp_profile = r"c:\lake_worth\chrome_temp_profile_clipper"
     os.makedirs(temp_profile, exist_ok=True)
-    options.add_argument(f"--user-data-dir={temp_profile}")
-    driver = uc.Chrome(options=options, version_main=146)
+    driver = Driver(uc=True, headed=True, user_data_dir=temp_profile)
     driver.set_window_size(1920, 1080)
     driver.implicitly_wait(5)
 
-    # Check if logged in — if not, pause for manual login
-    driver.get("https://star-telegram.newspapers.com/")
-    time.sleep(5)
+    # Navigate and handle Cloudflare if needed
+    driver.uc_open_with_reconnect("https://star-telegram.newspapers.com/", 4)
+    time.sleep(3)
+    solve_cloudflare(driver)
+
+    # Check if logged in — try auto-login from accounts DB, else wait for manual
+    global _current_account_email, _current_account_clips
     page_text = driver.execute_script("return document.body.innerText || '';").lower()
     if "sign in" in page_text or "log in" in page_text:
-        log.info("NOT LOGGED IN — please log in to newspapers.com in the browser window.")
-        log.info("Waiting up to 30 seconds for login...")
-        for i in range(30):
-            time.sleep(1)
+        # Pick account: prefer specified account, else next available
+        acct = None
+        if preferred_account:
+            aconn = get_accounts_db()
             try:
-                page_text = driver.execute_script("return document.body.innerText || '';").lower()
-                if "sign in" not in page_text and "log in" not in page_text:
-                    log.info("Login detected! Continuing...")
-                    break
-            except Exception:
-                pass
+                row = aconn.execute("SELECT * FROM accounts WHERE email = ? AND active = 1", (preferred_account,)).fetchone()
+                if row:
+                    acct = dict(row)
+                else:
+                    log.warning(f"Preferred account {preferred_account} not found or inactive.")
+            finally:
+                aconn.close()
+        if not acct:
+            acct = get_next_account()
+
+        if acct:
+            log.info(f"NOT LOGGED IN — auto-login as {acct['email']}...")
+            if do_login(driver, acct):
+                log.info(f"Auto-login successful: {acct['email']}")
+                # Navigate back to star-telegram
+                navigate(driver, "https://star-telegram.newspapers.com/")
+                time.sleep(2)
+            else:
+                log.warning(f"Auto-login failed for {acct['email']}. Waiting for manual login...")
+                log.info("Please log in to newspapers.com in the browser window.")
+                log.info("Waiting up to 60 seconds for login...")
+                for i in range(60):
+                    time.sleep(1)
+                    try:
+                        page_text = driver.execute_script("return document.body.innerText || '';").lower()
+                        if "sign in" not in page_text and "log in" not in page_text:
+                            log.info("Login detected! Continuing...")
+                            break
+                    except Exception:
+                        pass
+                else:
+                    log.warning("Login timeout — proceeding anyway.")
         else:
-            log.warning("Login timeout — proceeding anyway.")
+            log.info("No accounts in DB. Please log in manually in the browser window.")
+            log.info("Waiting up to 60 seconds for login...")
+            for i in range(60):
+                time.sleep(1)
+                try:
+                    page_text = driver.execute_script("return document.body.innerText || '';").lower()
+                    if "sign in" not in page_text and "log in" not in page_text:
+                        log.info("Login detected! Continuing...")
+                        break
+                except Exception:
+                    pass
+            else:
+                log.warning("Login timeout — proceeding anyway.")
     else:
         log.info("Already logged in.")
+        current_user = _detect_logged_in_account(driver)
+        target_account = preferred_account
+
+        if not target_account:
+            # Auto-rotate mode: check if the current session is an eligible account
+            if current_user:
+                # Check if this account is eligible (not in 24h cooldown)
+                aconn = get_accounts_db()
+                try:
+                    row = aconn.execute(
+                        "SELECT * FROM accounts WHERE email = ? AND active = 1 AND (last_throttle_time IS NULL OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))",
+                        (current_user,)
+                    ).fetchone()
+                    if row:
+                        log.info(f"  Current session ({current_user}) is eligible.")
+                        target_account = current_user
+                    else:
+                        log.info(f"  Current session ({current_user}) is in cooldown or inactive.")
+                finally:
+                    aconn.close()
+
+            if not target_account:
+                # Need to switch to an eligible account
+                next_acct = get_next_account()
+                if next_acct:
+                    log.info(f"  Switching to eligible account: {next_acct['email']}...")
+                    do_logout(driver)
+                    time.sleep(2)
+                    if do_login(driver, next_acct):
+                        target_account = next_acct["email"]
+                        log.info(f"  Switched to {target_account}")
+                        navigate(driver, "https://star-telegram.newspapers.com/")
+                        time.sleep(2)
+                    else:
+                        log.warning(f"  Could not login as {next_acct['email']}.")
+                else:
+                    log.warning("  No eligible accounts available.")
+
+        elif preferred_account:
+            # Specific account requested — switch if needed
+            if current_user and current_user.lower() != preferred_account.lower():
+                log.info(f"  Logged in as {current_user}, but need {preferred_account} — switching...")
+                do_logout(driver)
+                time.sleep(2)
+                aconn = get_accounts_db()
+                try:
+                    row = aconn.execute("SELECT * FROM accounts WHERE email = ? AND active = 1", (preferred_account,)).fetchone()
+                    if row:
+                        if do_login(driver, dict(row)):
+                            log.info(f"  Switched to {preferred_account}")
+                            navigate(driver, "https://star-telegram.newspapers.com/")
+                            time.sleep(2)
+                        else:
+                            log.warning(f"  Could not login as {preferred_account}, proceeding with current session.")
+                            target_account = current_user
+                finally:
+                    aconn.close()
+
+        if target_account:
+            _current_account_email = target_account
+            _current_account_clips = 0
+            log.info(f"  Tracking as account: {target_account}")
 
     return driver
 
@@ -688,7 +1331,145 @@ def drag_clip_corners(driver):
     log.info(f"    Dragged SE via JS: ({result['start']['x']:.0f},{result['start']['y']:.0f}) -> ({result['end']['x']:.0f},{result['end']['y']:.0f})")
     time.sleep(2)
 
+    # Verify handles landed near viewer corners
+    ok = _verify_clip_coverage(driver, viewer, margin)
+    if ok:
+        return True
+
+    # Retry once — mouse may have been bumped
+    log.warning("    Clip coverage check failed — retrying drags...")
+    ok = _retry_clip_drags(driver, margin)
+    if not ok:
+        log.warning("    Proceeding despite verification failure (clip may be partial).")
+    return True  # Always proceed — Save button will use whatever coverage we got
+
+
+def _get_handle_positions(driver):
+    """Re-read current NW and SE handle positions."""
+    return driver.execute_script("""
+        var circles = document.querySelectorAll('circle');
+        var handles = {};
+        for (var i = 0; i < circles.length; i++) {
+            var c = circles[i];
+            var style = window.getComputedStyle(c);
+            var rect = c.getBoundingClientRect();
+            if (rect.width < 1) continue;
+            var cursor = style.cursor;
+            if (cursor === 'nw-resize' || cursor === 'se-resize') {
+                handles[cursor] = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
+            }
+        }
+        var viewer = document.getElementById('svg-viewer');
+        var vr = viewer ? viewer.getBoundingClientRect() : null;
+        return {
+            handles: handles,
+            viewer: vr ? {left: vr.left, top: vr.top, right: vr.right, bottom: vr.bottom} : null
+        };
+    """)
+
+
+def _verify_clip_coverage(driver, viewer, margin, threshold=50):
+    """Check that NW handle is near top-left and SE handle is near bottom-right of viewer.
+    Returns True if both are within threshold pixels of their target corners."""
+    info = _get_handle_positions(driver)
+    handles = info.get("handles", {})
+    if "nw-resize" not in handles or "se-resize" not in handles:
+        log.warning("    Verify: could not find handles")
+        return False
+
+    nw = handles["nw-resize"]
+    se = handles["se-resize"]
+    target_nw_x = viewer["left"] + margin
+    target_nw_y = viewer["top"] + margin
+    target_se_x = viewer["right"] - margin
+    target_se_y = viewer["bottom"] - margin
+
+    nw_off = max(abs(nw["x"] - target_nw_x), abs(nw["y"] - target_nw_y))
+    se_off = max(abs(se["x"] - target_se_x), abs(se["y"] - target_se_y))
+
+    log.info(f"    Verify: NW offset={nw_off:.0f}px, SE offset={se_off:.0f}px (threshold={threshold})")
+
+    if nw_off > threshold or se_off > threshold:
+        log.warning(f"    Verify FAILED: NW at ({nw['x']:.0f},{nw['y']:.0f}), SE at ({se['x']:.0f},{se['y']:.0f})")
+        return False
     return True
+
+
+def _retry_clip_drags(driver, margin):
+    """Re-read handle positions and redo both drags, then verify again."""
+    info = _get_handle_positions(driver)
+    handles = info.get("handles", {})
+    viewer = info.get("viewer")
+    if not viewer or "nw-resize" not in handles or "se-resize" not in handles:
+        log.warning("    Retry: could not find handles/viewer")
+        return False
+
+    nw = handles["nw-resize"]
+
+    # Re-drag NW
+    nw_el = driver.execute_script("""
+        var circles = document.querySelectorAll('circle');
+        for (var i = 0; i < circles.length; i++) {
+            if (window.getComputedStyle(circles[i]).cursor === 'nw-resize') return circles[i];
+        }
+        return null;
+    """)
+    if not nw_el:
+        log.warning("    Retry: NW element not found")
+        return False
+
+    dx_nw = int(viewer["left"] + margin - nw["x"])
+    dy_nw = int(viewer["top"] + margin - nw["y"])
+    log.info(f"    Retry: dragging NW by ({dx_nw}, {dy_nw})")
+    actions = ActionChains(driver)
+    actions.click_and_hold(nw_el)
+    actions.pause(0.2)
+    actions.move_by_offset(dx_nw, dy_nw)
+    actions.pause(0.2)
+    actions.release()
+    actions.perform()
+    time.sleep(2)
+
+    # Re-drag SE via JS
+    result = driver.execute_script("""
+        var circles = document.querySelectorAll('circle');
+        var se = null;
+        for (var i = 0; i < circles.length; i++) {
+            if (window.getComputedStyle(circles[i]).cursor === 'se-resize') { se = circles[i]; break; }
+        }
+        if (!se) return {error: 'no se handle'};
+        var rect = se.getBoundingClientRect();
+        var startX = rect.left + rect.width/2;
+        var startY = rect.top + rect.height/2;
+        var viewer = document.getElementById('svg-viewer');
+        var vr = viewer.getBoundingClientRect();
+        var endX = vr.right - """ + str(margin) + """;
+        var endY = vr.bottom - """ + str(margin) + """;
+        function fireMouseEvent(type, x, y) {
+            se.dispatchEvent(new MouseEvent(type, {
+                bubbles: true, cancelable: true, view: window,
+                clientX: x, clientY: y, button: 0, buttons: 1
+            }));
+        }
+        fireMouseEvent('mousedown', startX, startY);
+        for (var s = 1; s <= 10; s++) {
+            fireMouseEvent('mousemove', startX + (endX-startX)*s/10, startY + (endY-startY)*s/10);
+        }
+        fireMouseEvent('mouseup', endX, endY);
+        return {ok: true};
+    """)
+    if not result or result.get("error"):
+        log.warning(f"    Retry: SE drag failed: {result}")
+        return False
+    time.sleep(2)
+
+    # Verify again
+    ok = _verify_clip_coverage(driver, viewer, margin)
+    if ok:
+        log.info("    Retry succeeded — clip covers full page.")
+    else:
+        log.warning("    Retry failed — clip may not cover full page.")
+    return ok
 
 
 def click_save_button(driver):
@@ -732,9 +1513,9 @@ def navigate_to_clip_page(driver):
         for link in article_links:
             href = link.get_attribute("href") or ""
             if clip_id in href:
-                driver.get(href)
+                navigate(driver, href)
                 log.info(f"    Navigated to clip article: {href[:80]}")
-                time.sleep(5)
+                time.sleep(2)
                 return True
 
         # Construct URL directly from what we know
@@ -744,9 +1525,9 @@ def navigate_to_clip_page(driver):
         if article_links:
             href = article_links[0].get_attribute("href")
             if href:
-                driver.get(href)
+                navigate(driver, href)
                 log.info(f"    Navigated to article link: {href[:80]}")
-                time.sleep(5)
+                time.sleep(2)
                 return True
 
     # Method 2: Try clicking View Clip button quickly
@@ -1022,16 +1803,14 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
 
     # Navigate to the page
     page_start_time = time.time()
-    driver.get(url)
-    time.sleep(3)
+    if not navigate(driver, url):
+        log.warning(f"    Cloudflare blocked navigation. Stopping.")
+        return "stop"
 
     title = driver.title or ""
     meta = parse_page_title(title, url)
 
     if not meta["date"]:
-        if "just a moment" in title.lower():
-            log.warning(f"    Cloudflare challenge detected. Stopping.")
-            return "stop"
         log.warning(f"    Could not parse title: {title[:60]}")
         return None
 
@@ -1077,18 +1856,75 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         log.warning(f"    Could not find Save button for {pdf_filename}")
         return None
 
-    # Check for throttle message
+    # Check for throttle message — try account switch first, then escalating delays
+    THROTTLE_DELAYS = [60, 120, 180, 300, 300]  # 1min, 2min, 3min, 5min, 5min then 10min
     try:
         page_text = driver.execute_script("return document.body.innerText || '';")
         if "unable to create your clipping" in page_text.lower():
-            log.warning("    THROTTLED: 'unable to create your clipping' detected. Stopping.")
-            driver.execute_script("""
-                var d = document.createElement('div');
-                d.style.cssText = 'position:fixed;top:0;left:0;right:0;padding:20px;background:red;color:white;font-size:24px;font-weight:bold;z-index:999999;text-align:center';
-                d.textContent = 'THROTTLED — Unable to create clipping. Server rejected request.';
-                document.body.appendChild(d);
-            """)
-            return "stop"
+            log.warning("    THROTTLED: 'unable to create your clipping' detected.")
+
+            # Try switching to another account first
+            if _current_account_email:
+                log.info(f"    Current account: {_current_account_email} — attempting account switch...")
+                if switch_account(driver, exclude_email=_current_account_email):
+                    log.info(f"    Switched to {_current_account_email}. Retrying clip...")
+                    # Retry the clip with new account
+                    if not navigate(driver, url):
+                        return "stop"
+                    time.sleep(2)
+                    zoom_out(driver)
+                    time.sleep(1)
+                    if click_clip_button(driver) and drag_clip_corners(driver) and click_save_button(driver):
+                        page_text = driver.execute_script("return document.body.innerText || '';")
+                        if "unable to create your clipping" not in page_text.lower():
+                            log.info("    Clip succeeded with new account!")
+                            # Fall through to Step 5
+                            pass
+                        else:
+                            log.warning("    New account also throttled.")
+                    else:
+                        log.warning("    Clip retry failed after account switch.")
+
+            # If still throttled (no switch or switch didn't help), use escalating delays
+            page_text = driver.execute_script("return document.body.innerText || '';")
+            if "unable to create your clipping" in page_text.lower():
+                throttle_attempt = 0
+                while True:
+                    throttle_attempt += 1
+                    if throttle_attempt <= len(THROTTLE_DELAYS):
+                        delay = THROTTLE_DELAYS[throttle_attempt - 1]
+                    else:
+                        delay = 600
+                    log.info(f"    Throttle retry {throttle_attempt}: waiting {delay}s...")
+                    if stoppable_sleep(delay):
+                        return "stop"
+                    # Retry: navigate back to page and try clipping again
+                    if not navigate(driver, url):
+                        log.warning("    Cloudflare blocked during throttle retry.")
+                        return "stop"
+                    time.sleep(2)
+                    zoom_out(driver)
+                    time.sleep(1)
+                    if not click_clip_button(driver):
+                        log.warning("    Could not click Clip button on throttle retry.")
+                        continue
+                    time.sleep(2)
+                    if not drag_clip_corners(driver):
+                        log.warning("    Could not drag clip corners on throttle retry.")
+                        continue
+                    if not click_save_button(driver):
+                        log.warning("    Could not click Save on throttle retry.")
+                        continue
+                    page_text = driver.execute_script("return document.body.innerText || '';")
+                    if "unable to create your clipping" not in page_text.lower():
+                        log.info(f"    Throttle cleared after {throttle_attempt} retries!")
+                        break
+                    log.warning(f"    Still throttled after retry {throttle_attempt}.")
+                    # Every 3 retries, try switching accounts again
+                    if throttle_attempt % 3 == 0 and _current_account_email:
+                        log.info("    Trying account switch again...")
+                        if switch_account(driver, exclude_email=_current_account_email):
+                            log.info(f"    Switched to {_current_account_email}.")
     except Exception:
         pass
 
@@ -1110,8 +1946,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         log.info(f"    Clip image size: {img_width}x{img_height}")
         if img_width > 0 and img_height > 0 and (img_width < 750 or img_height < 800):
             log.warning(f"    Clip too small ({img_width}x{img_height}). Re-clipping...")
-            driver.get(url)
-            time.sleep(3)
+            navigate(driver, url)
             zoom_out(driver)
             time.sleep(1)
             if click_clip_button(driver):
@@ -1134,7 +1969,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
 
     # Step 7: Check for OCR button before attempting extraction
     ocr_btn_found = False
-    for _ in range(3):
+    for attempt in range(3):
         try:
             elements = driver.find_elements(By.XPATH, "//*[contains(text(), 'Article Text')]")
             for el in elements:
@@ -1148,8 +1983,42 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         time.sleep(2)
 
     if not ocr_btn_found:
-        log.warning(f"    NO OCR BUTTON — possible Cloudflare challenge. Stopping.")
-        return "stop"
+        # Could be a 502/temporary error — try reloading the page
+        log.warning("    No OCR button found — checking for page error...")
+        page_text = driver.execute_script("return document.body.innerText || '';")
+        if any(err in page_text.lower() for err in ["502", "bad gateway", "503", "server error", "temporarily unavailable"]):
+            log.warning("    Server error detected — retrying with reload...")
+            reload_delays = [60, 120, 180, 300, 300]
+            for retry in range(len(reload_delays)):
+                delay = reload_delays[retry]
+                log.info(f"    Waiting {delay}s before reload (retry {retry + 1}/{len(reload_delays)})...")
+                if stoppable_sleep(delay):
+                    return "stop"
+                driver.refresh()
+                time.sleep(5)
+                if is_cloudflare(driver):
+                    solve_cloudflare(driver)
+                    time.sleep(3)
+                try:
+                    elements = driver.find_elements(By.XPATH, "//*[contains(text(), 'Article Text')]")
+                    for el in elements:
+                        if el.is_displayed():
+                            ocr_btn_found = True
+                            break
+                except Exception:
+                    pass
+                if ocr_btn_found:
+                    log.info(f"    OCR button found after reload (retry {retry + 1}).")
+                    break
+                log.info(f"    Reload retry {retry + 1}/{len(reload_delays)} — still no OCR button.")
+
+    if not ocr_btn_found:
+        # Check if it's Cloudflare (fatal) vs a transient error (skip this page)
+        if is_cloudflare(driver):
+            log.warning("    Cloudflare challenge on clip page. Stopping.")
+            return "stop"
+        log.warning(f"    No OCR button after retries — skipping {pdf_filename}.")
+        return None
 
     # Step 8: Extract OCR text with retries
     ocr_text = extract_ocr_text(driver)
@@ -1223,7 +2092,8 @@ def get_unclipped_queue(conn, date_start=None, date_end=None):
     return conn.execute(sql, params).fetchall()
 
 
-def main(max_pages=0, date_start=None, date_end=None):
+def main(max_pages=0, date_start=None, date_end=None, account_email=None):
+    global _current_account_clips
     conn = get_db()
     ensure_columns(conn)
 
@@ -1254,11 +2124,14 @@ def main(max_pages=0, date_start=None, date_end=None):
 
     # Clear stop flag from previous runs
     if os.path.exists(STOP_FLAG_FILE):
-        os.remove(STOP_FLAG_FILE)
+        if os.path.isdir(STOP_FLAG_FILE):
+            os.rmdir(STOP_FLAG_FILE)
+        else:
+            os.remove(STOP_FLAG_FILE)
         log.info("  Cleared old stop flag.")
 
     try:
-        driver = resilient_setup_driver()
+        driver = resilient_setup_driver(preferred_account=account_email)
         if not driver:
             log.error("  Could not start browser. Exiting.")
             return
@@ -1286,6 +2159,12 @@ def main(max_pages=0, date_start=None, date_end=None):
                     log.info("  Resuming after throttle wait...")
                 elif result == "stop":
                     log.warning("  Failure — browser left open for inspection. Exiting.")
+                    try:
+                        spath = os.path.join(LOG_DIR, f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png")
+                        driver.save_screenshot(spath)
+                        log.info(f"  Screenshot saved: {spath}")
+                    except Exception as e:
+                        log.warning(f"  Screenshot failed: {e}")
                     keep_browser_open = True
                     break
                 elif result is None:
@@ -1299,7 +2178,36 @@ def main(max_pages=0, date_start=None, date_end=None):
                         clipped_image_ids.add(m.group(1))
                     if result.get("pdf_filename"):
                         done_filenames.add(result["pdf_filename"])
+                    # Update account clip stats
+                    if _current_account_email:
+                        _current_account_clips += 1
+                        page_articles = result.get("articles", 0)
+                        update_account_stats(_current_account_email, clips_added=1, articles_added=page_articles)
                     log.info(f"  Progress: {clipped} clipped, {total_articles} articles, {errors} errors")
+                    # Check daily clip limit (cumulative across sessions)
+                    clip_limit = get_daily_clip_limit()
+                    if clip_limit and _current_account_email:
+                        # Use DB clips_this_session which persists across runs
+                        _acc_conn = get_accounts_db()
+                        try:
+                            _acc_row = _acc_conn.execute(
+                                "SELECT clips_this_session FROM accounts WHERE email = ?",
+                                (_current_account_email,)
+                            ).fetchone()
+                            _session_total = _acc_row["clips_this_session"] if _acc_row else clipped
+                        finally:
+                            _acc_conn.close()
+                        if _session_total >= clip_limit:
+                            log.info(f"  Daily clip limit reached ({_session_total}/{clip_limit} cumulative) for {_current_account_email}.")
+                            update_account_stats(_current_account_email, throttled=True)
+                            # Try rotating to another eligible account
+                            if switch_account(driver, exclude_email=_current_account_email):
+                                log.info(f"  Rotated to {_current_account_email}. Continuing...")
+                                batch_clips = 0
+                            else:
+                                log.info("  No other eligible accounts. Exiting.")
+                                keep_browser_open = False
+                                break
             except (WebDriverException, InvalidSessionIdException) as e:
                 log.error(f"    Session error: {e}")
                 errors += 1
@@ -1307,8 +2215,12 @@ def main(max_pages=0, date_start=None, date_end=None):
                     driver.quit()
                 except Exception:
                     pass
+                # Wait for internet before trying to restart browser
+                if not wait_for_internet():
+                    log.error("    No internet — exiting.")
+                    break
                 log.info("    Restarting browser session...")
-                driver = resilient_setup_driver()
+                driver = resilient_setup_driver(preferred_account=account_email)
                 if not driver:
                     log.error("    Could not recover browser. Exiting.")
                     break
@@ -1317,6 +2229,11 @@ def main(max_pages=0, date_start=None, date_end=None):
             except Exception as e:
                 log.error(f"    Clip error: {e}")
                 errors += 1
+                # If internet is down, wait rather than burning through errors
+                if not is_internet_up():
+                    if not wait_for_internet():
+                        log.error("    No internet — exiting.")
+                        break
 
             # Every 100 clips, restart browser to stay fresh
             if batch_clips >= 100:
@@ -1325,7 +2242,7 @@ def main(max_pages=0, date_start=None, date_end=None):
                     driver.quit()
                 except Exception:
                     pass
-                driver = resilient_setup_driver()
+                driver = resilient_setup_driver(preferred_account=account_email)
                 if not driver:
                     log.error("    Could not restart browser. Exiting.")
                     break
@@ -1338,7 +2255,13 @@ def main(max_pages=0, date_start=None, date_end=None):
     except Exception as e:
         log.error(f"Fatal error: {e}", exc_info=True)
     finally:
-        if driver and not keep_browser_open:
+        if driver:
+            try:
+                screenshot_path = os.path.join(LOG_DIR, f"screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png")
+                driver.save_screenshot(screenshot_path)
+                log.info(f"  Screenshot saved: {screenshot_path}")
+            except Exception as e:
+                log.warning(f"  Screenshot failed: {e}")
             try:
                 driver.quit()
             except Exception:
@@ -1355,12 +2278,14 @@ def main(max_pages=0, date_start=None, date_end=None):
 
 
 if __name__ == "__main__":
-    # Usage: python clip_and_extract.py [max_pages] [date_start] [date_end]
+    # Usage: python clip_and_extract.py [max_pages] [date_start] [date_end] [account_email]
     # Examples:
     #   python clip_and_extract.py              # all unclipped
     #   python clip_and_extract.py 10           # first 10
-    #   python clip_and_extract.py 0 1914-01-01 1915-12-31  # 1914-1915 only
+    #   python clip_and_extract.py 0 1916-01-01 1917-12-31  # date range
+    #   python clip_and_extract.py 0 1916-01-01 1917-12-31 user@example.com  # specific account
     limit = int(sys.argv[1]) if len(sys.argv) > 1 else 0
     ds = sys.argv[2] if len(sys.argv) > 2 else None
     de = sys.argv[3] if len(sys.argv) > 3 else None
-    main(max_pages=limit, date_start=ds, date_end=de)
+    acct = sys.argv[4] if len(sys.argv) > 4 else None
+    main(max_pages=limit, date_start=ds, date_end=de, account_email=acct)

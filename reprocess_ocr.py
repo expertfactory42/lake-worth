@@ -19,7 +19,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
-import undetected_chromedriver as uc
+from seleniumbase import Driver
 
 # Reuse functions from clip_and_extract
 sys.path.insert(0, os.path.dirname(__file__))
@@ -28,6 +28,7 @@ from clip_and_extract import (
     DB_PATH, SEARCH_TERM,
     _click_ocr_button, _wait_for_ocr_text, extract_ocr_text,
     extract_articles_with_ai, save_articles,
+    solve_cloudflare, navigate,
 )
 
 MIN_CLIP_WIDTH = 750
@@ -98,15 +99,16 @@ def parse_filename(fname):
 def setup_driver():
     temp_profile = r"c:\lake_worth\chrome_temp_profile_clipper"
     os.makedirs(temp_profile, exist_ok=True)
-    options = uc.ChromeOptions()
-    options.add_argument(f"--user-data-dir={temp_profile}")
-    driver = uc.Chrome(options=options, version_main=146)
+    driver = Driver(uc=True, headed=True, user_data_dir=temp_profile)
     driver.set_window_size(1920, 1080)
     driver.implicitly_wait(5)
 
+    # Navigate and handle Cloudflare if needed
+    driver.uc_open_with_reconnect("https://star-telegram.newspapers.com/", 4)
+    time.sleep(3)
+    solve_cloudflare(driver)
+
     # Check login
-    driver.get("https://star-telegram.newspapers.com/")
-    time.sleep(5)
     page_text = driver.execute_script("return document.body.innerText || '';").lower()
     if "sign in" in page_text or "log in" in page_text:
         log.info("NOT LOGGED IN — please log in now.")
@@ -177,8 +179,11 @@ def main(max_pages=0):
 
             try:
                 # Navigate to clip page
-                driver.get(clip_url)
-                time.sleep(5)
+                if not navigate(driver, clip_url):
+                    log.warning(f"    Cloudflare blocked navigation. Stopping.")
+                    keep_browser_open = True
+                    break
+                time.sleep(2)
 
                 # Check for non-public clipping
                 page_text = driver.execute_script("return document.body.innerText || '';")

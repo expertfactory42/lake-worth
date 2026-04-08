@@ -240,6 +240,9 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
   <div class="tab" onclick="showTab('noarticles')">No Articles</div>
   <div class="tab" onclick="showTab('log')">Processing Log</div>
   <div class="tab" onclick="showTab('dbviewer')">DB Viewer</div>
+  <div class="tab" onclick="showTab('screenshots')">Screenshots</div>
+  <div class="tab" onclick="showTab('accounts')">Accounts</div>
+  <div class="tab" onclick="showTab('clipper')">Clipper</div>
 </div>
 
 <div id="tab-articles" class="section">
@@ -297,6 +300,138 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
       <thead id="dbHead"></thead>
       <tbody id="dbBody"></tbody>
     </table>
+  </div>
+</div>
+
+<div id="tab-screenshots" class="section" style="display:none">
+  <h2>Screenshots</h2>
+  <div style="margin-bottom:10px">
+    <button onclick="loadScreenshots()" style="padding:8px 16px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:6px;cursor:pointer">Load / Refresh</button>
+  </div>
+  <div id="screenshotsList" style="display:flex;flex-wrap:wrap;gap:15px"></div>
+</div>
+
+<div id="tab-accounts" class="section" style="display:none">
+  <h2>Newspapers.com Accounts</h2>
+  <div style="margin-bottom:12px;display:flex;gap:8px">
+    <button onclick="loadAccounts()" style="padding:8px 16px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:6px;cursor:pointer">Refresh</button>
+    <button onclick="showAccountForm()" style="padding:8px 16px;background:#1a3a5c;color:#4fc3f7;border:1px solid #4fc3f7;border-radius:6px;cursor:pointer">+ Add Account</button>
+  </div>
+  <div id="accountForm" style="display:none;background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;margin-bottom:15px">
+    <input type="hidden" id="acctId">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div>
+        <label style="color:#888;font-size:0.8em">Email</label>
+        <input type="text" id="acctEmail" style="width:100%;box-sizing:border-box;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px">
+      </div>
+      <div>
+        <label style="color:#888;font-size:0.8em">Password</label>
+        <input type="text" id="acctPassword" style="width:100%;box-sizing:border-box;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px">
+      </div>
+      <div>
+        <label style="color:#888;font-size:0.8em">Label (optional)</label>
+        <input type="text" id="acctLabel" placeholder="e.g. Main, Backup" style="width:100%;box-sizing:border-box;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px">
+      </div>
+      <div>
+        <label style="color:#888;font-size:0.8em">Subscription Type</label>
+        <input type="text" id="acctSubType" placeholder="e.g. Publisher Extra" style="width:100%;box-sizing:border-box;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px">
+      </div>
+    </div>
+    <div style="margin-bottom:10px">
+      <label style="color:#888;font-size:0.8em">Notes</label>
+      <textarea id="acctNotes" rows="2" style="width:100%;box-sizing:border-box;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px"></textarea>
+    </div>
+    <div style="display:flex;gap:8px">
+      <label style="color:#888;display:flex;align-items:center;gap:4px"><input type="checkbox" id="acctActive" checked> Active</label>
+      <button onclick="saveAccount()" style="padding:6px 16px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer">Save</button>
+      <button onclick="hideAccountForm()" style="padding:6px 16px;background:#555;color:#fff;border:none;border-radius:4px;cursor:pointer">Cancel</button>
+    </div>
+  </div>
+  <div id="accountsList"></div>
+</div>
+
+<div id="tab-clipper" class="section" style="display:none">
+  <h2>Clipper Controls</h2>
+  <div style="display:flex;gap:20px;flex-wrap:wrap">
+    <!-- Status -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Status</h3>
+      <div id="clipperStatus" style="color:#aaa">Loading...</div>
+      <div id="clipperProgress" style="margin-top:10px">
+        <table style="width:100%;font-size:0.9em;border-collapse:collapse">
+          <tr><td style="color:#888;padding:2px 8px 2px 0">Clipped</td><td id="progClipped" style="color:#4caf50;font-weight:bold;font-size:1.3em">-</td></tr>
+          <tr><td style="color:#888;padding:2px 8px 2px 0">Articles</td><td id="progArticles" style="color:#4fc3f7;font-weight:bold;font-size:1.3em">-</td></tr>
+          <tr><td style="color:#888;padding:2px 8px 2px 0">Errors</td><td id="progErrors" style="color:#f44;font-weight:bold">-</td></tr>
+          <tr><td style="color:#888;padding:2px 8px 2px 0">Queue</td><td id="progQueue" style="color:#aaa">-</td></tr>
+          <tr><td style="color:#888;padding:2px 8px 2px 0">Account</td><td id="progAccount" style="color:#aaa">-</td></tr>
+          <tr><td style="color:#888;padding:2px 8px 2px 0">Current Page</td><td id="progPage" style="color:#aaa;font-size:0.85em;word-break:break-all">-</td></tr>
+          <tr><td style="color:#888;padding:2px 8px 2px 0">Page Time</td><td id="progPageTime" style="color:#aaa">-</td></tr>
+          <tr><td style="color:#888;padding:2px 8px 2px 0">Last Update</td><td id="progLastUpdate" style="color:#666;font-size:0.85em">-</td></tr>
+        </table>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="clipperStop()" style="padding:8px 16px;background:#e65100;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold">Stop (graceful)</button>
+        <button onclick="clipperKill()" style="padding:8px 16px;background:#b71c1c;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold">Kill (force)</button>
+        <button onclick="loadClipperSettings()" style="padding:8px 16px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:6px;cursor:pointer">Refresh</button>
+      </div>
+    </div>
+    <!-- Settings -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:280px">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Settings</h3>
+      <div style="margin-bottom:10px">
+        <label style="color:#888;font-size:0.85em">Daily Clip Limit per Session</label>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          <input type="number" id="clipLimitInput" min="0" step="10" placeholder="0 = unlimited" style="width:120px;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box">
+          <button onclick="saveClipLimit()" style="padding:6px 16px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer">Save</button>
+        </div>
+        <div style="color:#666;font-size:0.75em;margin-top:4px">Clipper stops after this many clips. 0 or blank = unlimited.</div>
+      </div>
+    </div>
+    <!-- Start Clipper -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Start Clipper</h3>
+      <div style="margin-bottom:10px">
+        <label style="color:#888;font-size:0.85em">Account Mode</label>
+        <select id="clipperAccountMode" onchange="toggleAccountSelect()" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+          <option value="auto">Run with available accounts (auto-rotate)</option>
+          <option value="specific">Run with this account only</option>
+        </select>
+      </div>
+      <div id="specificAccountRow" style="margin-bottom:10px;display:none">
+        <label style="color:#888;font-size:0.85em">Account</label>
+        <select id="clipperAccountSelect" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div style="flex:1">
+          <label style="color:#888;font-size:0.85em">Date Start</label>
+          <input type="text" id="clipperDateStart" value="1916-01-01" placeholder="YYYY-MM-DD" onchange="localStorage.setItem('clipperDateStart', this.value)" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+        </div>
+        <div style="flex:1">
+          <label style="color:#888;font-size:0.85em">Date End</label>
+          <input type="text" id="clipperDateEnd" value="1917-12-31" placeholder="YYYY-MM-DD" onchange="localStorage.setItem('clipperDateEnd', this.value)" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+        </div>
+      </div>
+      <script>
+        (function(){
+          var s = localStorage.getItem('clipperDateStart');
+          var e = localStorage.getItem('clipperDateEnd');
+          if (s) document.getElementById('clipperDateStart').value = s;
+          if (e) document.getElementById('clipperDateEnd').value = e;
+        })();
+      </script>
+      <button id="clipperStartBtn" onclick="clipperStart()" style="padding:10px 24px;background:#2e7d32;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:1em;width:100%">Start Clipper</button>
+    </div>
+    <!-- Account Eligibility -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Account Eligibility</h3>
+      <div id="accountEligibility" style="color:#aaa;font-size:0.9em">Loading...</div>
+    </div>
+    <!-- Latest Log -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:400px;max-width:600px;flex:1">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Latest Log (last 15 lines)</h3>
+      <pre id="clipperLog" style="color:#aaa;font-size:0.8em;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;margin:0">Loading...</pre>
+    </div>
   </div>
 </div>
 
@@ -459,6 +594,366 @@ function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).style.display = 'block';
   event.target.classList.add('active');
+  if (name !== 'clipper' && window._clipperRefreshInterval) clearInterval(window._clipperRefreshInterval);
+  if (name === 'screenshots') loadScreenshots();
+  if (name === 'accounts') loadAccounts();
+  if (name === 'clipper') loadClipperSettings();
+}
+
+async function loadScreenshots() {
+  const container = document.getElementById('screenshotsList');
+  container.innerHTML = '<span style="color:#888">Loading...</span>';
+  try {
+    const resp = await fetch('/api/screenshots');
+    const files = await resp.json();
+    if (!files.length) { container.innerHTML = '<span style="color:#888">No screenshots found.</span>'; return; }
+    container.innerHTML = files.map(f => `
+      <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:10px;width:420px">
+        <div style="color:#e0c97f;font-size:0.85em;margin-bottom:6px">${f.name} <span style="color:#888;font-size:0.8em">${f.time}</span></div>
+        <a href="/api/screenshot/${f.name}" target="_blank">
+          <img src="/api/screenshot/${f.name}" style="width:400px;border-radius:4px;border:1px solid #444">
+        </a>
+      </div>
+    `).join('');
+  } catch(e) { container.innerHTML = '<span style="color:#f44">Error: ' + e + '</span>'; }
+}
+
+// === ACCOUNTS ===
+let _accountsData = [];
+
+async function loadAccounts() {
+  const container = document.getElementById('accountsList');
+  container.innerHTML = '<span style="color:#888">Loading...</span>';
+  try {
+    const resp = await fetch('/api/accounts');
+    _accountsData = await resp.json();
+    renderAccounts();
+  } catch(e) { container.innerHTML = '<span style="color:#f44">Error: ' + e + '</span>'; }
+}
+
+function renderAccounts() {
+  const container = document.getElementById('accountsList');
+  if (!_accountsData.length) { container.innerHTML = '<span style="color:#888">No accounts. Click + Add Account to get started.</span>'; return; }
+  container.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">' +
+    '<thead><tr>' +
+    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Status</th>' +
+    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Label</th>' +
+    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Email</th>' +
+    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Subscription</th>' +
+    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Total Clips</th>' +
+    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Session Clips</th>' +
+    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Avg Before Throttle</th>' +
+    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Throttle Count</th>' +
+    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Last Clip</th>' +
+    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Last Throttle</th>' +
+    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Notes</th>' +
+    '<th style="padding:6px;border-bottom:1px solid #444">Actions</th>' +
+    '</tr></thead><tbody>' +
+    _accountsData.map(a => {
+      const statusColor = a.active ? '#4caf50' : '#f44336';
+      const statusText = a.active ? 'Active' : 'Inactive';
+      const lastClip = a.last_clip_time ? a.last_clip_time.substring(0,16) : '-';
+      const lastThrottle = a.last_throttle_time ? a.last_throttle_time.substring(0,16) : '-';
+      const avg = a.avg_clips_before_throttle ? a.avg_clips_before_throttle.toFixed(0) : '-';
+      return `<tr style="border-bottom:1px solid #222">
+        <td style="padding:6px"><span style="color:${statusColor};font-weight:bold">${statusText}</span></td>
+        <td style="padding:6px">${a.label || '-'}</td>
+        <td style="padding:6px;color:#4fc3f7">${a.email}</td>
+        <td style="padding:6px">${a.subscription_type || '-'}</td>
+        <td style="padding:6px;text-align:right;font-weight:bold">${a.total_clips}</td>
+        <td style="padding:6px;text-align:right">${a.clips_this_session}</td>
+        <td style="padding:6px;text-align:right">${avg}</td>
+        <td style="padding:6px;text-align:right">${a.throttle_count}</td>
+        <td style="padding:6px;font-size:0.85em;color:#aaa">${lastClip}</td>
+        <td style="padding:6px;font-size:0.85em;color:#f44">${lastThrottle}</td>
+        <td style="padding:6px;font-size:0.85em;color:#888">${a.notes || ''}</td>
+        <td style="padding:6px;white-space:nowrap">
+          <button onclick="editAccount(${a.id})" style="padding:3px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:3px;cursor:pointer;font-size:0.8em">Edit</button>
+          <button onclick="resetSession(${a.id})" style="padding:3px 8px;background:#1a3a5c;color:#4fc3f7;border:1px solid #4fc3f7;border-radius:3px;cursor:pointer;font-size:0.8em">Reset</button>
+          <button onclick="deleteAccount(${a.id})" style="padding:3px 8px;background:#1a3a5c;color:#f44336;border:1px solid #f44336;border-radius:3px;cursor:pointer;font-size:0.8em">Del</button>
+        </td>
+      </tr>`;
+    }).join('') +
+    '</tbody></table>';
+}
+
+function showAccountForm(id) {
+  document.getElementById('accountForm').style.display = 'block';
+  if (id) {
+    const a = _accountsData.find(x => x.id === id);
+    if (a) {
+      document.getElementById('acctId').value = a.id;
+      document.getElementById('acctEmail').value = a.email;
+      document.getElementById('acctPassword').value = a.password;
+      document.getElementById('acctLabel').value = a.label || '';
+      document.getElementById('acctSubType').value = a.subscription_type || '';
+      document.getElementById('acctNotes').value = a.notes || '';
+      document.getElementById('acctActive').checked = !!a.active;
+    }
+  } else {
+    document.getElementById('acctId').value = '';
+    document.getElementById('acctEmail').value = '';
+    document.getElementById('acctPassword').value = '';
+    document.getElementById('acctLabel').value = '';
+    document.getElementById('acctSubType').value = '';
+    document.getElementById('acctNotes').value = '';
+    document.getElementById('acctActive').checked = true;
+  }
+}
+
+function hideAccountForm() { document.getElementById('accountForm').style.display = 'none'; }
+function editAccount(id) { showAccountForm(id); }
+
+async function saveAccount() {
+  const body = {
+    email: document.getElementById('acctEmail').value,
+    password: document.getElementById('acctPassword').value,
+    label: document.getElementById('acctLabel').value,
+    subscription_type: document.getElementById('acctSubType').value,
+    notes: document.getElementById('acctNotes').value,
+    active: document.getElementById('acctActive').checked ? 1 : 0,
+  };
+  const id = document.getElementById('acctId').value;
+  if (id) body.id = parseInt(id);
+  await fetch('/api/account/save', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  hideAccountForm();
+  loadAccounts();
+}
+
+async function deleteAccount(id) {
+  if (!confirm('Delete this account?')) return;
+  await fetch('/api/account/delete', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id}) });
+  loadAccounts();
+}
+
+async function resetSession(id) {
+  await fetch('/api/account/reset-session', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id}) });
+  loadAccounts();
+}
+
+// === CLIPPER CONTROLS ===
+
+async function loadClipperSettings() {
+  try {
+    const resp = await fetch('/api/clipper/settings');
+    const data = await resp.json();
+    // Populate limit field
+    const limit = parseInt(data.daily_clip_limit) || 0;
+    document.getElementById('clipLimitInput').value = limit || '';
+    // Status display
+    const statusEl = document.getElementById('clipperStatus');
+    const running = data.clipper_running;
+    const stopped = data.stop_flag_active;
+    let statusHtml = '';
+    if (running) {
+      statusHtml += '<span style="color:#4caf50;font-weight:bold">RUNNING</span>';
+      if (stopped) statusHtml += ' <span style="color:#e65100">(stop pending)</span>';
+    } else {
+      statusHtml += '<span style="color:#888">NOT RUNNING</span>';
+    }
+    if (limit > 0) {
+      statusHtml += `<br><span style="color:#aaa;font-size:0.9em">Clip limit: ${limit} per account (cumulative)</span>`;
+    } else {
+      statusHtml += '<br><span style="color:#aaa;font-size:0.9em">Clip limit: unlimited</span>';
+    }
+    statusEl.innerHTML = statusHtml;
+    // Load progress, log tail, account eligibility, and account dropdown
+    loadClipperProgress();
+    loadClipperLog();
+    loadAccountEligibility();
+    populateAccountDropdown();
+    // Auto-refresh every 15 seconds while on clipper tab
+    clearInterval(window._clipperRefreshInterval);
+    if (running) {
+      window._clipperRefreshInterval = setInterval(() => { loadClipperProgress(); loadClipperLog(); }, 15000);
+    }
+  } catch(e) {
+    document.getElementById('clipperStatus').innerHTML = '<span style="color:#f44">Error: ' + e + '</span>';
+  }
+}
+
+async function loadAccountEligibility() {
+  try {
+    const resp = await fetch('/api/accounts');
+    const accounts = await resp.json();
+    const el = document.getElementById('accountEligibility');
+    const now = new Date();
+    const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+    let html = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">';
+    html += '<tr><th style="text-align:left;padding:4px;border-bottom:1px solid #444">Account</th>';
+    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Session</th>';
+    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Total</th>';
+    html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Status</th>';
+    html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Eligible</th></tr>';
+    accounts.forEach(a => {
+      if (!a.active) return;
+      const throttleTime = a.last_throttle_time ? new Date(a.last_throttle_time.replace(' ', 'T')) : null;
+      const eligible = throttleTime ? new Date(throttleTime.getTime() + COOLDOWN_MS) : null;
+      let statusHtml, eligibleHtml;
+      if (!throttleTime) {
+        statusHtml = '<span style="color:#4caf50">Ready</span>';
+        eligibleHtml = '<span style="color:#4caf50">Now</span>';
+      } else if (eligible > now) {
+        const hoursLeft = ((eligible - now) / 3600000).toFixed(1);
+        statusHtml = '<span style="color:#e65100">Cooling down</span>';
+        eligibleHtml = `<span style="color:#e65100">${eligible.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (${hoursLeft}h)</span>`;
+      } else {
+        statusHtml = '<span style="color:#4caf50">Ready</span>';
+        eligibleHtml = '<span style="color:#4caf50">Now</span>';
+      }
+      html += `<tr>
+        <td style="padding:4px;color:#4fc3f7">${a.email}</td>
+        <td style="padding:4px;text-align:right;font-weight:bold">${a.clips_this_session || 0}</td>
+        <td style="padding:4px;text-align:right">${a.total_clips}</td>
+        <td style="padding:4px">${statusHtml}</td>
+        <td style="padding:4px">${eligibleHtml}</td>
+      </tr>`;
+    });
+    html += '</table>';
+    el.innerHTML = html;
+  } catch(e) {
+    document.getElementById('accountEligibility').innerHTML = '<span style="color:#f44">Error: ' + e + '</span>';
+  }
+}
+
+async function loadClipperProgress() {
+  try {
+    const resp = await fetch('/api/clipper/progress');
+    const p = await resp.json();
+    // Show current account's cumulative clips toward the limit
+    let clippedText = `${p.session_clips} clips`;
+    if (p.clip_limit > 0) {
+      clippedText += ` / ${p.clip_limit} limit`;
+    }
+    document.getElementById('progClipped').textContent = clippedText;
+    document.getElementById('progAccount').textContent = p.account || '-';
+    if (p.running) {
+      document.getElementById('progArticles').textContent = p.articles;
+      document.getElementById('progErrors').textContent = p.errors;
+      document.getElementById('progQueue').textContent = p.queue ? `${p.queue - p.clipped} remaining (of ${p.queue})` : '-';
+      document.getElementById('progPage').textContent = p.current_page || '-';
+      document.getElementById('progPageTime').textContent = p.page_time || '-';
+      document.getElementById('progLastUpdate').textContent = p.last_update || '-';
+    } else {
+      document.getElementById('progArticles').textContent = '0';
+      document.getElementById('progErrors').textContent = '0';
+      document.getElementById('progQueue').textContent = '-';
+      document.getElementById('progPage').textContent = '-';
+      document.getElementById('progPageTime').textContent = '-';
+      document.getElementById('progLastUpdate').textContent = '-';
+    }
+    // Update running status indicator
+    const statusEl = document.getElementById('clipperStatus');
+    if (p.running) {
+      if (!statusEl.innerHTML.includes('RUNNING')) {
+        statusEl.innerHTML = statusEl.innerHTML.replace('NOT RUNNING', '<span style="color:#4caf50;font-weight:bold">RUNNING</span>');
+      }
+    }
+  } catch(e) { console.error('Progress fetch error:', e); }
+}
+
+async function loadClipperLog() {
+  try {
+    const resp = await fetch('/api/clipper/log');
+    const data = await resp.json();
+    document.getElementById('clipperLog').textContent = data.lines || 'No log found.';
+  } catch(e) {
+    document.getElementById('clipperLog').textContent = 'Error loading log: ' + e;
+  }
+}
+
+async function saveClipLimit() {
+  const val = document.getElementById('clipLimitInput').value || '0';
+  await fetch('/api/clipper/settings', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ daily_clip_limit: val })
+  });
+  loadClipperSettings();
+}
+
+async function clipperStop() {
+  if (!confirm('Send graceful stop signal? Clipper will finish current page then exit.')) return;
+  const resp = await fetch('/api/clipper/stop', { method: 'POST' });
+  const data = await resp.json();
+  alert(data.message || 'Stop flag set.');
+  loadClipperSettings();
+}
+
+async function clipperKill() {
+  if (!confirm('Force kill the clipper process? This will terminate immediately without cleanup.')) return;
+  const resp = await fetch('/api/clipper/kill', { method: 'POST' });
+  const data = await resp.json();
+  if (data.killed_pids && data.killed_pids.length) {
+    alert('Killed PIDs: ' + data.killed_pids.join(', '));
+  } else {
+    alert('No clipper process found to kill.');
+  }
+  loadClipperSettings();
+}
+
+function toggleAccountSelect() {
+  const mode = document.getElementById('clipperAccountMode').value;
+  document.getElementById('specificAccountRow').style.display = mode === 'specific' ? 'block' : 'none';
+}
+
+async function populateAccountDropdown() {
+  try {
+    const resp = await fetch('/api/accounts');
+    const accounts = await resp.json();
+    const sel = document.getElementById('clipperAccountSelect');
+    sel.innerHTML = '';
+    const now = new Date();
+    const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+    accounts.forEach(a => {
+      if (!a.active) return;
+      const throttleTime = a.last_throttle_time ? new Date(a.last_throttle_time.replace(' ', 'T')) : null;
+      const eligible = throttleTime ? new Date(throttleTime.getTime() + COOLDOWN_MS) : null;
+      const ready = !eligible || eligible <= now;
+      const label = a.email + (ready ? ' (ready)' : ' (cooling down)');
+      const opt = document.createElement('option');
+      opt.value = a.email;
+      opt.textContent = label;
+      opt.style.color = ready ? '#4caf50' : '#e65100';
+      sel.appendChild(opt);
+    });
+  } catch(e) { console.error('Failed to populate accounts:', e); }
+}
+
+async function clipperStart() {
+  const mode = document.getElementById('clipperAccountMode').value;
+  const account = mode === 'specific' ? document.getElementById('clipperAccountSelect').value : '';
+  const dateStart = document.getElementById('clipperDateStart').value.trim();
+  const dateEnd = document.getElementById('clipperDateEnd').value.trim();
+  localStorage.setItem('clipperDateStart', dateStart);
+  localStorage.setItem('clipperDateEnd', dateEnd);
+
+  const desc = mode === 'specific' ? `Start clipper with ${account}?` : 'Start clipper with auto-rotate accounts?';
+  if (!confirm(desc + `\n\nDate range: ${dateStart || 'all'} to ${dateEnd || 'all'}`)) return;
+
+  const btn = document.getElementById('clipperStartBtn');
+  btn.disabled = true;
+  btn.textContent = 'Starting...';
+
+  try {
+    const resp = await fetch('/api/clipper/start', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ account, date_start: dateStart, date_end: dateEnd })
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      alert('Clipper started!' + (data.message ? '\n' + data.message : ''));
+    } else {
+      alert('Error: ' + (data.error || 'Unknown error'));
+    }
+  } catch(e) {
+    alert('Failed to start clipper: ' + e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Start Clipper';
+  setTimeout(loadClipperSettings, 3000);
 }
 
 function renderMonthlyChart() {

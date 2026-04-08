@@ -11,15 +11,21 @@ import re
 import sqlite3
 import os
 import glob
+import subprocess
+import signal
 import urllib.request
 import urllib.error
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from socketserver import ThreadingMixIn
 from pathlib import Path
 
+from datetime import datetime
+
 BASE_DIR = Path(r"C:\lake_worth")
 DB_PATH = BASE_DIR / "lake_worth.db"
 PDF_DIR = BASE_DIR / "pdfs"
+LOG_DIR = BASE_DIR / "collector_logs"
+STOP_FLAG = BASE_DIR / "stop_clipper"
 PORT = 8765
 
 
@@ -28,6 +34,48 @@ def get_db():
     conn.execute("PRAGMA journal_mode=WAL")
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def _is_clipper_running():
+    """Check if clip_and_extract.py is running."""
+    try:
+        result = subprocess.run(
+            ["wmic", "process", "where", "name='python.exe'", "get", "CommandLine"],
+            capture_output=True, text=True, timeout=5
+        )
+        return "clip_and_extract" in result.stdout
+    except Exception:
+        return False
+
+
+def ensure_accounts_table():
+    conn = get_db()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS accounts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            label TEXT DEFAULT '',
+            subscription_type TEXT DEFAULT '',
+            active INTEGER DEFAULT 1,
+            total_clips INTEGER DEFAULT 0,
+            clips_this_session INTEGER DEFAULT 0,
+            last_clip_time TEXT,
+            last_throttle_time TEXT,
+            throttle_count INTEGER DEFAULT 0,
+            avg_clips_before_throttle REAL DEFAULT 0,
+            last_login_time TEXT,
+            last_logout_time TEXT,
+            notes TEXT DEFAULT '',
+            created_at TEXT DEFAULT (datetime('now','localtime')),
+            updated_at TEXT DEFAULT (datetime('now','localtime'))
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+ensure_accounts_table()
 
 
 def get_dashboard_data():
@@ -133,6 +181,7 @@ def get_dashboard_data():
         SELECT COUNT(*) as c FROM processed_pdfs pp
         LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
         WHERE a.id IS NULL AND pp.articles_found != -1
+        AND (pp.ignored IS NULL OR pp.ignored = 0)
     """).fetchone()["c"]
 
     # No-articles filenames for aggregation
@@ -140,6 +189,7 @@ def get_dashboard_data():
         SELECT pp.pdf_filename FROM processed_pdfs pp
         LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
         WHERE a.id IS NULL AND pp.articles_found != -1
+        AND (pp.ignored IS NULL OR pp.ignored = 0)
     """).fetchall()
 
     # Parse dates from filenames for monthly/yearly counts
@@ -203,6 +253,7 @@ def get_no_articles_page(page=1, per_page=100, sort="desc", filter_text=""):
             SELECT COUNT(*) as c FROM processed_pdfs pp
             LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
             WHERE a.id IS NULL AND pp.articles_found != -1
+            AND (pp.ignored IS NULL OR pp.ignored = 0)
             AND pp.pdf_filename LIKE ?
         """, (like,)).fetchone()["c"]
         rows = conn.execute(f"""
@@ -211,6 +262,7 @@ def get_no_articles_page(page=1, per_page=100, sort="desc", filter_text=""):
             FROM processed_pdfs pp
             LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
             WHERE a.id IS NULL AND pp.articles_found != -1
+            AND (pp.ignored IS NULL OR pp.ignored = 0)
             AND pp.pdf_filename LIKE ?
             ORDER BY pp.date_str {order}, pp.pdf_filename {order}
             LIMIT ? OFFSET ?
@@ -220,6 +272,7 @@ def get_no_articles_page(page=1, per_page=100, sort="desc", filter_text=""):
             SELECT COUNT(*) as c FROM processed_pdfs pp
             LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
             WHERE a.id IS NULL AND pp.articles_found != -1
+            AND (pp.ignored IS NULL OR pp.ignored = 0)
         """).fetchone()["c"]
         rows = conn.execute(f"""
             SELECT pp.pdf_filename, pp.search_term, pp.url, pp.clip_url,
@@ -227,6 +280,7 @@ def get_no_articles_page(page=1, per_page=100, sort="desc", filter_text=""):
             FROM processed_pdfs pp
             LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
             WHERE a.id IS NULL AND pp.articles_found != -1
+            AND (pp.ignored IS NULL OR pp.ignored = 0)
             ORDER BY pp.date_str {order}, pp.pdf_filename {order}
             LIMIT ? OFFSET ?
         """, (per_page, offset)).fetchall()
@@ -284,38 +338,8 @@ def _extract_ld_json(html: str):
 
 
 def _fetch_with_chrome(url: str) -> str:
-    """Fetch a URL using headless Chrome with the saved login profile."""
-    import time
-    import undetected_chromedriver as uc
-
-    # Use a copy of the login profile to avoid locking the main one
-    profile_src = BASE_DIR / "chrome_temp_profile"
-    profile_dst = BASE_DIR / "chrome_temp_profile_server"
-
-    # Copy profile if it doesn't exist yet (or is stale)
-    if not (profile_dst / "Default").exists() and (profile_src / "Default").exists():
-        import shutil
-        if profile_dst.exists():
-            shutil.rmtree(profile_dst, ignore_errors=True)
-        shutil.copytree(str(profile_src), str(profile_dst), dirs_exist_ok=True)
-
-    options = uc.ChromeOptions()
-    options.add_argument(f"--user-data-dir={str(profile_dst)}")
-    options.add_argument("--headless=new")
-    options.add_argument("--no-first-run")
-    options.add_argument("--disable-gpu")
-    driver = None
-    try:
-        driver = uc.Chrome(options=options, version_main=145)
-        driver.get(url)
-        time.sleep(6)
-        return driver.page_source
-    finally:
-        if driver:
-            try:
-                driver.quit()
-            except Exception:
-                pass
+    """Disabled — was launching stray Chrome browsers via undetected_chromedriver."""
+    raise RuntimeError("Chrome fetch disabled — use direct HTTP instead")
 
 
 def fetch_clip(url: str) -> dict:
@@ -552,11 +576,20 @@ def import_clip(clip_data: dict, replace_article_id: int = None) -> dict:
         use_headline = headline if headline else (old["headline"] if old else "")
         if not use_headline:
             use_headline = _make_working_title(ocr_text)
+        # Inherit page-level flags set by user on the "no articles" tab (promote only)
+        pdf_row = conn.execute(
+            "SELECT highlighted, has_photo FROM processed_pdfs WHERE pdf_filename = ?",
+            (pdf_filename,)
+        ).fetchone() if pdf_filename else None
+        pdf_highlighted = (pdf_row["highlighted"] or 0) if pdf_row else 0
+        pdf_has_photo = (pdf_row["has_photo"] or 0) if pdf_row else 0
         conn.execute(
             """UPDATE articles SET full_text = ?, headline = ?, has_image = ?,
-                                   clip_id = ?, newspaper = ?
+                                   clip_id = ?, newspaper = ?,
+                                   highlighted = COALESCE(NULLIF(highlighted,0), ?),
+                                   has_photo   = COALESCE(NULLIF(has_photo,0), ?)
                WHERE id = ?""",
-            (ocr_text, use_headline, has_image, clip_id or None, newspaper, match_id),
+            (ocr_text, use_headline, has_image, clip_id or None, newspaper, pdf_highlighted, pdf_has_photo, match_id),
         )
         article_id = match_id
 
@@ -578,11 +611,18 @@ def import_clip(clip_data: dict, replace_article_id: int = None) -> dict:
         action = "created"
         if not headline:
             headline = _make_working_title(ocr_text)
+        # Inherit page-level flags set by user on the "no articles" tab
+        pdf_row = conn.execute(
+            "SELECT highlighted, has_photo FROM processed_pdfs WHERE pdf_filename = ?",
+            (pdf_filename,)
+        ).fetchone() if pdf_filename else None
+        pdf_highlighted = (pdf_row["highlighted"] or 0) if pdf_row else 0
+        pdf_has_photo = (pdf_row["has_photo"] or 0) if pdf_row else 0
         cur = conn.execute(
             """INSERT INTO articles (date, newspaper, page, headline, full_text,
-                                     pdf_filename, has_image, search_term, clip_id)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (date, newspaper, page, headline, ocr_text, pdf_filename, has_image, search_term, clip_id or None),
+                                     pdf_filename, has_image, search_term, clip_id, highlighted, has_photo)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (date, newspaper, page, headline, ocr_text, pdf_filename, has_image, search_term, clip_id or None, pdf_highlighted, pdf_has_photo),
         )
         article_id = cur.lastrowid
 
@@ -668,6 +708,209 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                     }
                 conn.close()
                 self.wfile.write(json.dumps(tables, default=str).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/screenshots":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                import glob as g
+                screenshots = sorted(
+                    g.glob(str(LOG_DIR / "screenshot_*.png")),
+                    key=os.path.getmtime, reverse=True
+                )
+                files = []
+                for path in screenshots:
+                    name = os.path.basename(path)
+                    mtime = datetime.fromtimestamp(os.path.getmtime(path)).strftime("%Y-%m-%d %H:%M:%S")
+                    files.append({"name": name, "time": mtime})
+                self.wfile.write(json.dumps(files).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path.startswith("/api/screenshot/"):
+            filename = self.path.split("/api/screenshot/")[1]
+            filepath = LOG_DIR / filename
+            if filepath.exists() and filepath.suffix == ".png" and ".." not in filename:
+                self.send_response(200)
+                self.send_header("Content-type", "image/png")
+                self.end_headers()
+                with open(filepath, "rb") as f:
+                    self.wfile.write(f.read())
+            else:
+                self.send_response(404)
+                self.end_headers()
+        elif self.path == "/api/accounts":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                rows = conn.execute("SELECT * FROM accounts ORDER BY active DESC, total_clips DESC").fetchall()
+                accounts = [dict(r) for r in rows]
+                conn.close()
+                self.wfile.write(json.dumps(accounts, default=str).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/clipper/progress":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                log_files = sorted(glob.glob(str(LOG_DIR / "clipper_*.log")), key=os.path.getmtime, reverse=True)
+                progress = {"clipped": 0, "articles": 0, "errors": 0, "queue": 0,
+                            "current_page": "", "account": "", "running": _is_clipper_running(),
+                            "last_update": "", "page_time": "", "session_clips": 0, "clip_limit": 0}
+                if log_files:
+                    with open(log_files[0], "r", encoding="utf-8", errors="replace") as f:
+                        lines = f.readlines()
+                    for line in lines:
+                        if "Queue:" in line:
+                            m = re.search(r'Queue:\s*(\d+)', line)
+                            if m:
+                                progress["queue"] = int(m.group(1))
+                        if "Progress:" in line:
+                            m = re.search(r'(\d+) clipped, (\d+) articles?, (\d+) errors?', line)
+                            if m:
+                                progress["clipped"] = int(m.group(1))
+                                progress["articles"] = int(m.group(2))
+                                progress["errors"] = int(m.group(3))
+                            # Extract timestamp
+                            tm = re.match(r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})', line)
+                            if tm:
+                                progress["last_update"] = tm.group(1)
+                        if "Tracking as account:" in line:
+                            m = re.search(r'Tracking as account:\s*(\S+)', line)
+                            if m:
+                                progress["account"] = m.group(1)
+                        if "Rotated to" in line or "Switched to" in line:
+                            m = re.search(r'(?:Rotated|Switched) to\s*(\S+@\S+\.com)', line)
+                            if m:
+                                progress["account"] = m.group(1)
+                        if re.search(r'\[\d+/\d+\]', line):
+                            m = re.search(r'\[\d+/\d+\]\s*(.*)', line)
+                            if m:
+                                progress["current_page"] = m.group(1).strip()
+                        if "DONE" in line:
+                            progress["running"] = False
+                        # Extract per-page time
+                        tm2 = re.search(r'Page:.*?(\d+\.\d+)s', line)
+                        if tm2:
+                            progress["page_time"] = tm2.group(1) + "s"
+                # When not running, show next eligible account from DB (log account is stale)
+                # When running, use the account from the log (most recent Tracking/Switched/Rotated)
+                try:
+                    acc_conn = sqlite3.connect(str(BASE_DIR / "lake_worth.db"))
+                    acc_conn.row_factory = sqlite3.Row
+                    acct_email = None
+                    if not progress["running"]:
+                        next_row = acc_conn.execute(
+                            "SELECT email, clips_this_session FROM accounts WHERE active = 1"
+                            " AND (last_throttle_time IS NULL OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))"
+                            " ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC LIMIT 1"
+                        ).fetchone()
+                        if next_row:
+                            progress["account"] = next_row["email"]
+                            progress["session_clips"] = next_row["clips_this_session"] or 0
+                            acct_email = next_row["email"]
+                    else:
+                        acct_email = progress["account"]
+                        if acct_email:
+                            acc_row = acc_conn.execute(
+                                "SELECT clips_this_session FROM accounts WHERE email = ?",
+                                (acct_email,)
+                            ).fetchone()
+                            if acc_row:
+                                progress["session_clips"] = acc_row["clips_this_session"] or 0
+                    # Count articles from pages clipped by this account (parsed from logs)
+                    if acct_email and log_files:
+                        acct_pages = []
+                        is_acct = False
+                        for lf in log_files:
+                            try:
+                                with open(lf, "r", encoding="utf-8", errors="replace") as lfile:
+                                    for ln in lfile:
+                                        if "Tracking as account:" in ln:
+                                            is_acct = acct_email in ln
+                                        elif "Rotated to" in ln or "Switched to" in ln:
+                                            is_acct = acct_email in ln
+                                        if is_acct and "Page:" in ln:
+                                            pm = re.search(r'Page:\s*(\S+\.pdf)', ln)
+                                            if pm:
+                                                acct_pages.append(pm.group(1))
+                            except Exception:
+                                pass
+                        if acct_pages:
+                            placeholders = ",".join(["?"] * len(acct_pages))
+                            art_count = acc_conn.execute(
+                                f"SELECT COUNT(*) as c FROM articles WHERE pdf_filename IN ({placeholders})",
+                                acct_pages
+                            ).fetchone()
+                            progress["articles"] = art_count["c"] if art_count else 0
+                    acc_conn.close()
+                except Exception:
+                    pass
+                # Look up clip limit and next eligible account from DB
+                try:
+                    state_conn = sqlite3.connect(str(BASE_DIR / "lake_worth.db"))
+                    state_conn.row_factory = sqlite3.Row
+                    lim_row = state_conn.execute(
+                        "SELECT value FROM clipper_state WHERE key = 'daily_clip_limit'"
+                    ).fetchone()
+                    if lim_row:
+                        progress["clip_limit"] = int(lim_row["value"] or 0)
+                    # Find next eligible account (not throttled within 24h)
+                    next_row = state_conn.execute(
+                        "SELECT email, clips_this_session FROM accounts WHERE active = 1"
+                        " AND (last_throttle_time IS NULL OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))"
+                        " ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC LIMIT 1"
+                    ).fetchone()
+                    if next_row:
+                        progress["next_account"] = next_row["email"]
+                        progress["next_account_clips"] = next_row["clips_this_session"] or 0
+                    state_conn.close()
+                except Exception:
+                    pass
+                self.wfile.write(json.dumps(progress).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/clipper/log":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                log_files = sorted(glob.glob(str(LOG_DIR / "clipper_*.log")), key=os.path.getmtime, reverse=True)
+                if log_files:
+                    with open(log_files[0], "r", encoding="utf-8", errors="replace") as f:
+                        all_lines = f.readlines()
+                        tail = all_lines[-15:]
+                        lines = "".join(tail)
+                else:
+                    lines = "No clipper log files found."
+                self.wfile.write(json.dumps({"lines": lines}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/clipper/settings":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                conn.execute("CREATE TABLE IF NOT EXISTS clipper_state (key TEXT PRIMARY KEY, value TEXT)")
+                conn.commit()
+                settings = {}
+                for row in conn.execute("SELECT key, value FROM clipper_state").fetchall():
+                    settings[row["key"]] = row["value"]
+                conn.close()
+                # Add live status
+                settings["stop_flag_active"] = STOP_FLAG.exists()
+                settings["clipper_running"] = _is_clipper_running()
+                self.wfile.write(json.dumps(settings, default=str).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
         else:
@@ -890,6 +1133,173 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 result = import_clip(clip_data, replace_article_id)
                 result["clip"] = clip_data
                 self.wfile.write(json.dumps(result, default=str).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/account/save":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                acct_id = body.get("id")
+                if acct_id:
+                    conn.execute("""
+                        UPDATE accounts SET email=?, password=?, label=?, subscription_type=?,
+                        active=?, notes=?, updated_at=datetime('now','localtime')
+                        WHERE id=?
+                    """, (body["email"], body["password"], body.get("label",""),
+                          body.get("subscription_type",""), body.get("active",1),
+                          body.get("notes",""), acct_id))
+                else:
+                    conn.execute("""
+                        INSERT INTO accounts (email, password, label, subscription_type, active, notes)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    """, (body["email"], body["password"], body.get("label",""),
+                          body.get("subscription_type",""), body.get("active",1),
+                          body.get("notes","")))
+                conn.commit()
+                conn.close()
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/account/delete":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                conn.execute("DELETE FROM accounts WHERE id=?", (body["id"],))
+                conn.commit()
+                conn.close()
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/account/reset-session":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                conn.execute("""
+                    UPDATE accounts SET clips_this_session=0, updated_at=datetime('now','localtime')
+                    WHERE id=?
+                """, (body["id"],))
+                conn.commit()
+                conn.close()
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/clipper/settings":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                conn.execute("CREATE TABLE IF NOT EXISTS clipper_state (key TEXT PRIMARY KEY, value TEXT)")
+                for key, value in body.items():
+                    conn.execute(
+                        "INSERT INTO clipper_state (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = ?",
+                        (key, str(value), str(value))
+                    )
+                conn.commit()
+                conn.close()
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/clipper/start":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                # Check if already running
+                if _is_clipper_running():
+                    self.wfile.write(json.dumps({"error": "Clipper is already running."}).encode())
+                    return
+                # Clear stop flag if present
+                if STOP_FLAG.exists():
+                    if STOP_FLAG.is_dir():
+                        STOP_FLAG.rmdir()
+                    else:
+                        STOP_FLAG.unlink()
+                # Build command
+                account = body.get("account", "").strip()
+                date_start = body.get("date_start", "").strip()
+                date_end = body.get("date_end", "").strip()
+                cmd = ["python", "clip_and_extract.py", "0"]
+                if date_start:
+                    cmd.append(date_start)
+                    cmd.append(date_end or "2025-12-31")
+                    if account:
+                        cmd.append(account)
+                elif account:
+                    cmd.extend(["", "", account])
+                # Launch as independent process (CREATE_NEW_PROCESS_GROUP so it survives
+                # parent exit, but NOT DETACHED_PROCESS which hides the window and
+                # prevents Chrome from getting focus for mouse interactions)
+                subprocess.Popen(
+                    cmd,
+                    cwd=str(BASE_DIR),
+                    creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+                )
+                msg = f"Clipper started"
+                if account:
+                    msg += f" with {account}"
+                else:
+                    msg += " with auto-rotate"
+                if date_start:
+                    msg += f" ({date_start} to {date_end or '2025-12-31'})"
+                self.wfile.write(json.dumps({"ok": True, "message": msg}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/clipper/stop":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                STOP_FLAG.mkdir(exist_ok=True)
+                self.wfile.write(json.dumps({"ok": True, "message": "Stop flag set. Clipper will stop after current page."}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/clipper/kill":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                # Find and kill clip_and_extract.py processes
+                result = subprocess.run(
+                    ["wmic", "process", "where", "name='python.exe'", "get", "ProcessId,CommandLine"],
+                    capture_output=True, text=True, timeout=5
+                )
+                killed = []
+                for line in result.stdout.splitlines():
+                    if "clip_and_extract" in line:
+                        parts = line.strip().split()
+                        for part in parts:
+                            if part.isdigit():
+                                pid = int(part)
+                                try:
+                                    os.kill(pid, signal.SIGTERM)
+                                    killed.append(pid)
+                                except Exception:
+                                    pass
+                self.wfile.write(json.dumps({"ok": True, "killed_pids": killed}).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
         else:
