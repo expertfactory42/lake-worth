@@ -19,7 +19,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from socketserver import ThreadingMixIn
 from pathlib import Path
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 BASE_DIR = Path(r"C:\lake_worth")
 DB_PATH = BASE_DIR / "lake_worth.db"
@@ -36,12 +36,161 @@ def get_db():
     return conn
 
 
+_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+
+
+_LOG_TS_RE = re.compile(r'^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})')
+
+
+def _parse_log_ts(line):
+    m = _LOG_TS_RE.match(line)
+    if not m:
+        return None
+    try:
+        return datetime.strptime(m.group(1), "%Y-%m-%d %H:%M:%S")
+    except Exception:
+        return None
+
+
+def _determine_run_set_start():
+    """Return a datetime marking the start of the most recent 'run set'.
+
+    A run set is the cluster of clipper_instances.started_at values around
+    the most recent activity. If any instance has a heartbeat within the
+    last 5 minutes, the run set starts at the earliest started_at among
+    currently-active instances. Otherwise we cluster backward from the
+    latest started_at, grouping any rows within 15 minutes of each other.
+    Returns None if there is no usable data.
+    """
+    try:
+        conn = sqlite3.connect(str(DB_PATH), timeout=5)
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(
+            "SELECT started_at, heartbeat_at FROM clipper_instances "
+            "WHERE started_at IS NOT NULL"
+        ).fetchall()
+        conn.close()
+    except Exception:
+        return None
+    if not rows:
+        return None
+
+    def _p(s):
+        if not s:
+            return None
+        try:
+            return datetime.strptime(s[:19], "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            return None
+
+    now = datetime.now()
+    recent_threshold = now - timedelta(minutes=5)
+    active_starts = []
+    for r in rows:
+        hb = _p(r["heartbeat_at"])
+        st = _p(r["started_at"])
+        if hb and st and hb >= recent_threshold:
+            active_starts.append(st)
+    if active_starts:
+        return min(active_starts)
+
+    starts = sorted([_p(r["started_at"]) for r in rows if _p(r["started_at"])])
+    if not starts:
+        return None
+    cluster_start = starts[-1]
+    gap = timedelta(minutes=15)
+    for s in reversed(starts[:-1]):
+        if cluster_start - s <= gap:
+            cluster_start = s
+        else:
+            break
+    return cluster_start
+
+
+_daily_stats_cache = {"ts": 0.0, "out": None}
+_DAILY_STATS_TTL = 10.0  # seconds
+
+
+def _scan_logs_since(since_dt):
+    """Scan clipper_*.log files for events on/after since_dt. Returns
+    dict(clipped=int, errors=int).
+    """
+    result = {"clipped": 0, "errors": 0}
+    if since_dt is None:
+        return result
+    try:
+        since_ts = since_dt.timestamp()
+        files = glob.glob(str(LOG_DIR / "clipper_*.log"))
+        files = [f for f in files if os.path.getmtime(f) >= since_ts - 3600]
+        # Only tail the last 512KB of each file to avoid scanning megabytes
+        # of clipper log on every poll.
+        TAIL_BYTES = 512 * 1024
+        for fp in files:
+            try:
+                size = os.path.getsize(fp)
+                with open(fp, "rb") as fh:
+                    if size > TAIL_BYTES:
+                        fh.seek(size - TAIL_BYTES)
+                        fh.readline()  # discard partial line
+                    data = fh.read()
+                text = data.decode("utf-8", errors="replace")
+                for line in text.splitlines():
+                    ts = _parse_log_ts(line)
+                    if ts is None or ts < since_dt:
+                        continue
+                    if "Clicked Save button" in line:
+                        result["clipped"] += 1
+                    if "[ERROR]" in line:
+                        result["errors"] += 1
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return result
+
+
+def _count_articles_since(conn, since_dt):
+    """Returns (articles_total, picture_heavy) counted from the articles
+    table where created_at >= since_dt. If since_dt is None, returns zeros.
+    """
+    if since_dt is None:
+        return 0, 0
+    since_s = since_dt.strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        total = conn.execute(
+            "SELECT COUNT(*) AS c FROM articles WHERE created_at >= ?",
+            (since_s,),
+        ).fetchone()["c"]
+        picture = conn.execute(
+            "SELECT COUNT(*) AS c FROM articles "
+            "WHERE created_at >= ? AND headline LIKE 'PICTURE HEAVY%'",
+            (since_s,),
+        ).fetchone()["c"]
+        return total, picture
+    except Exception:
+        return 0, 0
+
+
+def _current_queue_size(conn):
+    try:
+        row = conn.execute(
+            "SELECT COUNT(*) AS c FROM processed_pdfs "
+            "WHERE (clipped = 0 OR clipped IS NULL) "
+            "AND (ignored IS NULL OR ignored = 0) "
+            "AND url IS NOT NULL AND url != ''"
+        ).fetchone()
+        return row["c"] if row else 0
+    except Exception:
+        return 0
+
+
 def _is_clipper_running():
     """Check if clip_and_extract.py is running."""
     try:
         result = subprocess.run(
             ["wmic", "process", "where", "name='python.exe'", "get", "CommandLine"],
-            capture_output=True, text=True, timeout=5
+            capture_output=True, text=True, timeout=5,
+            creationflags=_NO_WINDOW,
         )
         return "clip_and_extract" in result.stdout
     except Exception:
@@ -70,6 +219,7 @@ def _pid_alive(pid):
         out = subprocess.run(
             ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
             capture_output=True, text=True, timeout=5,
+            creationflags=_NO_WINDOW,
         )
         return str(pid) in (out.stdout or "")
     except Exception:
@@ -92,6 +242,11 @@ def _sweep_stale_claims():
         ).fetchall()
         for r in rows:
             if not _pid_alive(r["pid"]):
+                print(
+                    f"[sweep] removing slot={r['slot_id']} pid={r['pid']} "
+                    f"(process not alive)",
+                    flush=True,
+                )
                 conn.execute(
                     "DELETE FROM clipper_instances WHERE slot_id = ?", (r["slot_id"],)
                 )
@@ -144,19 +299,242 @@ def _next_free_slot_id():
     return str(i)
 
 
+def _get_state(key, default=""):
+    try:
+        conn = get_db()
+        try:
+            row = conn.execute(
+                "SELECT value FROM clipper_state WHERE key = ?", (key,)
+            ).fetchone()
+            if row and row["value"] is not None:
+                return row["value"]
+        finally:
+            conn.close()
+    except Exception:
+        pass
+    return default
+
+
+def _set_state(key, value):
+    try:
+        conn = get_db()
+        try:
+            conn.execute(
+                "INSERT OR REPLACE INTO clipper_state (key, value) VALUES (?, ?)",
+                (key, str(value)),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+    except Exception:
+        pass
+
+
+def _log_spawn(msg):
+    import datetime as _dt
+    print(f"[{_dt.datetime.now().strftime('%H:%M:%S')}] [spawn] {msg}", flush=True)
+
+
+def _spawn_instance(date_start="", date_end="", max_pages="0"):
+    """Launch a new detached clip_and_extract.py worker in a fresh slot.
+    Returns (slot_id, pid) on success or (None, None) on failure.
+    Extracted from /api/instances/add so autoscale can call it too.
+    """
+    import shutil as _shutil
+    try:
+        _sweep_stale_claims()
+        slot_id = _next_free_slot_id()
+        try:
+            _profile_dir = BASE_DIR / f"chrome_temp_profile_clipper_{slot_id}"
+            if _profile_dir.exists():
+                _shutil.rmtree(_profile_dir, ignore_errors=True)
+        except Exception:
+            pass
+        try:
+            conn = sqlite3.connect(str(DB_PATH))
+            conn.execute(
+                "INSERT OR REPLACE INTO clipper_instances "
+                "(slot_id, pid, status, started_at, heartbeat_at) "
+                "VALUES (?, ?, ?, datetime('now','localtime'), datetime('now','localtime'))",
+                (slot_id, 0, "spawning"),
+            )
+            conn.commit()
+            conn.close()
+        except Exception:
+            pass
+        # Only clear the per-slot stop flag on spawn. Never clear the global
+        # kill switch here — if the user set it, we must not undo that.
+        try:
+            _slot_flag = _instance_stop_flag(slot_id)
+            if _slot_flag.exists():
+                if _slot_flag.is_dir():
+                    _shutil.rmtree(_slot_flag, ignore_errors=True)
+                else:
+                    _slot_flag.unlink()
+        except Exception:
+            pass
+        cmd = [
+            "python", "clip_and_extract.py",
+            f"--slot-id={slot_id}",
+            str(max_pages) or "0",
+        ]
+        if date_start:
+            cmd.append(date_start)
+            cmd.append(date_end or "2025-12-31")
+        _si = subprocess.STARTUPINFO()
+        _si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        _si.wShowWindow = 0  # SW_HIDE
+        import traceback as _tb
+        caller = "".join(_tb.format_stack(limit=4)[:-1])
+        _log_spawn(
+            f"spawning slot={slot_id} date_start={date_start} date_end={date_end}\n"
+            f"  called from:\n{caller}"
+        )
+        proc = subprocess.Popen(
+            cmd,
+            cwd=str(BASE_DIR),
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+            startupinfo=_si,
+        )
+        _log_spawn(f"spawned slot={slot_id} pid={proc.pid}")
+        return slot_id, proc.pid
+    except Exception as e:
+        print(f"[autoscale] spawn failed: {e}", flush=True)
+        return None, None
+
+
+_autoscale_lock = None  # threading.Lock placeholder; set on first use
+
+
+def _autoscale_tick():
+    """Read the persisted target and reconcile running instance count.
+    Spawns at most one instance per tick to avoid thundering-herd launches.
+    """
+    try:
+        target_s = _get_state("instances_target", "0")
+        try:
+            target = int(target_s)
+        except ValueError:
+            target = 0
+        if target <= 0:
+            return
+        _sweep_stale_claims()
+        conn = get_db()
+        try:
+            rows = conn.execute(
+                "SELECT status, started_at FROM clipper_instances"
+            ).fetchall()
+        finally:
+            conn.close()
+        current = len(rows)
+        if current >= target:
+            return
+        # Don't pile on new browsers while an earlier one is still trying to log
+        # in. Block spawning if any instance is in a pre-running state, unless
+        # it's been stuck there long enough that it's clearly wedged (then the
+        # stale sweep / user will clean it up).
+        import datetime as _dt
+        now = _dt.datetime.now()
+        for r in rows:
+            st = (r["status"] or "").lower()
+            if st in ("running", "dead", "stopped", "error"):
+                continue
+            # pending states: spawning, starting, logging-in, etc.
+            started = r["started_at"] or ""
+            age = 9999
+            try:
+                t = _dt.datetime.strptime(started, "%Y-%m-%d %H:%M:%S")
+                age = (now - t).total_seconds()
+            except Exception:
+                pass
+            if age < 240:  # give each spawn up to 4 minutes to reach running
+                print(
+                    f"[autoscale] holding off — pending instance status={st} age={int(age)}s"
+                )
+                return
+        # Skip if a global stop flag is set
+        if GLOBAL_STOP_FLAG.exists() or STOP_FLAG.exists():
+            return
+        date_start = _get_state("instances_date_start", "")
+        date_end = _get_state("instances_date_end", "")
+        # Don't spawn if the configured range has no unclipped pages left —
+        # otherwise we'd spin up a new clipper just to have it find an empty
+        # queue and exit, forever.
+        try:
+            q_conn = sqlite3.connect(str(DB_PATH), timeout=5)
+            try:
+                where = [
+                    "(ignored IS NULL OR ignored = 0)",
+                    "url IS NOT NULL AND url != ''",
+                    "(clipped IS NULL OR clipped = 0)",
+                ]
+                params = []
+                if date_start:
+                    where.append("date_str >= ?")
+                    params.append(date_start)
+                if date_end:
+                    where.append("date_str <= ?")
+                    params.append(date_end)
+                remain = q_conn.execute(
+                    "SELECT COUNT(*) FROM processed_pdfs WHERE " + " AND ".join(where),
+                    params,
+                ).fetchone()[0]
+            finally:
+                q_conn.close()
+        except Exception as _e:
+            remain = 1  # fail-open: don't block on a query error
+        if remain <= 0:
+            _log_spawn(
+                f"autoscale tick: queue empty for range {date_start}..{date_end} — "
+                f"zeroing target and halting spawns"
+            )
+            _set_state("instances_target", "0")
+            return
+        _log_spawn(
+            f"autoscale tick: current={current} target={target} remain={remain} — spawning"
+        )
+        _spawn_instance(date_start=date_start, date_end=date_end, max_pages="0")
+    except Exception as e:
+        print(f"[autoscale] tick error: {e}")
+
+
+def _autoscale_loop():
+    import time as _time
+    # Initial delay so the server finishes starting before first tick
+    _time.sleep(10)
+    while True:
+        _autoscale_tick()
+        _time.sleep(30)
+
+
 def _list_instances():
-    """Return current clipper_instances rows as plain dicts (after sweep)."""
+    """Return current clipper_instances rows as plain dicts (after sweep).
+    Also joins the account's persistent clips_this_session and the daily
+    limit so the UI can show cumulative usage vs cap."""
     _sweep_stale_claims()
     conn = get_db()
     try:
         rows = conn.execute(
-            """SELECT slot_id, pid, account_email, status, current_date, current_page,
-                      count_this_run, date_start, date_end, started_at, heartbeat_at,
-                      last_action
-                 FROM clipper_instances
-                ORDER BY CAST(slot_id AS INTEGER), slot_id"""
+            """SELECT i.slot_id, i.pid, i.account_email, i.status, i.current_date,
+                      i.current_page, i.count_this_run, i.date_start, i.date_end,
+                      i.started_at, i.heartbeat_at, i.last_action,
+                      CASE WHEN a.clips_today_date = date('now','localtime')
+                           THEN COALESCE(a.clips_today, 0) ELSE 0 END AS account_clips_today
+                 FROM clipper_instances i
+                 LEFT JOIN accounts a ON a.email = i.account_email
+                ORDER BY CAST(i.slot_id AS INTEGER), i.slot_id"""
         ).fetchall()
-        return [dict(r) for r in rows]
+        result = [dict(r) for r in rows]
+        try:
+            lim_row = conn.execute(
+                "SELECT value FROM clipper_state WHERE key='daily_clip_limit'"
+            ).fetchone()
+            daily_limit = int(lim_row["value"]) if lim_row and lim_row["value"] else 0
+        except Exception:
+            daily_limit = 0
+        for r in result:
+            r["daily_clip_limit"] = daily_limit
+        return result
     finally:
         conn.close()
 
@@ -767,6 +1145,20 @@ class DashboardHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(BASE_DIR), **kwargs)
 
+    def log_message(self, fmt, *args):
+        # Route access log to stdout so it gets captured alongside other
+        # diagnostics. Quiet noisy static/asset requests.
+        try:
+            msg = fmt % args
+        except Exception:
+            msg = str(args)
+        path = getattr(self, "path", "")
+        if any(p in path for p in ("/api/instances/add", "/api/instances/stop",
+                                    "/api/instances/set_target",
+                                    "/api/instances/clear_stop_all")):
+            import datetime as _dt
+            print(f"[{_dt.datetime.now().strftime('%H:%M:%S')}] [http] {msg}", flush=True)
+
     def do_GET(self):
         if self.path == "/" or self.path == "/index.html":
             self.send_response(200)
@@ -865,6 +1257,104 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 accounts = [dict(r) for r in rows]
                 conn.close()
                 self.wfile.write(json.dumps(accounts, default=str).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path.startswith("/api/clipper/range_stats"):
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                from urllib.parse import urlparse, parse_qs
+                q = parse_qs(urlparse(self.path).query)
+                ds = (q.get("start", [""])[0] or "").strip() or None
+                de = (q.get("end", [""])[0] or "").strip() or None
+                rs_conn = sqlite3.connect(str(DB_PATH), timeout=5)
+                rs_conn.row_factory = sqlite3.Row
+                try:
+                    where = [
+                        "(ignored IS NULL OR ignored = 0)",
+                        "url IS NOT NULL",
+                        "url != ''",
+                    ]
+                    params = []
+                    if ds:
+                        where.append("date_str >= ?")
+                        params.append(ds)
+                    if de:
+                        where.append("date_str <= ?")
+                        params.append(de)
+                    where_sql = " AND ".join(where)
+                    total = rs_conn.execute(
+                        f"SELECT COUNT(*) AS c FROM processed_pdfs WHERE {where_sql}",
+                        params,
+                    ).fetchone()["c"]
+                    done = rs_conn.execute(
+                        f"SELECT COUNT(*) AS c FROM processed_pdfs WHERE {where_sql} AND clipped = 1",
+                        params,
+                    ).fetchone()["c"]
+                finally:
+                    rs_conn.close()
+                remain = max(total - done, 0)
+                self.wfile.write(json.dumps({
+                    "start": ds,
+                    "end": de,
+                    "total": total,
+                    "done": done,
+                    "remain": remain,
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/clipper/daily_stats":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                import time as _t
+                _now_mono = _t.monotonic()
+                if (_daily_stats_cache["out"] is not None
+                        and (_now_mono - _daily_stats_cache["ts"]) < _DAILY_STATS_TTL):
+                    self.wfile.write(json.dumps(_daily_stats_cache["out"]).encode())
+                    return
+                now = datetime.now()
+                midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+                run_set_start = _determine_run_set_start()
+
+                mid_logs = _scan_logs_since(midnight)
+                rs_logs = _scan_logs_since(run_set_start) if run_set_start else {"clipped": 0, "errors": 0}
+
+                stats_conn = sqlite3.connect(str(DB_PATH), timeout=5)
+                stats_conn.row_factory = sqlite3.Row
+                try:
+                    mid_art, mid_pic = _count_articles_since(stats_conn, midnight)
+                    rs_art, rs_pic = _count_articles_since(stats_conn, run_set_start)
+                    queue = _current_queue_size(stats_conn)
+                finally:
+                    stats_conn.close()
+
+                out = {
+                    "since_midnight": {
+                        "clipped": mid_logs["clipped"],
+                        "articles": mid_art,
+                        "picture_heavy": mid_pic,
+                        "errors": mid_logs["errors"],
+                        "queue": queue,
+                        "start": midnight.strftime("%Y-%m-%d %H:%M:%S"),
+                    },
+                    "run_set": {
+                        "clipped": rs_logs["clipped"],
+                        "articles": rs_art,
+                        "picture_heavy": rs_pic,
+                        "errors": rs_logs["errors"],
+                        "queue": queue,
+                        "start": run_set_start.strftime("%Y-%m-%d %H:%M:%S") if run_set_start else None,
+                    },
+                    "running": _is_clipper_running(),
+                }
+                _daily_stats_cache["out"] = out
+                _daily_stats_cache["ts"] = _now_mono
+                self.wfile.write(json.dumps(out).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
         elif self.path == "/api/clipper/progress":
@@ -1000,8 +1490,8 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 if log_files:
                     with open(log_files[0], "r", encoding="utf-8", errors="replace") as f:
                         all_lines = f.readlines()
-                        tail = all_lines[-15:]
-                        lines = "".join(tail)
+                        tail = all_lines[-500:]
+                        lines = "".join(reversed(tail))
                 else:
                     lines = "No clipper log files found."
                 self.wfile.write(json.dumps({"lines": lines}).encode())
@@ -1402,6 +1892,58 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"ok": True, "message": "Stop flag set. Clipper will stop after current page."}).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/instances/set_target":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                try:
+                    target = int(body.get("target", 0))
+                except Exception:
+                    target = 0
+                target = max(0, target)
+                date_start = (body.get("date_start") or "").strip()
+                date_end = (body.get("date_end") or "").strip()
+                _set_state("instances_target", target)
+                _set_state("instances_date_start", date_start)
+                _set_state("instances_date_end", date_end)
+                # If lowering target, stop the oldest extras immediately.
+                _sweep_stale_claims()
+                conn = get_db()
+                try:
+                    rows = conn.execute(
+                        "SELECT slot_id, started_at FROM clipper_instances "
+                        "ORDER BY COALESCE(started_at, '') DESC"
+                    ).fetchall()
+                finally:
+                    conn.close()
+                current = len(rows)
+                stopped = []
+                if target < current:
+                    # stop the oldest ones (sort ascending by started_at)
+                    to_stop = sorted(rows, key=lambda r: r["started_at"] or "")[: current - target]
+                    for r in to_stop:
+                        try:
+                            _instance_stop_flag(r["slot_id"]).mkdir(exist_ok=True)
+                            stopped.append(r["slot_id"])
+                        except Exception:
+                            pass
+                # Trigger an immediate autoscale tick to spawn if needed.
+                try:
+                    _autoscale_tick()
+                except Exception:
+                    pass
+                self.wfile.write(json.dumps({
+                    "ok": True,
+                    "target": target,
+                    "previous": current,
+                    "stopped": stopped,
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
         elif self.path == "/api/instances/add":
             content_len = int(self.headers.get("Content-Length", 0))
             body = json.loads(self.rfile.read(content_len)) if content_len else {}
@@ -1416,16 +1958,42 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 max_pages = str(body.get("max_pages") or "0").strip() or "0"
 
                 slot_id = _next_free_slot_id()
-                # Clear any stale per-slot stop flag for this slot
-                flag = _instance_stop_flag(slot_id)
+                # Wipe the per-slot Chrome profile to guarantee a clean launch.
+                # A stale/locked profile from a crashed or force-killed prior
+                # run causes undetected_chromedriver to fail with "Browser
+                # window not found" or attach to an existing Chrome instance.
                 try:
-                    if flag.exists():
-                        if flag.is_dir():
-                            flag.rmdir()
-                        else:
-                            flag.unlink()
+                    import shutil as _shutil
+                    _profile_dir = BASE_DIR / f"chrome_temp_profile_clipper_{slot_id}"
+                    if _profile_dir.exists():
+                        _shutil.rmtree(_profile_dir, ignore_errors=True)
                 except Exception:
                     pass
+                # Reserve the slot immediately so concurrent /add calls don't
+                # race and pick the same slot_id before the child writes its row.
+                try:
+                    conn = sqlite3.connect(str(DB_PATH))
+                    conn.execute(
+                        "INSERT OR REPLACE INTO clipper_instances "
+                        "(slot_id, pid, status, started_at, heartbeat_at) "
+                        "VALUES (?, ?, ?, datetime('now','localtime'), datetime('now','localtime'))",
+                        (slot_id, 0, "spawning"),
+                    )
+                    conn.commit()
+                    conn.close()
+                except Exception:
+                    pass
+                # Clear any stop flags that would immediately halt this worker:
+                # per-slot, global, and legacy single-instance flags.
+                for flag in (_instance_stop_flag(slot_id), GLOBAL_STOP_FLAG, STOP_FLAG):
+                    try:
+                        if flag.exists():
+                            if flag.is_dir():
+                                _shutil.rmtree(flag, ignore_errors=True)
+                            else:
+                                flag.unlink()
+                    except Exception:
+                        pass
 
                 cmd = [
                     "python", "clip_and_extract.py",
@@ -1437,10 +2005,17 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                     cmd.append(date_end or "2025-12-31")
 
                 # Detach so the worker survives the dashboard closing.
+                # Hide the worker's console window (STARTF_USESHOWWINDOW +
+                # SW_HIDE) but keep real stdio handles so libraries that write
+                # to stdout don't crash. CREATE_NO_WINDOW would kill stdio.
+                _si = subprocess.STARTUPINFO()
+                _si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                _si.wShowWindow = 0  # SW_HIDE
                 proc = subprocess.Popen(
                     cmd,
                     cwd=str(BASE_DIR),
                     creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+                    startupinfo=_si,
                 )
                 self.wfile.write(json.dumps({
                     "ok": True,
@@ -1477,9 +2052,12 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             self.end_headers()
             try:
                 GLOBAL_STOP_FLAG.mkdir(exist_ok=True)
+                # Also zero the autoscale target so the background loop
+                # stops wanting to replace stopped instances.
+                _set_state("instances_target", "0")
                 self.wfile.write(json.dumps({
                     "ok": True,
-                    "message": "Global stop flag set. All instances will stop after current page.",
+                    "message": "Global stop flag set and target=0. All instances will stop.",
                 }).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
@@ -1507,7 +2085,8 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 # Find and kill clip_and_extract.py processes
                 result = subprocess.run(
                     ["wmic", "process", "where", "name='python.exe'", "get", "ProcessId,CommandLine"],
-                    capture_output=True, text=True, timeout=5
+                    capture_output=True, text=True, timeout=5,
+                    creationflags=_NO_WINDOW,
                 )
                 killed = []
                 for line in result.stdout.splitlines():
@@ -1547,6 +2126,12 @@ def main():
     server = ThreadedHTTPServer(("localhost", PORT), DashboardHandler)
     print(f"Dashboard running at http://localhost:{PORT}")
     print("Press Ctrl+C to stop")
+    # Start the autoscale background thread. It reads instances_target
+    # from clipper_state every 30s and spawns missing instances.
+    import threading as _threading
+    _t = _threading.Thread(target=_autoscale_loop, daemon=True)
+    _t.start()
+    print("Autoscale thread started (30s tick).")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

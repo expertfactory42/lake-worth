@@ -753,6 +753,39 @@ def check_internet_pause():
 
 # === CLOUDFLARE HANDLING ===
 
+def close_extra_tabs(driver):
+    """Close every browser tab except the currently focused one.
+
+    seleniumbase's uc_open_with_reconnect opens a new tab to bypass
+    Cloudflare and leaves the old one behind. Without cleanup, tabs
+    accumulate on every login / retry / navigation and eventually the
+    browser is full of dead tabs.
+    """
+    try:
+        handles = driver.window_handles
+        if len(handles) <= 1:
+            return
+        current = driver.current_window_handle
+        for h in handles:
+            if h == current:
+                continue
+            try:
+                driver.switch_to.window(h)
+                driver.close()
+            except Exception:
+                pass
+        try:
+            driver.switch_to.window(current)
+        except Exception:
+            # If the "current" handle was somehow killed, fall back to
+            # whatever handle is still open.
+            remaining = driver.window_handles
+            if remaining:
+                driver.switch_to.window(remaining[0])
+    except Exception as e:
+        log.info(f"    close_extra_tabs skipped: {e}")
+
+
 def is_cloudflare(driver):
     """Check if the current page is a Cloudflare challenge."""
     try:
@@ -991,6 +1024,7 @@ def do_logout(driver):
             driver.uc_open_with_reconnect("https://www.newspapers.com/", 4)
         except Exception:
             driver.get("https://www.newspapers.com/")
+        close_extra_tabs(driver)
         time.sleep(5)
 
         if is_cloudflare(driver):
@@ -1045,7 +1079,57 @@ def do_login(driver, acct):
         driver.uc_open_with_reconnect("https://www.newspapers.com/signin/", 4)
     except Exception:
         driver.execute_script("window.location.href = 'https://www.newspapers.com/signin/';")
+    close_extra_tabs(driver)
     time.sleep(5)
+
+    # Dismiss subscription / upsell nag modal if present. Fresh sessions often
+    # land on a "Subscribe now / Sign in" interstitial that hides the login form
+    # until its "Sign in" link/button is clicked.
+    try:
+        nag_clicked = False
+        nag_js = r"""
+            const wanted = ['sign in','log in','sign-in','log-in'];
+            const nodes = document.querySelectorAll(
+                "a, button, [role='button'], span, div"
+            );
+            for (const el of nodes) {
+                const txt = (el.innerText || el.textContent || '').trim().toLowerCase();
+                if (!txt || txt.length > 24) continue;
+                if (!wanted.some(w => txt === w || txt.startsWith(w))) continue;
+                // Skip elements that are plainly the page's own form labels/buttons.
+                // We only want items inside modal/dialog/overlay containers.
+                let p = el, inModal = false;
+                for (let i = 0; i < 8 && p; i++, p = p.parentElement) {
+                    const cls = (p.className || '') + ' ' + (p.id || '');
+                    const role = p.getAttribute && p.getAttribute('role');
+                    if (/modal|dialog|overlay|popup|paywall|upsell|subscribe|nag|interstitial/i.test(cls)
+                        || role === 'dialog') {
+                        inModal = true;
+                        break;
+                    }
+                }
+                if (!inModal) continue;
+                const r = el.getBoundingClientRect();
+                if (r.width < 2 || r.height < 2) continue;
+                el.click();
+                return true;
+            }
+            return false;
+        """
+        for _ in range(3):
+            if driver.find_elements(By.CSS_SELECTOR, "input[type='password']"):
+                break
+            try:
+                nag_clicked = bool(driver.execute_script(nag_js))
+            except Exception:
+                nag_clicked = False
+            if nag_clicked:
+                log.info("    Dismissed subscription nag (clicked in-modal Sign in).")
+                time.sleep(2)
+                break
+            time.sleep(1)
+    except Exception as e:
+        log.info(f"    Nag-dismiss scan skipped: {e}")
 
     # Handle full-page Cloudflare challenge (first gate)
     if is_cloudflare(driver):
@@ -1126,9 +1210,36 @@ def do_login(driver, acct):
         return False
 
     # Solve Cloudflare Turnstile on the login form (second gate)
-    # Always attempt — uc_gui_click_captcha scans for captcha iframes automatically
+    # Always attempt — uc_gui_click_captcha scans for captcha iframes automatically.
+    # We also log whether a widget was detected so we can diagnose cases
+    # where the click misbehaves (e.g. lands on userid when no widget
+    # present). Detection is diagnostic only — the click runs either way.
     log.info("    Solving Turnstile on login form...")
     time.sleep(2)
+    turnstile_selectors = [
+        "iframe[src*='challenges.cloudflare.com']",
+        "iframe[src*='turnstile']",
+        "iframe[title*='Turnstile' i]",
+        "iframe[title*='challenge' i]",
+        "div.cf-turnstile",
+        "div[class*='turnstile']",
+    ]
+    turnstile_detected = False
+    for sel in turnstile_selectors:
+        try:
+            els = driver.find_elements(By.CSS_SELECTOR, sel)
+            for el in els:
+                try:
+                    if el.is_displayed():
+                        turnstile_detected = True
+                        break
+                except Exception:
+                    continue
+            if turnstile_detected:
+                break
+        except Exception:
+            continue
+    log.info(f"    Turnstile widget detected by selectors: {turnstile_detected}")
     try:
         driver.uc_gui_click_captcha()
         time.sleep(5)
@@ -1251,6 +1362,7 @@ def setup_driver(preferred_account=None, slot_id=None):
 
     # Navigate and handle Cloudflare if needed
     driver.uc_open_with_reconnect("https://star-telegram.newspapers.com/", 4)
+    close_extra_tabs(driver)
     time.sleep(3)
     solve_cloudflare(driver)
 
@@ -2072,15 +2184,21 @@ def get_clip_url(driver):
 
 
 def classify_clip_with_vision(driver, ocr_text=""):
-    """Ask Claude vision to classify a clip image into one of four categories
-    when our OCR came back short or missing. Returns one of:
-      "MOSTLY_PICTURES" — the page is legitimately picture-heavy (photos,
-          illustrations, maps, cartoons). High-value: we want to keep these
-          and surface them for human review.
-      "BAD_SCAN"       — the scan quality is so poor that text cannot be read.
-      "HAS_TEXT"       — readable body text IS clearly present; our OCR
-          failure is therefore transient and we should retry later.
-      None             — the vision call itself errored / could not decide.
+    """Ask Claude vision to classify a clip image and extract any readable
+    caption/title text visible on the page. Returns a dict:
+      {
+        "category": "MOSTLY_PICTURES" | "BAD_SCAN" | "HAS_TEXT" | None,
+        "caption_text": "<any readable text visible in the clip>",
+        "mentions_lake_worth": bool,
+      }
+    Returns None on vision-call failure.
+
+    Categories:
+      MOSTLY_PICTURES — page is legitimately picture-heavy (photos,
+          illustrations, maps, cartoons). High-value: keep and surface.
+      BAD_SCAN       — scan quality too poor to read text.
+      HAS_TEXT       — readable body text is clearly present; OCR failure
+          is therefore transient and we should retry later.
     """
     try:
         import anthropic
@@ -2106,7 +2224,7 @@ def classify_clip_with_vision(driver, ocr_text=""):
         client = anthropic.Anthropic()
         response = client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=30,
+            max_tokens=800,
             messages=[{
                 "role": "user",
                 "content": [
@@ -2123,49 +2241,85 @@ def classify_clip_with_vision(driver, ocr_text=""):
                         "text": (
                             "This is a clipping from an old newspaper page. Our "
                             f"OCR extracted {len(ocr_text)} characters "
-                            f"(~{len(ocr_text.split())} words). "
-                            "Classify this image into EXACTLY ONE of these "
-                            "categories and reply with only the single label:\n"
-                            "MOSTLY_PICTURES — the page is dominated by photos, "
-                            "illustrations, maps, cartoons, or graphics. There "
-                            "may be captions or a few words, but body text is "
-                            "minimal. (A page with lots of photos and only a "
-                            "few words of caption still counts as MOSTLY_PICTURES.)\n"
-                            "BAD_SCAN — the scan is so damaged, blurry, torn, "
-                            "faded, or illegible that text cannot be read even "
-                            "by a human.\n"
-                            "HAS_TEXT — readable body text is clearly present "
-                            "in substantial amounts; an OCR system should be "
-                            "able to read it.\n"
-                            "Reply with exactly one word: MOSTLY_PICTURES, "
-                            "BAD_SCAN, or HAS_TEXT."
+                            f"(~{len(ocr_text.split())} words).\n\n"
+                            "Do TWO things:\n\n"
+                            "1) Classify the page into EXACTLY ONE category:\n"
+                            "   MOSTLY_PICTURES — dominated by photos, illustrations, "
+                            "maps, cartoons, or graphics. Body text is minimal "
+                            "(captions and a few words still count as MOSTLY_PICTURES).\n"
+                            "   BAD_SCAN — the scan is so damaged, blurry, torn, "
+                            "faded, or illegible that text cannot be read even by "
+                            "a human.\n"
+                            "   HAS_TEXT — readable body text is clearly present "
+                            "in substantial amounts.\n\n"
+                            "2) Transcribe any readable text you can see in the "
+                            "image: headlines, photo captions, subtitles, labels "
+                            "on maps, text inside cartoons, etc. Old newspaper "
+                            "photos are often hard to see but the caption text "
+                            "underneath each photo is usually readable — focus "
+                            "on those. If you cannot read anything, leave empty.\n\n"
+                            "Return a JSON object and nothing else, in this exact "
+                            "shape:\n"
+                            '{"category": "MOSTLY_PICTURES|BAD_SCAN|HAS_TEXT", '
+                            '"caption_text": "<readable text joined with newlines, or empty string>"}'
                         ),
                     },
                 ],
             }],
         )
-        answer = (response.content[0].text or "").strip().upper()
-        log.info(f"    Vision raw answer: {answer[:60]}")
-        # Check MOSTLY_PICTURES / BAD_SCAN before HAS_TEXT since the strings
-        # are distinct and we want exact tokens.
-        if "MOSTLY_PICTURES" in answer or "MOSTLY PICTURES" in answer:
-            return "MOSTLY_PICTURES"
-        if "BAD_SCAN" in answer or "BAD SCAN" in answer:
-            return "BAD_SCAN"
-        if "HAS_TEXT" in answer or "HAS TEXT" in answer:
-            return "HAS_TEXT"
-        return None
+        raw = (response.content[0].text or "").strip()
+        log.info(f"    Vision raw answer (first 200): {raw[:200]}")
+        # Pull JSON out (tolerate code fences)
+        json_text = raw
+        if "```" in json_text:
+            m = re.search(r'```(?:json)?\s*(.*?)```', json_text, re.DOTALL)
+            if m:
+                json_text = m.group(1).strip()
+        category = None
+        caption_text = ""
+        try:
+            data = json.loads(json_text)
+            cat_raw = (data.get("category") or "").strip().upper()
+            if "MOSTLY_PICTURES" in cat_raw or "MOSTLY PICTURES" in cat_raw:
+                category = "MOSTLY_PICTURES"
+            elif "BAD_SCAN" in cat_raw or "BAD SCAN" in cat_raw:
+                category = "BAD_SCAN"
+            elif "HAS_TEXT" in cat_raw or "HAS TEXT" in cat_raw:
+                category = "HAS_TEXT"
+            caption_text = (data.get("caption_text") or "").strip()
+        except Exception as e:
+            log.warning(f"    Vision JSON parse failed: {e} — trying keyword fallback")
+            up = raw.upper()
+            if "MOSTLY_PICTURES" in up or "MOSTLY PICTURES" in up:
+                category = "MOSTLY_PICTURES"
+            elif "BAD_SCAN" in up or "BAD SCAN" in up:
+                category = "BAD_SCAN"
+            elif "HAS_TEXT" in up or "HAS TEXT" in up:
+                category = "HAS_TEXT"
+        mentions_lw = False
+        if caption_text:
+            mentions_lw = bool(re.search(r'(?i)lake[\s.\-,;:]+worth', caption_text))
+        if category is None:
+            return None
+        return {
+            "category": category,
+            "caption_text": caption_text,
+            "mentions_lake_worth": mentions_lw,
+        }
     except Exception as e:
         log.warning(f"    Vision check failed: {e}")
         return None
 
 
-def save_review_article(conn, pdf_filename, clip_url, meta, prefix, body_text):
+def save_review_article(conn, pdf_filename, clip_url, meta, prefix, body_text,
+                        caption_text="", mentions_lake_worth=False):
     """Insert a synthetic articles row for a page that the clipper is giving
     up on (picture-heavy, bad scan, etc.) so it appears in the Articles tab
     for human review instead of silently disappearing. prefix is e.g.
     'PICTURE HEAVY' or 'BAD SCAN'. body_text is any short OCR we captured
-    (may be empty).
+    (may be empty). caption_text is any text the vision model read off the
+    image (photo captions, headlines, labels). If mentions_lake_worth is
+    True the headline is prefixed with [LAKE WORTH] so these jump out.
     """
     try:
         newspaper_label = (meta.get("newspaper") or "").replace("_", " ")
@@ -2173,12 +2327,31 @@ def save_review_article(conn, pdf_filename, clip_url, meta, prefix, body_text):
         page_label = meta.get("page") or 0
         title_tail_bits = [b for b in [newspaper_label, date_label, f"page {page_label}" if page_label else ""] if b]
         title_tail = ", ".join(title_tail_bits) if title_tail_bits else pdf_filename
-        headline = f"{prefix} - {title_tail}"
+        lw_tag = "[LAKE WORTH] " if mentions_lake_worth else ""
+        headline = f"{lw_tag}{prefix} - {title_tail}"
         is_picture_heavy = prefix.upper().startswith("PICTURE HEAVY")
+        # Build full_text: vision caption text first (most useful for search),
+        # then any short OCR body we captured.
+        combined_bits = []
+        if caption_text:
+            combined_bits.append("[Vision-read text from image]\n" + caption_text)
+        if body_text:
+            combined_bits.append("[OCR]\n" + body_text)
+        combined_text = "\n\n".join(combined_bits)
+        # photo_description holds a compact summary used by dashboard
+        if is_picture_heavy:
+            if caption_text:
+                pd = caption_text
+                if mentions_lake_worth:
+                    pd = "[MENTIONS LAKE WORTH] " + pd
+            else:
+                pd = "Page flagged by vision classifier for human review."
+        else:
+            pd = caption_text or ""
         synthetic = [{
             "headline": headline,
-            "text": body_text or "",
-            "photo_description": "Page flagged by vision classifier for human review." if is_picture_heavy else "",
+            "text": combined_text,
+            "photo_description": pd,
         }]
         # Ensure processed_pdfs.has_photo is set for picture-heavy so
         # save_articles propagates has_photo=1 on the inserted row.
@@ -2198,12 +2371,15 @@ def save_review_article(conn, pdf_filename, clip_url, meta, prefix, body_text):
 
 
 # Backwards-compatible wrapper — older code paths may still reference the
-# old name. Maps the new 4-way verdict back to the old 2-way vocabulary.
+# old name. Maps the new classifier output back to the old 2-way vocabulary.
 def check_clip_is_mostly_images(driver, ocr_text=""):
-    verdict = classify_clip_with_vision(driver, ocr_text=ocr_text)
-    if verdict == "MOSTLY_PICTURES" or verdict == "BAD_SCAN":
+    result = classify_clip_with_vision(driver, ocr_text=ocr_text)
+    if not result:
+        return None
+    cat = result.get("category")
+    if cat == "MOSTLY_PICTURES" or cat == "BAD_SCAN":
         return "CONSISTENT"
-    if verdict == "HAS_TEXT":
+    if cat == "HAS_TEXT":
         return "MORE_EXPECTED"
     return None
 
@@ -2253,7 +2429,7 @@ OCR TEXT:
 
         response = client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=4096,
+            max_tokens=16384,
             messages=[{"role": "user", "content": prompt}],
         )
 
@@ -2272,13 +2448,13 @@ OCR TEXT:
 
     except ImportError:
         log.error("    anthropic package not installed. Run: pip install anthropic")
-        return []
+        return None
     except json.JSONDecodeError as e:
         log.warning(f"    AI returned invalid JSON: {e}")
-        return []
+        return None
     except Exception as e:
         log.warning(f"    AI extraction error: {e}")
-        return []
+        return None
 
 
 # === MAIN CLIPPING LOOP ===
@@ -2547,27 +2723,36 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         # tag and stop retrying if it's a legitimate picture-heavy / bad-scan
         # page. Otherwise fall through to retry-later behavior.
         log.warning("    No OCR button after retries — asking vision to classify the page...")
-        verdict = classify_clip_with_vision(driver, ocr_text="")
-        log.info(f"    Vision verdict (no-OCR-button path): {verdict}")
-        if verdict == "MOSTLY_PICTURES":
-            log.info(f"    Vision: PICTURE HEAVY — saving review article and marking done.")
-            save_clip_data(conn, pdf_filename, url, clip_url, "")
-            n = save_review_article(conn, pdf_filename, clip_url, meta, "PICTURE HEAVY", "")
+        vresult = classify_clip_with_vision(driver, ocr_text="")
+        vcat = (vresult or {}).get("category")
+        vcaption = (vresult or {}).get("caption_text", "") or ""
+        vmentions = bool((vresult or {}).get("mentions_lake_worth"))
+        log.info(f"    Vision verdict (no-OCR-button path): {vcat} lake_worth={vmentions} caption_chars={len(vcaption)}")
+        if vcat == "MOSTLY_PICTURES":
+            log.info(f"    Vision: PICTURE HEAVY{' [LAKE WORTH]' if vmentions else ''} — saving review article and marking done.")
+            save_clip_data(conn, pdf_filename, url, clip_url, vcaption)
+            n = save_review_article(
+                conn, pdf_filename, clip_url, meta, "PICTURE HEAVY",
+                body_text="", caption_text=vcaption, mentions_lake_worth=vmentions,
+            )
             return {
                 "pdf_filename": pdf_filename,
                 "clip_url": clip_url,
-                "ocr_len": 0,
+                "ocr_len": len(vcaption),
                 "articles": n,
                 "date": meta["date"],
             }
-        if verdict == "BAD_SCAN":
+        if vcat == "BAD_SCAN":
             log.info(f"    Vision: BAD SCAN — saving review article and marking done.")
-            save_clip_data(conn, pdf_filename, url, clip_url, "")
-            n = save_review_article(conn, pdf_filename, clip_url, meta, "BAD SCAN", "")
+            save_clip_data(conn, pdf_filename, url, clip_url, vcaption)
+            n = save_review_article(
+                conn, pdf_filename, clip_url, meta, "BAD SCAN",
+                body_text="", caption_text=vcaption, mentions_lake_worth=vmentions,
+            )
             return {
                 "pdf_filename": pdf_filename,
                 "clip_url": clip_url,
-                "ocr_len": 0,
+                "ocr_len": len(vcaption),
                 "articles": n,
                 "date": meta["date"],
             }
@@ -2586,12 +2771,18 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     # present do we fall through to refreshing the page and trying again.
     if len(ocr_text) <= 1000:
         log.info(f"    OCR short ({len(ocr_text)} chars). Asking Claude vision to classify the image...")
-        verdict = classify_clip_with_vision(driver, ocr_text=ocr_text)
-        log.info(f"    Vision verdict (short-OCR path): {verdict}")
-        if verdict == "MOSTLY_PICTURES":
-            log.info(f"    Vision: PICTURE HEAVY — saving review article and marking done.")
+        vresult = classify_clip_with_vision(driver, ocr_text=ocr_text)
+        vcat = (vresult or {}).get("category")
+        vcaption = (vresult or {}).get("caption_text", "") or ""
+        vmentions = bool((vresult or {}).get("mentions_lake_worth"))
+        log.info(f"    Vision verdict (short-OCR path): {vcat} lake_worth={vmentions} caption_chars={len(vcaption)}")
+        if vcat == "MOSTLY_PICTURES":
+            log.info(f"    Vision: PICTURE HEAVY{' [LAKE WORTH]' if vmentions else ''} — saving review article and marking done.")
             save_clip_data(conn, pdf_filename, url, clip_url, ocr_text)
-            n = save_review_article(conn, pdf_filename, clip_url, meta, "PICTURE HEAVY", ocr_text)
+            n = save_review_article(
+                conn, pdf_filename, clip_url, meta, "PICTURE HEAVY",
+                body_text=ocr_text, caption_text=vcaption, mentions_lake_worth=vmentions,
+            )
             return {
                 "pdf_filename": pdf_filename,
                 "clip_url": clip_url,
@@ -2599,10 +2790,13 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
                 "articles": n,
                 "date": meta["date"],
             }
-        if verdict == "BAD_SCAN":
+        if vcat == "BAD_SCAN":
             log.info(f"    Vision: BAD SCAN — saving review article and marking done.")
             save_clip_data(conn, pdf_filename, url, clip_url, ocr_text)
-            n = save_review_article(conn, pdf_filename, clip_url, meta, "BAD SCAN", ocr_text)
+            n = save_review_article(
+                conn, pdf_filename, clip_url, meta, "BAD SCAN",
+                body_text=ocr_text, caption_text=vcaption, mentions_lake_worth=vmentions,
+            )
             return {
                 "pdf_filename": pdf_filename,
                 "clip_url": clip_url,
@@ -2627,10 +2821,29 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     # Save to DB
     save_clip_data(conn, pdf_filename, url, clip_url, ocr_text)
 
-    # Extract articles with AI
+    # Extract articles with AI. Return value is:
+    #   list — normal case, may be empty ([] = genuinely no articles found)
+    #   None — extraction failed (truncated JSON, API error, etc.). Do NOT
+    #          mark articles_found=0 for these; leave the row un-clipped so
+    #          it will be retried on a later pass.
     articles = extract_articles_with_ai(
         ocr_text, meta["date"], meta["newspaper"], meta["page"]
     )
+
+    if articles is None:
+        log.warning(
+            "    AI extraction failed — un-clipping this page so it will "
+            "be re-queued for another attempt."
+        )
+        conn.execute(
+            "UPDATE processed_pdfs SET clipped = 0, articles_found = NULL "
+            "WHERE pdf_filename = ?",
+            (pdf_filename,),
+        )
+        conn.commit()
+        elapsed = time.time() - page_start_time
+        log.info(f"    Page: {pdf_filename} — {elapsed:.1f}s (extraction failed, re-queued)")
+        return None
 
     if articles:
         count = save_articles(conn, pdf_filename, articles, SEARCH_TERM, clip_url=clip_url)
@@ -2641,6 +2854,11 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         conn.commit()
         log.info(f"    Found {count} articles")
     else:
+        conn.execute(
+            "UPDATE processed_pdfs SET articles_found = 0 WHERE pdf_filename = ?",
+            (pdf_filename,),
+        )
+        conn.commit()
         log.info(f"    No Lake Worth articles found in OCR")
 
     elapsed = time.time() - page_start_time
@@ -2794,6 +3012,27 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
                     if max_pages and total_clipped >= max_pages:
                         log.info(f"  Reached max_pages limit ({max_pages})")
                         break
+
+                    # Liveness check: if the browser window was closed (by the
+                    # user or a crash) or the chromedriver is gone, exit the
+                    # slot so autoscale can respawn a fresh instance instead of
+                    # letting this python process hang around zombie-style.
+                    try:
+                        _handles = driver.window_handles if driver else []
+                    except Exception as _e:
+                        log.error(f"  Browser session lost: {_e} — exiting slot.")
+                        _handles = []
+                    if not _handles:
+                        log.error("  No browser windows — exiting slot for respawn.")
+                        write_instance_status(
+                            slot_id, status="error",
+                            last_action="browser gone",
+                        )
+                        break
+                    # Prune any stray tabs from uc_gui_click_captcha /
+                    # uc_open_with_reconnect before doing real work.
+                    if len(_handles) > 1:
+                        close_extra_tabs(driver)
 
                     page = claim_next_page(conn, slot_id, pid, date_start, date_end)
                     if not page:

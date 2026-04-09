@@ -359,20 +359,24 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
       <div id="clipperStatus" style="color:#aaa">Loading...</div>
       <div id="clipperProgress" style="margin-top:10px">
         <table style="width:100%;font-size:0.9em;border-collapse:collapse">
-          <tr><td style="color:#888;padding:2px 8px 2px 0">Clipped</td><td id="progClipped" style="color:#4caf50;font-weight:bold;font-size:1.3em">-</td></tr>
-          <tr><td style="color:#888;padding:2px 8px 2px 0">Articles</td><td id="progArticles" style="color:#4fc3f7;font-weight:bold;font-size:1.3em">-</td></tr>
-          <tr><td style="color:#888;padding:2px 8px 2px 0">Errors</td><td id="progErrors" style="color:#f44;font-weight:bold">-</td></tr>
-          <tr><td style="color:#888;padding:2px 8px 2px 0">Queue</td><td id="progQueue" style="color:#aaa">-</td></tr>
-          <tr><td style="color:#888;padding:2px 8px 2px 0">Account</td><td id="progAccount" style="color:#aaa">-</td></tr>
-          <tr><td style="color:#888;padding:2px 8px 2px 0">Current Page</td><td id="progPage" style="color:#aaa;font-size:0.85em;word-break:break-all">-</td></tr>
-          <tr><td style="color:#888;padding:2px 8px 2px 0">Page Time</td><td id="progPageTime" style="color:#aaa">-</td></tr>
-          <tr><td style="color:#888;padding:2px 8px 2px 0">Last Update</td><td id="progLastUpdate" style="color:#666;font-size:0.85em">-</td></tr>
+          <thead>
+            <tr style="color:#888;border-bottom:1px solid #333">
+              <th style="text-align:left;padding:4px 8px 4px 0;font-weight:normal"></th>
+              <th style="text-align:right;padding:4px 8px">Since midnight</th>
+              <th style="text-align:right;padding:4px 0 4px 8px">Last run set</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="color:#888;padding:2px 8px 2px 0">Clipped</td><td id="dsMidClipped" style="text-align:right;color:#4caf50;font-weight:bold;font-size:1.2em">-</td><td id="dsRsClipped" style="text-align:right;color:#4caf50;font-weight:bold;font-size:1.2em">-</td></tr>
+            <tr><td style="color:#888;padding:2px 8px 2px 0">Articles</td><td id="dsMidArticles" style="text-align:right;color:#4fc3f7;font-weight:bold;font-size:1.2em">-</td><td id="dsRsArticles" style="text-align:right;color:#4fc3f7;font-weight:bold;font-size:1.2em">-</td></tr>
+            <tr><td style="color:#888;padding:2px 8px 2px 0">Picture heavy</td><td id="dsMidPicture" style="text-align:right;color:#e0c97f;font-weight:bold">-</td><td id="dsRsPicture" style="text-align:right;color:#e0c97f;font-weight:bold">-</td></tr>
+            <tr><td style="color:#888;padding:2px 8px 2px 0">Errors</td><td id="dsMidErrors" style="text-align:right;color:#f44;font-weight:bold">-</td><td id="dsRsErrors" style="text-align:right;color:#f44;font-weight:bold">-</td></tr>
+            <tr><td style="color:#888;padding:2px 8px 2px 0">Queue</td><td id="dsMidQueue" style="text-align:right;color:#aaa">-</td><td id="dsRsQueue" style="text-align:right;color:#aaa">-</td></tr>
+          </tbody>
         </table>
-      </div>
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-        <button onclick="clipperStop()" style="padding:8px 16px;background:#e65100;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold">Stop (graceful)</button>
-        <button onclick="clipperKill()" style="padding:8px 16px;background:#b71c1c;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold">Kill (force)</button>
-        <button onclick="loadClipperSettings()" style="padding:8px 16px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:6px;cursor:pointer">Refresh</button>
+        <div style="margin-top:6px;color:#666;font-size:0.78em">
+          Run set started: <span id="dsRsStart">-</span>
+        </div>
       </div>
     </div>
     <!-- Settings -->
@@ -389,7 +393,7 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
     </div>
     <!-- Start Clipper -->
     <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
-      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Start Clipper</h3>
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Clipper Settings</h3>
       <div style="margin-bottom:10px">
         <label style="color:#888;font-size:0.85em">Account Mode</label>
         <select id="clipperAccountMode" onchange="toggleAccountSelect()" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
@@ -405,12 +409,17 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
       <div style="display:flex;gap:8px;margin-bottom:10px">
         <div style="flex:1">
           <label style="color:#888;font-size:0.85em">Date Start</label>
-          <input type="text" id="clipperDateStart" value="1916-01-01" placeholder="YYYY-MM-DD" onchange="localStorage.setItem('clipperDateStart', this.value)" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+          <input type="text" id="clipperDateStart" value="1916-01-01" placeholder="YYYY-MM-DD" onchange="localStorage.setItem('clipperDateStart', this.value); loadRangeStats();" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
         </div>
         <div style="flex:1">
           <label style="color:#888;font-size:0.85em">Date End</label>
-          <input type="text" id="clipperDateEnd" value="1917-12-31" placeholder="YYYY-MM-DD" onchange="localStorage.setItem('clipperDateEnd', this.value)" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+          <input type="text" id="clipperDateEnd" value="1917-12-31" placeholder="YYYY-MM-DD" onchange="localStorage.setItem('clipperDateEnd', this.value); loadRangeStats();" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
         </div>
+      </div>
+      <div id="clipperRangeStats" style="background:#1a1a2e;border:1px solid #333;border-radius:4px;padding:8px;font-size:0.85em;color:#aaa;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#888">In range</span><span id="rsTotal" style="color:#e0c97f;font-weight:bold">-</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#888">Done</span><span id="rsDone" style="color:#4caf50;font-weight:bold">-</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#888">Remaining</span><span id="rsRemain" style="color:#4fc3f7;font-weight:bold">-</span></div>
       </div>
       <script>
         (function(){
@@ -420,26 +429,28 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
           if (e) document.getElementById('clipperDateEnd').value = e;
         })();
       </script>
-      <button id="clipperStartBtn" onclick="clipperStart()" style="padding:10px 24px;background:#2e7d32;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold;font-size:1em;width:100%">Start Clipper</button>
     </div>
     <!-- Instances -->
     <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:520px;flex:1">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;flex-wrap:wrap">
         <h3 style="margin:0;color:#e0c97f;font-size:1em">Clipper Instances</h3>
-        <div style="display:flex;gap:6px">
-          <button onclick="addInstance()" style="padding:6px 12px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">+ Add Instance</button>
-          <button onclick="stopAllInstances()" style="padding:6px 12px;background:#b71c1c;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Stop All</button>
-          <button onclick="clearStopAll()" id="clearStopAllBtn" style="padding:6px 12px;background:#555;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em;display:none">Clear Stop-All</button>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="color:#888;font-size:0.8em">Target:</span>
+          <button id="instTargetDown" onclick="changeTarget(-1)" style="padding:4px 10px;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer">▼</button>
+          <span id="instTargetVal" style="color:#e0c97f;font-weight:bold;min-width:20px;text-align:center;font-size:1em">0</span>
+          <button id="instTargetUp" onclick="changeTarget(1)" style="padding:4px 10px;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer">▲</button>
+          <button id="instSaveBtn" onclick="saveTarget()" style="padding:6px 12px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Save</button>
+          <button id="instStopAllBtn" onclick="stopAllInstances()" style="padding:6px 12px;background:#b71c1c;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Stop All</button>
         </div>
       </div>
       <div id="instancesGlobalStop" style="color:#ff8a65;font-size:0.8em;margin-bottom:6px;display:none">Global stop flag is set — new instances will exit immediately.</div>
       <table style="width:100%;border-collapse:collapse;font-size:0.82em">
         <thead>
           <tr style="color:#888;text-align:left;border-bottom:1px solid #333">
-            <th style="padding:4px">Slot</th><th style="padding:4px">PID</th><th style="padding:4px">Account</th><th style="padding:4px">Date/Page</th><th style="padding:4px">Clips</th><th style="padding:4px">Status</th><th style="padding:4px">Updated</th><th></th>
+            <th style="padding:4px">Slot</th><th style="padding:4px">PID</th><th style="padding:4px">Account</th><th style="padding:4px">Date/Page</th><th style="padding:4px">Run</th><th style="padding:4px">Today / Cap</th><th style="padding:4px">Status</th><th style="padding:4px">Updated</th><th></th>
           </tr>
         </thead>
-        <tbody id="instancesBody"><tr><td colspan="8" style="color:#666;padding:6px">No active instances.</td></tr></tbody>
+        <tbody id="instancesBody"><tr><td colspan="9" style="color:#666;padding:6px">No active instances.</td></tr></tbody>
       </table>
     </div>
     <!-- Account Eligibility -->
@@ -449,8 +460,8 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
     </div>
     <!-- Latest Log -->
     <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:400px;max-width:600px;flex:1">
-      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Latest Log (last 15 lines)</h3>
-      <pre id="clipperLog" style="color:#aaa;font-size:0.8em;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;margin:0">Loading...</pre>
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Latest Log (last 500 lines)</h3>
+      <pre id="clipperLog" style="color:#aaa;font-size:0.8em;white-space:pre-wrap;word-break:break-all;height:500px;overflow-y:scroll;margin:0">Loading...</pre>
     </div>
   </div>
 </div>
@@ -782,10 +793,11 @@ async function loadClipperSettings() {
     loadClipperLog();
     loadAccountEligibility();
     populateAccountDropdown();
+    loadRangeStats();
     // Auto-refresh every 15 seconds while on clipper tab
     clearInterval(window._clipperRefreshInterval);
     if (running) {
-      window._clipperRefreshInterval = setInterval(() => { loadClipperProgress(); loadClipperLog(); }, 15000);
+      window._clipperRefreshInterval = setInterval(() => { loadClipperProgress(); loadClipperLog(); loadRangeStats(); }, 15000);
     }
   } catch(e) {
     document.getElementById('clipperStatus').innerHTML = '<span style="color:#f44">Error: ' + e + '</span>';
@@ -799,9 +811,10 @@ async function loadAccountEligibility() {
     const el = document.getElementById('accountEligibility');
     const now = new Date();
     const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+    const todayStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
     let html = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">';
     html += '<tr><th style="text-align:left;padding:4px;border-bottom:1px solid #444">Account</th>';
-    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Session</th>';
+    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Today</th>';
     html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Total</th>';
     html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Status</th>';
     html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Eligible</th></tr>';
@@ -809,21 +822,24 @@ async function loadAccountEligibility() {
       if (!a.active) return;
       const throttleTime = a.last_throttle_time ? new Date(a.last_throttle_time.replace(' ', 'T')) : null;
       const eligible = throttleTime ? new Date(throttleTime.getTime() + COOLDOWN_MS) : null;
+      const working = !!a.in_use_by;
+      // Today column: clips_today when the stored date is today; else 0
+      const todayCount = (a.clips_today_date === todayStr) ? (a.clips_today || 0) : 0;
       let statusHtml, eligibleHtml;
-      if (!throttleTime) {
+      if (working) {
+        statusHtml = '<span style="color:#4fc3f7">Working</span>';
+        eligibleHtml = '<span style="color:#888">—</span>';
+      } else if (!throttleTime || eligible <= now) {
         statusHtml = '<span style="color:#4caf50">Ready</span>';
         eligibleHtml = '<span style="color:#4caf50">Now</span>';
-      } else if (eligible > now) {
-        const hoursLeft = ((eligible - now) / 3600000).toFixed(1);
-        statusHtml = '<span style="color:#e65100">Cooling down</span>';
-        eligibleHtml = `<span style="color:#e65100">${eligible.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (${hoursLeft}h)</span>`;
       } else {
-        statusHtml = '<span style="color:#4caf50">Ready</span>';
-        eligibleHtml = '<span style="color:#4caf50">Now</span>';
+        const hoursLeft = ((eligible - now) / 3600000).toFixed(1);
+        statusHtml = '<span style="color:#e65100">Cooling</span>';
+        eligibleHtml = `<span style="color:#e65100">${eligible.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (${hoursLeft}h)</span>`;
       }
       html += `<tr>
         <td style="padding:4px;color:#4fc3f7">${a.email}</td>
-        <td style="padding:4px;text-align:right;font-weight:bold">${a.clips_this_session || 0}</td>
+        <td style="padding:4px;text-align:right;font-weight:bold">${todayCount}</td>
         <td style="padding:4px;text-align:right">${a.total_clips}</td>
         <td style="padding:4px">${statusHtml}</td>
         <td style="padding:4px">${eligibleHtml}</td>
@@ -836,38 +852,42 @@ async function loadAccountEligibility() {
   }
 }
 
+async function loadRangeStats() {
+  try {
+    const s = (document.getElementById('clipperDateStart').value || '').trim();
+    const e = (document.getElementById('clipperDateEnd').value || '').trim();
+    const url = `/api/clipper/range_stats?start=${encodeURIComponent(s)}&end=${encodeURIComponent(e)}`;
+    const resp = await fetch(url);
+    const d = await resp.json();
+    const fmt = (n) => (n == null ? '-' : Number(n).toLocaleString());
+    document.getElementById('rsTotal').textContent  = fmt(d.total);
+    document.getElementById('rsDone').textContent   = fmt(d.done);
+    document.getElementById('rsRemain').textContent = fmt(d.remain);
+  } catch(e) { console.error('Range stats error:', e); }
+}
+
 async function loadClipperProgress() {
   try {
-    const resp = await fetch('/api/clipper/progress');
-    const p = await resp.json();
-    // Show current account's cumulative clips toward the limit
-    let clippedText = `${p.session_clips} clips`;
-    if (p.clip_limit > 0) {
-      clippedText += ` / ${p.clip_limit} limit`;
-    }
-    document.getElementById('progClipped').textContent = clippedText;
-    document.getElementById('progAccount').textContent = p.account || '-';
-    if (p.running) {
-      document.getElementById('progArticles').textContent = p.articles;
-      document.getElementById('progErrors').textContent = p.errors;
-      document.getElementById('progQueue').textContent = p.queue ? `${p.queue - p.clipped} remaining (of ${p.queue})` : '-';
-      document.getElementById('progPage').textContent = p.current_page || '-';
-      document.getElementById('progPageTime').textContent = p.page_time || '-';
-      document.getElementById('progLastUpdate').textContent = p.last_update || '-';
-    } else {
-      document.getElementById('progArticles').textContent = '0';
-      document.getElementById('progErrors').textContent = '0';
-      document.getElementById('progQueue').textContent = '-';
-      document.getElementById('progPage').textContent = '-';
-      document.getElementById('progPageTime').textContent = '-';
-      document.getElementById('progLastUpdate').textContent = '-';
-    }
+    const resp = await fetch('/api/clipper/daily_stats');
+    const d = await resp.json();
+    const mid = d.since_midnight || {};
+    const rs  = d.run_set || {};
+    const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = (v == null ? '-' : v); };
+    setText('dsMidClipped',  mid.clipped);
+    setText('dsMidArticles', mid.articles);
+    setText('dsMidPicture',  mid.picture_heavy);
+    setText('dsMidErrors',   mid.errors);
+    setText('dsMidQueue',    mid.queue);
+    setText('dsRsClipped',   rs.clipped);
+    setText('dsRsArticles',  rs.articles);
+    setText('dsRsPicture',   rs.picture_heavy);
+    setText('dsRsErrors',    rs.errors);
+    setText('dsRsQueue',     rs.queue);
+    setText('dsRsStart',     rs.start || 'no recent run');
     // Update running status indicator
     const statusEl = document.getElementById('clipperStatus');
-    if (p.running) {
-      if (!statusEl.innerHTML.includes('RUNNING')) {
-        statusEl.innerHTML = statusEl.innerHTML.replace('NOT RUNNING', '<span style="color:#4caf50;font-weight:bold">RUNNING</span>');
-      }
+    if (d.running && statusEl && !statusEl.innerHTML.includes('RUNNING')) {
+      statusEl.innerHTML = statusEl.innerHTML.replace('NOT RUNNING', '<span style="color:#4caf50;font-weight:bold">RUNNING</span>');
     }
   } catch(e) { console.error('Progress fetch error:', e); }
 }
@@ -976,60 +996,141 @@ async function clipperStart() {
   setTimeout(loadClipperSettings, 3000);
 }
 
+let instTarget = parseInt(localStorage.getItem('instTarget') || '0', 10);
+let instLocked = false;  // transition lock
+let instStopAllState = 'idle'; // idle | stopping | stopped
+let instLastRunning = 0;
+
+function setTargetDisplay(n) {
+  instTarget = n;
+  localStorage.setItem('instTarget', String(n));
+  const el = document.getElementById('instTargetVal');
+  if (el) el.textContent = n;
+}
+function changeTarget(delta) {
+  if (instLocked) return;
+  const n = Math.max(0, instTarget + delta);
+  setTargetDisplay(n);
+}
+function applyLockUI() {
+  const ids = ['instTargetDown','instTargetUp','instTargetVal','instSaveBtn'];
+  ids.forEach(id => { const e=document.getElementById(id); if(e) e.style.opacity = instLocked ? '0.5' : '1'; });
+  document.getElementById('instTargetDown').disabled = instLocked;
+  document.getElementById('instTargetUp').disabled = instLocked;
+  document.getElementById('instSaveBtn').disabled = instLocked;
+  // per-row stop buttons
+  document.querySelectorAll('.instRowStop').forEach(b => { b.disabled = instLocked; b.style.opacity = instLocked ? '0.5' : '1'; });
+  // stop all button state
+  const sa = document.getElementById('instStopAllBtn');
+  if (!sa) return;
+  if (instStopAllState === 'stopping') {
+    sa.textContent = 'Stopping...'; sa.disabled = true; sa.style.background = '#555'; sa.style.cursor = 'not-allowed';
+  } else if (instStopAllState === 'stopped') {
+    sa.textContent = 'All Stopped'; sa.disabled = true; sa.style.background = '#555'; sa.style.cursor = 'not-allowed';
+  } else {
+    sa.textContent = 'Stop All'; sa.disabled = instLocked; sa.style.background = '#b71c1c'; sa.style.cursor = instLocked ? 'not-allowed' : 'pointer';
+    sa.style.opacity = instLocked ? '0.5' : '1';
+  }
+}
+
 async function loadInstances() {
   try {
     const r = await fetch('/api/instances');
     const d = await r.json();
     const rows = d.instances || [];
+    instLastRunning = rows.length;
     const tbody = document.getElementById('instancesBody');
     document.getElementById('instancesGlobalStop').style.display = d.global_stop ? '' : 'none';
-    document.getElementById('clearStopAllBtn').style.display = d.global_stop ? '' : 'none';
     if (!rows.length) {
-      tbody.innerHTML = '<tr><td colspan="8" style="color:#666;padding:6px">No active instances.</td></tr>';
-      return;
+      tbody.innerHTML = '<tr><td colspan="9" style="color:#666;padding:6px">No active instances.</td></tr>';
+    } else {
+      tbody.innerHTML = rows.map(r => {
+        const dp = [r.current_date, r.current_page].filter(Boolean).join(' p') || '—';
+        const cap = r.daily_clip_limit || 0;
+        const today = r.account_clips_today || 0;
+        const capStr = cap ? `${today} / ${cap}` : `${today}`;
+        const warn = cap && today >= cap * 0.9 ? 'color:#ff8a65' : '';
+        return `<tr style="border-bottom:1px solid #222">
+          <td style="padding:4px">${r.slot_id}</td>
+          <td style="padding:4px;color:#888">${r.pid||''}</td>
+          <td style="padding:4px">${r.account_email||'—'}</td>
+          <td style="padding:4px">${dp}</td>
+          <td style="padding:4px">${r.count_this_run||0}</td>
+          <td style="padding:4px;${warn}">${capStr}</td>
+          <td style="padding:4px;color:#e0c97f">${r.status||''}</td>
+          <td style="padding:4px;color:#666">${r.heartbeat_at||''}</td>
+          <td style="padding:4px"><button class="instRowStop" onclick="stopInstance('${r.slot_id}')" style="padding:3px 8px;background:#b71c1c;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:0.75em">Stop</button></td>
+        </tr>`;
+      }).join('');
     }
-    tbody.innerHTML = rows.map(r => {
-      const dp = [r.current_date, r.current_page].filter(Boolean).join(' p') || '—';
-      return `<tr style="border-bottom:1px solid #222">
-        <td style="padding:4px">${r.slot_id}</td>
-        <td style="padding:4px;color:#888">${r.pid||''}</td>
-        <td style="padding:4px">${r.account_email||'—'}</td>
-        <td style="padding:4px">${dp}</td>
-        <td style="padding:4px">${r.clips_this_run||0}</td>
-        <td style="padding:4px;color:#e0c97f">${r.status||''}</td>
-        <td style="padding:4px;color:#666">${r.last_update||''}</td>
-        <td style="padding:4px"><button onclick="stopInstance(${r.slot_id})" style="padding:3px 8px;background:#b71c1c;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:0.75em">Stop</button></td>
-      </tr>`;
-    }).join('');
+    // Gray out date/account fields while any instance is running
+    const running = rows.length > 0;
+    ['clipperDateStart','clipperDateEnd','clipperAccountMode','clipperAccountSelect'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.disabled = running;
+      el.style.opacity = running ? '0.5' : '1';
+    });
+    // auto-release lock when target reached
+    if (instLocked && rows.length === instTarget) {
+      instLocked = false;
+      if (instStopAllState === 'stopping' && rows.length === 0) instStopAllState = 'stopped';
+    }
+    // reset StopAll "All Stopped" display once user bumps target up again
+    if (instStopAllState === 'stopped' && instTarget > 0) instStopAllState = 'idle';
+    applyLockUI();
   } catch(e) { console.error('loadInstances failed', e); }
 }
-async function addInstance() {
+
+async function saveTarget() {
+  if (instLocked) return;
   const dateStart = document.getElementById('clipperDateStart').value.trim();
   const dateEnd = document.getElementById('clipperDateEnd').value.trim();
   localStorage.setItem('clipperDateStart', dateStart);
   localStorage.setItem('clipperDateEnd', dateEnd);
-  if (!confirm(`Add a new clipper instance?\nDate range: ${dateStart||'all'} to ${dateEnd||'all'}`)) return;
+  if (!confirm(`Set target to ${instTarget} instance(s)?\nCurrently running: ${instLastRunning}\nDate range: ${dateStart||'all'} to ${dateEnd||'all'}\n\nBackend will auto-maintain this count.`)) return;
+  instLocked = true; applyLockUI();
   try {
-    const r = await fetch('/api/instances/add', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date_start:dateStart,date_end:dateEnd})});
-    const d = await r.json();
-    if (!d.ok) alert('Error: '+(d.error||'unknown'));
-    else loadInstances();
-  } catch(e){ alert('Failed: '+e); }
+    await fetch('/api/instances/set_target', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ target: instTarget, date_start: dateStart, date_end: dateEnd }),
+    });
+  } catch(e){ alert('Failed: '+e); instLocked=false; applyLockUI(); }
+  loadInstances();
 }
+
 async function stopInstance(slot) {
+  if (instLocked) return;
   if (!confirm('Stop instance '+slot+'?')) return;
-  await fetch('/api/instances/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slot_id:slot})});
+  instLocked = true;
+  setTargetDisplay(Math.max(0, instTarget - 1));
+  applyLockUI();
+  try {
+    await fetch('/api/instances/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slot_id:slot})});
+  } catch(e){ alert('Failed: '+e); instLocked=false; applyLockUI(); }
   loadInstances();
 }
+
 async function stopAllInstances() {
+  if (instLocked || instStopAllState !== 'idle') return;
   if (!confirm('Stop ALL clipper instances?')) return;
-  await fetch('/api/instances/stop_all',{method:'POST'});
+  setTargetDisplay(0);
+  instLocked = true;
+  instStopAllState = 'stopping';
+  applyLockUI();
+  try {
+    const r = await fetch('/api/instances');
+    const d = await r.json();
+    const rows = d.instances || [];
+    for (const row of rows) {
+      await fetch('/api/instances/stop',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slot_id:row.slot_id})});
+    }
+  } catch(e){ alert('Failed: '+e); instLocked=false; instStopAllState='idle'; applyLockUI(); }
   loadInstances();
 }
-async function clearStopAll() {
-  await fetch('/api/instances/clear_stop_all',{method:'POST'});
-  loadInstances();
-}
+
+setTargetDisplay(instTarget);
 setInterval(loadInstances, 3000);
 loadInstances();
 
