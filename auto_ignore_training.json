@@ -1,0 +1,17 @@
+{
+  "ignore_examples": [],
+  "keep_examples": [
+    "Fort_Worth_Record_Telegram_1923_09_13_13.pdf",
+    "Fort_Worth_Record_Telegram_1923_09_13_35.pdf",
+    "Fort_Worth_Star_Telegram_1923_09_13_19.pdf"
+  ],
+  "hard_negatives": [
+    "Fort_Worth_Record_Telegram_1921_01_02_24.pdf",
+    "Fort_Worth_Record_Telegram_1921_01_04_10.pdf",
+    "Fort_Worth_Record_Telegram_1921_01_06_7.pdf",
+    "Fort_Worth_Record_Telegram_1921_01_21_7.pdf",
+    "Fort_Worth_Record_Telegram_1921_01_23_29.pdf",
+    "Fort_Worth_Record_Telegram_1921_02_09_4.pdf"
+  ],
+  "max_per_list": 30
+}

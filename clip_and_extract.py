@@ -76,8 +76,32 @@ MONTH_MAP = {
 
 # === DATABASE ===
 
+def db_retry(func, *args, max_retries=5, base_delay=1.0, **kwargs):
+    """Retry a database operation that may fail with 'database is locked'.
+    Uses exponential back-off with jitter."""
+    import random as _random
+    for attempt in range(max_retries):
+        try:
+            return func(*args, **kwargs)
+        except sqlite3.OperationalError as e:
+            if "locked" in str(e) and attempt < max_retries - 1:
+                delay = base_delay * (2 ** attempt) + _random.uniform(0, 0.5)
+                log.warning(
+                    f"    DB locked (attempt {attempt + 1}/{max_retries}), "
+                    f"retrying in {delay:.1f}s..."
+                )
+                time.sleep(delay)
+            else:
+                raise
+
+
+def db_commit(conn):
+    """Commit with retry on 'database is locked'."""
+    db_retry(conn.commit)
+
+
 def get_db():
-    conn = sqlite3.connect(DB_PATH, timeout=10)
+    conn = sqlite3.connect(DB_PATH, timeout=30)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
@@ -89,39 +113,39 @@ def ensure_columns(conn):
     cols = {r[1] for r in conn.execute("PRAGMA table_info(processed_pdfs)").fetchall()}
     if "ocr_text" not in cols:
         conn.execute("ALTER TABLE processed_pdfs ADD COLUMN ocr_text TEXT")
-        conn.commit()
+        db_commit(conn)
         log.info("Added ocr_text column to processed_pdfs")
     if "clip_url" not in cols:
         conn.execute("ALTER TABLE processed_pdfs ADD COLUMN clip_url TEXT")
-        conn.commit()
+        db_commit(conn)
         log.info("Added clip_url column to processed_pdfs")
     if "clipped" not in cols:
         conn.execute("ALTER TABLE processed_pdfs ADD COLUMN clipped INTEGER DEFAULT 0")
-        conn.commit()
+        db_commit(conn)
         log.info("Added clipped column to processed_pdfs")
     # Multi-instance page-claim columns (Step 1 / multi-instance plan)
     if "claimed_by" not in cols:
         conn.execute("ALTER TABLE processed_pdfs ADD COLUMN claimed_by TEXT")
-        conn.commit()
+        db_commit(conn)
         log.info("Added claimed_by column to processed_pdfs")
     if "claimed_at" not in cols:
         conn.execute("ALTER TABLE processed_pdfs ADD COLUMN claimed_at TEXT")
-        conn.commit()
+        db_commit(conn)
         log.info("Added claimed_at column to processed_pdfs")
     if "claimed_pid" not in cols:
         conn.execute("ALTER TABLE processed_pdfs ADD COLUMN claimed_pid INTEGER")
-        conn.commit()
+        db_commit(conn)
         log.info("Added claimed_pid column to processed_pdfs")
 
     # Articles table
     art_cols = {r[1] for r in conn.execute("PRAGMA table_info(articles)").fetchall()}
     if "has_photo" not in art_cols:
         conn.execute("ALTER TABLE articles ADD COLUMN has_photo INTEGER DEFAULT 0")
-        conn.commit()
+        db_commit(conn)
         log.info("Added has_photo column to articles")
     if "photo_description" not in art_cols:
         conn.execute("ALTER TABLE articles ADD COLUMN photo_description TEXT")
-        conn.commit()
+        db_commit(conn)
         log.info("Added photo_description column to articles")
 
     # Accounts table: multi-instance claim columns (Step 1 / multi-instance plan)
@@ -130,15 +154,15 @@ def ensure_columns(conn):
         acct_cols = {r[1] for r in conn.execute("PRAGMA table_info(accounts)").fetchall()}
         if "in_use_by" not in acct_cols:
             conn.execute("ALTER TABLE accounts ADD COLUMN in_use_by TEXT")
-            conn.commit()
+            db_commit(conn)
             log.info("Added in_use_by column to accounts")
         if "in_use_since" not in acct_cols:
             conn.execute("ALTER TABLE accounts ADD COLUMN in_use_since TEXT")
-            conn.commit()
+            db_commit(conn)
             log.info("Added in_use_since column to accounts")
         if "in_use_pid" not in acct_cols:
             conn.execute("ALTER TABLE accounts ADD COLUMN in_use_pid INTEGER")
-            conn.commit()
+            db_commit(conn)
             log.info("Added in_use_pid column to accounts")
 
     # Per-instance status table (Step 1 / multi-instance plan)
@@ -155,10 +179,17 @@ def ensure_columns(conn):
             date_end       TEXT,
             started_at     TEXT,
             heartbeat_at   TEXT,
-            last_action    TEXT
+            last_action    TEXT,
+            browser_health TEXT DEFAULT 'unknown'
         )
     """)
-    conn.commit()
+    db_commit(conn)
+    # Add browser_health column if table already existed without it
+    inst_cols = {r[1] for r in conn.execute("PRAGMA table_info(clipper_instances)").fetchall()}
+    if "browser_health" not in inst_cols:
+        conn.execute("ALTER TABLE clipper_instances ADD COLUMN browser_health TEXT DEFAULT 'unknown'")
+        db_commit(conn)
+        log.info("Added browser_health column to clipper_instances")
 
 
 def get_start_date(conn):
@@ -169,7 +200,7 @@ def get_start_date(conn):
             value TEXT
         )
     """)
-    conn.commit()
+    db_commit(conn)
     row = conn.execute(
         "SELECT value FROM clipper_state WHERE key = 'current_date'"
     ).fetchone()
@@ -184,7 +215,7 @@ def save_start_date(conn, date_str):
         INSERT INTO clipper_state (key, value) VALUES ('current_date', ?)
         ON CONFLICT(key) DO UPDATE SET value = ?
     """, (date_str, date_str))
-    conn.commit()
+    db_commit(conn)
 
 
 def needs_clipping(conn, pdf_filename):
@@ -227,14 +258,14 @@ def backfill_page_url(conn, pdf_filename, url):
             "INSERT INTO processed_pdfs (pdf_filename, url, clipped, search_term) VALUES (?, ?, 0, ?)",
             (pdf_filename, url, SEARCH_TERM)
         )
-        conn.commit()
+        db_commit(conn)
     elif not row[0]:
         # Entry exists but URL is missing — fill it in
         conn.execute(
             "UPDATE processed_pdfs SET url = ? WHERE pdf_filename = ?",
             (url, pdf_filename)
         )
-        conn.commit()
+        db_commit(conn)
 
 
 def save_clip_data(conn, pdf_filename, url, clip_url, ocr_text):
@@ -249,7 +280,7 @@ def save_clip_data(conn, pdf_filename, url, clip_url, ocr_text):
            WHERE pdf_filename = ?""",
         (url, clip_url, ocr_text, _current_account_email or "", pdf_filename)
     )
-    conn.commit()
+    db_commit(conn)
 
 
 def save_articles(conn, pdf_filename, articles, search_term, clip_url=""):
@@ -329,7 +360,7 @@ def save_articles(conn, pdf_filename, articles, search_term, clip_url=""):
             "UPDATE processed_pdfs SET articles_found = ? WHERE pdf_filename = ?",
             (count, pdf_filename)
         )
-        conn.commit()
+        db_commit(conn)
     return count
 
 
@@ -376,7 +407,7 @@ def parse_page_title(title, url):
 
 # === STOP FLAG ===
 
-STOP_FLAG_FILE = r"c:\lake_worth\stop_clipper"
+STOP_FLAG_FILE = r"c:\lake_worth_runtime\stop_clipper"
 
 
 def check_stop_flag():
@@ -405,12 +436,12 @@ def stoppable_sleep(seconds):
 # and one account pool. Single-instance runs do not call any of these — they
 # are only used when the worker is started with --slot-id.
 
-GLOBAL_STOP_FLAG_FILE = r"c:\lake_worth\stop_clipper_all"
+GLOBAL_STOP_FLAG_FILE = r"c:\lake_worth_runtime\stop_clipper_all"
 
 
 def instance_stop_flag_path(slot_id):
     """Per-instance stop flag file path."""
-    return rf"c:\lake_worth\stop_clipper_{slot_id}"
+    return rf"c:\lake_worth_runtime\stop_clipper_{slot_id}"
 
 
 def check_instance_stop(slot_id):
@@ -436,15 +467,17 @@ def _now_str():
 def claim_account(slot_id, pid):
     """Atomically claim the next eligible account for this slot.
 
-    Eligibility matches get_next_account() exactly:
+    Eligibility:
       - active = 1
       - not currently claimed by any slot (in_use_by IS NULL)
-      - not throttled within the last 24 hours
-    Ordered by coldest first: last_throttle_time ASC NULLS FIRST, total_clips ASC.
+      - clips_today < daily_clip_limit, OR last_clip_time is 24+ hours ago
+    Ordered by fewest clips today first, then least total clips.
 
     Returns a dict with account fields on success, or None if no account is
     currently eligible. Uses BEGIN IMMEDIATE to serialize claims across workers.
     """
+    clip_limit = get_daily_clip_limit() or 999999
+    today = datetime.now().strftime("%Y-%m-%d")
     conn = get_accounts_db()
     try:
         conn.isolation_level = None  # manual transaction control
@@ -454,11 +487,18 @@ def claim_account(slot_id, pid):
             SELECT * FROM accounts
              WHERE active = 1
                AND in_use_by IS NULL
-               AND (last_throttle_time IS NULL
-                    OR last_throttle_time < datetime('now','localtime','-24 hours'))
-             ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC
+               AND (
+                   clips_today < ?
+                   OR clips_today IS NULL
+                   OR clips_today_date IS NULL
+                   OR clips_today_date != ?
+                   OR last_clip_time IS NULL
+                   OR last_clip_time < datetime('now','localtime','-24 hours')
+               )
+             ORDER BY clips_today ASC NULLS FIRST, total_clips ASC
              LIMIT 1
-            """
+            """,
+            (clip_limit, today),
         ).fetchone()
         if not row:
             conn.execute("COMMIT")
@@ -503,7 +543,7 @@ def release_account(email, slot_id=None):
                     WHERE email = ?""",
                 (email,),
             )
-        conn.commit()
+        db_commit(conn)
     finally:
         conn.close()
 
@@ -592,7 +632,7 @@ def release_page(conn, pdf_filename, slot_id=None):
                 WHERE pdf_filename = ?""",
             (pdf_filename,),
         )
-    conn.commit()
+    db_commit(conn)
 
 
 def release_all_pages_for_slot(conn, slot_id):
@@ -606,7 +646,7 @@ def release_all_pages_for_slot(conn, slot_id):
             WHERE claimed_by = ? AND (clipped = 0 OR clipped IS NULL)""",
         (slot_id,),
     )
-    conn.commit()
+    db_commit(conn)
 
 
 def write_instance_status(slot_id, **fields):
@@ -618,6 +658,7 @@ def write_instance_status(slot_id, **fields):
     allowed = {
         "pid", "account_email", "status", "current_date", "current_page",
         "count_this_run", "date_start", "date_end", "started_at", "last_action",
+        "browser_health",
     }
     fields = {k: v for k, v in fields.items() if k in allowed}
     fields["heartbeat_at"] = _now_str()
@@ -643,7 +684,7 @@ def write_instance_status(slot_id, **fields):
                 f"INSERT INTO clipper_instances ({', '.join(cols)}) VALUES ({placeholders})",
                 params,
             )
-        conn.commit()
+        db_commit(conn)
     finally:
         conn.close()
 
@@ -655,7 +696,7 @@ def delete_instance_row(slot_id):
     conn = get_db()
     try:
         conn.execute("DELETE FROM clipper_instances WHERE slot_id = ?", (slot_id,))
-        conn.commit()
+        db_commit(conn)
     finally:
         conn.close()
 
@@ -663,7 +704,7 @@ def delete_instance_row(slot_id):
 def get_daily_clip_limit():
     """Read daily_clip_limit from clipper_state table. Returns 0 (unlimited) if not set."""
     try:
-        conn = sqlite3.connect(DB_PATH, timeout=10)
+        conn = sqlite3.connect(DB_PATH, timeout=30)
         row = conn.execute("SELECT value FROM clipper_state WHERE key = 'daily_clip_limit'").fetchone()
         conn.close()
         if row and row[0]:
@@ -684,6 +725,8 @@ def resilient_setup_driver(preferred_account=None, slot_id=None):
     """
     attempt = 0
     while True:
+        if slot_id and check_instance_stop(slot_id):
+            return None
         try:
             check_internet_pause()
             return setup_driver(preferred_account=preferred_account, slot_id=slot_id)
@@ -760,30 +803,124 @@ def close_extra_tabs(driver):
     Cloudflare and leaves the old one behind. Without cleanup, tabs
     accumulate on every login / retry / navigation and eventually the
     browser is full of dead tabs.
+
+    After cleanup, re-maximizes the surviving tab since new tabs opened by
+    uc_open_with_reconnect do not inherit the maximized state.
     """
     try:
         handles = driver.window_handles
-        if len(handles) <= 1:
-            return
-        current = driver.current_window_handle
-        for h in handles:
-            if h == current:
-                continue
+        closed_any = len(handles) > 1
+        if closed_any:
+            current = driver.current_window_handle
+            for h in handles:
+                if h == current:
+                    continue
+                try:
+                    driver.switch_to.window(h)
+                    driver.close()
+                except Exception:
+                    pass
             try:
-                driver.switch_to.window(h)
-                driver.close()
+                driver.switch_to.window(current)
             except Exception:
-                pass
+                remaining = driver.window_handles
+                if remaining:
+                    driver.switch_to.window(remaining[0])
+        # Re-maximize — new tabs from uc_open_with_reconnect don't inherit
+        # the maximized state from the original tab.
         try:
-            driver.switch_to.window(current)
+            driver.maximize_window()
         except Exception:
-            # If the "current" handle was somehow killed, fall back to
-            # whatever handle is still open.
-            remaining = driver.window_handles
-            if remaining:
-                driver.switch_to.window(remaining[0])
+            pass
     except Exception as e:
         log.info(f"    close_extra_tabs skipped: {e}")
+
+
+def validate_browser_health(driver, slot_id=None):
+    """Check browser health. Returns dict with status and detail fields."""
+    result = {
+        "healthy": True,
+        "tab_count": 0,
+        "is_fullscreen": False,
+        "on_site": False,
+        "driver_responsive": False,
+        "issues": [],
+    }
+    try:
+        # 1. Driver responsive
+        handles = driver.window_handles
+        result["driver_responsive"] = True
+        result["tab_count"] = len(handles)
+
+        # 2. Tab count — should be exactly 1
+        if len(handles) == 0:
+            result["healthy"] = False
+            result["issues"].append("no_tabs")
+            return result
+        if len(handles) > 1:
+            result["issues"].append(f"{len(handles)}_tabs")
+            close_extra_tabs(driver)
+            handles = driver.window_handles
+            result["tab_count"] = len(handles)
+
+        # 3. Window size — check if maximized/fullscreen
+        try:
+            size = driver.get_window_size()
+            result["is_fullscreen"] = size.get("width", 0) >= 1200
+            if not result["is_fullscreen"]:
+                result["issues"].append("not_fullscreen")
+                try:
+                    driver.maximize_window()
+                    time.sleep(0.5)
+                    size = driver.get_window_size()
+                    result["is_fullscreen"] = size.get("width", 0) >= 1200
+                    if result["is_fullscreen"]:
+                        result["issues"].remove("not_fullscreen")
+                except Exception:
+                    pass
+        except Exception:
+            result["issues"].append("size_check_failed")
+
+        # 4. URL domain check
+        try:
+            url = driver.current_url or ""
+            result["on_site"] = "newspapers.com" in url
+            if not result["on_site"] and "data:" not in url:
+                result["issues"].append("wrong_site")
+        except Exception:
+            result["issues"].append("url_check_failed")
+
+        # Only mark unhealthy for critical issues
+        critical = {"no_tabs", "size_check_failed", "url_check_failed"}
+        if critical & set(result["issues"]):
+            result["healthy"] = False
+
+    except Exception as e:
+        result["healthy"] = False
+        result["driver_responsive"] = False
+        result["issues"].append(f"exception:{e}")
+
+    return result
+
+
+def browser_health_str(health):
+    """Convert health dict to a short string for DB storage."""
+    if not health["issues"]:
+        return "ok"
+    return ",".join(health["issues"])
+
+
+def _save_error_screenshot(driver, reason, slot_id=None):
+    """Save a screenshot when something goes wrong so we can see what the browser showed."""
+    try:
+        tag = f"slot{slot_id}_" if slot_id else ""
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        fname = f"error_{tag}{reason}_{ts}.png"
+        fpath = os.path.join(LOG_DIR, fname)
+        driver.save_screenshot(fpath)
+        log.info(f"  Error screenshot saved: {fpath}")
+    except Exception as e:
+        log.warning(f"  Could not save error screenshot: {e}")
 
 
 def is_cloudflare(driver):
@@ -838,34 +975,46 @@ _current_account_clips = 0
 
 def get_accounts_db():
     """Get a connection to read/write accounts table."""
-    conn = sqlite3.connect(DB_PATH, timeout=10)
+    conn = sqlite3.connect(DB_PATH, timeout=30)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     return conn
 
 
 def get_next_account(exclude_email=None):
-    """Get the next active account to use. Excludes accounts throttled within 24 hours."""
+    """Get the next active, eligible account.
+
+    Eligible means:
+      - clips_today < daily_clip_limit, OR
+      - last_clip_time is 24+ hours ago (new day resets the counter)
+    """
+    clip_limit = get_daily_clip_limit() or 999999
     conn = get_accounts_db()
     try:
         tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
         if "accounts" not in tables:
             return None
 
-        sql = "SELECT * FROM accounts WHERE active = 1"
-        params = []
+        sql = """SELECT * FROM accounts WHERE active = 1
+                 AND (
+                     clips_today < ?
+                     OR clips_today IS NULL
+                     OR clips_today_date IS NULL
+                     OR clips_today_date != ?
+                     OR last_clip_time IS NULL
+                     OR last_clip_time < datetime('now','localtime','-24 hours')
+                 )"""
+        today = datetime.now().strftime("%Y-%m-%d")
+        params = [clip_limit, today]
         if exclude_email:
             sql += " AND email != ?"
             params.append(exclude_email)
-        # Exclude accounts throttled within the last 24 hours
-        sql += " AND (last_throttle_time IS NULL OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))"
-        # Prefer: never throttled first, then least recently throttled
-        sql += " ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC LIMIT 1"
+        # Prefer: accounts with fewest clips today first, then least total clips
+        sql += " ORDER BY clips_today ASC NULLS FIRST, total_clips ASC LIMIT 1"
         row = conn.execute(sql, params).fetchone()
         if row:
             return dict(row)
-        # If all accounts are in cooldown, log it
-        log.warning("  All active accounts are in 24-hour cooldown.")
+        log.warning("  All active accounts have hit the daily limit — waiting for cooldown.")
         return None
     finally:
         conn.close()
@@ -897,13 +1046,13 @@ def update_account_stats(email, clips_added=0, articles_added=0, throttled=False
         cols = [r[1] for r in conn.execute("PRAGMA table_info(accounts)").fetchall()]
         if "articles_this_session" not in cols:
             conn.execute("ALTER TABLE accounts ADD COLUMN articles_this_session INTEGER DEFAULT 0")
-            conn.commit()
+            db_commit(conn)
         if "clips_today" not in cols:
             conn.execute("ALTER TABLE accounts ADD COLUMN clips_today INTEGER DEFAULT 0")
-            conn.commit()
+            db_commit(conn)
         if "clips_today_date" not in cols:
             conn.execute("ALTER TABLE accounts ADD COLUMN clips_today_date TEXT")
-            conn.commit()
+            db_commit(conn)
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         today = datetime.now().strftime("%Y-%m-%d")
         if clips_added > 0:
@@ -948,7 +1097,7 @@ def update_account_stats(email, clips_added=0, articles_added=0, throttled=False
                         updated_at = ?
                     WHERE email = ?
                 """, (now, new_count, round(new_avg, 1), now, email))
-        conn.commit()
+        db_commit(conn)
     finally:
         conn.close()
 
@@ -968,7 +1117,7 @@ def update_account_login(email):
                WHERE email = ?""",
             (now, now, email),
         )
-        conn.commit()
+        db_commit(conn)
     finally:
         conn.close()
 
@@ -982,7 +1131,7 @@ def update_account_logout(email):
             return
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         conn.execute("UPDATE accounts SET last_logout_time = ?, updated_at = ? WHERE email = ?", (now, now, email))
-        conn.commit()
+        db_commit(conn)
     finally:
         conn.close()
 
@@ -1240,12 +1389,15 @@ def do_login(driver, acct):
         except Exception:
             continue
     log.info(f"    Turnstile widget detected by selectors: {turnstile_detected}")
-    try:
-        driver.uc_gui_click_captcha()
-        time.sleep(5)
-        log.info("    Turnstile click done.")
-    except Exception as e:
-        log.info(f"    Turnstile click attempt: {e}")
+    if turnstile_detected:
+        try:
+            driver.uc_gui_click_captcha()
+            time.sleep(5)
+            log.info("    Turnstile click done.")
+        except Exception as e:
+            log.info(f"    Turnstile click attempt: {e}")
+    else:
+        log.info("    No Turnstile widget visible — skipping captcha click.")
 
     # Click sign-in button
     clicked = False
@@ -1289,6 +1441,7 @@ def do_login(driver, acct):
 
     if "signin" in driver.current_url.lower():
         log.warning("    LOGIN FAILED — still on sign-in page.")
+        _save_error_screenshot(driver, "login_failed")
         return False
 
     log.info(f"    LOGIN SUCCESS as {email}")
@@ -1344,15 +1497,63 @@ def switch_account(driver, exclude_email=None):
 
 # === BROWSER SETUP ===
 
+def _clean_chrome_profile_locks(profile_dir):
+    """Remove Chrome singleton lock files that prevent a clean new browser launch."""
+    for lock_name in ("SingletonLock", "SingletonCookie", "SingletonSocket"):
+        lock_path = os.path.join(profile_dir, lock_name)
+        try:
+            if os.path.exists(lock_path):
+                os.remove(lock_path)
+                log.info(f"    Removed stale lock: {lock_path}")
+        except Exception as e:
+            log.warning(f"    Could not remove {lock_path}: {e}")
+
+
+def _patch_chrome_preferences(profile_dir):
+    """Patch Chrome Preferences to prevent session restore / crash bubble.
+
+    Sets exit_type to 'none' and exited_cleanly to true so Chrome doesn't
+    think it crashed and try to reopen previous tabs on the next launch.
+    """
+    import json as _json
+    prefs_path = os.path.join(profile_dir, "Default", "Preferences")
+    prefs = {}
+    if os.path.isfile(prefs_path):
+        try:
+            with open(prefs_path, "r", encoding="utf-8") as f:
+                prefs = _json.load(f)
+        except Exception:
+            prefs = {}
+    # Ensure nested dicts exist
+    prefs.setdefault("profile", {})
+    prefs["profile"]["exit_type"] = "none"
+    prefs["profile"]["exited_cleanly"] = True
+    os.makedirs(os.path.dirname(prefs_path), exist_ok=True)
+    try:
+        with open(prefs_path, "w", encoding="utf-8") as f:
+            _json.dump(prefs, f)
+        log.info(f"    Patched Chrome Preferences: exit_type=none, exited_cleanly=true")
+    except Exception as e:
+        log.warning(f"    Could not patch Chrome Preferences: {e}")
+
+
 def setup_driver(preferred_account=None, slot_id=None):
+    # Abort early if stop flag is set — don't waste time opening a browser.
+    if slot_id and check_instance_stop(slot_id):
+        log.info("  Stop flag detected before browser launch — aborting setup.")
+        return None
+
     # In slot mode each worker gets its own Chrome profile so multiple
     # browsers can run in parallel without colliding on the user-data-dir.
     if slot_id:
-        temp_profile = rf"c:\lake_worth\chrome_temp_profile_clipper_{slot_id}"
+        temp_profile = rf"c:\lake_worth_runtime\chrome_temp_profile_clipper_{slot_id}"
     else:
-        temp_profile = r"c:\lake_worth\chrome_temp_profile_clipper"
+        temp_profile = r"c:\lake_worth_runtime\chrome_temp_profile_clipper"
     os.makedirs(temp_profile, exist_ok=True)
-    driver = Driver(uc=True, headed=True, user_data_dir=temp_profile)
+    _clean_chrome_profile_locks(temp_profile)
+    _patch_chrome_preferences(temp_profile)
+    driver = Driver(uc=True, headed=True, user_data_dir=temp_profile,
+                    chromium_arg="--disable-session-crashed-bubble")
     driver.set_window_size(1920, 1080)
     try:
         driver.maximize_window()
@@ -1365,6 +1566,21 @@ def setup_driver(preferred_account=None, slot_id=None):
     close_extra_tabs(driver)
     time.sleep(3)
     solve_cloudflare(driver)
+
+    # Post-launch health check — verify we have a real standalone browser
+    health = validate_browser_health(driver, slot_id=slot_id)
+    if slot_id:
+        write_instance_status(slot_id, browser_health=browser_health_str(health))
+    if not health["healthy"]:
+        log.error(f"  Browser health check FAILED: {health['issues']}")
+        _save_error_screenshot(driver, "health_failed_setup", slot_id=slot_id)
+        try:
+            driver.quit()
+        except Exception:
+            pass
+        raise RuntimeError(f"Browser health check failed: {health['issues']}")
+    if health["issues"]:
+        log.warning(f"  Browser health warnings: {health['issues']}")
 
     # Check if logged in — try auto-login from accounts DB, else wait for manual
     global _current_account_email, _current_account_clips
@@ -1393,6 +1609,7 @@ def setup_driver(preferred_account=None, slot_id=None):
                 navigate(driver, "https://star-telegram.newspapers.com/")
                 time.sleep(2)
             else:
+                _save_error_screenshot(driver, "login_failed_setup", slot_id=slot_id)
                 log.warning(f"Auto-login failed for {acct['email']}. Waiting for manual login...")
                 log.info("Please log in to newspapers.com in the browser window.")
                 log.info("Waiting up to 60 seconds for login...")
@@ -1485,6 +1702,15 @@ def setup_driver(preferred_account=None, slot_id=None):
             _current_account_email = target_account
             _current_account_clips = 0
             log.info(f"  Tracking as account: {target_account}")
+
+    # Final stop check — if flagged during login, close browser and abort.
+    if slot_id and check_instance_stop(slot_id):
+        log.info("  Stop flag detected after login — closing browser.")
+        try:
+            driver.quit()
+        except Exception:
+            pass
+        return None
 
     return driver
 
@@ -2361,7 +2587,7 @@ def save_review_article(conn, pdf_filename, clip_url, meta, prefix, body_text,
                     "UPDATE processed_pdfs SET has_photo = 1 WHERE pdf_filename = ?",
                     (pdf_filename,),
                 )
-                conn.commit()
+                db_commit(conn)
             except Exception as e:
                 log.warning(f"    Could not set has_photo on processed_pdfs: {e}")
         return save_articles(conn, pdf_filename, synthetic, SEARCH_TERM, clip_url=clip_url)
@@ -2454,6 +2680,41 @@ OCR TEXT:
         return None
     except Exception as e:
         log.warning(f"    AI extraction error: {e}")
+        err_str = str(e).lower()
+        if "credit balance" in err_str or "billing" in err_str or "purchase credits" in err_str:
+            log.error("    *** ANTHROPIC API CREDITS EXHAUSTED — EMERGENCY STOP ***")
+            # 1. Set global stop flag immediately
+            try:
+                os.makedirs(GLOBAL_STOP_FLAG_FILE, exist_ok=True)
+            except Exception:
+                pass
+            # 2. Zero target and write timestamp to DB
+            try:
+                _db = get_db()
+                _db.execute(
+                    "INSERT OR REPLACE INTO clipper_state (key, value) VALUES (?, ?)",
+                    ("api_credits_exhausted", datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
+                )
+                _db.execute(
+                    "INSERT OR REPLACE INTO clipper_state (key, value) VALUES ('instances_target', '0')",
+                )
+                _db.commit()
+                _db.close()
+            except Exception:
+                pass
+            # 3. Set per-slot stop flags for all running instances
+            try:
+                _db2 = get_db()
+                _slots = [r[0] for r in _db2.execute("SELECT slot_id FROM clipper_instances").fetchall()]
+                _db2.close()
+                for _sid in _slots:
+                    try:
+                        os.makedirs(os.path.join(r"c:\lake_worth_runtime", f"stop_clipper_{_sid}"), exist_ok=True)
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+            return "credits_exhausted"
         return None
 
 
@@ -2509,11 +2770,33 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         log.warning(f"    Cloudflare blocked navigation. Stopping.")
         return "stop"
 
+    # Detect subscription paywall modal. When the session has been logged
+    # out, newspapers.com drops a "Choose a subscription to view this page"
+    # modal on top of the image. Interacting with the page in this state
+    # is impossible — the only recovery is to exit the slot and let
+    # autoscale respawn with a fresh login.
+    try:
+        _body = driver.execute_script("return document.body.innerText || '';") or ""
+        _b = _body.lower()
+        if (
+            "choose a subscription to view this page" in _b
+            or ("already have an account" in _b and "sign in" in _b
+                and "start free trial" in _b)
+        ):
+            log.warning(
+                "    Subscription paywall modal detected — session appears "
+                "logged out. Exiting slot for respawn."
+            )
+            return "stop"
+    except Exception:
+        pass
+
     title = driver.title or ""
     meta = parse_page_title(title, url)
 
     if not meta["date"]:
         log.warning(f"    Could not parse title: {title[:60]}")
+        _save_error_screenshot(driver, "parse_title_failed")
         return None
 
     pdf_filename = meta["pdf_filename"]
@@ -2532,6 +2815,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     # Step 2: Click Clip button
     if not click_clip_button(driver):
         log.warning(f"    Could not find Clip button for {pdf_filename}")
+        _save_error_screenshot(driver, "no_clip_button")
         return None
 
     time.sleep(2)
@@ -2550,12 +2834,14 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
                 break
     if not handle_ok:
         log.warning(f"    Could not drag clip corners for {pdf_filename} after 5 retries. Skipping.")
+        _save_error_screenshot(driver, "drag_corners_failed")
         return None
 
 
     # Step 4: Save
     if not click_save_button(driver):
         log.warning(f"    Could not find Save button for {pdf_filename}")
+        _save_error_screenshot(driver, "no_save_button")
         return None
 
     # Check for throttle message — try account switch first, then escalating delays
@@ -2633,6 +2919,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     # Step 5: Navigate to clip page
     if not navigate_to_clip_page(driver):
         log.warning(f"    Could not navigate to clip page for {pdf_filename}")
+        _save_error_screenshot(driver, "no_clip_page")
         return None
 
     time.sleep(2)
@@ -2758,6 +3045,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
             }
         # HAS_TEXT or None — treat as transient, retry later
         log.warning(f"    No OCR button and vision did not classify as picture/bad — skipping {pdf_filename} for retry later.")
+        _save_error_screenshot(driver, "no_ocr_button_unclassified")
         return None
 
     # Step 8: Extract OCR text with retries
@@ -2816,6 +3104,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
 
     if len(ocr_text) <= 1000:
         log.warning(f"    OCR still too short ({len(ocr_text)} chars) after refresh retries. NOT marking as clipped — will retry later.")
+        _save_error_screenshot(driver, "ocr_too_short")
         return None
 
     # Save to DB
@@ -2830,17 +3119,24 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
         ocr_text, meta["date"], meta["newspaper"], meta["page"]
     )
 
+    if articles == "credits_exhausted":
+        log.error("    STOPPING: Anthropic API credits exhausted. Clip saved but AI extraction skipped.")
+        _save_error_screenshot(driver, "credits_exhausted")
+        # Don't un-clip — the clip and OCR are saved. Just stop.
+        return "stop"
+
     if articles is None:
         log.warning(
             "    AI extraction failed — un-clipping this page so it will "
             "be re-queued for another attempt."
         )
+        _save_error_screenshot(driver, "ai_extraction_failed")
         conn.execute(
             "UPDATE processed_pdfs SET clipped = 0, articles_found = NULL "
             "WHERE pdf_filename = ?",
             (pdf_filename,),
         )
-        conn.commit()
+        db_commit(conn)
         elapsed = time.time() - page_start_time
         log.info(f"    Page: {pdf_filename} — {elapsed:.1f}s (extraction failed, re-queued)")
         return None
@@ -2851,14 +3147,14 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
             "UPDATE processed_pdfs SET articles_found = ? WHERE pdf_filename = ?",
             (count, pdf_filename)
         )
-        conn.commit()
+        db_commit(conn)
         log.info(f"    Found {count} articles")
     else:
         conn.execute(
             "UPDATE processed_pdfs SET articles_found = 0 WHERE pdf_filename = ?",
             (pdf_filename,),
         )
-        conn.commit()
+        db_commit(conn)
         log.info(f"    No Lake Worth articles found in OCR")
 
     elapsed = time.time() - page_start_time
@@ -2917,17 +3213,16 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
     log.info(f"  Max pages:  {max_pages or 'unlimited'}")
     log.info(f"  Log: {log_filename}")
 
-    # Clear per-slot stop flag from previous runs (do not touch legacy/global).
-    try:
-        p = instance_stop_flag_path(slot_id)
-        if os.path.exists(p):
-            if os.path.isdir(p):
-                os.rmdir(p)
-            else:
-                os.remove(p)
-            log.info(f"  Cleared old stop flag for slot {slot_id}.")
-    except Exception:
-        pass
+    # Check stop flags BEFORE doing anything. The per-slot flag is cleared by
+    # _spawn_instance() in the server before launching us. Any flag that exists
+    # now was set AFTER spawn — it's a real stop command. Obey it.
+    if check_instance_stop(slot_id):
+        log.info(f"  Stop flag set before boot — exiting immediately.")
+        try:
+            delete_instance_row(slot_id)
+        except Exception:
+            pass
+        return
 
     conn = get_db()
     ensure_columns(conn)
@@ -3013,31 +3308,44 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
                         log.info(f"  Reached max_pages limit ({max_pages})")
                         break
 
-                    # Liveness check: if the browser window was closed (by the
-                    # user or a crash) or the chromedriver is gone, exit the
-                    # slot so autoscale can respawn a fresh instance instead of
-                    # letting this python process hang around zombie-style.
-                    try:
-                        _handles = driver.window_handles if driver else []
-                    except Exception as _e:
-                        log.error(f"  Browser session lost: {_e} — exiting slot.")
-                        _handles = []
-                    if not _handles:
-                        log.error("  No browser windows — exiting slot for respawn.")
+                    # Health check: verify browser is alive, has 1 tab,
+                    # is fullscreen, and on the right site. Auto-fixes
+                    # minor issues (extra tabs, not maximized).
+                    health = validate_browser_health(driver, slot_id=slot_id)
+                    _health_str = browser_health_str(health)
+                    write_instance_status(
+                        slot_id, browser_health=_health_str,
+                    )
+                    if not health["healthy"]:
+                        log.error(f"  Browser health FAILED: {health['issues']} — exiting slot for respawn.")
+                        _save_error_screenshot(driver, "health_failed", slot_id=slot_id)
                         write_instance_status(
                             slot_id, status="error",
-                            last_action="browser gone",
+                            last_action=f"unhealthy:{_health_str}",
                         )
                         break
-                    # Prune any stray tabs from uc_gui_click_captcha /
-                    # uc_open_with_reconnect before doing real work.
-                    if len(_handles) > 1:
-                        close_extra_tabs(driver)
+                    if health["issues"]:
+                        log.warning(f"  Browser health warnings: {health['issues']}")
 
                     page = claim_next_page(conn, slot_id, pid, date_start, date_end)
                     if not page:
                         log.info("  Queue empty for this range — slot will exit.")
                         write_instance_status(slot_id, status="queue_empty", last_action="queue empty")
+                        # Proactively zero the target so autoscale doesn't respawn
+                        try:
+                            other = conn.execute(
+                                "SELECT status FROM clipper_instances WHERE slot_id != ?",
+                                (slot_id,),
+                            ).fetchall()
+                            active = [r for r in other if (r["status"] or "").lower() in ("running", "starting", "logging-in", "spawning")]
+                            if not active:
+                                conn.execute(
+                                    "INSERT OR REPLACE INTO clipper_state (key, value) VALUES ('instances_target', '0')"
+                                )
+                                db_commit(conn)
+                                log.info("  All instances idle — set instances_target=0")
+                        except Exception as e:
+                            log.warning(f"  Could not zero target: {e}")
                         account_exhausted = True
                         break
 
@@ -3088,14 +3396,35 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
                         continue
                     if result == "throttled":
                         log.info("  Throttle detected — releasing account and rotating.")
+                        _save_error_screenshot(driver, "throttled", slot_id=slot_id)
                         # clip_page already waited; mark account throttled and rotate.
                         update_account_stats(claimed_account_email, throttled=True)
                         release_page(conn, pdf_filename, slot_id=slot_id)
                         write_instance_status(slot_id, status="cooling", last_action="throttled")
                         break
                     if result == "stop":
+                        _save_error_screenshot(driver, "clip_stop", slot_id=slot_id)
                         log.warning("  clip_page returned 'stop' — releasing and exiting slot.")
                         release_page(conn, pdf_filename, slot_id=slot_id)
+                        # Check if this is a credits-exhausted stop — kill everything
+                        try:
+                            _chk = get_db()
+                            _cred_row = _chk.execute(
+                                "SELECT value FROM clipper_state WHERE key = 'api_credits_exhausted'"
+                            ).fetchone()
+                            _chk.close()
+                            if _cred_row:
+                                log.error("  *** API CREDITS EXHAUSTED — setting global stop and target=0 ***")
+                                os.makedirs(GLOBAL_STOP_FLAG_FILE, exist_ok=True)
+                                try:
+                                    conn.execute(
+                                        "INSERT OR REPLACE INTO clipper_state (key, value) VALUES ('instances_target', '0')"
+                                    )
+                                    db_commit(conn)
+                                except Exception:
+                                    pass
+                        except Exception:
+                            pass
                         write_instance_status(slot_id, status="error", last_action="clip_page stop")
                         account_exhausted = True
                         break
@@ -3141,7 +3470,7 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
                                 f"  Daily clip limit reached ({_day_total}/{clip_limit}) "
                                 f"for {claimed_account_email} — rotating."
                             )
-                            update_account_stats(claimed_account_email, throttled=True)
+                            _save_error_screenshot(driver, "daily_limit", slot_id=slot_id)
                             write_instance_status(slot_id, status="cooling", last_action="daily limit")
                             break
             finally:
@@ -3295,7 +3624,6 @@ def main(max_pages=0, date_start=None, date_end=None, account_email=None):
                             _acc_conn.close()
                         if _session_total >= clip_limit:
                             log.info(f"  Daily clip limit reached ({_session_total}/{clip_limit}) for {_current_account_email}.")
-                            update_account_stats(_current_account_email, throttled=True)
                             # Try rotating to another eligible account
                             if switch_account(driver, exclude_email=_current_account_email):
                                 log.info(f"  Rotated to {_current_account_email}. Continuing...")
@@ -3412,6 +3740,12 @@ if __name__ == "__main__":
         )
         _fh = logging.FileHandler(_slot_log)
         _fh.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+        # Remove the default file handler (clipper_YYYYMMDD.log) so log lines
+        # only go to the slot-specific file, preventing double-counting in
+        # the dashboard's log scanner.
+        for _h in log.handlers[:]:
+            if isinstance(_h, logging.FileHandler) and _h is not _fh:
+                log.removeHandler(_h)
         log.addHandler(_fh)
         log.info(f"  Slot log file: {_slot_log}")
         main_slot(_slot_id, date_start=ds, date_end=de, max_pages=limit)

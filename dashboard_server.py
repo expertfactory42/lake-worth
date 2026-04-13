@@ -10,6 +10,7 @@ import json
 import re
 import sqlite3
 import os
+import sys
 import glob
 import subprocess
 import signal
@@ -22,15 +23,17 @@ from pathlib import Path
 from datetime import datetime, timedelta
 
 BASE_DIR = Path(r"C:\lake_worth")
+RUNTIME_DIR = Path(r"C:\lake_worth_runtime")
 DB_PATH = BASE_DIR / "lake_worth.db"
 PDF_DIR = BASE_DIR / "pdfs"
 LOG_DIR = BASE_DIR / "collector_logs"
-STOP_FLAG = BASE_DIR / "stop_clipper"
+BOOK_NOTES_PATH = BASE_DIR / "book_notes.txt"
+STOP_FLAG = RUNTIME_DIR / "stop_clipper"
 PORT = 8765
 
 
 def get_db():
-    conn = sqlite3.connect(str(DB_PATH), timeout=10)
+    conn = sqlite3.connect(str(DB_PATH), timeout=30)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.row_factory = sqlite3.Row
     return conn
@@ -63,7 +66,7 @@ def _determine_run_set_start():
     Returns None if there is no usable data.
     """
     try:
-        conn = sqlite3.connect(str(DB_PATH), timeout=5)
+        conn = sqlite3.connect(str(DB_PATH), timeout=30)
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             "SELECT started_at, heartbeat_at FROM clipper_instances "
@@ -121,6 +124,12 @@ def _scan_logs_since(since_dt):
     try:
         since_ts = since_dt.timestamp()
         files = glob.glob(str(LOG_DIR / "clipper_*.log"))
+        # Only scan slot-specific logs (clipper_slot*) when they exist.
+        # The base clipper_YYYYMMDD.log used to be a duplicate of the slot
+        # file; scanning both would double-count events.
+        slot_files = [f for f in files if "clipper_slot" in os.path.basename(f)]
+        if slot_files:
+            files = slot_files
         files = [f for f in files if os.path.getmtime(f) >= since_ts - 3600]
         # Only tail the last 512KB of each file to avoid scanning megabytes
         # of clipper log on every poll.
@@ -199,22 +208,37 @@ def _is_clipper_running():
 
 # === MULTI-INSTANCE SUPPORT ===
 
-GLOBAL_STOP_FLAG = BASE_DIR / "stop_clipper_all"
+GLOBAL_STOP_FLAG = RUNTIME_DIR / "stop_clipper_all"
 
 
 def _instance_stop_flag(slot_id):
-    return BASE_DIR / f"stop_clipper_{slot_id}"
+    return RUNTIME_DIR / f"stop_clipper_{slot_id}"
 
 
 def _pid_alive(pid):
-    """Return True if the given PID is currently running. PID-based only; no
-    time heuristics. Uses tasklist so we never accidentally signal a process."""
+    """Return True if the given PID is currently running. Uses the Windows
+    kernel32 OpenProcess API for an instant check — no subprocess overhead.
+    Falls back to tasklist only if the ctypes call fails unexpectedly."""
     if not pid:
         return False
     try:
         pid = int(pid)
     except (TypeError, ValueError):
         return False
+    # Fast path: kernel32.OpenProcess with PROCESS_QUERY_LIMITED_INFORMATION
+    try:
+        import ctypes
+        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+        handle = ctypes.windll.kernel32.OpenProcess(
+            PROCESS_QUERY_LIMITED_INFORMATION, False, pid
+        )
+        if handle:
+            ctypes.windll.kernel32.CloseHandle(handle)
+            return True
+        return False
+    except Exception:
+        pass
+    # Fallback: tasklist (slow but reliable)
     try:
         out = subprocess.run(
             ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
@@ -230,25 +254,59 @@ def _sweep_stale_claims():
     """Conservative PID-based sweeper.
 
     - Any row in clipper_instances whose pid is not alive → deleted.
+    - Any instance stuck in 'starting' or 'waiting_for_account' with a
+      heartbeat older than 5 minutes → killed and deleted.
     - Any account whose in_use_pid is not alive → claim cleared.
     - Any processed_pdfs row with claimed_pid not alive and clipped=0 → claim cleared.
-
-    A live PID is NEVER touched, regardless of how stale a heartbeat looks.
     """
+    import datetime as _dt
+    STALE_STATUSES = ("starting", "waiting_for_account")
+    STALE_TIMEOUT = 300  # 5 minutes
+
     conn = get_db()
     try:
         rows = conn.execute(
-            "SELECT slot_id, pid FROM clipper_instances"
+            "SELECT slot_id, pid, status, heartbeat_at FROM clipper_instances"
         ).fetchall()
         for r in rows:
+            killed = False
             if not _pid_alive(r["pid"]):
                 print(
                     f"[sweep] removing slot={r['slot_id']} pid={r['pid']} "
                     f"(process not alive)",
                     flush=True,
                 )
+                killed = True
+            elif (r["status"] or "").lower() in STALE_STATUSES and r["heartbeat_at"]:
+                try:
+                    hb = _dt.datetime.strptime(r["heartbeat_at"], "%Y-%m-%d %H:%M:%S")
+                    age = (_dt.datetime.now() - hb).total_seconds()
+                    if age > STALE_TIMEOUT:
+                        print(
+                            f"[sweep] killing slot={r['slot_id']} pid={r['pid']} "
+                            f"status={r['status']} stale heartbeat ({age:.0f}s)",
+                            flush=True,
+                        )
+                        try:
+                            os.kill(int(r["pid"]), signal.SIGTERM)
+                        except Exception:
+                            pass
+                        killed = True
+                except Exception:
+                    pass
+            if killed:
                 conn.execute(
                     "DELETE FROM clipper_instances WHERE slot_id = ?", (r["slot_id"],)
+                )
+                # Also release any account claimed by this slot
+                conn.execute(
+                    "UPDATE accounts SET in_use_by = NULL, in_use_since = NULL, in_use_pid = NULL "
+                    "WHERE in_use_by = ?", (r["slot_id"],)
+                )
+                # Release any pages claimed by this slot
+                conn.execute(
+                    "UPDATE processed_pdfs SET claimed_by = NULL, claimed_at = NULL, claimed_pid = NULL "
+                    "WHERE claimed_by = ?", (r["slot_id"],)
                 )
 
         rows = conn.execute(
@@ -316,18 +374,23 @@ def _get_state(key, default=""):
 
 
 def _set_state(key, value):
-    try:
-        conn = get_db()
+    for _attempt in range(3):
         try:
-            conn.execute(
-                "INSERT OR REPLACE INTO clipper_state (key, value) VALUES (?, ?)",
-                (key, str(value)),
-            )
-            conn.commit()
-        finally:
-            conn.close()
-    except Exception:
-        pass
+            conn = get_db()
+            try:
+                conn.execute(
+                    "INSERT OR REPLACE INTO clipper_state (key, value) VALUES (?, ?)",
+                    (key, str(value)),
+                )
+                conn.commit()
+                return  # success
+            finally:
+                conn.close()
+        except Exception as e:
+            import time as _time
+            print(f"[_set_state] attempt {_attempt+1} failed for {key}={value}: {e}", flush=True)
+            _time.sleep(1)
+    print(f"[_set_state] FAILED to set {key}={value} after 3 attempts", flush=True)
 
 
 def _log_spawn(msg):
@@ -342,10 +405,41 @@ def _spawn_instance(date_start="", date_end="", max_pages="0"):
     """
     import shutil as _shutil
     try:
+        # Abort if global stop is active or target is zero
+        if GLOBAL_STOP_FLAG.exists() or STOP_FLAG.exists():
+            _log_spawn("spawn aborted — stop flag active")
+            return None, None
+        try:
+            t = int(_get_state("instances_target", "0"))
+            if t <= 0:
+                _log_spawn("spawn aborted — target is 0")
+                return None, None
+        except Exception:
+            pass
         _sweep_stale_claims()
         slot_id = _next_free_slot_id()
+        # Kill any orphan Chrome processes using this slot's profile
         try:
-            _profile_dir = BASE_DIR / f"chrome_temp_profile_clipper_{slot_id}"
+            _target_str = f"chrome_temp_profile_clipper_{slot_id}"
+            result = subprocess.run(
+                ["wmic", "process", "where", "name='chrome.exe'", "get", "ProcessId,CommandLine"],
+                capture_output=True, text=True, timeout=10,
+                creationflags=_NO_WINDOW,
+            )
+            for line in result.stdout.splitlines():
+                if _target_str in line:
+                    parts = line.strip().split()
+                    if parts:
+                        try:
+                            _pid = int(parts[-1])
+                            os.kill(_pid, 9)
+                            _log_spawn(f"killed orphan chrome pid={_pid} for slot {slot_id}")
+                        except Exception:
+                            pass
+        except Exception:
+            pass
+        try:
+            _profile_dir = RUNTIME_DIR / f"chrome_temp_profile_clipper_{slot_id}"
             if _profile_dir.exists():
                 _shutil.rmtree(_profile_dir, ignore_errors=True)
         except Exception:
@@ -396,6 +490,27 @@ def _spawn_instance(date_start="", date_end="", max_pages="0"):
             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
             startupinfo=_si,
         )
+        # Verify subprocess is alive after 1 second
+        import time as _time
+        _time.sleep(1)
+        if proc.poll() is not None:
+            _log_spawn(f"spawned slot={slot_id} but process died immediately (exit={proc.returncode})")
+            try:
+                conn = sqlite3.connect(str(DB_PATH), timeout=10)
+                conn.execute("DELETE FROM clipper_instances WHERE slot_id = ?", (slot_id,))
+                conn.commit()
+                conn.close()
+            except Exception:
+                pass
+            return None, None
+        # Update PID in the row (was 0 from initial insert)
+        try:
+            conn = sqlite3.connect(str(DB_PATH), timeout=10)
+            conn.execute("UPDATE clipper_instances SET pid = ? WHERE slot_id = ?", (proc.pid, slot_id))
+            conn.commit()
+            conn.close()
+        except Exception:
+            pass
         _log_spawn(f"spawned slot={slot_id} pid={proc.pid}")
         return slot_id, proc.pid
     except Exception as e:
@@ -403,14 +518,25 @@ def _spawn_instance(date_start="", date_end="", max_pages="0"):
         return None, None
 
 
-_autoscale_lock = None  # threading.Lock placeholder; set on first use
+import threading as _threading
+_autoscale_lock = _threading.Lock()
+_last_spawn_time = 0  # epoch timestamp of last spawn
+_SPAWN_COOLDOWN = 15  # minimum seconds between spawns
 
 
 def _autoscale_tick():
     """Read the persisted target and reconcile running instance count.
     Spawns at most one instance per tick to avoid thundering-herd launches.
     """
+    global _last_spawn_time
+    if not _autoscale_lock.acquire(blocking=False):
+        return  # another tick is already running
     try:
+        # Enforce minimum cooldown between spawns
+        import time as _time
+        if _time.time() - _last_spawn_time < _SPAWN_COOLDOWN:
+            return
+        _sweep_stale_claims()
         target_s = _get_state("instances_target", "0")
         try:
             target = int(target_s)
@@ -418,7 +544,6 @@ def _autoscale_tick():
             target = 0
         if target <= 0:
             return
-        _sweep_stale_claims()
         conn = get_db()
         try:
             rows = conn.execute(
@@ -461,7 +586,7 @@ def _autoscale_tick():
         # otherwise we'd spin up a new clipper just to have it find an empty
         # queue and exit, forever.
         try:
-            q_conn = sqlite3.connect(str(DB_PATH), timeout=5)
+            q_conn = sqlite3.connect(str(DB_PATH), timeout=30)
             try:
                 where = [
                     "(ignored IS NULL OR ignored = 0)",
@@ -484,18 +609,37 @@ def _autoscale_tick():
         except Exception as _e:
             remain = 1  # fail-open: don't block on a query error
         if remain <= 0:
+            # Queue is empty. Check if all instances are done (not actively clipping).
+            # If any instance is still running/starting, hold off — it may unclaim pages
+            # on failure that need retrying.
+            active_statuses = {"running", "starting", "logging-in", "spawning"}
+            still_active = [
+                r for r in rows
+                if (r["status"] or "").lower() in active_statuses
+            ]
+            if still_active:
+                _log_spawn(
+                    f"autoscale tick: queue empty but {len(still_active)} instance(s) "
+                    f"still active — waiting for them to finish"
+                )
+                return  # don't spawn more, but don't zero target yet
+            # All instances are idle/done/gone — safe to shut down
             _log_spawn(
-                f"autoscale tick: queue empty for range {date_start}..{date_end} — "
-                f"zeroing target and halting spawns"
+                f"autoscale tick: queue empty for range {date_start}..{date_end} "
+                f"and all instances idle — zeroing target"
             )
             _set_state("instances_target", "0")
             return
         _log_spawn(
             f"autoscale tick: current={current} target={target} remain={remain} — spawning"
         )
-        _spawn_instance(date_start=date_start, date_end=date_end, max_pages="0")
+        slot_id, pid = _spawn_instance(date_start=date_start, date_end=date_end, max_pages="0")
+        if slot_id:
+            _last_spawn_time = _time.time()
     except Exception as e:
         print(f"[autoscale] tick error: {e}")
+    finally:
+        _autoscale_lock.release()
 
 
 def _autoscale_loop():
@@ -517,7 +661,7 @@ def _list_instances():
         rows = conn.execute(
             """SELECT i.slot_id, i.pid, i.account_email, i.status, i.current_date,
                       i.current_page, i.count_this_run, i.date_start, i.date_end,
-                      i.started_at, i.heartbeat_at, i.last_action,
+                      i.started_at, i.heartbeat_at, i.last_action, i.browser_health,
                       CASE WHEN a.clips_today_date = date('now','localtime')
                            THEN COALESCE(a.clips_today, 0) ELSE 0 END AS account_clips_today
                  FROM clipper_instances i
@@ -716,6 +860,21 @@ def get_dashboard_data():
     # No articles by year
     no_articles_by_year_sorted = sorted(na_yearly.items())
 
+    # Ignored by year (pages with ignored=1, no articles)
+    ignored_fnames = conn.execute("""
+        SELECT pp.pdf_filename FROM processed_pdfs pp
+        LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+        WHERE a.id IS NULL AND pp.articles_found != -1
+        AND pp.ignored = 1
+    """).fetchall()
+    ignored_yearly = {}
+    for row in ignored_fnames:
+        m = re.search(r'_(\d{4})_(\d{2})_(\d{2})_\d+\.pdf$', row["pdf_filename"])
+        if m:
+            y = m.group(1)
+            ignored_yearly[y] = ignored_yearly.get(y, 0) + 1
+    ignored_by_year_sorted = sorted(ignored_yearly.items())
+
     conn.close()
 
     return {
@@ -728,50 +887,62 @@ def get_dashboard_data():
         "monthly": monthly_sorted,
         "articles_by_year": articles_by_year_sorted,
         "no_articles_by_year": no_articles_by_year_sorted,
+        "ignored_by_year": ignored_by_year_sorted,
     }
 
 
-def get_no_articles_page(page=1, per_page=100, sort="desc", filter_text=""):
-    """Return one page of no-articles entries, sorted by date."""
+def get_no_articles_page(page=1, per_page=100, sort="desc", filter_text="", filter_mode="keep"):
+    """Return one page of no-articles entries, sorted by date.
+    filter_mode: 'keep' (non-ignored only), 'ignored' (ignored only), 'all' (both)
+    """
     conn = get_db()
     order = "DESC" if sort == "desc" else "ASC"
     offset = (page - 1) * per_page
 
+    if filter_mode == "ignored":
+        ignore_clause = "AND pp.ignored = 1"
+    elif filter_mode == "all":
+        ignore_clause = ""
+    else:
+        ignore_clause = "AND (pp.ignored IS NULL OR pp.ignored = 0)"
+
     # Count total (with optional filter)
     if filter_text:
         like = f"%{filter_text}%"
-        total = conn.execute("""
+        total = conn.execute(f"""
             SELECT COUNT(*) as c FROM processed_pdfs pp
             LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
             WHERE a.id IS NULL AND pp.articles_found != -1
-            AND (pp.ignored IS NULL OR pp.ignored = 0)
+            {ignore_clause}
             AND pp.pdf_filename LIKE ?
         """, (like,)).fetchone()["c"]
         rows = conn.execute(f"""
             SELECT pp.pdf_filename, pp.search_term, pp.url, pp.clip_url,
-                   pp.thumbnail_path, pp.ignored, pp.highlighted, pp.has_photo
+                   pp.thumbnail_path, pp.ignored, pp.highlighted, pp.has_photo,
+                   pp.auto_ignore_confidence
             FROM processed_pdfs pp
             LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
             WHERE a.id IS NULL AND pp.articles_found != -1
-            AND (pp.ignored IS NULL OR pp.ignored = 0)
+            {ignore_clause}
             AND pp.pdf_filename LIKE ?
             ORDER BY pp.date_str {order}, pp.pdf_filename {order}
             LIMIT ? OFFSET ?
         """, (like, per_page, offset)).fetchall()
     else:
-        total = conn.execute("""
+        total = conn.execute(f"""
             SELECT COUNT(*) as c FROM processed_pdfs pp
             LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
             WHERE a.id IS NULL AND pp.articles_found != -1
-            AND (pp.ignored IS NULL OR pp.ignored = 0)
+            {ignore_clause}
         """).fetchone()["c"]
         rows = conn.execute(f"""
             SELECT pp.pdf_filename, pp.search_term, pp.url, pp.clip_url,
-                   pp.thumbnail_path, pp.ignored, pp.highlighted, pp.has_photo
+                   pp.thumbnail_path, pp.ignored, pp.highlighted, pp.has_photo,
+                   pp.auto_ignore_confidence
             FROM processed_pdfs pp
             LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
             WHERE a.id IS NULL AND pp.articles_found != -1
-            AND (pp.ignored IS NULL OR pp.ignored = 0)
+            {ignore_clause}
             ORDER BY pp.date_str {order}, pp.pdf_filename {order}
             LIMIT ? OFFSET ?
         """, (per_page, offset)).fetchall()
@@ -804,6 +975,7 @@ def get_no_articles_page(page=1, per_page=100, sort="desc", filter_text=""):
             "ignored": row["ignored"] or 0,
             "highlighted": row["highlighted"] or 0,
             "has_photo": row["has_photo"] or 0,
+            "confidence": row["auto_ignore_confidence"],
         })
 
     conn.close()
@@ -1176,6 +1348,23 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(data, default=str).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/no-articles/count":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                try:
+                    row = conn.execute(
+                        "SELECT COUNT(*) as c FROM processed_pdfs "
+                        "WHERE articles_found = 0 OR articles_found IS NULL"
+                    ).fetchone()
+                finally:
+                    conn.close()
+                self.wfile.write(json.dumps({"count": row["c"]}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
         elif self.path.startswith("/api/no-articles"):
             self.send_response(200)
             self.send_header("Content-type", "application/json")
@@ -1188,7 +1377,8 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 per_page = int(params.get("per_page", [100])[0])
                 sort = params.get("sort", ["desc"])[0]
                 filter_text = params.get("filter", [""])[0]
-                data = get_no_articles_page(page, per_page, sort, filter_text)
+                filter_mode = params.get("filter_mode", ["keep"])[0]
+                data = get_no_articles_page(page, per_page, sort, filter_text, filter_mode=filter_mode)
                 self.wfile.write(json.dumps(data, default=str).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
@@ -1255,8 +1445,11 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 conn = get_db()
                 rows = conn.execute("SELECT * FROM accounts ORDER BY active DESC, total_clips DESC").fetchall()
                 accounts = [dict(r) for r in rows]
+                # Include daily clip limit so the UI can determine cooldown status
+                limit_row = conn.execute("SELECT value FROM clipper_state WHERE key='daily_clip_limit'").fetchone()
+                clip_limit = int(limit_row[0]) if limit_row and limit_row[0] else 250
                 conn.close()
-                self.wfile.write(json.dumps(accounts, default=str).encode())
+                self.wfile.write(json.dumps({"accounts": accounts, "daily_clip_limit": clip_limit}, default=str).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
         elif self.path.startswith("/api/clipper/range_stats"):
@@ -1269,7 +1462,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 q = parse_qs(urlparse(self.path).query)
                 ds = (q.get("start", [""])[0] or "").strip() or None
                 de = (q.get("end", [""])[0] or "").strip() or None
-                rs_conn = sqlite3.connect(str(DB_PATH), timeout=5)
+                rs_conn = sqlite3.connect(str(DB_PATH), timeout=30)
                 rs_conn.row_factory = sqlite3.Row
                 try:
                     where = [
@@ -1324,7 +1517,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 mid_logs = _scan_logs_since(midnight)
                 rs_logs = _scan_logs_since(run_set_start) if run_set_start else {"clipped": 0, "errors": 0}
 
-                stats_conn = sqlite3.connect(str(DB_PATH), timeout=5)
+                stats_conn = sqlite3.connect(str(DB_PATH), timeout=30)
                 stats_conn.row_factory = sqlite3.Row
                 try:
                     mid_art, mid_pic = _count_articles_since(stats_conn, midnight)
@@ -1357,6 +1550,40 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(out).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/book_notes":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                text = BOOK_NOTES_PATH.read_text(encoding="utf-8") if BOOK_NOTES_PATH.exists() else ""
+            except Exception:
+                text = ""
+            self.wfile.write(json.dumps({"text": text}).encode())
+        elif self.path == "/api/reextract/status":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                status_file = RUNTIME_DIR / "reextract_status.json"
+                if status_file.exists():
+                    data = json.loads(status_file.read_text(encoding="utf-8"))
+                else:
+                    data = {"status": "idle"}
+                # Also count how many pages are eligible
+                conn = get_db()
+                eligible = conn.execute("""
+                    SELECT COUNT(*) as c FROM processed_pdfs
+                    WHERE clipped = 1 AND articles_found = 0
+                      AND ocr_text IS NOT NULL AND length(ocr_text) > 100
+                      AND lower(ocr_text) LIKE '%lake%worth%'
+                """).fetchone()["c"]
+                conn.close()
+                data["eligible"] = eligible
+                self.wfile.write(json.dumps(data).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"status": "idle", "error": str(e)}).encode())
         elif self.path == "/api/clipper/progress":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
@@ -1529,11 +1756,137 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 }, default=str).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/last-noarticle-date":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                try:
+                    row = conn.execute("""
+                        SELECT MAX(pp.date_str) as max_date
+                        FROM processed_pdfs pp
+                        LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+                        WHERE a.id IS NULL AND pp.articles_found != -1
+                          AND (pp.ignored IS NULL OR pp.ignored = 0)
+                          AND pp.date_str IS NOT NULL AND pp.date_str != '?'
+                    """).fetchone()
+                finally:
+                    conn.close()
+                self.wfile.write(json.dumps({"date": row["max_date"] if row else None}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/auto-ignore/last-ignored-date":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                try:
+                    row = conn.execute("""
+                        SELECT MAX(pp.date_str) as max_date
+                        FROM processed_pdfs pp
+                        LEFT JOIN articles a ON a.pdf_filename = pp.pdf_filename
+                        WHERE a.id IS NULL AND pp.articles_found != -1
+                          AND pp.ignored = 1
+                          AND pp.date_str IS NOT NULL AND pp.date_str != '?'
+                    """).fetchone()
+                finally:
+                    conn.close()
+                self.wfile.write(json.dumps({"date": row["max_date"] if row else None}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/status":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                try:
+                    rows = conn.execute(
+                        "SELECT key, value FROM clipper_state WHERE key LIKE 'collector_%'"
+                    ).fetchall()
+                finally:
+                    conn.close()
+                status = {}
+                for r in rows:
+                    k = r["key"].replace("collector_", "", 1)
+                    status[k] = r["value"]
+                # Check if PID is still alive — clear stale state in DB
+                pid = int(status.get("pid", 0) or 0)
+                if pid and not _pid_alive(pid):
+                    status["status"] = "stopped"
+                    status["pid"] = ""
+                    try:
+                        conn2 = get_db()
+                        conn2.execute("UPDATE clipper_state SET value = 'stopped' WHERE key = 'collector_status' AND value = 'running'")
+                        conn2.execute("UPDATE clipper_state SET value = '' WHERE key = 'collector_pid'")
+                        conn2.commit()
+                        conn2.close()
+                    except Exception:
+                        pass
+                self.wfile.write(json.dumps(status).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path.startswith("/api/auto-ignore/count"):
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                qs = self.path.split("?", 1)[1] if "?" in self.path else ""
+                params = dict(p.split("=", 1) for p in qs.split("&") if "=" in p)
+                ds = params.get("date_start", "1900-01-01")
+                de = params.get("date_end", "2000-12-31")
+                conn = get_db()
+                try:
+                    row = conn.execute("""
+                        SELECT COUNT(*) as c FROM processed_pdfs
+                        WHERE date_str >= ? AND date_str <= ?
+                          AND (clipped = 0 OR clipped IS NULL)
+                          AND (ignored IS NULL OR ignored = 0)
+                          AND thumbnail_path IS NOT NULL
+                    """, (ds, de)).fetchone()
+                finally:
+                    conn.close()
+                self.wfile.write(json.dumps({"count": row["c"]}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/auto-ignore/status":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                _ai_status_file = RUNTIME_DIR / "auto_ignore_status.json"
+                if _ai_status_file.exists():
+                    data = json.loads(_ai_status_file.read_text(encoding="utf-8"))
+                else:
+                    data = {"status": "idle"}
+                self.wfile.write(json.dumps(data).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"status": "idle", "error": str(e)}).encode())
         else:
             super().do_GET()
 
     def do_POST(self):
-        if self.path == "/api/dismiss-entry":
+        if self.path == "/api/book_notes":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                BOOK_NOTES_PATH.write_text(body.get("text", ""), encoding="utf-8")
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+            return
+        elif self.path == "/api/dismiss-entry":
             content_len = int(self.headers.get("Content-Length", 0))
             body = json.loads(self.rfile.read(content_len)) if content_len else {}
             filename = body.get("filename", "")
@@ -1592,6 +1945,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             body = json.loads(self.rfile.read(content_len)) if content_len else {}
             filename = body.get("filename", "")
             ignored = 1 if body.get("ignored") else 0
+            add_training = body.get("add_training", False)
 
             self.send_response(200)
             self.send_header("Content-type", "application/json")
@@ -1604,13 +1958,61 @@ class DashboardHandler(SimpleHTTPRequestHandler):
 
             try:
                 conn = get_db()
+                # Check if this was AI-tagged (has confidence score)
+                row = conn.execute(
+                    "SELECT auto_ignore_confidence FROM processed_pdfs WHERE pdf_filename = ?",
+                    (filename,)
+                ).fetchone()
+                was_ai_tagged = row and row["auto_ignore_confidence"] is not None
+
                 conn.execute(
                     "UPDATE processed_pdfs SET ignored = ? WHERE pdf_filename = ?",
                     (ignored, filename)
                 )
                 conn.commit()
                 conn.close()
-                self.wfile.write(json.dumps({"ok": True, "filename": filename, "ignored": ignored}).encode())
+
+                # Update training data if user said yes
+                training_updated = False
+                if add_training:
+                    try:
+                        _tf = BASE_DIR / "auto_ignore_training.json"
+                        if _tf.exists():
+                            td = json.loads(_tf.read_text(encoding="utf-8"))
+                        else:
+                            td = {"ignore_examples": [], "keep_examples": [], "hard_negatives": [], "max_per_list": 30}
+                        _max = td.get("max_per_list", 30)
+
+                        if ignored:
+                            # User checked ignore → add to ignore_examples
+                            _list = td["ignore_examples"]
+                            if filename not in _list:
+                                _list.append(filename)
+                                if len(_list) > _max:
+                                    _list.pop(0)
+                        else:
+                            # User unchecked ignore
+                            if was_ai_tagged:
+                                # Correcting AI mistake → hard_negative
+                                _list = td["hard_negatives"]
+                                if filename not in _list:
+                                    _list.append(filename)
+                                    if len(_list) > _max:
+                                        _list.pop(0)
+                            else:
+                                # Removing human tag → keep_example
+                                _list = td["keep_examples"]
+                                if filename not in _list:
+                                    _list.append(filename)
+                                    if len(_list) > _max:
+                                        _list.pop(0)
+
+                        _tf.write_text(json.dumps(td, indent=2), encoding="utf-8")
+                        training_updated = True
+                    except Exception as te:
+                        logging.warning(f"Training update failed: {te}")
+
+                self.wfile.write(json.dumps({"ok": True, "filename": filename, "ignored": ignored, "training_updated": training_updated}).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
 
@@ -1781,6 +2183,24 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"ok": True}).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/account/toggle-active":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                conn.execute(
+                    "UPDATE accounts SET active=?, updated_at=datetime('now','localtime') WHERE id=?",
+                    (1 if body.get("active") else 0, body["id"]),
+                )
+                conn.commit()
+                conn.close()
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
         elif self.path == "/api/account/delete":
             content_len = int(self.headers.get("Content-Length", 0))
             body = json.loads(self.rfile.read(content_len)) if content_len else {}
@@ -1907,9 +2327,39 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 target = max(0, target)
                 date_start = (body.get("date_start") or "").strip()
                 date_end = (body.get("date_end") or "").strip()
+                # Refuse to launch if there are zero pages to clip in the date range
+                if target > 0 and date_start and date_end:
+                    chk = get_db()
+                    try:
+                        avail = chk.execute(
+                            "SELECT COUNT(*) AS c FROM processed_pdfs "
+                            "WHERE (clipped = 0 OR clipped IS NULL) "
+                            "AND (ignored IS NULL OR ignored = 0) "
+                            "AND url IS NOT NULL AND url != '' "
+                            "AND date_str >= ? AND date_str <= ?",
+                            (date_start, date_end),
+                        ).fetchone()["c"]
+                    finally:
+                        chk.close()
+                    if avail == 0:
+                        self.wfile.write(json.dumps({
+                            "error": f"No unclipped pages in {date_start} to {date_end}. Check date range."
+                        }).encode())
+                        return
                 _set_state("instances_target", target)
                 _set_state("instances_date_start", date_start)
                 _set_state("instances_date_end", date_end)
+                # Clear global stop flag when setting a positive target,
+                # otherwise autoscale_tick and _spawn_instance will refuse to run.
+                if target > 0:
+                    try:
+                        if GLOBAL_STOP_FLAG.exists():
+                            if GLOBAL_STOP_FLAG.is_dir():
+                                GLOBAL_STOP_FLAG.rmdir()
+                            else:
+                                GLOBAL_STOP_FLAG.unlink()
+                    except Exception:
+                        pass
                 # If lowering target, stop the oldest extras immediately.
                 _sweep_stale_claims()
                 conn = get_db()
@@ -1964,7 +2414,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 # window not found" or attach to an existing Chrome instance.
                 try:
                     import shutil as _shutil
-                    _profile_dir = BASE_DIR / f"chrome_temp_profile_clipper_{slot_id}"
+                    _profile_dir = RUNTIME_DIR / f"chrome_temp_profile_clipper_{slot_id}"
                     if _profile_dir.exists():
                         _shutil.rmtree(_profile_dir, ignore_errors=True)
                 except Exception:
@@ -2055,6 +2505,17 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 # Also zero the autoscale target so the background loop
                 # stops wanting to replace stopped instances.
                 _set_state("instances_target", "0")
+                # Set per-slot flags too — belt and suspenders
+                try:
+                    conn = sqlite3.connect(str(DB_PATH), timeout=10)
+                    slots = [r[0] for r in conn.execute(
+                        "SELECT slot_id FROM clipper_instances"
+                    ).fetchall()]
+                    conn.close()
+                    for sid in slots:
+                        _instance_stop_flag(sid).mkdir(exist_ok=True)
+                except Exception:
+                    pass
                 self.wfile.write(json.dumps({
                     "ok": True,
                     "message": "Global stop flag set and target=0. All instances will stop.",
@@ -2073,6 +2534,126 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                         GLOBAL_STOP_FLAG.rmdir()
                     else:
                         GLOBAL_STOP_FLAG.unlink()
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/instances/reset_stale":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                import shutil as _shutil
+                conn = sqlite3.connect(str(DB_PATH), timeout=10)
+                conn.row_factory = sqlite3.Row
+                # Get ALL clipper instances (kill everything, not just dead PIDs)
+                instances = conn.execute("SELECT slot_id, pid, account_email FROM clipper_instances").fetchall()
+                killed_pids = []
+                slot_ids = []
+                for inst in instances:
+                    slot_ids.append(inst["slot_id"])
+                    pid = int(inst["pid"] or 0)
+                    if pid and _pid_alive(pid):
+                        try:
+                            os.kill(pid, signal.SIGTERM)
+                            killed_pids.append(pid)
+                        except Exception:
+                            pass
+                # Also kill any orphan chrome processes from clipper profiles
+                try:
+                    import subprocess as _sp
+                    wmic_out = _sp.check_output(
+                        'wmic process where "name=\'chrome.exe\'" get ProcessId,CommandLine /format:csv',
+                        shell=True, text=True, timeout=10
+                    )
+                    for line in wmic_out.splitlines():
+                        if "chrome_temp_profile_clipper" in line:
+                            parts = line.strip().split(",")
+                            try:
+                                cpid = int(parts[-1])
+                                os.kill(cpid, signal.SIGTERM)
+                                killed_pids.append(cpid)
+                            except Exception:
+                                pass
+                except Exception:
+                    pass
+                # Clear all account claims
+                claimed = conn.execute("SELECT email FROM accounts WHERE in_use_by IS NOT NULL").fetchall()
+                cleared_claims = len(claimed)
+                conn.execute("UPDATE accounts SET in_use_by = NULL, in_use_since = NULL, in_use_pid = NULL")
+                # Clear all page claims
+                conn.execute("UPDATE processed_pdfs SET claimed_by = NULL, claimed_at = NULL, claimed_pid = NULL WHERE claimed_by IS NOT NULL")
+                # Delete all clipper instances
+                conn.execute("DELETE FROM clipper_instances")
+                # Zero target
+                conn.execute("INSERT OR REPLACE INTO clipper_state (key, value) VALUES ('instances_target', '0')")
+                conn.commit()
+                conn.close()
+                # Clear global stop flag
+                try:
+                    if GLOBAL_STOP_FLAG.exists():
+                        if GLOBAL_STOP_FLAG.is_dir():
+                            GLOBAL_STOP_FLAG.rmdir()
+                        else:
+                            GLOBAL_STOP_FLAG.unlink()
+                except Exception:
+                    pass
+                # Clear per-slot stop flags
+                for sid in slot_ids:
+                    try:
+                        sf = _instance_stop_flag(sid)
+                        if sf.exists():
+                            if sf.is_dir():
+                                sf.rmdir()
+                            else:
+                                sf.unlink()
+                    except Exception:
+                        pass
+                # Delete Chrome temp profiles (cookies, sessions, cache)
+                profiles_cleared = 0
+                for p in RUNTIME_DIR.glob("chrome_temp_profile_clipper*"):
+                    try:
+                        _shutil.rmtree(p)
+                        profiles_cleared += 1
+                    except Exception:
+                        pass
+                self.wfile.write(json.dumps({
+                    "ok": True,
+                    "killed_processes": len(killed_pids),
+                    "cleared_instances": len(slot_ids),
+                    "cleared_claims": cleared_claims,
+                    "profiles_cleared": profiles_cleared,
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/reextract/start":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                # Remove stop flag if present
+                stop_flag = RUNTIME_DIR / "stop_reextract"
+                if stop_flag.exists():
+                    stop_flag.unlink(missing_ok=True)
+                # Launch as background process
+                subprocess.Popen(
+                    [sys.executable, str(BASE_DIR / "reextract_no_articles.py")],
+                    cwd=str(BASE_DIR),
+                    creationflags=_NO_WINDOW,
+                )
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/reextract/stop":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                stop_flag = RUNTIME_DIR / "stop_reextract"
+                RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+                stop_flag.touch()
                 self.wfile.write(json.dumps({"ok": True}).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
@@ -2101,6 +2682,175 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                                 except Exception:
                                     pass
                 self.wfile.write(json.dumps({"ok": True, "killed_pids": killed}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/start":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                date_start = (body.get("date_start") or "").strip()
+                date_end = (body.get("date_end") or "").strip()
+                restart_every = int(body.get("restart_every", 100) or 100)
+                max_urls = int(body.get("max_urls", 1500) or 1500)
+                if not date_start or not date_end:
+                    self.wfile.write(json.dumps(
+                        {"error": "Start and end dates are required."}
+                    ).encode())
+                    return
+                # Check if already running
+                try:
+                    conn = get_db()
+                    status_row = conn.execute(
+                        "SELECT value FROM clipper_state WHERE key = 'collector_status'"
+                    ).fetchone()
+                    pid_row = conn.execute(
+                        "SELECT value FROM clipper_state WHERE key = 'collector_pid'"
+                    ).fetchone()
+                    conn.close()
+                    old_status = status_row["value"] if status_row else ""
+                    old_pid = int(pid_row["value"]) if pid_row and pid_row["value"] else 0
+                    if old_status == "running" and old_pid and _pid_alive(old_pid):
+                        self.wfile.write(json.dumps(
+                            {"error": f"Collector already running (PID {old_pid})."}
+                        ).encode())
+                        return
+                except Exception:
+                    pass
+                # Clear stop flag
+                _coll_stop = RUNTIME_DIR / "stop_collector"
+                try:
+                    if _coll_stop.exists():
+                        if _coll_stop.is_dir():
+                            _coll_stop.rmdir()
+                        else:
+                            _coll_stop.unlink()
+                except Exception:
+                    pass
+                # Claim an account — use specified email or auto-select
+                chosen_email = (body.get("email") or "").strip()
+                conn = get_db()
+                try:
+                    if chosen_email:
+                        acct = conn.execute(
+                            "SELECT email, password FROM accounts "
+                            "WHERE email = ? AND active = 1",
+                            (chosen_email,),
+                        ).fetchone()
+                    else:
+                        acct = conn.execute(
+                            "SELECT email, password FROM accounts "
+                            "WHERE active = 1 AND in_use_by IS NULL "
+                            "ORDER BY total_clips ASC LIMIT 1"
+                        ).fetchone()
+                finally:
+                    conn.close()
+                if not acct:
+                    self.wfile.write(json.dumps(
+                        {"error": "No available account." + (" Check if it's active." if chosen_email else " All are in use or inactive.")}
+                    ).encode())
+                    return
+                email = acct["email"]
+                password = acct["password"]
+                # Spawn collector subprocess
+                cmd = [
+                    "python", "collect_search_results.py",
+                    "--start", date_start,
+                    "--end", date_end,
+                    "--email", email,
+                    "--password", password,
+                    "--restart-every", str(restart_every),
+                    "--max-urls", str(max_urls),
+                ]
+                _si_coll = subprocess.STARTUPINFO()
+                _si_coll.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                _si_coll.wShowWindow = 0  # SW_HIDE
+                proc = subprocess.Popen(
+                    cmd,
+                    cwd=str(BASE_DIR),
+                    creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+                    startupinfo=_si_coll,
+                )
+                import time as _time
+                _time.sleep(1)
+                if proc.poll() is not None:
+                    self.wfile.write(json.dumps(
+                        {"error": "Collector process died immediately."}
+                    ).encode())
+                    return
+                self.wfile.write(json.dumps({
+                    "ok": True,
+                    "pid": proc.pid,
+                    "account": email,
+                    "date_start": date_start,
+                    "date_end": date_end,
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/stop":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                _coll_stop = RUNTIME_DIR / "stop_collector"
+                _coll_stop.mkdir(exist_ok=True)
+                self.wfile.write(json.dumps({
+                    "ok": True,
+                    "message": "Stop flag set. Collector will stop after current batch.",
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/auto-ignore/start":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                # Clear any leftover stop flag
+                _ai_stop = RUNTIME_DIR / "stop_auto_ignore"
+                if _ai_stop.exists():
+                    _shutil.rmtree(_ai_stop, ignore_errors=True)
+
+                date_start = body.get("date_start", "1921-01-01")
+                date_end = body.get("date_end", "1921-12-31")
+                batch = body.get("batch", 20)
+                dry = body.get("dry", False)
+
+                cmd = [sys.executable, str(BASE_DIR / "auto_ignore.py"),
+                       "--date-start", str(date_start), "--date-end", str(date_end),
+                       "--batch", str(batch)]
+                if dry:
+                    cmd += ["--dry"]
+
+                _si_ai = subprocess.STARTUPINFO()
+                _si_ai.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                _si_ai.wShowWindow = 0
+                proc = subprocess.Popen(
+                    cmd, cwd=str(BASE_DIR),
+                    creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+                    startupinfo=_si_ai,
+                )
+                self.wfile.write(json.dumps({"ok": True, "pid": proc.pid}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/auto-ignore/stop":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                _ai_stop = RUNTIME_DIR / "stop_auto_ignore"
+                _ai_stop.mkdir(exist_ok=True)
+                self.wfile.write(json.dumps({
+                    "ok": True,
+                    "message": "Stop flag set. Auto-ignore will stop after current batch.",
+                }).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
         else:

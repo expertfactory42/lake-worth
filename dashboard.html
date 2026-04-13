@@ -121,7 +121,6 @@
 
   .refresh-info { color: #666; font-size: 0.8em; margin-bottom: 15px; }
 
-  #log-table-container { max-height: 400px; overflow-y: auto; }
 
   .filter-bar { margin-bottom: 15px; }
   .filter-bar input {
@@ -196,6 +195,15 @@
     <div style="font-size:0.8em;color:#888;margin-bottom:6px">No Articles by Year</div>
     <div id="noArticleYearBars" style="display:flex;align-items:flex-end;gap:2px;min-height:100px"></div>
   </div>
+  <div style="flex:0 0 280px;background:#16213e;border-radius:10px;padding:12px 15px;border:1px solid #1a3a5c;overflow:hidden">
+    <div style="font-size:0.8em;color:#888;margin-bottom:6px">Disposition by Year</div>
+    <div id="dispositionYearBars" style="display:flex;align-items:flex-end;gap:2px;min-height:100px"></div>
+    <div style="display:flex;gap:10px;margin-top:6px;font-size:0.6em;color:#888">
+      <span><span style="color:#4caf50">&#9632;</span> Articles</span>
+      <span><span style="color:#ff9800">&#9632;</span> No Articles</span>
+      <span><span style="color:#9c27b0">&#9632;</span> Ignored</span>
+    </div>
+  </div>
 </div>
 
 <div class="stats-grid">
@@ -233,23 +241,41 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
 </script>
 <div class="import-log" id="importLog"></div>
 
-<div class="tabs">
+<div class="tabs" style="display:flex;align-items:center">
   <div class="tab active" onclick="showTab('articles')">Articles</div>
+  <div class="tab" onclick="showTab('noarticles')">No Articles</div>
   <div class="tab" onclick="showTab('quotes')">Quotes</div>
   <div class="tab" onclick="showTab('people')">People</div>
-  <div class="tab" onclick="showTab('noarticles')">No Articles</div>
-  <div class="tab" onclick="showTab('log')">Processing Log</div>
-  <div class="tab" onclick="showTab('dbviewer')">DB Viewer</div>
   <div class="tab" onclick="showTab('screenshots')">Screenshots</div>
   <div class="tab" onclick="showTab('accounts')">Accounts</div>
+  <div class="tab" onclick="showTab('collector')">Gather URLs</div>
+  <div class="tab" onclick="showTab('autoignore')">Auto-Ignore</div>
   <div class="tab" onclick="showTab('clipper')">Clipper</div>
+  <div style="flex:1"></div>
+  <button onclick="openBookNotes()" style="padding:5px 14px;background:#5c4b8a;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em;white-space:nowrap">Book Notes</button>
+</div>
+
+<!-- Book Notes overlay -->
+<div id="bookNotesOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:9999;justify-content:center;align-items:center">
+  <div style="background:#1a1a2e;border:1px solid #555;border-radius:8px;width:700px;max-width:90vw;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.5)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #333">
+      <span style="font-size:1.1em;font-weight:bold;color:#e0e0e0">Book Ideas &amp; Brainstorming</span>
+      <div>
+        <span id="bookNotesSaveStatus" style="color:#4caf50;font-size:0.8em;margin-right:12px"></span>
+        <button onclick="saveAndCloseBookNotes()" style="padding:4px 14px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer">Save and Close</button>
+      </div>
+    </div>
+    <textarea id="bookNotesEditor" style="flex:1;min-height:60vh;margin:12px 16px;padding:12px;background:#0d1117;color:#e0e0e0;border:1px solid #444;border-radius:4px;font-family:'Segoe UI',monospace;font-size:0.95em;line-height:1.6;resize:none;outline:none" placeholder="Type your book ideas, section outlines, themes, character notes..."></textarea>
+  </div>
 </div>
 
 <div id="tab-articles" class="section">
   <div class="filter-bar">
-    <input type="text" id="articleFilter" placeholder="Filter articles..." oninput="renderArticles()">
+    <input type="text" id="articleFilter" placeholder="Filter articles..." oninput="articlesCurrentPage=1;renderArticles()">
   </div>
+  <div id="articlesPaginationTop" style="margin-bottom:8px;text-align:center"></div>
   <div id="articlesList"></div>
+  <div id="articlesPaginationBottom" style="margin-top:8px;text-align:center"></div>
 </div>
 
 <div id="tab-quotes" class="section" style="display:none">
@@ -262,46 +288,30 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
 
 <div id="tab-noarticles" class="section" style="display:none">
   <h2>Processed PDFs — No Articles Found (<span id="noArticlesCount">0</span>)</h2>
-  <div style="margin-bottom:8px">
-    <button onclick="sortNoArticles('asc')" style="margin-right:4px;padding:4px 12px;background:#1a1a2e;color:#e0e0e0;border:1px solid #555;border-radius:4px;cursor:pointer">Date Asc</button>
+  <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <button onclick="sortNoArticles('asc')" style="padding:4px 12px;background:#1a1a2e;color:#e0e0e0;border:1px solid #555;border-radius:4px;cursor:pointer">Date Asc</button>
     <button onclick="sortNoArticles('desc')" style="padding:4px 12px;background:#1a1a2e;color:#e0e0e0;border:1px solid #555;border-radius:4px;cursor:pointer">Date Desc</button>
-    <button onclick="loadNoArticles()" style="margin-left:8px;padding:4px 12px;background:#1a1a2e;color:#4fc3f7;border:1px solid #4fc3f7;border-radius:4px;cursor:pointer">Refresh</button>
+    <button onclick="loadNoArticles()" style="padding:4px 12px;background:#1a1a2e;color:#4fc3f7;border:1px solid #4fc3f7;border-radius:4px;cursor:pointer">Refresh</button>
+    <select id="noArticlesFilter" onchange="noArticlesFilterMode=this.value;noArticlesPage=1;loadNoArticles()" style="margin-left:8px;padding:4px 8px;background:#16213e;color:#e0e0e0;border:1px solid #555;border-radius:4px;font-size:0.9em;cursor:pointer">
+      <option value="all">All</option>
+      <option value="keep">Keep Only</option>
+      <option value="ignored">Ignored Only</option>
+    </select>
+    <span style="flex:1"></span>
+    <span id="reextractStatus" style="font-size:0.85em;color:#888"></span>
+    <button id="reextractStartBtn" onclick="startReextract()" style="padding:4px 14px;background:#1a1a2e;color:#4caf50;border:1px solid #4caf50;border-radius:4px;cursor:pointer;font-weight:bold">Re-extract AI (<span id="reextractEligible">?</span>)</button>
+    <button id="reextractStopBtn" onclick="stopReextract()" style="padding:4px 14px;background:#1a1a2e;color:#f44336;border:1px solid #f44336;border-radius:4px;cursor:pointer;display:none">Stop</button>
   </div>
+  <div id="noArticlesPaginationTop" style="margin-bottom:8px;text-align:center"></div>
   <div id="noarticles-table-container" style="max-height:500px;overflow-y:auto">
     <table>
-      <thead><tr><th>#</th><th>Date</th><th>Page</th><th>Newspaper</th><th>Picture</th><th>Highlight</th><th>Ignore</th><th>Thumb</th><th>View</th></tr></thead>
+      <thead><tr><th>#</th><th>Date</th><th>Page</th><th>Newspaper</th><th>Picture</th><th>Highlight</th><th>Ignore</th><th>Conf</th><th>Thumb</th><th>View</th></tr></thead>
       <tbody id="noArticlesBody"></tbody>
     </table>
   </div>
   <div id="noArticlesPagination" style="margin-top:8px;text-align:center"></div>
 </div>
 
-<div id="tab-log" class="section" style="display:none">
-  <div id="log-table-container">
-    <table>
-      <thead><tr><th>#</th><th>Status</th><th>Date</th><th>Page</th><th>Newspaper</th><th>Articles</th></tr></thead>
-      <tbody id="logBody"></tbody>
-    </table>
-  </div>
-</div>
-
-<div id="tab-dbviewer" class="section" style="display:none">
-  <h2>Database Viewer</h2>
-  <div style="margin-bottom:10px">
-    <button onclick="loadDbViewer()" style="padding:8px 16px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:6px;cursor:pointer">Load / Refresh</button>
-    <select id="dbTableSelect" onchange="renderDbTable()" style="padding:8px;background:#16213e;color:#e0e0e0;border:1px solid #333;border-radius:6px;margin-left:10px">
-      <option value="">Select table...</option>
-    </select>
-    <span id="dbTableCount" style="color:#888;margin-left:10px"></span>
-    <input type="text" id="dbFilter" placeholder="Filter rows..." oninput="renderDbTable()" style="padding:8px;background:#16213e;color:#e0e0e0;border:1px solid #333;border-radius:6px;margin-left:10px;width:200px">
-  </div>
-  <div id="db-table-container" style="max-height:500px;overflow:auto">
-    <table>
-      <thead id="dbHead"></thead>
-      <tbody id="dbBody"></tbody>
-    </table>
-  </div>
-</div>
 
 <div id="tab-screenshots" class="section" style="display:none">
   <h2>Screenshots</h2>
@@ -356,6 +366,7 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
     <!-- Status -->
     <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
       <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Status</h3>
+      <div id="apiCreditsAlert" style="display:none;background:#b71c1c;color:#fff;padding:8px 12px;border-radius:4px;margin-bottom:10px;font-weight:bold">Anthropic API credits exhausted — articles cannot be extracted. Add credits at console.anthropic.com</div>
       <div id="clipperStatus" style="color:#aaa">Loading...</div>
       <div id="clipperProgress" style="margin-top:10px">
         <table style="width:100%;font-size:0.9em;border-collapse:collapse">
@@ -379,21 +390,17 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
         </div>
       </div>
     </div>
-    <!-- Settings -->
-    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:280px">
-      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Settings</h3>
+    <!-- Clipper Settings -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Clipper Settings</h3>
       <div style="margin-bottom:10px">
-        <label style="color:#888;font-size:0.85em">Daily Clip Limit per Session</label>
+        <label style="color:#888;font-size:0.85em">Daily Clip Limit per Account</label>
         <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
           <input type="number" id="clipLimitInput" min="0" step="10" placeholder="0 = unlimited" style="width:120px;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box">
           <button onclick="saveClipLimit()" style="padding:6px 16px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer">Save</button>
         </div>
-        <div style="color:#666;font-size:0.75em;margin-top:4px">Clipper stops after this many clips. 0 or blank = unlimited.</div>
+        <div style="color:#666;font-size:0.75em;margin-top:4px">Account rotates after this many clips. 0 or blank = unlimited.</div>
       </div>
-    </div>
-    <!-- Start Clipper -->
-    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
-      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Clipper Settings</h3>
       <div style="margin-bottom:10px">
         <label style="color:#888;font-size:0.85em">Account Mode</label>
         <select id="clipperAccountMode" onchange="toggleAccountSelect()" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
@@ -441,13 +448,14 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
           <button id="instTargetUp" onclick="changeTarget(1)" style="padding:4px 10px;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer">▲</button>
           <button id="instSaveBtn" onclick="saveTarget()" style="padding:6px 12px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Save</button>
           <button id="instStopAllBtn" onclick="stopAllInstances()" style="padding:6px 12px;background:#b71c1c;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Stop All</button>
+          <button onclick="resetAll()" style="padding:6px 12px;background:#e65100;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Reset All</button>
         </div>
       </div>
       <div id="instancesGlobalStop" style="color:#ff8a65;font-size:0.8em;margin-bottom:6px;display:none">Global stop flag is set — new instances will exit immediately.</div>
       <table style="width:100%;border-collapse:collapse;font-size:0.82em">
         <thead>
           <tr style="color:#888;text-align:left;border-bottom:1px solid #333">
-            <th style="padding:4px">Slot</th><th style="padding:4px">PID</th><th style="padding:4px">Account</th><th style="padding:4px">Date/Page</th><th style="padding:4px">Run</th><th style="padding:4px">Today / Cap</th><th style="padding:4px">Status</th><th style="padding:4px">Updated</th><th></th>
+            <th style="padding:4px">Slot</th><th style="padding:4px">PID</th><th style="padding:4px">Account</th><th style="padding:4px">Date/Page</th><th style="padding:4px">Run</th><th style="padding:4px">Today / Cap</th><th style="padding:4px">Status</th><th style="padding:4px">Health</th><th style="padding:4px">Updated</th><th></th>
           </tr>
         </thead>
         <tbody id="instancesBody"><tr><td colspan="9" style="color:#666;padding:6px">No active instances.</td></tr></tbody>
@@ -466,12 +474,154 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
   </div>
 </div>
 
+<div id="tab-collector" class="section" style="display:none">
+  <h2>Gather URLs</h2>
+  <div style="display:flex;gap:20px;flex-wrap:wrap">
+    <!-- Controls -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Collector Settings</h3>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div style="flex:1">
+          <label style="color:#888;font-size:0.85em">Start Date</label>
+          <input type="text" id="collectorDateStart" value="1924-01-01" placeholder="YYYY-MM-DD" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+        </div>
+        <div style="flex:1">
+          <label style="color:#888;font-size:0.85em">End Date</label>
+          <input type="text" id="collectorDateEnd" value="1960-12-31" placeholder="YYYY-MM-DD" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+        </div>
+      </div>
+      <div style="margin-bottom:10px">
+        <label style="color:#888;font-size:0.85em">Account</label>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:4px">
+          <label style="color:#aaa;font-size:0.85em;cursor:pointer"><input type="radio" name="collAcctMode" value="auto" checked onchange="document.getElementById('collAccountSelect').disabled=true"> Auto</label>
+          <label style="color:#aaa;font-size:0.85em;cursor:pointer"><input type="radio" name="collAcctMode" value="manual" onchange="document.getElementById('collAccountSelect').disabled=false"> Choose</label>
+          <select id="collAccountSelect" disabled style="flex:1;padding:5px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;font-size:0.85em">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div style="flex:1">
+          <label style="color:#888;font-size:0.85em">Max New URLs</label>
+          <input type="number" id="collectorMaxUrls" value="1500" min="50" step="50" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+          <div style="color:#666;font-size:0.75em;margin-top:4px">Stops when limit reached. Switch account and restart.</div>
+        </div>
+        <div style="flex:1">
+          <label style="color:#888;font-size:0.85em">Restart Every N URLs</label>
+          <input type="number" id="collectorRestartEvery" value="100" min="10" step="10" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+          <div style="color:#666;font-size:0.75em;margin-top:4px">Browser re-navigates after this many new URLs.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+        <button id="collectorStartBtn" onclick="startCollector()" style="padding:6px 18px;background:#4caf50;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">Start</button>
+        <button id="collectorStopBtn" onclick="stopCollector()" style="padding:6px 18px;background:#f44336;color:#fff;border:none;border-radius:4px;cursor:pointer;display:none">Stop</button>
+      </div>
+    </div>
+    <!-- Status -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px;flex:1">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Collector Status</h3>
+      <div id="collectorStatus" style="color:#aaa;font-size:0.85em">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Status</span><span id="collStatus" style="color:#4fc3f7">Stopped</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Account</span><span id="collAccount">—</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">New URLs</span><span id="collNewEntries" style="color:#4caf50;font-weight:bold">0</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Current Date</span><span id="collCurrentDate">—</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Date Range</span><span id="collDateRange">—</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#888">PID</span><span id="collPid">—</span></div>
+        <div style="margin-top:8px;background:#1a1a2e;border-radius:4px;height:8px;overflow:hidden">
+          <div id="collProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#2e7d32,#4caf50);transition:width 0.3s"></div>
+        </div>
+        <div id="collProgressLabel" style="text-align:center;font-size:0.8em;color:#888;margin-top:4px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-autoignore" class="section" style="display:none">
+  <h2>Auto-Ignore Console</h2>
+  <div style="display:flex;gap:20px;flex-wrap:wrap">
+    <!-- Controls -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
+      <div style="margin-bottom:10px">
+        <label style="color:#888;font-size:0.85em">Start</label>
+        <input type="text" id="aiDateStart" value="1921-01-01" placeholder="YYYY-MM-DD" onchange="loadAiCandidateCount()" style="width:100px;padding:4px 8px;background:#0f3460;color:#e0e0e0;border:1px solid #555;border-radius:4px;margin-left:4px">
+        <label style="color:#888;font-size:0.85em;margin-left:12px">End</label>
+        <input type="text" id="aiDateEnd" value="1921-12-31" placeholder="YYYY-MM-DD" onchange="loadAiCandidateCount()" style="width:100px;padding:4px 8px;background:#0f3460;color:#e0e0e0;border:1px solid #555;border-radius:4px;margin-left:4px">
+      </div>
+      <div style="margin-bottom:10px">
+        <label style="color:#888;font-size:0.85em">Batch size</label>
+        <input type="number" id="aiBatch" value="20" min="1" max="50" style="width:60px;padding:4px 8px;background:#0f3460;color:#e0e0e0;border:1px solid #555;border-radius:4px;margin-left:8px">
+        <label style="margin-left:12px;color:#888;font-size:0.85em;cursor:pointer">
+          <input type="checkbox" id="aiDryRun"> Dry Run
+        </label>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <button id="aiStartBtn" onclick="startAutoIgnore()" style="padding:6px 18px;background:#4caf50;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">Start</button>
+        <button id="aiStopBtn" onclick="stopAutoIgnore()" style="padding:6px 18px;background:#f44336;color:#fff;border:none;border-radius:4px;cursor:pointer;display:none">Stop</button>
+        <span id="aiCandidateCount" style="font-size:0.85em;color:#888"></span>
+      </div>
+      <!-- Status -->
+      <div id="aiStatusBox" style="background:#0a1628;border:1px solid #333;border-radius:6px;padding:10px;font-size:0.85em">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Status</span><span id="aiStatus" style="color:#4fc3f7">Idle</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Progress</span><span id="aiProgress">—</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Ignored</span><span id="aiIgnored" style="color:#9c27b0;font-weight:bold">0</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Kept</span><span id="aiKept" style="color:#4caf50;font-weight:bold">0</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Failed</span><span id="aiFailed" style="color:#f44336">0</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#888">Year</span><span id="aiRunYear">—</span></div>
+        <div style="margin-top:6px;background:#1a1a2e;border-radius:4px;height:8px;overflow:hidden">
+          <div id="aiProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#9c27b0,#ce93d8);transition:width 0.3s"></div>
+        </div>
+      </div>
+    </div>
+    <!-- AI Prompt & Results -->
+    <div style="flex:1;min-width:400px">
+      <details>
+        <summary style="cursor:pointer;color:#e0c97f;font-size:0.9em;margin-bottom:8px">AI Classification Prompt</summary>
+        <div style="background:#0a1628;border:1px solid #333;border-radius:6px;padding:12px;font-size:0.8em;color:#ccc;max-height:400px;overflow-y:auto;white-space:pre-wrap;line-height:1.5">You are classifying newspaper page thumbnails for a Lake Worth, Texas history project. Each thumbnail is a small crop around where 'Lake Worth' was found on a newspaper page.
+
+ONLY mark IGNORE when you see CLEAR classified/listing indicators:
+- Section headers: SWAP, FOR RENT, FOR SALE, WANTED, LOST, FOUND
+- Property specs: room counts, bath numbers, phone numbers as addresses
+- Price patterns: dollar amounts, dots/dashes as price leaders
+- Dense stacked short entries (many items in a column)
+- Bus/jitney route schedules, stock tables, box scores
+- Address-as-content: 'W. Magnolia', '3111', street names listed as locations for sale/rent
+
+Mark KEEP when you see ANY of these:
+- Flowing narrative sentences (even partial ones)
+- People's names in story context (not listing context)
+- Quotes or dialogue ('said', 'declared', 'announced')
+- Event descriptions: entertained, construction, road, dam, fishing, camp
+- Photo captions or references to images
+- Headlines or story-style text
+- City commission, court, or government proceedings text
+
+CRITICAL RULE: When in doubt, ALWAYS classify as KEEP.
+Missing an article is far worse than clipping a classified.
+Only use IGNORE when you are HIGHLY CONFIDENT it is a classified or listing.
+
+Training data: up to 30 IGNORE examples, 30 KEEP examples, plus 30 hard-negative corrections (rolling window, curated from manual tagging).
+
+Model: claude-haiku-4-5-20251001
+Output: JSON array of {filename, classification, confidence}</div>
+      </details>
+      <div id="aiResultsPanel" style="margin-top:10px;display:none">
+        <div style="font-size:0.85em;color:#e0c97f;margin-bottom:4px">Results <span id="aiResultsCount" style="color:#888"></span></div>
+        <div style="max-height:500px;overflow-y:auto">
+          <table style="width:100%">
+            <thead><tr><th>#</th><th>Verdict</th><th>Conf</th><th>Date</th><th>Pg</th><th>Newspaper</th><th>Thumb</th><th>File</th></tr></thead>
+            <tbody id="aiResultsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 let allData = { stats: {}, articles: [], quotes: [], people: [], log: [] };
 let _prevArticlesJson = '';
 let _prevQuotesJson = '';
 let _prevPeopleJson = '';
-let _prevLogJson = '';
 let _prevMonthlyJson = '';
 let _prevYearlyJson = '';
 let _prevNoArtYearlyJson = '';
@@ -620,15 +770,77 @@ function resetDropZone(zone) {
   zone.querySelector('.drop-hint').textContent = 'Drag a newspapers.com clip URL from your browser address bar';
 }
 
+// --- Book Notes overlay ---
+async function openBookNotes() {
+  const overlay = document.getElementById('bookNotesOverlay');
+  const editor = document.getElementById('bookNotesEditor');
+  overlay.style.display = 'flex';
+  try {
+    const resp = await fetch('/api/book_notes');
+    const d = await resp.json();
+    editor.value = d.text || '';
+  } catch(e) { editor.value = '(could not load notes)'; }
+  editor.focus();
+  document.getElementById('bookNotesSaveStatus').textContent = '';
+}
+function closeBookNotes() {
+  document.getElementById('bookNotesOverlay').style.display = 'none';
+}
+async function saveBookNotes() {
+  const text = document.getElementById('bookNotesEditor').value;
+  try {
+    await fetch('/api/book_notes', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ text })
+    });
+    document.getElementById('bookNotesSaveStatus').textContent = 'Saved';
+    setTimeout(() => { document.getElementById('bookNotesSaveStatus').textContent = ''; }, 2000);
+  } catch(e) {
+    document.getElementById('bookNotesSaveStatus').textContent = 'Save failed!';
+  }
+}
+async function saveAndCloseBookNotes() {
+  await saveBookNotes();
+  closeBookNotes();
+}
+// Ctrl+S inside the editor saves
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('bookNotesOverlay').style.display === 'flex'
+      && e.ctrlKey && e.key === 's') {
+    e.preventDefault();
+    saveAndCloseBookNotes();
+  }
+  // Escape saves and closes
+  if (document.getElementById('bookNotesOverlay').style.display === 'flex'
+      && e.key === 'Escape') {
+    saveAndCloseBookNotes();
+  }
+});
+
 function showTab(name) {
   document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).style.display = 'block';
   event.target.classList.add('active');
   if (name !== 'clipper' && window._clipperRefreshInterval) clearInterval(window._clipperRefreshInterval);
+  if (name !== 'collector' && window._collectorRefreshInterval) { clearInterval(window._collectorRefreshInterval); window._collectorRefreshInterval = null; }
+  if (name !== 'autoignore' && window._aiRefreshInterval) { clearInterval(window._aiRefreshInterval); window._aiRefreshInterval = null; }
   if (name === 'screenshots') loadScreenshots();
   if (name === 'accounts') loadAccounts();
   if (name === 'clipper') loadClipperSettings();
+  if (name === 'noarticles') pollReextractStatus();
+  if (name === 'collector') {
+    loadCollectorStartDate();
+    loadCollectorAccounts();
+    loadCollectorStatus();
+    window._collectorRefreshInterval = setInterval(loadCollectorStatus, 3000);
+  }
+  if (name === 'autoignore') {
+    loadAutoIgnoreStartDate();
+    loadAutoIgnoreStatus();
+    window._aiRefreshInterval = setInterval(loadAutoIgnoreStatus, 2000);
+  }
 }
 
 async function loadScreenshots() {
@@ -652,12 +864,16 @@ async function loadScreenshots() {
 // === ACCOUNTS ===
 let _accountsData = [];
 
+var _dailyClipLimit = 250;
+
 async function loadAccounts() {
   const container = document.getElementById('accountsList');
   container.innerHTML = '<span style="color:#888">Loading...</span>';
   try {
     const resp = await fetch('/api/accounts');
-    _accountsData = await resp.json();
+    const data = await resp.json();
+    _accountsData = data.accounts || data;
+    _dailyClipLimit = data.daily_clip_limit || 250;
     renderAccounts();
   } catch(e) { container.innerHTML = '<span style="color:#f44">Error: ' + e + '</span>'; }
 }
@@ -667,16 +883,13 @@ function renderAccounts() {
   if (!_accountsData.length) { container.innerHTML = '<span style="color:#888">No accounts. Click + Add Account to get started.</span>'; return; }
   container.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">' +
     '<thead><tr>' +
-    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Status</th>' +
+    '<th style="text-align:center;padding:6px;border-bottom:1px solid #444">Active</th>' +
     '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Label</th>' +
     '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Email</th>' +
     '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Subscription</th>' +
     '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Total Clips</th>' +
-    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Session Clips</th>' +
-    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Avg Before Throttle</th>' +
-    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Throttle Count</th>' +
+    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Last Run</th>' +
     '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Last Clip</th>' +
-    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Last Throttle</th>' +
     '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Notes</th>' +
     '<th style="padding:6px;border-bottom:1px solid #444">Actions</th>' +
     '</tr></thead><tbody>' +
@@ -684,19 +897,30 @@ function renderAccounts() {
       const statusColor = a.active ? '#4caf50' : '#f44336';
       const statusText = a.active ? 'Active' : 'Inactive';
       const lastClip = a.last_clip_time ? a.last_clip_time.substring(0,16) : '-';
-      const lastThrottle = a.last_throttle_time ? a.last_throttle_time.substring(0,16) : '-';
-      const avg = a.avg_clips_before_throttle ? a.avg_clips_before_throttle.toFixed(0) : '-';
+      const lastRunClips = a.clips_today || 0;
+      // Determine cooldown status based on last clip time and clip count
+      let lastRunColor = '#4caf50'; // green = cooldown over or no clips
+      if (a.last_clip_time) {
+        const lastClipMs = new Date(a.last_clip_time.replace(' ', 'T')).getTime();
+        const hoursSince = (Date.now() - lastClipMs) / (1000 * 60 * 60);
+        if (hoursSince < 24 && lastRunClips >= _dailyClipLimit) {
+          lastRunColor = '#f44336'; // red = maxed out, cooling down
+        } else if (hoursSince < 24 && lastRunClips > 0) {
+          lastRunColor = '#ff9800'; // orange = has clips but still eligible
+        }
+      }
       return `<tr style="border-bottom:1px solid #222">
-        <td style="padding:6px"><span style="color:${statusColor};font-weight:bold">${statusText}</span></td>
+        <td style="padding:6px;text-align:center">
+          <input type="checkbox" ${a.active ? 'checked' : ''} onchange="toggleAccountActive(${a.id}, this.checked)"
+            style="cursor:pointer;width:16px;height:16px">
+          <span id="acctStatus_${a.id}" style="color:${statusColor};font-weight:bold;margin-left:4px;font-size:0.85em">${statusText}</span>
+        </td>
         <td style="padding:6px">${a.label || '-'}</td>
         <td style="padding:6px;color:#4fc3f7">${a.email}</td>
         <td style="padding:6px">${a.subscription_type || '-'}</td>
         <td style="padding:6px;text-align:right;font-weight:bold">${a.total_clips}</td>
-        <td style="padding:6px;text-align:right">${a.clips_this_session}</td>
-        <td style="padding:6px;text-align:right">${avg}</td>
-        <td style="padding:6px;text-align:right">${a.throttle_count}</td>
+        <td style="padding:6px;text-align:right;font-weight:bold;color:${lastRunColor}">${lastRunClips}</td>
         <td style="padding:6px;font-size:0.85em;color:#aaa">${lastClip}</td>
-        <td style="padding:6px;font-size:0.85em;color:#f44">${lastThrottle}</td>
         <td style="padding:6px;font-size:0.85em;color:#888">${a.notes || ''}</td>
         <td style="padding:6px;white-space:nowrap">
           <button onclick="editAccount(${a.id})" style="padding:3px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:3px;cursor:pointer;font-size:0.8em">Edit</button>
@@ -706,6 +930,27 @@ function renderAccounts() {
       </tr>`;
     }).join('') +
     '</tbody></table>';
+}
+
+async function toggleAccountActive(id, active) {
+  const span = document.getElementById('acctStatus_' + id);
+  if (span) {
+    span.style.color = active ? '#4caf50' : '#f44336';
+    span.textContent = active ? 'Active' : 'Inactive';
+  }
+  try {
+    const resp = await fetch('/api/account/toggle-active', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({id: id, active: active})
+    });
+    const result = await resp.json();
+    if (result.error) { alert('Error: ' + result.error); loadAccounts(); }
+    else {
+      const acct = _accountsData.find(a => a.id === id);
+      if (acct) acct.active = active ? 1 : 0;
+    }
+  } catch(e) { alert('Error toggling active: ' + e); loadAccounts(); }
 }
 
 function showAccountForm(id) {
@@ -788,17 +1033,24 @@ async function loadClipperSettings() {
       statusHtml += '<br><span style="color:#aaa;font-size:0.9em">Clip limit: unlimited</span>';
     }
     statusEl.innerHTML = statusHtml;
+    // Anthropic API credits alert
+    if (data.api_credits_exhausted) {
+      const alertEl = document.getElementById('apiCreditsAlert');
+      if (alertEl) alertEl.style.display = 'block';
+      if (!window._apiCreditsAlerted) {
+        window._apiCreditsAlerted = true;
+        alert('⚠ Anthropic API credits exhausted!\n\nClipping is running but articles cannot be extracted.\nAdd credits at console.anthropic.com before continuing.\n\nDetected: ' + data.api_credits_exhausted);
+      }
+    }
     // Load progress, log tail, account eligibility, and account dropdown
     loadClipperProgress();
     loadClipperLog();
     loadAccountEligibility();
     populateAccountDropdown();
     loadRangeStats();
-    // Auto-refresh every 15 seconds while on clipper tab
+    // Auto-refresh every 15 seconds while on clipper tab (always, so status updates)
     clearInterval(window._clipperRefreshInterval);
-    if (running) {
-      window._clipperRefreshInterval = setInterval(() => { loadClipperProgress(); loadClipperLog(); loadRangeStats(); }, 15000);
-    }
+    window._clipperRefreshInterval = setInterval(() => { loadClipperSettings(); }, 15000);
   } catch(e) {
     document.getElementById('clipperStatus').innerHTML = '<span style="color:#f44">Error: ' + e + '</span>';
   }
@@ -807,39 +1059,49 @@ async function loadClipperSettings() {
 async function loadAccountEligibility() {
   try {
     const resp = await fetch('/api/accounts');
-    const accounts = await resp.json();
+    const data = await resp.json();
+    const accounts = data.accounts || data;
+    const clipLimit = data.daily_clip_limit || 250;
     const el = document.getElementById('accountEligibility');
     const now = new Date();
     const COOLDOWN_MS = 24 * 60 * 60 * 1000;
-    const todayStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
     let html = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">';
     html += '<tr><th style="text-align:left;padding:4px;border-bottom:1px solid #444">Account</th>';
-    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Today</th>';
+    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Last Run</th>';
     html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Total</th>';
     html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Status</th>';
     html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Eligible</th></tr>';
     accounts.forEach(a => {
       if (!a.active) return;
-      const throttleTime = a.last_throttle_time ? new Date(a.last_throttle_time.replace(' ', 'T')) : null;
-      const eligible = throttleTime ? new Date(throttleTime.getTime() + COOLDOWN_MS) : null;
+      const lastClipTime = a.last_clip_time ? new Date(a.last_clip_time.replace(' ', 'T')) : null;
+      const hoursSinceClip = lastClipTime ? (now - lastClipTime) / 3600000 : 999;
+      const lastRunClips = a.clips_today || 0;
+      const hitLimit = lastRunClips >= clipLimit;
+      const cooledDown = hoursSinceClip >= 24;
       const working = !!a.in_use_by;
-      // Today column: clips_today when the stored date is today; else 0
-      const todayCount = (a.clips_today_date === todayStr) ? (a.clips_today || 0) : 0;
+      // Color: green=cooldown over, orange=active but room left, red=maxed and cooling
+      let lastRunColor = '#4caf50';
+      if (lastClipTime && hoursSinceClip < 24 && hitLimit) lastRunColor = '#f44336';
+      else if (lastClipTime && hoursSinceClip < 24 && lastRunClips > 0) lastRunColor = '#ff9800';
       let statusHtml, eligibleHtml;
       if (working) {
         statusHtml = '<span style="color:#4fc3f7">Working</span>';
         eligibleHtml = '<span style="color:#888">—</span>';
-      } else if (!throttleTime || eligible <= now) {
+      } else if (!lastClipTime || cooledDown) {
         statusHtml = '<span style="color:#4caf50">Ready</span>';
         eligibleHtml = '<span style="color:#4caf50">Now</span>';
+      } else if (!hitLimit) {
+        statusHtml = '<span style="color:#ff9800">Partial</span>';
+        eligibleHtml = `<span style="color:#ff9800">Now (${lastRunClips}/${clipLimit})</span>`;
       } else {
-        const hoursLeft = ((eligible - now) / 3600000).toFixed(1);
+        const eligibleAt = new Date(lastClipTime.getTime() + COOLDOWN_MS);
+        const hoursLeft = ((eligibleAt - now) / 3600000).toFixed(1);
         statusHtml = '<span style="color:#e65100">Cooling</span>';
-        eligibleHtml = `<span style="color:#e65100">${eligible.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (${hoursLeft}h)</span>`;
+        eligibleHtml = `<span style="color:#e65100">${eligibleAt.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (${hoursLeft}h)</span>`;
       }
       html += `<tr>
         <td style="padding:4px;color:#4fc3f7">${a.email}</td>
-        <td style="padding:4px;text-align:right;font-weight:bold">${todayCount}</td>
+        <td style="padding:4px;text-align:right;font-weight:bold;color:${lastRunColor}">${lastRunClips}</td>
         <td style="padding:4px;text-align:right">${a.total_clips}</td>
         <td style="padding:4px">${statusHtml}</td>
         <td style="padding:4px">${eligibleHtml}</td>
@@ -1050,6 +1312,8 @@ async function loadInstances() {
         const today = r.account_clips_today || 0;
         const capStr = cap ? `${today} / ${cap}` : `${today}`;
         const warn = cap && today >= cap * 0.9 ? 'color:#ff8a65' : '';
+        const bh = r.browser_health || 'unknown';
+        const healthColor = bh === 'ok' ? '#4caf50' : bh === 'unknown' ? '#666' : bh.includes('not_fullscreen') || bh.includes('_tabs') ? '#ff9800' : '#f44336';
         return `<tr style="border-bottom:1px solid #222">
           <td style="padding:4px">${r.slot_id}</td>
           <td style="padding:4px;color:#888">${r.pid||''}</td>
@@ -1058,6 +1322,7 @@ async function loadInstances() {
           <td style="padding:4px">${r.count_this_run||0}</td>
           <td style="padding:4px;${warn}">${capStr}</td>
           <td style="padding:4px;color:#e0c97f">${r.status||''}</td>
+          <td style="padding:4px;color:${healthColor};font-size:0.8em">${bh}</td>
           <td style="padding:4px;color:#666">${r.heartbeat_at||''}</td>
           <td style="padding:4px"><button class="instRowStop" onclick="stopInstance('${r.slot_id}')" style="padding:3px 8px;background:#b71c1c;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:0.75em">Stop</button></td>
         </tr>`;
@@ -1091,12 +1356,14 @@ async function saveTarget() {
   if (!confirm(`Set target to ${instTarget} instance(s)?\nCurrently running: ${instLastRunning}\nDate range: ${dateStart||'all'} to ${dateEnd||'all'}\n\nBackend will auto-maintain this count.`)) return;
   instLocked = true; applyLockUI();
   try {
-    await fetch('/api/instances/set_target', {
+    const resp = await fetch('/api/instances/set_target', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ target: instTarget, date_start: dateStart, date_end: dateEnd }),
     });
-  } catch(e){ alert('Failed: '+e); instLocked=false; applyLockUI(); }
+    const result = await resp.json();
+    if (result.error) { alert(result.error); instLocked=false; applyLockUI(); return; }
+  } catch(e){ alert('Failed: '+e); instLocked=false; applyLockUI(); return; }
   loadInstances();
 }
 
@@ -1116,10 +1383,14 @@ async function stopAllInstances() {
   if (instLocked || instStopAllState !== 'idle') return;
   if (!confirm('Stop ALL clipper instances?')) return;
   setTargetDisplay(0);
+  instTarget = 0;
   instLocked = true;
   instStopAllState = 'stopping';
   applyLockUI();
   try {
+    // Zero the target and set global stop flag via server
+    await fetch('/api/instances/stop_all', {method:'POST', headers:{'Content-Type':'application/json'}});
+    // Also set per-slot stop flags
     const r = await fetch('/api/instances');
     const d = await r.json();
     const rows = d.instances || [];
@@ -1128,6 +1399,35 @@ async function stopAllInstances() {
     }
   } catch(e){ alert('Failed: '+e); instLocked=false; instStopAllState='idle'; applyLockUI(); }
   loadInstances();
+}
+
+async function resetAll() {
+  // Gather info for the confirmation dialog
+  let msg = 'This will:\n';
+  try {
+    const r = await fetch('/api/instances');
+    const d = await r.json();
+    const rows = d.instances || [];
+    msg += `• Kill ${rows.length} clipper process(es)\n`;
+  } catch(e) { msg += '• Kill all clipper processes\n'; }
+  try {
+    const r = await fetch('/api/accounts');
+    const d = await r.json();
+    const accts = d.accounts || d;
+    const claimed = accts.filter(a => a.in_use_by);
+    msg += `• Release ${claimed.length} claimed account(s)\n`;
+  } catch(e) { msg += '• Release all claimed accounts\n'; }
+  msg += '• Kill orphan Chrome browsers\n• Delete Chrome profiles (cookies/sessions)\n• Set target to 0\n• Clear all flags\n\nProceed?';
+  if (!confirm(msg)) return;
+  try {
+    const resp = await fetch('/api/instances/reset_stale', {method:'POST', headers:{'Content-Type':'application/json'}});
+    const result = await resp.json();
+    if (result.error) { alert('Error: ' + result.error); return; }
+    alert(`Killed ${result.killed_processes} process(es), cleared ${result.cleared_instances} instance(s), ${result.cleared_claims} claim(s), deleted ${result.profiles_cleared} Chrome profile(s). Target set to 0.`);
+    setTargetDisplay(0);
+    instTarget = 0;
+    loadInstances();
+  } catch(e) { alert('Failed: ' + e); }
 }
 
 setTargetDisplay(instTarget);
@@ -1212,6 +1512,47 @@ function renderNoArticleYearChart() {
   }).join('');
 }
 
+function renderDispositionChart() {
+  const artData = allData.articles_by_year || [];
+  const noArtData = allData.no_articles_by_year || [];
+  const ignData = allData.ignored_by_year || [];
+  const container = document.getElementById('dispositionYearBars');
+
+  // Build a map of all years
+  const yearMap = {};
+  artData.forEach(([y, c]) => { yearMap[y] = yearMap[y] || {art:0,noArt:0,ign:0}; yearMap[y].art = c; });
+  noArtData.forEach(([y, c]) => { yearMap[y] = yearMap[y] || {art:0,noArt:0,ign:0}; yearMap[y].noArt = c; });
+  ignData.forEach(([y, c]) => { yearMap[y] = yearMap[y] || {art:0,noArt:0,ign:0}; yearMap[y].ign = c; });
+
+  const years = Object.keys(yearMap).sort();
+  if (!years.length) { container.innerHTML = '<span style="color:#666;font-size:0.8em">No data</span>'; return; }
+
+  const max = Math.max(...years.map(y => yearMap[y].art + yearMap[y].noArt + yearMap[y].ign));
+  const barMax = 80;
+
+  container.innerHTML = years.map(y => {
+    const d = yearMap[y];
+    const total = d.art + d.noArt + d.ign;
+    const hIgn = Math.max(d.ign > 0 ? 2 : 0, Math.round((d.ign / max) * barMax));
+    const hNoArt = Math.max(d.noArt > 0 ? 2 : 0, Math.round((d.noArt / max) * barMax));
+    const hArt = Math.max(d.art > 0 ? 2 : 0, Math.round((d.art / max) * barMax));
+    return `<div style="display:flex;flex-direction:column;align-items:center;flex:1 1 0;min-width:0" title="${y}: ${d.art} articles, ${d.noArt} no-articles, ${d.ign} ignored (${total} total)">
+      <div style="font-size:0.6em;color:#888;margin-bottom:1px">${total}</div>
+      <div style="width:100%;display:flex;flex-direction:column">
+        <div style="width:100%;height:${hArt}px;background:linear-gradient(180deg,#4caf50,#2e7d32);${hArt && !hNoArt && !hIgn ? 'border-radius:2px 2px 0 0' : hArt ? 'border-radius:2px 2px 0 0' : ''}"></div>
+        <div style="width:100%;height:${hNoArt}px;background:linear-gradient(180deg,#ff9800,#e65100)"></div>
+        <div style="width:100%;height:${hIgn}px;background:linear-gradient(180deg,#9c27b0,#6a1b9a);border-radius:0 0 2px 2px"></div>
+      </div>
+      <div style="font-size:0.6em;color:#666;margin-top:2px;white-space:nowrap">${y.substring(2)}</div>
+    </div>`;
+  }).join('');
+}
+
+let articlesCurrentPage = 1;
+const articlesPerPage = 25;
+
+function setArticlesPage(pg) { articlesCurrentPage = pg; renderArticles(); window.scrollTo(0, document.getElementById('tab-articles').offsetTop); }
+
 function renderArticles() {
   const filter = document.getElementById('articleFilter').value.toLowerCase();
   const container = document.getElementById('articlesList');
@@ -1222,7 +1563,36 @@ function renderArticles() {
     (a.newspaper || '').toLowerCase().includes(filter)
   ).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
-  container.innerHTML = filtered.map((a, i) => {
+  const totalPages = Math.max(1, Math.ceil(filtered.length / articlesPerPage));
+  if (articlesCurrentPage > totalPages) articlesCurrentPage = totalPages;
+  const startIdx = (articlesCurrentPage - 1) * articlesPerPage;
+  const pageItems = filtered.slice(startIdx, startIdx + articlesPerPage);
+
+  // Build pagination HTML
+  function buildArticlesPag() {
+    const page = articlesCurrentPage;
+    const maxBtns = 7;
+    let startPg = Math.max(1, page - Math.floor(maxBtns / 2));
+    let endPg = Math.min(totalPages, startPg + maxBtns - 1);
+    if (endPg - startPg < maxBtns - 1) startPg = Math.max(1, endPg - maxBtns + 1);
+    let h = `<span style="margin-right:8px;color:#888">Page ${page} of ${totalPages} (${filtered.length} articles)</span>`;
+    h += `<button onclick="setArticlesPage(1)" ${page<=1?'disabled':''} style="margin:0 2px">&laquo;</button>`;
+    h += `<button onclick="setArticlesPage(${page-1})" ${page<=1?'disabled':''} style="margin:0 2px">&lsaquo;</button>`;
+    for (let p = startPg; p <= endPg; p++) {
+      h += `<button onclick="setArticlesPage(${p})" style="margin:0 2px;${p===page?'background:#4fc3f7;color:#000;font-weight:bold':''}">${p}</button>`;
+    }
+    h += `<button onclick="setArticlesPage(${page+1})" ${page>=totalPages?'disabled':''} style="margin:0 2px">&rsaquo;</button>`;
+    h += `<button onclick="setArticlesPage(${totalPages})" ${page>=totalPages?'disabled':''} style="margin:0 2px">&raquo;</button>`;
+    return h;
+  }
+  const pagHtml = buildArticlesPag();
+  const pagTop = document.getElementById('articlesPaginationTop');
+  const pagBot = document.getElementById('articlesPaginationBottom');
+  if (pagTop) pagTop.innerHTML = pagHtml;
+  if (pagBot) pagBot.innerHTML = pagHtml;
+
+  container.innerHTML = pageItems.map((a, idx) => {
+    const i = startIdx + idx;
     const quotes = (a.quotes || []).map(q =>
       `<div class="quote-block">"${esc(q.quote_text)}"<div class="quote-speaker">— ${esc(q.speaker)}${q.speaker_role ? ', ' + esc(q.speaker_role) : ''}</div></div>`
     ).join('');
@@ -1282,26 +1652,13 @@ function renderPeople() {
   ).join('') || '<p style="color:#888">No people found yet.</p>';
 }
 
-function renderLog() {
-  const tbody = document.getElementById('logBody');
-  tbody.innerHTML = allData.log.map((r, i) => {
-    const statusClass = r.articles > 0 ? 'status-ok' : r.status === 'FAILED' ? 'status-failed' : 'status-empty';
-    return `<tr>
-      <td>${i + 1}</td>
-      <td class="${statusClass}">${r.status}</td>
-      <td>${r.date}</td>
-      <td>${r.page}</td>
-      <td>${esc(r.newspaper)}</td>
-      <td>${r.articles}</td>
-    </tr>`;
-  }).join('');
-}
 
 let noArticlesSortOrder = 'desc';
 let noArticlesPage = 1;
 let noArticlesPerPage = 100;
 let noArticlesTotal = 0;
 let noArticlesTotalPages = 0;
+let noArticlesFilterMode = 'keep';  // 'all', 'keep', 'ignored'
 
 function sortNoArticles(order) {
   noArticlesSortOrder = order;
@@ -1312,7 +1669,7 @@ function sortNoArticles(order) {
 async function loadNoArticles(pg) {
   if (pg !== undefined) noArticlesPage = pg;
   try {
-    const resp = await fetch(`/api/no-articles?page=${noArticlesPage}&per_page=${noArticlesPerPage}&sort=${noArticlesSortOrder}`);
+    const resp = await fetch(`/api/no-articles?page=${noArticlesPage}&per_page=${noArticlesPerPage}&sort=${noArticlesSortOrder}&filter_mode=${noArticlesFilterMode}`);
     const data = await resp.json();
     noArticlesTotal = data.total;
     noArticlesTotalPages = data.total_pages;
@@ -1345,6 +1702,7 @@ function renderNoArticles(items, page, total) {
       <td style="text-align:center"><input type="checkbox" ${r.has_photo ? 'checked' : ''} onchange="togglePhoto('processed_pdfs','${esc(r.filename)}',this.checked)"></td>
       <td style="text-align:center"><input type="checkbox" ${r.highlighted ? 'checked' : ''} onchange="toggleHighlight('processed_pdfs','${esc(r.filename)}',this.checked)"></td>
       <td style="text-align:center"><input type="checkbox" data-filename="${esc(r.filename)}" class="ignore-check" ${r.ignored ? 'checked' : ''} onchange="toggleIgnore(this)"></td>
+      <td style="text-align:center;font-size:0.8em;color:${r.confidence != null ? (r.confidence >= 0.9 ? '#4caf50' : r.confidence >= 0.7 ? '#ff9800' : '#f44336') : '#555'}">${r.confidence != null ? Math.round(r.confidence * 100) + '%' : ''}</td>
       <td>${thumbUrl ? `<img src="${thumbUrl}" style="width:120px;height:72px;object-fit:cover;border-radius:3px;cursor:pointer" onclick="window.open('${thumbUrl}','_blank')" title="Click to enlarge">` : ''}</td>
       <td style="white-space:nowrap">
         <button class="pdf-btn" title="View original search result page" onclick="openRight('${wwwUrl}', '${esc(r.filename)}')" style="display:inline-flex">WWW</button>
@@ -1371,6 +1729,67 @@ function renderNoArticles(items, page, total) {
     html += `<button onclick="loadNoArticles(${page + 1})" ${page >= noArticlesTotalPages ? 'disabled' : ''} style="margin:0 2px">&rsaquo;</button>`;
     html += `<button onclick="loadNoArticles(${noArticlesTotalPages})" ${page >= noArticlesTotalPages ? 'disabled' : ''} style="margin:0 2px">&raquo;</button>`;
     pag.innerHTML = html;
+  }
+  const pagTop = document.getElementById('noArticlesPaginationTop');
+  if (pagTop) pagTop.innerHTML = pag ? pag.innerHTML : '';
+}
+
+// ── Re-extract AI controls ──
+let _reextractPolling = null;
+
+async function pollReextractStatus() {
+  try {
+    const resp = await fetch('/api/reextract/status');
+    const d = await resp.json();
+    const statusEl = document.getElementById('reextractStatus');
+    const startBtn = document.getElementById('reextractStartBtn');
+    const stopBtn = document.getElementById('reextractStopBtn');
+    const eligibleEl = document.getElementById('reextractEligible');
+    if (d.eligible !== undefined) eligibleEl.textContent = d.eligible;
+
+    if (d.status === 'running') {
+      statusEl.innerHTML = `<span style="color:#4caf50">Processing ${d.processed}/${d.total} — ${d.articles} articles found${d.failed ? ', ' + d.failed + ' failed' : ''}</span>`;
+      startBtn.style.display = 'none';
+      stopBtn.style.display = '';
+      if (!_reextractPolling) _reextractPolling = setInterval(pollReextractStatus, 3000);
+    } else if (d.status === 'done' || d.status === 'stopped') {
+      const label = d.status === 'stopped' ? 'Stopped' : 'Done';
+      statusEl.innerHTML = `<span style="color:#e0c97f">${label}: ${d.processed} processed, ${d.articles} articles${d.failed ? ', ' + d.failed + ' failed' : ''}</span>`;
+      startBtn.style.display = '';
+      stopBtn.style.display = 'none';
+      if (_reextractPolling) { clearInterval(_reextractPolling); _reextractPolling = null; }
+      loadNoArticles();  // refresh the table
+    } else {
+      statusEl.textContent = '';
+      startBtn.style.display = '';
+      stopBtn.style.display = 'none';
+      if (_reextractPolling) { clearInterval(_reextractPolling); _reextractPolling = null; }
+    }
+  } catch(e) {
+    console.error('pollReextractStatus:', e);
+  }
+}
+
+async function startReextract() {
+  if (!confirm('Re-run AI article extraction on pages with "lake worth" in OCR but 0 articles found?')) return;
+  try {
+    await fetch('/api/reextract/start', {method: 'POST'});
+    document.getElementById('reextractStatus').innerHTML = '<span style="color:#888">Starting...</span>';
+    document.getElementById('reextractStartBtn').style.display = 'none';
+    document.getElementById('reextractStopBtn').style.display = '';
+    if (!_reextractPolling) _reextractPolling = setInterval(pollReextractStatus, 3000);
+    setTimeout(pollReextractStatus, 1500);
+  } catch(e) {
+    alert('Failed to start re-extract: ' + e);
+  }
+}
+
+async function stopReextract() {
+  try {
+    await fetch('/api/reextract/stop', {method: 'POST'});
+    document.getElementById('reextractStatus').innerHTML = '<span style="color:#ff9800">Stopping...</span>';
+  } catch(e) {
+    console.error('stopReextract:', e);
   }
 }
 
@@ -1401,11 +1820,12 @@ async function toggleHighlight(table, identifier, highlighted) {
 async function toggleIgnore(cb) {
   const filename = cb.dataset.filename;
   const ignored = cb.checked;
+  const addTraining = confirm('Use this as AI training data?');
   try {
     await fetch('/api/toggle-ignore', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({filename, ignored})
+      body: JSON.stringify({filename, ignored, add_training: addTraining})
     });
   } catch(e) {
     console.error('Toggle ignore failed:', e);
@@ -1444,17 +1864,15 @@ async function refresh() {
     const articlesJson = JSON.stringify(allData.articles);
     const quotesJson = JSON.stringify(allData.quotes);
     const peopleJson = JSON.stringify(allData.people);
-    const logJson = JSON.stringify(allData.log);
     const monthlyJson = JSON.stringify(allData.monthly);
     const yearlyJson = JSON.stringify(allData.articles_by_year);
 
     if (monthlyJson !== _prevMonthlyJson) { renderMonthlyChart(); _prevMonthlyJson = monthlyJson; }
     const noArtYearlyJson = JSON.stringify(allData.no_articles_by_year);
-    if (yearlyJson !== _prevYearlyJson || noArtYearlyJson !== _prevNoArtYearlyJson) { renderYearlyChart(); renderArticleYearChart(); renderNoArticleYearChart(); _prevYearlyJson = yearlyJson; _prevNoArtYearlyJson = noArtYearlyJson; }
+    if (yearlyJson !== _prevYearlyJson || noArtYearlyJson !== _prevNoArtYearlyJson) { renderYearlyChart(); renderArticleYearChart(); renderNoArticleYearChart(); renderDispositionChart(); _prevYearlyJson = yearlyJson; _prevNoArtYearlyJson = noArtYearlyJson; }
     if (articlesJson !== _prevArticlesJson) { renderArticles(); _prevArticlesJson = articlesJson; }
     if (quotesJson !== _prevQuotesJson) { renderQuotes(); _prevQuotesJson = quotesJson; }
     if (peopleJson !== _prevPeopleJson) { renderPeople(); _prevPeopleJson = peopleJson; }
-    if (logJson !== _prevLogJson) { renderLog(); _prevLogJson = logJson; }
   } catch(e) {
     document.getElementById('lastUpdate').textContent = 'Connection error - is dashboard_server.py running?';
   }
@@ -1462,72 +1880,260 @@ async function refresh() {
 
 refresh();
 loadNoArticles();
+pollReextractStatus();
 setInterval(refresh, 10000);
 
-// === DB Viewer ===
-var _dbData = null;
+// === COLLECTOR (Gather URLs) ===
 
-async function loadDbViewer() {
+async function loadCollectorAccounts() {
   try {
-    const resp = await fetch('/api/db-viewer');
-    _dbData = await resp.json();
-    const sel = document.getElementById('dbTableSelect');
-    sel.innerHTML = '<option value="">Select table...</option>';
-    for (const name of Object.keys(_dbData).sort()) {
-      const opt = document.createElement('option');
-      opt.value = name;
-      opt.textContent = name + ' (' + _dbData[name].count + ' rows)';
-      sel.appendChild(opt);
-    }
-    // Default to articles table
-    if (_dbData.articles) { sel.value = 'articles'; renderDbTable(); }
-  } catch(e) {
-    document.getElementById('dbBody').innerHTML = '<tr><td>Error loading: ' + e + '</td></tr>';
-  }
+    const resp = await fetch('/api/accounts');
+    const data = await resp.json();
+    const accounts = data.accounts || data;
+    const sel = document.getElementById('collAccountSelect');
+    sel.innerHTML = (Array.isArray(accounts) ? accounts : [])
+      .filter(a => a.active)
+      .map(a => `<option value="${a.email}">${a.email}${a.in_use_by ? ' (in use)' : ''}</option>`)
+      .join('');
+  } catch(e) {}
 }
 
-function renderDbTable() {
-  if (!_dbData) return;
-  const name = document.getElementById('dbTableSelect').value;
-  if (!name || !_dbData[name]) { document.getElementById('dbBody').innerHTML = ''; return; }
-
-  const tbl = _dbData[name];
-  const filter = (document.getElementById('dbFilter').value || '').toLowerCase();
-  document.getElementById('dbTableCount').textContent = tbl.count + ' total rows (showing up to 100 recent)';
-
-  // Header
-  const head = document.getElementById('dbHead');
-  head.innerHTML = '<tr>' + tbl.columns.map(c => '<th style="position:sticky;top:0;background:#16213e;cursor:pointer;white-space:nowrap">' + c + '</th>').join('') + '</tr>';
-
-  // Rows
-  const body = document.getElementById('dbBody');
-  let html = '';
-  let shown = 0;
-  for (const row of tbl.rows) {
-    if (filter) {
-      const vals = Object.values(row).map(v => (v === null ? '' : String(v)).toLowerCase()).join(' ');
-      if (!vals.includes(filter)) continue;
+async function loadCollectorStartDate() {
+  try {
+    const resp = await fetch('/api/collector/last-noarticle-date');
+    const data = await resp.json();
+    if (data.date) {
+      document.getElementById('collectorDateStart').value = data.date;
+      // Set end date to end of that year, unless start is in December — then end of next year
+      const parts = data.date.split('-');
+      const month = parseInt(parts[1]);
+      const endYear = month === 12 ? parseInt(parts[0]) + 1 : parseInt(parts[0]);
+      document.getElementById('collectorDateEnd').value = endYear + '-12-31';
     }
-    html += '<tr>';
-    for (const col of tbl.columns) {
-      let val = row[col];
-      if (val === null) val = '<span style="color:#555">NULL</span>';
-      else {
-        val = String(val);
-        // Truncate long text
-        if (val.length > 120) val = val.substring(0, 120) + '...';
-        // Make URLs clickable
-        if (val.startsWith('http')) val = '<a href="' + val + '" target="_blank" style="color:#6db3f2">' + val.substring(0,60) + '...</a>';
-        val = val.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  } catch(e) { /* keep default */ }
+}
+
+async function loadCollectorStatus() {
+  try {
+    const resp = await fetch('/api/collector/status');
+    const s = await resp.json();
+    const running = s.status === 'running';
+    const throttled = s.status === 'throttled';
+    const limitReached = s.status === 'limit_reached';
+    const statusEl = document.getElementById('collStatus');
+    statusEl.textContent = throttled ? 'THROTTLED' : limitReached ? 'LIMIT REACHED' : running ? 'Running' : 'Stopped';
+    statusEl.style.color = throttled ? '#f44336' : limitReached ? '#ff9800' : running ? '#ff9800' : '#4fc3f7';
+    statusEl.style.fontWeight = running ? 'bold' : 'normal';
+    document.getElementById('collAccount').textContent = s.account || '—';
+    document.getElementById('collNewEntries').textContent = s.new_entries || '0';
+    document.getElementById('collCurrentDate').textContent = s.current_date || '—';
+    document.getElementById('collDateRange').textContent =
+      (s.date_start && s.date_end) ? s.date_start + ' to ' + s.date_end : '—';
+    document.getElementById('collPid').textContent = s.pid || '—';
+
+    // Progress bar — estimate based on date position within range
+    const bar = document.getElementById('collProgressBar');
+    const label = document.getElementById('collProgressLabel');
+    if (running && s.date_start && s.date_end && s.current_date) {
+      const start = new Date(s.date_start).getTime();
+      const end = new Date(s.date_end).getTime();
+      const cur = new Date(s.current_date).getTime();
+      const range = end - start;
+      const pct = range > 0 ? Math.min(100, Math.round(((cur - start) / range) * 100)) : 0;
+      bar.style.width = pct + '%';
+      label.textContent = s.current_date + ' (' + pct + '%)';
+    } else if (!running && parseInt(s.new_entries || 0) > 0) {
+      bar.style.width = '100%';
+      label.textContent = (s.new_entries || 0) + ' URLs collected';
+    } else {
+      bar.style.width = '0%';
+      label.textContent = '';
+    }
+
+    // Toggle Start/Stop visibility and polling
+    if (running) {
+      document.getElementById('collectorStartBtn').style.display = 'none';
+      document.getElementById('collectorStopBtn').style.display = '';
+      if (!window._collectorRefreshInterval) {
+        window._collectorRefreshInterval = setInterval(loadCollectorStatus, 3000);
       }
-      html += '<td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:4px 8px">' + val + '</td>';
+    } else {
+      document.getElementById('collectorStartBtn').style.display = '';
+      const stopBtn = document.getElementById('collectorStopBtn');
+      stopBtn.style.display = 'none';
+      stopBtn.textContent = 'Stop';
+      stopBtn.disabled = false;
+      if (window._collectorRefreshInterval) { clearInterval(window._collectorRefreshInterval); window._collectorRefreshInterval = null; }
     }
-    html += '</tr>';
-    shown++;
-    if (shown >= 100) break;
+  } catch(e) {
+    document.getElementById('collStatus').textContent = 'Error';
+    document.getElementById('collStatus').style.color = '#f44336';
   }
-  body.innerHTML = html || '<tr><td colspan="' + tbl.columns.length + '">No matching rows</td></tr>';
 }
+
+async function startCollector() {
+  const dateStart = document.getElementById('collectorDateStart').value.trim();
+  const dateEnd = document.getElementById('collectorDateEnd').value.trim();
+  const restartEvery = parseInt(document.getElementById('collectorRestartEvery').value) || 100;
+  const maxUrls = parseInt(document.getElementById('collectorMaxUrls').value) || 1500;
+  if (!dateStart || !dateEnd) { alert('Enter start and end dates.'); return; }
+  const acctMode = document.querySelector('input[name="collAcctMode"]:checked').value;
+  const chosenEmail = acctMode === 'manual' ? document.getElementById('collAccountSelect').value : '';
+  if (acctMode === 'manual' && !chosenEmail) { alert('Select an account.'); return; }
+  const acctLabel = chosenEmail || 'auto';
+  if (!confirm(`Start collecting URLs from ${dateStart} to ${dateEnd}?\nAccount: ${acctLabel}\nMax URLs: ${maxUrls}\nRestart every ${restartEvery} URLs.`)) return;
+  try {
+    const payload = {date_start: dateStart, date_end: dateEnd, restart_every: restartEvery, max_urls: maxUrls};
+    if (chosenEmail) payload.email = chosenEmail;
+    const resp = await fetch('/api/collector/start', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    });
+    const result = await resp.json();
+    if (result.error) { alert(result.error); return; }
+    document.getElementById('collectorStartBtn').style.display = 'none';
+    document.getElementById('collectorStopBtn').style.display = '';
+    if (!window._collectorRefreshInterval) {
+      window._collectorRefreshInterval = setInterval(loadCollectorStatus, 3000);
+    }
+    loadCollectorStatus();
+  } catch(e) { alert('Failed: ' + e); }
+}
+
+async function stopCollector() {
+  try {
+    const btn = document.getElementById('collectorStopBtn');
+    btn.textContent = 'Stopping...';
+    btn.disabled = true;
+    await fetch('/api/collector/stop', { method: 'POST' });
+  } catch(e) { alert('Failed: ' + e); }
+}
+
+// === AUTO-IGNORE ===
+
+async function loadAutoIgnoreStartDate() {
+  try {
+    const resp = await fetch('/api/auto-ignore/last-ignored-date');
+    const data = await resp.json();
+    if (data.date) {
+      document.getElementById('aiDateStart').value = data.date;
+      const parts = data.date.split('-');
+      const month = parseInt(parts[1]);
+      const endYear = month === 12 ? parseInt(parts[0]) + 1 : parseInt(parts[0]);
+      document.getElementById('aiDateEnd').value = endYear + '-12-31';
+    }
+  } catch(e) { /* keep default */ }
+  loadAiCandidateCount();
+}
+
+async function loadAiCandidateCount() {
+  const ds = document.getElementById('aiDateStart').value.trim();
+  const de = document.getElementById('aiDateEnd').value.trim();
+  const el = document.getElementById('aiCandidateCount');
+  if (!ds || !de) { el.textContent = ''; return; }
+  try {
+    const resp = await fetch(`/api/auto-ignore/count?date_start=${ds}&date_end=${de}`);
+    const data = await resp.json();
+    el.textContent = `${data.count} candidates`;
+    el.style.color = data.count > 0 ? '#4fc3f7' : '#888';
+  } catch(e) { el.textContent = ''; }
+}
+
+async function startAutoIgnore() {
+  const dateStart = document.getElementById('aiDateStart').value;
+  const dateEnd = document.getElementById('aiDateEnd').value;
+  if (!dateStart || !dateEnd) { alert('Set start and end dates'); return; }
+  const batch = document.getElementById('aiBatch').value;
+  const dry = document.getElementById('aiDryRun').checked;
+  document.getElementById('aiResultsBody').innerHTML = '';
+  document.getElementById('aiResultsPanel').style.display = 'none';
+  try {
+    const resp = await fetch('/api/auto-ignore/start', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({date_start: dateStart, date_end: dateEnd, batch: parseInt(batch), dry})
+    });
+    const data = await resp.json();
+    if (data.error) { alert('Error: ' + data.error); return; }
+    document.getElementById('aiStartBtn').style.display = 'none';
+    document.getElementById('aiStopBtn').style.display = '';
+    if (!window._aiRefreshInterval) {
+      window._aiRefreshInterval = setInterval(loadAutoIgnoreStatus, 2000);
+    }
+    loadAutoIgnoreStatus();
+  } catch(e) { alert('Failed: ' + e); }
+}
+
+async function stopAutoIgnore() {
+  try {
+    await fetch('/api/auto-ignore/stop', {method: 'POST'});
+  } catch(e) { alert('Failed: ' + e); }
+}
+
+async function loadAutoIgnoreStatus() {
+  try {
+    const resp = await fetch('/api/auto-ignore/status');
+    const data = await resp.json();
+    const s = data.status || 'idle';
+    document.getElementById('aiStatus').textContent = s === 'done_dry' ? 'done (dry)' : s;
+    document.getElementById('aiStatus').style.color =
+      s === 'running' ? '#ff9800' : s.startsWith('done') ? '#4caf50' : '#4fc3f7';
+    const processed = data.processed || 0;
+    const total = data.total || 0;
+    document.getElementById('aiProgress').textContent = total ? `${processed} / ${total}` : '—';
+    document.getElementById('aiIgnored').textContent = data.ignored || 0;
+    document.getElementById('aiKept').textContent = data.kept || 0;
+    document.getElementById('aiFailed').textContent = data.failed || 0;
+    const rangeStr = data.date_start && data.date_end ? `${data.date_start} → ${data.date_end}` : (data.year || '—');
+    document.getElementById('aiRunYear').textContent = rangeStr;
+    const pct = total ? Math.round((processed / total) * 100) : 0;
+    document.getElementById('aiProgressBar').style.width = pct + '%';
+
+    // Show per-item results only for dry runs
+    const results = data.results || [];
+    const isDry = data.dry;
+    const panel = document.getElementById('aiResultsPanel');
+    const tbody = document.getElementById('aiResultsBody');
+    if (isDry && results.length > 0) {
+      panel.style.display = 'block';
+      document.getElementById('aiResultsCount').textContent = `Dry Run (${results.length})`;
+      tbody.innerHTML = results.map((r, i) => {
+        const conf = r.confidence != null ? Math.round(r.confidence * 100) + '%' : '';
+        const verdict = (r.classification || 'keep').toUpperCase();
+        const color = r.classification === 'ignore' ? '#9c27b0' : r.classification === 'error' ? '#f44336' : '#4caf50';
+        const confColor = r.confidence != null ? (r.confidence >= 0.9 ? '#4caf50' : r.confidence >= 0.7 ? '#ff9800' : '#f44336') : '#555';
+        const thumbUrl = r.thumbnail ? '/' + r.thumbnail : '';
+        return `<tr>
+          <td>${i + 1}</td>
+          <td style="color:${color};font-weight:bold">${verdict}</td>
+          <td style="text-align:center;font-size:0.8em;color:${confColor}">${conf}</td>
+          <td>${r.date || '?'}</td>
+          <td>${r.page || '?'}</td>
+          <td>${r.newspaper || ''}</td>
+          <td>${thumbUrl ? `<img src="${thumbUrl}" style="width:120px;height:72px;object-fit:cover;border-radius:3px;cursor:pointer" onclick="window.open('${thumbUrl}','_blank')" title="Click to enlarge">` : ''}</td>
+          <td style="font-size:0.7em;color:#888;max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${r.filename}">${r.filename}</td>
+        </tr>`;
+      }).join('');
+    } else {
+      panel.style.display = 'none';
+      tbody.innerHTML = '';
+    }
+
+    if (s === 'running') {
+      document.getElementById('aiStartBtn').style.display = 'none';
+      document.getElementById('aiStopBtn').style.display = '';
+      if (!window._aiRefreshInterval) {
+        window._aiRefreshInterval = setInterval(loadAutoIgnoreStatus, 2000);
+      }
+    } else {
+      document.getElementById('aiStartBtn').style.display = '';
+      document.getElementById('aiStopBtn').style.display = 'none';
+      if (window._aiRefreshInterval) { clearInterval(window._aiRefreshInterval); window._aiRefreshInterval = null; }
+    }
+  } catch(e) { console.error('Auto-ignore status failed:', e); }
+}
+
 </script>
 </body>
 </html>
