@@ -28,6 +28,7 @@ import json
 import socket
 import sqlite3
 import logging
+import random
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
@@ -270,15 +271,18 @@ def backfill_page_url(conn, pdf_filename, url):
 
 def save_clip_data(conn, pdf_filename, url, clip_url, ocr_text):
     """Save clip results to DB."""
-    # Ensure clipped_by column exists
+    # Ensure clipped_by and clipped_at columns exist
     cols = [r[1] for r in conn.execute("PRAGMA table_info(processed_pdfs)").fetchall()]
     if "clipped_by" not in cols:
         conn.execute("ALTER TABLE processed_pdfs ADD COLUMN clipped_by TEXT")
+    if "clipped_at" not in cols:
+        conn.execute("ALTER TABLE processed_pdfs ADD COLUMN clipped_at TEXT")
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     conn.execute(
         """UPDATE processed_pdfs
-           SET url = ?, clip_url = ?, ocr_text = ?, clipped = 1, clipped_by = ?
+           SET url = ?, clip_url = ?, ocr_text = ?, clipped = 1, clipped_by = ?, clipped_at = ?
            WHERE pdf_filename = ?""",
-        (url, clip_url, ocr_text, _current_account_email or "", pdf_filename)
+        (url, clip_url, ocr_text, _current_account_email or "", now, pdf_filename)
     )
     db_commit(conn)
 
@@ -477,15 +481,16 @@ def claim_account(slot_id, pid):
     currently eligible. Uses BEGIN IMMEDIATE to serialize claims across workers.
     """
     clip_limit = get_daily_clip_limit() or 999999
-    today = datetime.now().strftime("%Y-%m-%d")
     conn = get_accounts_db()
     try:
         conn.isolation_level = None  # manual transaction control
         conn.execute("BEGIN IMMEDIATE")
+        today = datetime.now().strftime("%Y-%m-%d")
         row = conn.execute(
             """
             SELECT * FROM accounts
              WHERE active = 1
+               AND (last_error IS NULL OR last_error = '')
                AND in_use_by IS NULL
                AND (
                    clips_today < ?
@@ -495,7 +500,7 @@ def claim_account(slot_id, pid):
                    OR last_clip_time IS NULL
                    OR last_clip_time < datetime('now','localtime','-24 hours')
                )
-             ORDER BY clips_today ASC NULLS FIRST, total_clips ASC
+             ORDER BY last_clip_time ASC NULLS FIRST, clips_today ASC NULLS FIRST, total_clips ASC
              LIMIT 1
             """,
             (clip_limit, today),
@@ -826,12 +831,13 @@ def close_extra_tabs(driver):
                 remaining = driver.window_handles
                 if remaining:
                     driver.switch_to.window(remaining[0])
-        # Re-maximize — new tabs from uc_open_with_reconnect don't inherit
-        # the maximized state from the original tab.
-        try:
-            driver.maximize_window()
-        except Exception:
-            pass
+        # Only re-maximize if we closed tabs and switched to a surviving one
+        # that may not have inherited maximized state.
+        if closed_any:
+            try:
+                driver.maximize_window()
+            except Exception:
+                pass
     except Exception as e:
         log.info(f"    close_extra_tabs skipped: {e}")
 
@@ -995,7 +1001,9 @@ def get_next_account(exclude_email=None):
         if "accounts" not in tables:
             return None
 
+        today = datetime.now().strftime("%Y-%m-%d")
         sql = """SELECT * FROM accounts WHERE active = 1
+                 AND (last_error IS NULL OR last_error = '')
                  AND (
                      clips_today < ?
                      OR clips_today IS NULL
@@ -1004,13 +1012,12 @@ def get_next_account(exclude_email=None):
                      OR last_clip_time IS NULL
                      OR last_clip_time < datetime('now','localtime','-24 hours')
                  )"""
-        today = datetime.now().strftime("%Y-%m-%d")
         params = [clip_limit, today]
         if exclude_email:
             sql += " AND email != ?"
             params.append(exclude_email)
         # Prefer: accounts with fewest clips today first, then least total clips
-        sql += " ORDER BY clips_today ASC NULLS FIRST, total_clips ASC LIMIT 1"
+        sql += " ORDER BY last_clip_time ASC NULLS FIRST, clips_today ASC NULLS FIRST, total_clips ASC LIMIT 1"
         row = conn.execute(sql, params).fetchone()
         if row:
             return dict(row)
@@ -1028,7 +1035,7 @@ def get_all_active_accounts():
         if "accounts" not in tables:
             return []
         rows = conn.execute(
-            "SELECT * FROM accounts WHERE active = 1 ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC"
+            "SELECT * FROM accounts WHERE active = 1 AND (last_error IS NULL OR last_error = '') ORDER BY last_clip_time ASC NULLS FIRST, clips_today ASC NULLS FIRST, total_clips ASC"
         ).fetchall()
         return [dict(r) for r in rows]
     finally:
@@ -1136,6 +1143,93 @@ def update_account_logout(email):
         conn.close()
 
 
+def update_account_error(email, error_msg, screenshot_filename=None):
+    """Mark an account with an error, deactivate it, and optionally store a screenshot filename."""
+    conn = get_accounts_db()
+    try:
+        tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+        if "accounts" not in tables:
+            return
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(accounts)").fetchall()]
+        if "last_error" not in cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN last_error TEXT")
+            db_commit(conn)
+        if "last_error_time" not in cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN last_error_time TEXT")
+            db_commit(conn)
+        if "last_error_screenshot" not in cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN last_error_screenshot TEXT")
+            db_commit(conn)
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        conn.execute("""UPDATE accounts SET
+            last_error = ?, last_error_time = ?, last_error_screenshot = ?,
+            active = 0, updated_at = ?
+            WHERE email = ?""",
+            (error_msg, now, screenshot_filename, now, email))
+        db_commit(conn)
+        log.warning(f"    Account {email} marked with error: {error_msg}")
+    finally:
+        conn.close()
+
+
+# Error patterns from newspapers.com that indicate an account problem.
+# Each tuple is (pattern_words, description).  We check if ALL words in the
+# tuple appear somewhere in the lowercased page text.
+_ACCOUNT_ERROR_PATTERNS = [
+    (["can", "search"],              "cannot search"),
+    (["subscription", "expired"],    "subscription expired"),
+    (["subscription", "cancel"],     "subscription cancelled"),
+    (["account", "restricted"],      "account restricted"),
+    (["account", "suspended"],       "account suspended"),
+    (["account", "disabled"],        "account disabled"),
+    (["access", "denied"],           "access denied"),
+    (["no longer", "access"],        "no longer have access"),
+    (["membership", "expired"],      "membership expired"),
+    (["plan has ended"],             "plan has ended"),
+    (["trial", "ended"],             "trial ended"),
+    (["trial", "expired"],           "trial expired"),
+    (["upgrade your subscription"], "upgrade required"),
+]
+
+
+def check_account_error(driver, email, context="page"):
+    """Check the current page for account-level error messages from newspapers.com.
+    If found, saves an error screenshot, marks the account, and returns the error string.
+    Returns None if no error detected."""
+    try:
+        page_text = driver.execute_script("return document.body.innerText || '';").lower()
+    except Exception:
+        return None
+
+    # 509 Bandwidth Limit Exceeded is transient — refresh, don't disable account
+    if "509" in page_text or "bandwidth limit exceeded" in page_text:
+        log.warning(f"    HTTP 509 detected ({context}) — refreshing browser")
+        try:
+            driver.refresh()
+            time.sleep(5)
+        except Exception:
+            pass
+        return None
+
+    for words, description in _ACCOUNT_ERROR_PATTERNS:
+        if all(w in page_text for w in words):
+            log.warning(f"    ACCOUNT ERROR detected ({context}): {description}")
+            # Save error screenshot
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            fname = f"acct_error_{email.split('@')[0]}_{ts}.png"
+            fpath = os.path.join(LOG_DIR, fname)
+            try:
+                driver.save_screenshot(fpath)
+                log.info(f"    Error screenshot saved: {fpath}")
+            except Exception as e:
+                log.warning(f"    Could not save error screenshot: {e}")
+                fname = None
+            # Mark the account
+            update_account_error(email, description, fname)
+            return description
+    return None
+
+
 def _detect_logged_in_account(driver):
     """Try to detect which account is currently logged in by checking the page for user info."""
     try:
@@ -1170,7 +1264,7 @@ def do_logout(driver):
 
         # Navigate to homepage to verify logged out
         try:
-            driver.uc_open_with_reconnect("https://www.newspapers.com/", 4)
+            driver.execute_script("window.location.href = 'https://www.newspapers.com/';")
         except Exception:
             driver.get("https://www.newspapers.com/")
         close_extra_tabs(driver)
@@ -1222,12 +1316,14 @@ def do_login(driver, acct):
     password = acct["password"]
     log.info(f"    Logging in as: {email}")
 
-    # Navigate to sign-in page — use uc_open_with_reconnect for Cloudflare bypass
+    # Navigate to sign-in page — use JS navigation to avoid the window-resize
+    # shudder caused by uc_open_with_reconnect (which opens a new non-maximized tab).
+    # Cloudflare Turnstile on this page is handled separately below.
     log.info("    Navigating to sign-in page...")
     try:
-        driver.uc_open_with_reconnect("https://www.newspapers.com/signin/", 4)
-    except Exception:
         driver.execute_script("window.location.href = 'https://www.newspapers.com/signin/';")
+    except Exception:
+        driver.get("https://www.newspapers.com/signin/")
     close_extra_tabs(driver)
     time.sleep(5)
 
@@ -1332,11 +1428,16 @@ def do_login(driver, acct):
         if not email_field:
             log.warning("    Could not find email field.")
             return False
+        email_field.click()
+        time.sleep(0.3)
         email_field.clear()
         email_field.send_keys(email)
+        log.info(f"    Email entered: {email}")
     except Exception as e:
         log.warning(f"    Email entry failed: {e}")
         return False
+
+    time.sleep(0.5)
 
     # Enter password
     try:
@@ -1352,76 +1453,428 @@ def do_login(driver, acct):
         if not pw_field:
             log.warning("    Could not find password field.")
             return False
+        pw_field.click()
+        time.sleep(0.3)
         pw_field.clear()
         pw_field.send_keys(password)
+        log.info("    Password entered.")
     except Exception as e:
         log.warning(f"    Password entry failed: {e}")
         return False
 
-    # Solve Cloudflare Turnstile on the login form (second gate)
-    # Always attempt — uc_gui_click_captcha scans for captcha iframes automatically.
-    # We also log whether a widget was detected so we can diagnose cases
-    # where the click misbehaves (e.g. lands on userid when no widget
-    # present). Detection is diagnostic only — the click runs either way.
-    log.info("    Solving Turnstile on login form...")
-    time.sleep(2)
-    turnstile_selectors = [
-        "iframe[src*='challenges.cloudflare.com']",
-        "iframe[src*='turnstile']",
-        "iframe[title*='Turnstile' i]",
-        "iframe[title*='challenge' i]",
-        "div.cf-turnstile",
-        "div[class*='turnstile']",
-    ]
-    turnstile_detected = False
-    for sel in turnstile_selectors:
+    # Verify fields have values (React can sometimes wipe send_keys values)
+    time.sleep(0.5)
+    try:
+        email_val = email_field.get_attribute("value") or ""
+        pw_val = pw_field.get_attribute("value") or ""
+        if not email_val or not pw_val:
+            log.warning(f"    Fields appear empty after send_keys (email='{email_val}', pw len={len(pw_val)}). Retrying...")
+            email_field.click()
+            email_field.clear()
+            for ch in email:
+                email_field.send_keys(ch)
+                time.sleep(0.03)
+            time.sleep(0.3)
+            pw_field.click()
+            pw_field.clear()
+            for ch in password:
+                pw_field.send_keys(ch)
+                time.sleep(0.03)
+            log.info("    Credentials re-entered char-by-char.")
+    except Exception:
+        pass
+
+    # Solve Cloudflare Turnstile — three-tier system:
+    #   Tier 1: Use cached position from last success (fast, 0 API calls)
+    #   Tier 2: Re-find checkbox using cached scale factor (1-2 API calls)
+    #   Tier 3: Full two-point calibration experiment (4-5 API calls)
+
+    close_extra_tabs(driver)
+    try:
+        driver.switch_to.window(driver.current_window_handle)
+    except Exception:
+        pass
+
+    log.info("    Checking for Turnstile on login form...")
+    time.sleep(1.5)  # Give Turnstile widget time to render
+
+    # Quick JS check — if no Turnstile iframe on the page, skip entirely
+    _has_turnstile = False
+    try:
+        _has_turnstile = driver.execute_script(
+            "return !!document.querySelector('iframe[src*=\"turnstile\"], iframe[src*=\"challenges.cloudflare\"], [id*=\"turnstile\"], .cf-turnstile')"
+        )
+    except Exception:
+        _has_turnstile = True  # Assume present if we can't check
+    if not _has_turnstile:
+        log.info("    No Turnstile detected — skipping checkbox click.")
+    else:
+        log.info("    Turnstile detected — proceeding with checkbox click.")
+
+    import base64
+    import anthropic
+    import ctypes
+    import io as _io
+    from PIL import Image as _Image, ImageDraw as _ImageDraw
+
+    _log_dir = r"c:\lake_worth\collector_logs"
+    _calib_file = os.path.join(r"c:\lake_worth_runtime", "turnstile_calibration.json")
+    os.makedirs(_log_dir, exist_ok=True)
+    os.makedirs(os.path.dirname(_calib_file), exist_ok=True)
+
+    # Detect DPI scale: screenshot pixels vs CSS viewport pixels
+    # (deferred for Tier 1 — computed from cache instead of taking a screenshot)
+    _vp_w = driver.execute_script("return window.innerWidth") or 1920
+    _ss_img = None
+    _dpi_scale = None
+
+    def _ts_ask_claude(image_path, prompt):
+        with open(image_path, "rb") as f:
+            img_b64 = base64.standard_b64encode(f.read()).decode("utf-8")
+        client = anthropic.Anthropic()
+        resp = client.messages.create(
+            model="claude-haiku-4-5-20251001", max_tokens=300,
+            messages=[{"role": "user", "content": [
+                {"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": img_b64}},
+                {"type": "text", "text": prompt}
+            ]}])
+        return resp.content[0].text.strip()
+
+    def _ts_screenshot(path):
+        """Viewport screenshot via Selenium — works at any z-level."""
+        driver.save_screenshot(path)
+
+    def _ts_screenshot_marker(path, x, y):
+        """Viewport screenshot with a red marker drawn at (x,y)."""
+        png = driver.get_screenshot_as_png()
+        img = _Image.open(_io.BytesIO(png))
+        draw = _ImageDraw.Draw(img)
+        r = 14
+        draw.ellipse([x-r, y-r, x+r, y+r], fill="red", outline="yellow", width=3)
+        draw.line([x-30, y, x+30, y], fill="red", width=3)
+        draw.line([x, y-30, x, y+30], fill="red", width=3)
+        img.save(path)
+
+    def _ts_parse_coords(text, label):
+        m = re.search(rf'{label}\s+(\d+)\s*,\s*(\d+)', text, re.IGNORECASE)
+        if m:
+            return int(m.group(1)), int(m.group(2))
+        m = re.search(r'(\d+)\s*,\s*(\d+)', text)
+        if m:
+            return int(m.group(1)), int(m.group(2))
+        return None
+
+    def _ts_load_calib():
+        if not os.path.exists(_calib_file):
+            return None
         try:
-            els = driver.find_elements(By.CSS_SELECTOR, sel)
-            for el in els:
+            with open(_calib_file) as f:
+                c = json.load(f)
+            # Invalidate old screen-coordinate calibrations
+            if c.get("coord_space") != "viewport":
+                return None
+            return c
+        except Exception:
+            return None
+
+    def _ts_save_calib(data):
+        data["coord_space"] = "viewport"
+        tmp = _calib_file + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump(data, f, indent=2)
+        os.replace(tmp, _calib_file)
+
+    def _ts_jitter(x, y, px=2):
+        return x + random.randint(-px, px), y + random.randint(-px, px)
+
+    def _ts_apply_calib(cx, cy, calib):
+        return (int(cx * calib.get("scale_x", 1.0) + calib.get("offset_x", 0)),
+                int(cy * calib.get("scale_y", 1.0) + calib.get("offset_y", 0)))
+
+    def _ts_find_checkbox(stamp):
+        """Find Turnstile checkbox in viewport screenshot. Returns (x,y) in screenshot coords."""
+        shot = os.path.join(_log_dir, f"ts_find_{stamp}.png")
+        _ts_screenshot(shot)
+        ans = _ts_ask_claude(shot, (
+            "This is a browser viewport screenshot. "
+            "Is there a Cloudflare 'Verify you are human' checkbox visible? "
+            "If yes, respond with ONLY the pixel coordinates of the CENTER of the "
+            "checkbox square in the format: CHECKBOX x,y\n"
+            "If there is no such checkbox, respond with: NONE"))
+        log.info(f"    Turnstile find: {ans}")
+        return _ts_parse_coords(ans, "CHECKBOX") or _ts_parse_coords(ans, "CLICK")
+
+    def _ts_probe(ax, ay, stamp, label):
+        shot = os.path.join(_log_dir, f"ts_{label}_{stamp}.png")
+        _ts_screenshot_marker(shot, ax, ay)
+        ans = _ts_ask_claude(shot, (
+            "This screenshot has a RED CIRCLE WITH CROSSHAIR drawn on it.\n"
+            "Tell me the pixel coordinates of the center of the RED MARKER: MARKER x,y\n"
+            "Respond with ONLY that one line."))
+        log.info(f"    Probe {label} at ({ax},{ay}): Claude sees {ans}")
+        return _ts_parse_coords(ans, "MARKER")
+
+    def _ts_calibrate(stamp, claude_cb):
+        pa = (200, 250)
+        pb = (claude_cb[0], claude_cb[1])
+        ca = _ts_probe(pa[0], pa[1], stamp, "calib_corner")
+        if not ca:
+            return None
+        cb = _ts_probe(pb[0], pb[1], stamp, "calib_target")
+        if not cb:
+            return None
+        dx_a, dy_a = pb[0] - pa[0], pb[1] - pa[1]
+        dx_c, dy_c = cb[0] - ca[0], cb[1] - ca[1]
+        if abs(dx_c) < 10 or abs(dy_c) < 10:
+            return None
+        sx, sy = dx_a / dx_c, dy_a / dy_c
+        ox, oy = pa[0] - ca[0] * sx, pa[1] - ca[1] * sy
+        log.info(f"    Calibration: scale=({sx:.4f},{sy:.4f}) offset=({ox:.1f},{oy:.1f})")
+        return {"scale_x": round(sx, 4), "scale_y": round(sy, 4),
+                "offset_x": round(ox, 1), "offset_y": round(oy, 1),
+                "probe_points": [{"actual": list(pa), "claude_saw": list(ca)},
+                                 {"actual": list(pb), "claude_saw": list(cb)}]}
+
+    def _ts_find_chrome_hwnd():
+        """Find the Chrome window HWND and its render widget child."""
+        user32 = ctypes.windll.user32
+        main_hwnd = [None]
+        try:
+            title = driver.title
+        except Exception:
+            return None, None
+        WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int))
+        def _find_main(hwnd, lp):
+            length = user32.GetWindowTextLengthW(hwnd)
+            if length > 0:
+                buf = ctypes.create_unicode_buffer(length + 1)
+                user32.GetWindowTextW(hwnd, buf, length + 1)
+                if title and title[:30] in buf.value:
+                    main_hwnd[0] = hwnd
+                    return False
+            return True
+        user32.EnumWindows(WNDENUMPROC(_find_main), 0)
+        if not main_hwnd[0]:
+            return None, None
+        render_hwnd = [None]
+        def _find_render(hwnd, lp):
+            cls = ctypes.create_unicode_buffer(256)
+            user32.GetClassNameW(hwnd, cls, 256)
+            if "Chrome_RenderWidgetHostHWND" in cls.value:
+                render_hwnd[0] = hwnd
+                return False
+            return True
+        user32.EnumChildWindows(main_hwnd[0], WNDENUMPROC(_find_render), 0)
+        return main_hwnd[0], render_hwnd[0]
+
+    def _ts_click(drv, x, y):
+        """Click at viewport-screenshot coords via PostMessage — no foreground needed.
+        PostMessage bypasses CDP entirely, so no disconnect/reconnect needed."""
+        _main_hwnd, _render_hwnd = _ts_find_chrome_hwnd()
+        _target = _render_hwnd or _main_hwnd
+        if not _target:
+            log.warning("    Could not find Chrome window — cannot click Turnstile")
+            return
+        # Convert screenshot coords to client-area (CSS) coords for PostMessage
+        cx, cy = int(x / _dpi_scale), int(y / _dpi_scale)
+        log.info(f"    PostMessage click: HWND={_target}, screenshot({x},{y}) -> client({cx},{cy})")
+        WM_MOUSEMOVE = 0x0200
+        WM_LBUTTONDOWN, WM_LBUTTONUP, MK_LBUTTON = 0x0201, 0x0202, 0x0001
+        PostMsg = ctypes.windll.user32.PostMessageW
+
+        # Simulate cursor moving toward the checkbox (human-like approach)
+        jx, jy = _ts_jitter(cx, cy)
+        start_x, start_y = cx - random.randint(80, 150), cy + random.randint(-30, 30)
+        steps = random.randint(12, 20)
+        for i in range(steps):
+            t = (i + 1) / steps
+            # Ease-out curve
+            t = 1 - (1 - t) ** 2
+            mx = int(start_x + (jx - start_x) * t)
+            my = int(start_y + (jy - start_y) * t)
+            mlp = (my & 0xFFFF) << 16 | (mx & 0xFFFF)
+            PostMsg(_target, WM_MOUSEMOVE, 0, mlp)
+            time.sleep(random.uniform(0.01, 0.04))
+        # Hover over checkbox briefly
+        time.sleep(random.uniform(0.3, 0.6))
+        # Click
+        lp = (jy & 0xFFFF) << 16 | (jx & 0xFFFF)
+        PostMsg(_target, WM_LBUTTONDOWN, MK_LBUTTON, lp)
+        time.sleep(random.uniform(0.06, 0.15))
+        PostMsg(_target, WM_LBUTTONUP, 0, lp)
+        log.info(f"    Turnstile clicked at ({jx},{jy}) via PostMessage")
+        # Give Turnstile a moment to process
+        time.sleep(random.uniform(1.5, 2.5))
+
+    def _ts_check_success(stamp):
+        shot = os.path.join(_log_dir, f"ts_result_{stamp}.png")
+        try:
+            _ts_screenshot(shot)
+            ans = _ts_ask_claude(shot, (
+                "Is the Cloudflare 'Verify you are human' checkbox now CHECKED "
+                "(has a checkmark/tick)? Respond ONLY: CHECKED or UNCHECKED"))
+            log.info(f"    Checkbox status: {ans}")
+            upper = ans.upper()
+            return "CHECKED" in upper and "UNCHECKED" not in upper
+        except Exception:
+            return False
+
+    # ── Execute three-tier Turnstile click ──
+    _stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    _calib = _ts_load_calib()
+    _turnstile_done = not _has_turnstile  # skip if no Turnstile detected
+
+    # Tier 1: Fast path — use cached viewport position, skip verification
+    # Compute DPI scale from cache (avoids ~5s screenshot+PIL overhead)
+    if (_calib and _calib.get("last_click_x") and _calib.get("last_success_time")
+            and _calib.get("viewport_size")
+            and _calib.get("fail_count", 0) < 3):
+        _cached_ss_w = _calib["viewport_size"][0]
+        _dpi_scale = _cached_ss_w / _vp_w if _vp_w else 1.0
+        log.info(f"    Turnstile Tier 1: cached ({_calib['last_click_x']},{_calib['last_click_y']}), DPI={_dpi_scale:.2f} (from cache)")
+        _ts_click(driver, _calib["last_click_x"], _calib["last_click_y"])
+        _calib["success_count"] = _calib.get("success_count", 0) + 1
+        _ts_save_calib(_calib)
+        log.info("    Turnstile Tier 1 — clicked, proceeding")
+        _turnstile_done = True
+
+    # For Tier 2/3: take screenshot to detect DPI scale and viewport size
+    if not _turnstile_done:
+        _ss_png = driver.get_screenshot_as_png()
+        _ss_img = _Image.open(_io.BytesIO(_ss_png))
+        _dpi_scale = _ss_img.width / _vp_w if _vp_w else 1.0
+        log.info(f"    Viewport={_vp_w}, Screenshot={_ss_img.width}x{_ss_img.height}, DPI={_dpi_scale:.2f}")
+    _viewport_size = [_calib["viewport_size"][0], _calib["viewport_size"][1]] if (_calib and _calib.get("viewport_size")) else ([_ss_img.width, _ss_img.height] if _ss_img else [int(_vp_w * (_dpi_scale or 1.0)), int(1080 * (_dpi_scale or 1.0))])
+
+    # Tier 2: Re-find checkbox with existing scale
+    if not _turnstile_done and _calib and _calib.get("scale_x"):
+        log.info(f"    Turnstile Tier 2: re-finding with scale ({_calib['scale_x']},{_calib['scale_y']})")
+        try:
+            driver.refresh()
+            time.sleep(5)
+        except Exception:
+            pass
+        _s2 = datetime.now().strftime("%Y%m%d_%H%M%S")
+        _cb2 = _ts_find_checkbox(_s2)
+        if _cb2:
+            _tx2, _ty2 = _ts_apply_calib(_cb2[0], _cb2[1], _calib)
+            log.info(f"    Claude=({_cb2[0]},{_cb2[1]}) -> viewport=({_tx2},{_ty2})")
+            _ts_click(driver, _tx2, _ty2)
+            _s2c = datetime.now().strftime("%Y%m%d_%H%M%S")
+            if _ts_check_success(_s2c):
+                _calib["last_click_x"] = _tx2
+                _calib["last_click_y"] = _ty2
+                _calib["last_success_time"] = datetime.now().isoformat()
+                _calib["success_count"] = _calib.get("success_count", 0) + 1
+                _calib["fail_count"] = 0
+                _ts_save_calib(_calib)
+                log.info("    Turnstile Tier 2 SUCCESS")
+                _turnstile_done = True
+            else:
+                log.info("    Turnstile Tier 2 failed")
+
+    # Tier 3: Full two-point calibration
+    if not _turnstile_done:
+        log.info("    Turnstile Tier 3: full calibration")
+        try:
+            driver.refresh()
+            time.sleep(5)
+        except Exception:
+            pass
+        _s3 = datetime.now().strftime("%Y%m%d_%H%M%S")
+        _cb3 = _ts_find_checkbox(_s3)
+        if _cb3:
+            _cal = _ts_calibrate(_s3, _cb3)
+            if _cal:
+                _tx3, _ty3 = _ts_apply_calib(_cb3[0], _cb3[1], _cal)
+                log.info(f"    Calibrated: Claude=({_cb3[0]},{_cb3[1]}) -> viewport=({_tx3},{_ty3})")
+                _ts_click(driver, _tx3, _ty3)
+                _s3c = datetime.now().strftime("%Y%m%d_%H%M%S")
+                _success3 = _ts_check_success(_s3c)
+                _new_calib = {
+                    "scale_x": _cal["scale_x"], "scale_y": _cal["scale_y"],
+                    "offset_x": _cal["offset_x"], "offset_y": _cal["offset_y"],
+                    "probe_points": _cal["probe_points"],
+                    "last_click_x": _tx3, "last_click_y": _ty3,
+                    "calibration_time": datetime.now().isoformat(),
+                    "last_success_time": datetime.now().isoformat() if _success3 else None,
+                    "success_count": 1 if _success3 else 0,
+                    "fail_count": 0 if _success3 else 1,
+                    "viewport_size": _viewport_size,
+                }
+                _ts_save_calib(_new_calib)
+                if _success3:
+                    log.info("    Turnstile Tier 3 SUCCESS")
+                    _turnstile_done = True
+                else:
+                    log.info("    Turnstile Tier 3 FAILED")
+            else:
+                log.warning("    Calibration failed — clicking raw coordinates")
+                _ts_click(driver, _cb3[0], _cb3[1])
+        else:
+            log.info("    No Turnstile checkbox found — skipping")
+
+    # Click sign-in button via PostMessage (no foreground needed)
+    try:
+        btn_pos = driver.execute_script("""
+            var sels = ["button[type='submit']", "input[type='submit']"];
+            for (var s of sels) {
+                var el = document.querySelector(s);
+                if (el && el.offsetWidth > 0) {
+                    var r = el.getBoundingClientRect();
+                    return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)];
+                }
+            }
+            var buttons = document.querySelectorAll('button');
+            for (var b of buttons) {
+                if ((b.innerText || '').toLowerCase().includes('sign in')) {
+                    var r = b.getBoundingClientRect();
+                    return [Math.round(r.x), Math.round(r.y), Math.round(r.width), Math.round(r.height)];
+                }
+            }
+            return null;
+        """)
+        if not btn_pos:
+            log.warning("    Could not find sign-in button.")
+            return False
+        # btn_pos is [x, y, width, height] in CSS coords — pick random point inside
+        _btn_x, _btn_y, _btn_w, _btn_h = btn_pos
+        _bcx = _btn_x + random.randint(int(_btn_w * 0.2), int(_btn_w * 0.8))
+        _bcy = _btn_y + random.randint(int(_btn_h * 0.25), int(_btn_h * 0.75))
+        _main_h, _render_h = _ts_find_chrome_hwnd()
+        _btn_target = _render_h or _main_h
+        if _btn_target:
+            WM_MOUSEMOVE = 0x0200
+            WM_LBUTTONDOWN, WM_LBUTTONUP, MK_LBUTTON = 0x0201, 0x0202, 0x0001
+            PostMsg = ctypes.windll.user32.PostMessageW
+            # Move cursor to button
+            _steps = random.randint(8, 14)
+            _sx, _sy = _bcx - random.randint(40, 80), _bcy + random.randint(-10, 10)
+            for _i in range(_steps):
+                _t = 1 - (1 - (_i + 1) / _steps) ** 2
+                _mx = int(_sx + (_bcx - _sx) * _t)
+                _my = int(_sy + (_bcy - _sy) * _t)
+                PostMsg(_btn_target, WM_MOUSEMOVE, 0, (_my & 0xFFFF) << 16 | (_mx & 0xFFFF))
+                time.sleep(random.uniform(0.01, 0.03))
+            time.sleep(random.uniform(0.2, 0.5))
+            # Click
+            _blp = (_bcy & 0xFFFF) << 16 | (_bcx & 0xFFFF)
+            PostMsg(_btn_target, WM_LBUTTONDOWN, MK_LBUTTON, _blp)
+            time.sleep(random.uniform(0.06, 0.15))
+            PostMsg(_btn_target, WM_LBUTTONUP, 0, _blp)
+            log.info(f"    Sign-in button clicked at ({_bcx},{_bcy}) via PostMessage")
+        else:
+            log.warning("    Could not find Chrome HWND for sign-in button — falling back to Selenium click")
+            for sel in ["button[type='submit']", "input[type='submit']"]:
                 try:
-                    if el.is_displayed():
-                        turnstile_detected = True
+                    btn = driver.find_element(By.CSS_SELECTOR, sel)
+                    if btn.is_displayed():
+                        btn.click()
                         break
                 except Exception:
-                    continue
-            if turnstile_detected:
-                break
-        except Exception:
-            continue
-    log.info(f"    Turnstile widget detected by selectors: {turnstile_detected}")
-    if turnstile_detected:
-        try:
-            driver.uc_gui_click_captcha()
-            time.sleep(5)
-            log.info("    Turnstile click done.")
-        except Exception as e:
-            log.info(f"    Turnstile click attempt: {e}")
-    else:
-        log.info("    No Turnstile widget visible — skipping captcha click.")
-
-    # Click sign-in button
-    clicked = False
-    for sel in ["button[type='submit']", "input[type='submit']"]:
-        try:
-            btn = driver.find_element(By.CSS_SELECTOR, sel)
-            if btn.is_displayed():
-                btn.click()
-                clicked = True
-                break
-        except Exception:
-            pass
-    if not clicked:
-        try:
-            buttons = driver.find_elements(By.CSS_SELECTOR, "button")
-            for b in buttons:
-                if "sign in" in (b.text or "").lower():
-                    b.click()
-                    clicked = True
-                    break
-        except Exception:
-            pass
-    if not clicked:
-        log.warning("    Could not find sign-in button.")
+                    pass
+    except Exception as e:
+        log.warning(f"    Sign-in button click failed: {e}")
         return False
 
     time.sleep(3)
@@ -1430,6 +1883,43 @@ def do_login(driver, acct):
     if is_cloudflare(driver):
         solve_cloudflare(driver)
         time.sleep(3)
+
+    # Check for transient sign-in error — retry by refreshing
+    for _login_retry in range(3):
+        try:
+            _login_text = driver.execute_script("return document.body.innerText || '';").lower()
+        except Exception:
+            _login_text = ""
+        if "error signing in" in _login_text and "try again" in _login_text:
+            log.warning(f"    Transient login error detected (attempt {_login_retry + 1}/3). Refreshing...")
+            _save_error_screenshot(driver, "login_transient_error")
+            time.sleep(random.uniform(8, 15))
+            try:
+                driver.refresh()
+            except Exception:
+                pass
+            time.sleep(5)
+            # Re-enter credentials and resubmit
+            try:
+                _ef = driver.find_element(By.CSS_SELECTOR, "input[name='email'], input[type='email']")
+                _pf = driver.find_element(By.CSS_SELECTOR, "input[type='password']")
+                _ef.click(); time.sleep(0.3); _ef.clear(); _ef.send_keys(email)
+                time.sleep(0.3)
+                _pf.click(); time.sleep(0.3); _pf.clear(); _pf.send_keys(password)
+                time.sleep(0.5)
+                for _sel in ["button[type='submit']", "input[type='submit']"]:
+                    try:
+                        _btn = driver.find_element(By.CSS_SELECTOR, _sel)
+                        if _btn.is_displayed():
+                            _btn.click()
+                            break
+                    except Exception:
+                        pass
+                time.sleep(3)
+            except Exception as e:
+                log.warning(f"    Retry credential entry failed: {e}")
+        else:
+            break
 
     # Wait for redirect away from sign-in page
     for _ in range(15):
@@ -1448,16 +1938,24 @@ def do_login(driver, acct):
     _current_account_email = email
     _current_account_clips = 0
     update_account_login(email)
+
+    # Check for account-level errors right after login
+    acct_err = check_account_error(driver, email, context="post-login")
+    if acct_err:
+        log.warning(f"    Account {email} has error after login: {acct_err}")
+        return False
+
     return True
 
 
-def switch_account(driver, exclude_email=None):
+def switch_account(driver, exclude_email=None, reason="throttle"):
     """Log out current account and log into the next available one.
+    reason: "throttle" or "limit" — only marks account as throttled when reason is "throttle".
     Returns True if switched successfully, False if no accounts available."""
     global _current_account_email
 
-    # Mark current account as throttled
-    if _current_account_email:
+    # Mark current account as throttled only if switching due to throttle
+    if _current_account_email and reason == "throttle":
         update_account_stats(_current_account_email, throttled=True)
 
     accounts = get_all_active_accounts()
@@ -1467,6 +1965,16 @@ def switch_account(driver, exclude_email=None):
 
     # Filter out the excluded (throttled) account
     candidates = [a for a in accounts if a["email"] != exclude_email]
+
+    # Filter out accounts that have hit their daily clip limit today
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    daily_limit = get_daily_clip_limit()
+    if daily_limit > 0:
+        candidates = [
+            a for a in candidates
+            if not (a.get("clips_today_date") == today_str and (a.get("clips_today") or 0) >= daily_limit)
+        ]
+
     if not candidates:
         log.info("    No other active accounts available to switch to.")
         return False
@@ -1553,18 +2061,20 @@ def setup_driver(preferred_account=None, slot_id=None):
     _clean_chrome_profile_locks(temp_profile)
     _patch_chrome_preferences(temp_profile)
     driver = Driver(uc=True, headed=True, user_data_dir=temp_profile,
-                    chromium_arg="--disable-session-crashed-bubble")
-    driver.set_window_size(1920, 1080)
+                    chromium_arg="--disable-session-crashed-bubble,--start-maximized")
     try:
         driver.maximize_window()
     except Exception:
-        pass
+        try:
+            driver.set_window_size(1920, 1080)
+        except Exception:
+            pass
     driver.implicitly_wait(5)
 
     # Navigate and handle Cloudflare if needed
-    driver.uc_open_with_reconnect("https://star-telegram.newspapers.com/", 4)
+    driver.get("https://star-telegram.newspapers.com/")
     close_extra_tabs(driver)
-    time.sleep(3)
+    time.sleep(5)
     solve_cloudflare(driver)
 
     # Post-launch health check — verify we have a real standalone browser
@@ -2791,6 +3301,13 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     except Exception:
         pass
 
+    # Check for account-level errors (restricted, expired, etc.)
+    if _current_account_email:
+        _acct_err = check_account_error(driver, _current_account_email, context="clip_page")
+        if _acct_err:
+            log.warning(f"    Account error during clipping: {_acct_err} — stopping.")
+            return "stop"
+
     title = driver.title or ""
     meta = parse_page_title(title, url)
 
@@ -3625,7 +4142,7 @@ def main(max_pages=0, date_start=None, date_end=None, account_email=None):
                         if _session_total >= clip_limit:
                             log.info(f"  Daily clip limit reached ({_session_total}/{clip_limit}) for {_current_account_email}.")
                             # Try rotating to another eligible account
-                            if switch_account(driver, exclude_email=_current_account_email):
+                            if switch_account(driver, exclude_email=_current_account_email, reason="limit"):
                                 log.info(f"  Rotated to {_current_account_email}. Continuing...")
                                 batch_clips = 0
                             else:

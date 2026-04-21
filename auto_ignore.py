@@ -45,7 +45,9 @@ def get_db():
 def _write_status(data):
     RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
     try:
-        STATUS_FILE.write_text(json.dumps(data), encoding="utf-8")
+        tmp = STATUS_FILE.with_suffix(".tmp")
+        tmp.write_text(json.dumps(data), encoding="utf-8")
+        tmp.replace(STATUS_FILE)
     except Exception:
         pass
 

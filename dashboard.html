@@ -477,53 +477,13 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
 <div id="tab-collector" class="section" style="display:none">
   <h2>Gather URLs</h2>
   <div style="display:flex;gap:20px;flex-wrap:wrap">
-    <!-- Controls -->
-    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
-      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Collector Settings</h3>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <div style="flex:1">
-          <label style="color:#888;font-size:0.85em">Start Date</label>
-          <input type="text" id="collectorDateStart" value="1924-01-01" placeholder="YYYY-MM-DD" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
-        </div>
-        <div style="flex:1">
-          <label style="color:#888;font-size:0.85em">End Date</label>
-          <input type="text" id="collectorDateEnd" value="1960-12-31" placeholder="YYYY-MM-DD" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
-        </div>
-      </div>
-      <div style="margin-bottom:10px">
-        <label style="color:#888;font-size:0.85em">Account</label>
-        <div style="display:flex;gap:12px;align-items:center;margin-top:4px">
-          <label style="color:#aaa;font-size:0.85em;cursor:pointer"><input type="radio" name="collAcctMode" value="auto" checked onchange="document.getElementById('collAccountSelect').disabled=true"> Auto</label>
-          <label style="color:#aaa;font-size:0.85em;cursor:pointer"><input type="radio" name="collAcctMode" value="manual" onchange="document.getElementById('collAccountSelect').disabled=false"> Choose</label>
-          <select id="collAccountSelect" disabled style="flex:1;padding:5px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;font-size:0.85em">
-            <option value="">Loading...</option>
-          </select>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <div style="flex:1">
-          <label style="color:#888;font-size:0.85em">Max New URLs</label>
-          <input type="number" id="collectorMaxUrls" value="1500" min="50" step="50" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
-          <div style="color:#666;font-size:0.75em;margin-top:4px">Stops when limit reached. Switch account and restart.</div>
-        </div>
-        <div style="flex:1">
-          <label style="color:#888;font-size:0.85em">Restart Every N URLs</label>
-          <input type="number" id="collectorRestartEvery" value="100" min="10" step="10" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
-          <div style="color:#666;font-size:0.75em;margin-top:4px">Browser re-navigates after this many new URLs.</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
-        <button id="collectorStartBtn" onclick="startCollector()" style="padding:6px 18px;background:#4caf50;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">Start</button>
-        <button id="collectorStopBtn" onclick="stopCollector()" style="padding:6px 18px;background:#f44336;color:#fff;border:none;border-radius:4px;cursor:pointer;display:none">Stop</button>
-      </div>
-    </div>
     <!-- Status -->
-    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px;flex:1">
-      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Collector Status</h3>
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Status</h3>
       <div id="collectorStatus" style="color:#aaa;font-size:0.85em">
         <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Status</span><span id="collStatus" style="color:#4fc3f7">Stopped</span></div>
         <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Account</span><span id="collAccount">—</span></div>
-        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">New URLs</span><span id="collNewEntries" style="color:#4caf50;font-weight:bold">0</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">New URLs (this run)</span><span id="collNewEntries" style="color:#4caf50;font-weight:bold">0</span></div>
         <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Current Date</span><span id="collCurrentDate">—</span></div>
         <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #222"><span style="color:#888">Date Range</span><span id="collDateRange">—</span></div>
         <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:#888">PID</span><span id="collPid">—</span></div>
@@ -532,6 +492,98 @@ document.getElementById('bookmarkletLink').href = `javascript:void(function(){tr
         </div>
         <div id="collProgressLabel" style="text-align:center;font-size:0.8em;color:#888;margin-top:4px"></div>
       </div>
+      <!-- Total URLs in DB -->
+      <div style="margin-top:12px;padding-top:8px;border-top:1px solid #333">
+        <div style="display:flex;justify-content:space-between"><span style="color:#888;font-size:0.85em">Total URLs in DB</span><span id="collTotalUrls" style="color:#e0c97f;font-weight:bold;font-size:0.85em">-</span></div>
+      </div>
+    </div>
+    <!-- Collector Settings -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Collector Settings</h3>
+      <div style="margin-bottom:10px">
+        <label style="color:#888;font-size:0.85em">URLs per Day</label>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          <input type="number" id="collectorMaxUrls" value="1500" min="50" step="50" oninput="document.getElementById('collMaxUrlsSaveBtn').style.background='#2e7d32'" onchange="document.getElementById('collMaxUrlsSaveBtn').style.background='#2e7d32'" style="width:120px;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box">
+          <button id="collMaxUrlsSaveBtn" onclick="saveCollectorMaxUrls()" style="padding:6px 16px;background:#666;color:#fff;border:none;border-radius:4px;cursor:pointer">Save</button>
+        </div>
+        <div style="color:#666;font-size:0.75em;margin-top:4px">Account rotates after this many URLs. 0 or blank = unlimited.</div>
+      </div>
+      <div style="margin-bottom:10px">
+        <label style="color:#888;font-size:0.85em">Account Mode</label>
+        <select id="collectorAccountMode" onchange="toggleCollectorAccountSelect()" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+          <option value="auto">Run with available accounts (auto-rotate)</option>
+          <option value="specific">Run with this account only</option>
+        </select>
+      </div>
+      <div id="collSpecificAccountRow" style="margin-bottom:10px;display:none">
+        <label style="color:#888;font-size:0.85em">Account</label>
+        <select id="collAccountSelect" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div style="flex:1">
+          <label style="color:#888;font-size:0.85em">Date Start</label>
+          <input type="text" id="collectorDateStart" value="1924-01-01" placeholder="YYYY-MM-DD" onchange="localStorage.setItem('collDateStart', this.value); loadCollectorRangeStats();" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+        </div>
+        <div style="flex:1">
+          <label style="color:#888;font-size:0.85em">Date End</label>
+          <input type="text" id="collectorDateEnd" value="1960-12-31" placeholder="YYYY-MM-DD" onchange="localStorage.setItem('collDateEnd', this.value); loadCollectorRangeStats();" style="width:100%;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+        </div>
+      </div>
+      <div id="collRangeStats" style="background:#1a1a2e;border:1px solid #333;border-radius:4px;padding:8px;font-size:0.85em;color:#aaa;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#888">In range</span><span id="collRsTotal" style="color:#e0c97f;font-weight:bold">-</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#888">Done</span><span id="collRsDone" style="color:#4caf50;font-weight:bold">-</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#888">Remaining</span><span id="collRsRemain" style="color:#4fc3f7;font-weight:bold">-</span></div>
+      </div>
+      <script>
+        (function(){
+          var s = localStorage.getItem('collDateStart');
+          var e = localStorage.getItem('collDateEnd');
+          var m = localStorage.getItem('collMaxUrls');
+          if (s) document.getElementById('collectorDateStart').value = s;
+          if (e) document.getElementById('collectorDateEnd').value = e;
+          if (m) document.getElementById('collectorMaxUrls').value = m;
+        })();
+      </script>
+      <div style="margin-bottom:10px">
+        <label style="color:#888;font-size:0.85em">Restart Every N URLs</label>
+        <input type="number" id="collectorRestartEvery" value="100" min="10" step="10" style="width:120px;padding:6px;background:#1a1a2e;color:#e0e0e0;border:1px solid #444;border-radius:4px;box-sizing:border-box;margin-top:4px">
+        <div style="color:#666;font-size:0.75em;margin-top:4px">Browser re-navigates after this many new URLs.</div>
+      </div>
+    </div>
+    <!-- Collector Instances -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:520px;flex:1">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;flex-wrap:wrap">
+        <h3 style="margin:0;color:#e0c97f;font-size:1em">Collector Instances</h3>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="color:#888;font-size:0.8em">Target:</span>
+          <button onclick="changeCollectorTarget(-1)" style="padding:4px 10px;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer">&#9660;</button>
+          <span id="collInstTargetVal" style="color:#e0c97f;font-weight:bold;min-width:20px;text-align:center;font-size:1em">0</span>
+          <button onclick="changeCollectorTarget(1)" style="padding:4px 10px;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer">&#9650;</button>
+          <button onclick="saveCollectorTarget()" style="padding:6px 12px;background:#2e7d32;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Save</button>
+          <button onclick="stopAllCollectorInstances()" style="padding:6px 12px;background:#b71c1c;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Stop All</button>
+          <button onclick="resetAllCollectors()" style="padding:6px 12px;background:#e65100;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:0.85em">Reset All</button>
+        </div>
+      </div>
+      <div id="collInstancesGlobalStop" style="color:#ff8a65;font-size:0.8em;margin-bottom:6px;display:none">Global stop flag is set — new instances will exit immediately.</div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.82em">
+        <thead>
+          <tr style="color:#888;text-align:left;border-bottom:1px solid #333">
+            <th style="padding:4px">Slot</th><th style="padding:4px">PID</th><th style="padding:4px">Account</th><th style="padding:4px">Date</th><th style="padding:4px">URLs</th><th style="padding:4px">Status</th><th style="padding:4px">Updated</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="collInstancesBody"><tr><td colspan="8" style="color:#666;padding:6px">No active instances.</td></tr></tbody>
+      </table>
+    </div>
+    <!-- Account Eligibility -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:320px">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Account Eligibility</h3>
+      <div id="collAccountEligibility" style="color:#aaa;font-size:0.9em">Loading...</div>
+    </div>
+    <!-- Latest Log -->
+    <div style="background:#16213e;border:1px solid #333;border-radius:8px;padding:15px;min-width:400px;max-width:600px;flex:1">
+      <h3 style="margin:0 0 10px 0;color:#e0c97f;font-size:1em">Latest Log (last 500 lines)</h3>
+      <pre id="collectorLog" style="color:#aaa;font-size:0.8em;white-space:pre-wrap;word-break:break-all;height:500px;overflow-y:scroll;margin:0">Loading...</pre>
     </div>
   </div>
 </div>
@@ -834,7 +886,16 @@ function showTab(name) {
     loadCollectorStartDate();
     loadCollectorAccounts();
     loadCollectorStatus();
-    window._collectorRefreshInterval = setInterval(loadCollectorStatus, 3000);
+    loadCollectorRangeStats();
+    loadCollectorAccountEligibility();
+    loadCollectorLog();
+    loadCollectorInstances();
+    window._collectorRefreshInterval = setInterval(() => {
+      loadCollectorStatus();
+      loadCollectorLog();
+      loadCollectorAccountEligibility();
+      loadCollectorInstances();
+    }, 5000);
   }
   if (name === 'autoignore') {
     loadAutoIgnoreStartDate();
@@ -897,7 +958,7 @@ function renderAccounts() {
       const statusColor = a.active ? '#4caf50' : '#f44336';
       const statusText = a.active ? 'Active' : 'Inactive';
       const lastClip = a.last_clip_time ? a.last_clip_time.substring(0,16) : '-';
-      const lastRunClips = a.clips_today || 0;
+      const lastRunClips = a.clips_today_actual ?? a.clips_today ?? 0;
       // Determine cooldown status based on last clip time and clip count
       let lastRunColor = '#4caf50'; // green = cooldown over or no clips
       if (a.last_clip_time) {
@@ -909,11 +970,15 @@ function renderAccounts() {
           lastRunColor = '#ff9800'; // orange = has clips but still eligible
         }
       }
+      const hasError = a.last_error && a.last_error_time;
+      const errorBtn = hasError
+        ? `<span onclick="showAccountError('${a.last_error_screenshot || ''}', '${(a.last_error || '').replace(/'/g, "\\'")}', '${a.email}')" style="color:#f44336;font-size:1.3em;font-weight:bold;cursor:pointer;margin-left:4px" title="${a.last_error} (${(a.last_error_time||'').substring(0,16)})">!</span>`
+        : '';
       return `<tr style="border-bottom:1px solid #222">
         <td style="padding:6px;text-align:center">
           <input type="checkbox" ${a.active ? 'checked' : ''} onchange="toggleAccountActive(${a.id}, this.checked)"
             style="cursor:pointer;width:16px;height:16px">
-          <span id="acctStatus_${a.id}" style="color:${statusColor};font-weight:bold;margin-left:4px;font-size:0.85em">${statusText}</span>
+          <span id="acctStatus_${a.id}" style="color:${statusColor};font-weight:bold;margin-left:4px;font-size:0.85em">${statusText}</span>${errorBtn}
         </td>
         <td style="padding:6px">${a.label || '-'}</td>
         <td style="padding:6px;color:#4fc3f7">${a.email}</td>
@@ -980,6 +1045,34 @@ function showAccountForm(id) {
 function hideAccountForm() { document.getElementById('accountForm').style.display = 'none'; }
 function editAccount(id) { showAccountForm(id); }
 
+function showAccountError(screenshotFile, errorMsg, email) {
+  // Switch to Screenshots tab and display the error screenshot
+  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-screenshots').style.display = 'block';
+  // Highlight the Screenshots tab
+  document.querySelectorAll('.tab').forEach(t => { if (t.textContent.trim() === 'Screenshots') t.classList.add('active'); });
+
+  const container = document.getElementById('screenshotsList');
+  if (screenshotFile) {
+    container.innerHTML = `
+      <div style="width:100%">
+        <div style="color:#f44336;font-size:1.1em;font-weight:bold;margin-bottom:8px">Account Error: ${email}</div>
+        <div style="color:#ff9800;margin-bottom:12px">${errorMsg}</div>
+        <a href="/api/screenshot/${screenshotFile}" target="_blank">
+          <img src="/api/screenshot/${screenshotFile}" style="max-width:100%;border-radius:6px;border:2px solid #f44336">
+        </a>
+      </div>`;
+  } else {
+    container.innerHTML = `
+      <div style="width:100%">
+        <div style="color:#f44336;font-size:1.1em;font-weight:bold;margin-bottom:8px">Account Error: ${email}</div>
+        <div style="color:#ff9800;margin-bottom:12px">${errorMsg}</div>
+        <div style="color:#888">No screenshot available.</div>
+      </div>`;
+  }
+}
+
 async function saveAccount() {
   const body = {
     email: document.getElementById('acctEmail').value,
@@ -1003,6 +1096,7 @@ async function deleteAccount(id) {
 }
 
 async function resetSession(id) {
+  if (!confirm('Clear error status for this account?')) return;
   await fetch('/api/account/reset-session', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id}) });
   loadAccounts();
 }
@@ -1070,12 +1164,19 @@ async function loadAccountEligibility() {
     html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Last Run</th>';
     html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Total</th>';
     html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Status</th>';
-    html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Eligible</th></tr>';
-    accounts.forEach(a => {
-      if (!a.active) return;
+    html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Last Clip</th></tr>';
+    accounts.sort((x, y) => {
+      const tx = x.last_clip_time || '';
+      const ty = y.last_clip_time || '';
+      if (!tx && !ty) return 0;
+      if (!tx) return 1;
+      if (!ty) return -1;
+      return ty.localeCompare(tx);
+    }).forEach(a => {
+      if (!a.active || a.last_error) return;
       const lastClipTime = a.last_clip_time ? new Date(a.last_clip_time.replace(' ', 'T')) : null;
       const hoursSinceClip = lastClipTime ? (now - lastClipTime) / 3600000 : 999;
-      const lastRunClips = a.clips_today || 0;
+      const lastRunClips = a.clips_today_actual ?? a.clips_today ?? 0;
       const hitLimit = lastRunClips >= clipLimit;
       const cooledDown = hoursSinceClip >= 24;
       const working = !!a.in_use_by;
@@ -1083,28 +1184,24 @@ async function loadAccountEligibility() {
       let lastRunColor = '#4caf50';
       if (lastClipTime && hoursSinceClip < 24 && hitLimit) lastRunColor = '#f44336';
       else if (lastClipTime && hoursSinceClip < 24 && lastRunClips > 0) lastRunColor = '#ff9800';
-      let statusHtml, eligibleHtml;
+      let statusHtml;
       if (working) {
         statusHtml = '<span style="color:#4fc3f7">Working</span>';
-        eligibleHtml = '<span style="color:#888">—</span>';
       } else if (!lastClipTime || cooledDown) {
         statusHtml = '<span style="color:#4caf50">Ready</span>';
-        eligibleHtml = '<span style="color:#4caf50">Now</span>';
       } else if (!hitLimit) {
         statusHtml = '<span style="color:#ff9800">Partial</span>';
-        eligibleHtml = `<span style="color:#ff9800">Now (${lastRunClips}/${clipLimit})</span>`;
       } else {
-        const eligibleAt = new Date(lastClipTime.getTime() + COOLDOWN_MS);
-        const hoursLeft = ((eligibleAt - now) / 3600000).toFixed(1);
         statusHtml = '<span style="color:#e65100">Cooling</span>';
-        eligibleHtml = `<span style="color:#e65100">${eligibleAt.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})} (${hoursLeft}h)</span>`;
       }
+      const lastClipStr = lastClipTime ? lastClipTime.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '-';
+      const lastClipColor = cooledDown || !lastClipTime ? '#4caf50' : (hitLimit ? '#e65100' : '#ff9800');
       html += `<tr>
         <td style="padding:4px;color:#4fc3f7">${a.email}</td>
         <td style="padding:4px;text-align:right;font-weight:bold;color:${lastRunColor}">${lastRunClips}</td>
         <td style="padding:4px;text-align:right">${a.total_clips}</td>
         <td style="padding:4px">${statusHtml}</td>
-        <td style="padding:4px">${eligibleHtml}</td>
+        <td style="padding:4px;color:${lastClipColor}">${lastClipStr}</td>
       </tr>`;
     });
     html += '</table>';
@@ -1270,16 +1367,17 @@ function setTargetDisplay(n) {
   if (el) el.textContent = n;
 }
 function changeTarget(delta) {
-  if (instLocked) return;
+  // Always allow decreasing (including to 0) even during transition
+  if (instLocked && delta > 0) return;
   const n = Math.max(0, instTarget + delta);
   setTargetDisplay(n);
 }
 function applyLockUI() {
   const ids = ['instTargetDown','instTargetUp','instTargetVal','instSaveBtn'];
   ids.forEach(id => { const e=document.getElementById(id); if(e) e.style.opacity = instLocked ? '0.5' : '1'; });
-  document.getElementById('instTargetDown').disabled = instLocked;
+  document.getElementById('instTargetDown').disabled = false;  // always allow decrease
   document.getElementById('instTargetUp').disabled = instLocked;
-  document.getElementById('instSaveBtn').disabled = instLocked;
+  document.getElementById('instSaveBtn').disabled = false;  // always allow save
   // per-row stop buttons
   document.querySelectorAll('.instRowStop').forEach(b => { b.disabled = instLocked; b.style.opacity = instLocked ? '0.5' : '1'; });
   // stop all button state
@@ -1577,11 +1675,13 @@ function renderArticles() {
     if (endPg - startPg < maxBtns - 1) startPg = Math.max(1, endPg - maxBtns + 1);
     let h = `<span style="margin-right:8px;color:#888">Page ${page} of ${totalPages} (${filtered.length} articles)</span>`;
     h += `<button onclick="setArticlesPage(1)" ${page<=1?'disabled':''} style="margin:0 2px">&laquo;</button>`;
+    h += `<button onclick="setArticlesPage(${Math.max(1,page-10)})" ${page<=1?'disabled':''} style="margin:0 2px" title="Back 10 pages">&lsaquo;&lsaquo;</button>`;
     h += `<button onclick="setArticlesPage(${page-1})" ${page<=1?'disabled':''} style="margin:0 2px">&lsaquo;</button>`;
     for (let p = startPg; p <= endPg; p++) {
       h += `<button onclick="setArticlesPage(${p})" style="margin:0 2px;${p===page?'background:#4fc3f7;color:#000;font-weight:bold':''}">${p}</button>`;
     }
     h += `<button onclick="setArticlesPage(${page+1})" ${page>=totalPages?'disabled':''} style="margin:0 2px">&rsaquo;</button>`;
+    h += `<button onclick="setArticlesPage(${Math.min(totalPages,page+10)})" ${page>=totalPages?'disabled':''} style="margin:0 2px" title="Forward 10 pages">&rsaquo;&rsaquo;</button>`;
     h += `<button onclick="setArticlesPage(${totalPages})" ${page>=totalPages?'disabled':''} style="margin:0 2px">&raquo;</button>`;
     return h;
   }
@@ -1625,6 +1725,7 @@ function renderArticles() {
         <span class="expand-btn" onclick="toggleText(${i})">Show more/less</span>
         ${quotes}
       </div>
+      ${a.thumbnail_path ? `<div style="flex-shrink:0;margin-left:12px;align-self:flex-start"><img src="/${a.thumbnail_path}" style="width:120px;height:72px;object-fit:cover;border-radius:3px;cursor:pointer" onclick="window.open('/${a.thumbnail_path}','_blank')" title="Click to enlarge"></div>` : ''}
     </div>`;
   }).join('');
 }
@@ -1722,11 +1823,13 @@ function renderNoArticles(items, page, total) {
     if (endPg - startPg < maxBtns - 1) startPg = Math.max(1, endPg - maxBtns + 1);
     let html = `<span style="margin-right:8px;color:#888">Page ${page} of ${noArticlesTotalPages} (${total} entries)</span>`;
     html += `<button onclick="loadNoArticles(1)" ${page <= 1 ? 'disabled' : ''} style="margin:0 2px">&laquo;</button>`;
+    html += `<button onclick="loadNoArticles(${Math.max(1,page-10)})" ${page <= 1 ? 'disabled' : ''} style="margin:0 2px" title="Back 10 pages">&lsaquo;&lsaquo;</button>`;
     html += `<button onclick="loadNoArticles(${page - 1})" ${page <= 1 ? 'disabled' : ''} style="margin:0 2px">&lsaquo;</button>`;
     for (let p = startPg; p <= endPg; p++) {
       html += `<button onclick="loadNoArticles(${p})" style="margin:0 2px;${p === page ? 'background:#4fc3f7;color:#000;font-weight:bold' : ''}">${p}</button>`;
     }
     html += `<button onclick="loadNoArticles(${page + 1})" ${page >= noArticlesTotalPages ? 'disabled' : ''} style="margin:0 2px">&rsaquo;</button>`;
+    html += `<button onclick="loadNoArticles(${Math.min(noArticlesTotalPages,page+10)})" ${page >= noArticlesTotalPages ? 'disabled' : ''} style="margin:0 2px" title="Forward 10 pages">&rsaquo;&rsaquo;</button>`;
     html += `<button onclick="loadNoArticles(${noArticlesTotalPages})" ${page >= noArticlesTotalPages ? 'disabled' : ''} style="margin:0 2px">&raquo;</button>`;
     pag.innerHTML = html;
   }
@@ -1885,32 +1988,152 @@ setInterval(refresh, 10000);
 
 // === COLLECTOR (Gather URLs) ===
 
+function toggleCollectorAccountSelect() {
+  const mode = document.getElementById('collectorAccountMode').value;
+  document.getElementById('collSpecificAccountRow').style.display = mode === 'specific' ? 'block' : 'none';
+}
+
+function saveCollectorMaxUrls() {
+  const val = document.getElementById('collectorMaxUrls').value;
+  localStorage.setItem('collMaxUrls', val);
+  const btn = document.getElementById('collMaxUrlsSaveBtn');
+  btn.style.background = '#666';
+  loadCollectorAccountEligibility();
+  loadCollectorRangeStats();
+}
+
 async function loadCollectorAccounts() {
   try {
     const resp = await fetch('/api/accounts');
     const data = await resp.json();
     const accounts = data.accounts || data;
     const sel = document.getElementById('collAccountSelect');
-    sel.innerHTML = (Array.isArray(accounts) ? accounts : [])
-      .filter(a => a.active)
-      .map(a => `<option value="${a.email}">${a.email}${a.in_use_by ? ' (in use)' : ''}</option>`)
-      .join('');
-  } catch(e) {}
+    sel.innerHTML = '';
+    const now = new Date();
+    const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+    (Array.isArray(accounts) ? accounts : []).forEach(a => {
+      if (!a.active) return;
+      const lastClipTime = a.last_clip_time ? new Date(a.last_clip_time.replace(' ', 'T')) : null;
+      const eligible = lastClipTime ? new Date(lastClipTime.getTime() + COOLDOWN_MS) : null;
+      const ready = !eligible || eligible <= now;
+      const label = a.email + (ready ? ' (ready)' : ' (cooling down)');
+      const opt = document.createElement('option');
+      opt.value = a.email;
+      opt.textContent = label;
+      opt.style.color = ready ? '#4caf50' : '#e65100';
+      sel.appendChild(opt);
+    });
+  } catch(e) { console.error('Failed to populate collector accounts:', e); }
 }
 
 async function loadCollectorStartDate() {
   try {
+    const saved = localStorage.getItem('collDateStart');
+    if (saved) {
+      document.getElementById('collectorDateStart').value = saved;
+      const savedEnd = localStorage.getItem('collDateEnd');
+      if (savedEnd) document.getElementById('collectorDateEnd').value = savedEnd;
+      return;
+    }
     const resp = await fetch('/api/collector/last-noarticle-date');
     const data = await resp.json();
     if (data.date) {
       document.getElementById('collectorDateStart').value = data.date;
-      // Set end date to end of that year, unless start is in December — then end of next year
       const parts = data.date.split('-');
       const month = parseInt(parts[1]);
       const endYear = month === 12 ? parseInt(parts[0]) + 1 : parseInt(parts[0]);
       document.getElementById('collectorDateEnd').value = endYear + '-12-31';
     }
   } catch(e) { /* keep default */ }
+}
+
+async function loadCollectorRangeStats() {
+  try {
+    const s = (document.getElementById('collectorDateStart').value || '').trim();
+    const e = (document.getElementById('collectorDateEnd').value || '').trim();
+    const url = `/api/collector/range_stats?start=${encodeURIComponent(s)}&end=${encodeURIComponent(e)}`;
+    const resp = await fetch(url);
+    const d = await resp.json();
+    const fmt = (n) => (n == null ? '-' : Number(n).toLocaleString());
+    document.getElementById('collRsTotal').textContent = fmt(d.total);
+    document.getElementById('collRsDone').textContent = fmt(d.done);
+    document.getElementById('collRsRemain').textContent = fmt(d.remain);
+    if (d.total_all != null) document.getElementById('collTotalUrls').textContent = fmt(d.total_all);
+  } catch(e) { console.error('Collector range stats error:', e); }
+}
+
+async function loadCollectorLog() {
+  try {
+    const resp = await fetch('/api/collector/log');
+    const data = await resp.json();
+    document.getElementById('collectorLog').textContent = data.lines || 'No log found.';
+  } catch(e) {
+    document.getElementById('collectorLog').textContent = 'Error loading log: ' + e;
+  }
+}
+
+async function loadCollectorAccountEligibility() {
+  try {
+    const resp = await fetch('/api/collector/account_stats');
+    const data = await resp.json();
+    const accounts = data.accounts || [];
+    const collectingEmails = new Set(data.collecting_emails || []);
+    const maxUrls = parseInt(document.getElementById('collectorMaxUrls').value) || 0;
+    const el = document.getElementById('collAccountEligibility');
+    const now = new Date();
+    let html = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">';
+    html += '<tr><th style="text-align:left;padding:4px;border-bottom:1px solid #444">Account</th>';
+    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">URLs Gathered</th>';
+    html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Status</th>';
+    html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Last URL</th></tr>';
+    accounts.forEach(a => {
+      if (!a.active) return;
+      const isCollecting = a.is_collecting || collectingEmails.has(a.email);
+      const inUse = !!a.in_use_by;
+      const lastGatheredTime = a.last_gathered_time ? new Date(a.last_gathered_time.replace(' ', 'T')) : null;
+      const hoursSinceGathered = lastGatheredTime ? (now - lastGatheredTime) / 3600000 : 999;
+      const cooledDown = hoursSinceGathered >= 24;
+      const urlsToday = a.urls_today || 0;
+      const urlsLifetime = a.urls_gathered || a.total_urls_gathered || 0;
+      const hitLimit = maxUrls > 0 && urlsToday >= maxUrls;
+      // URL count color based on daily count: green=under limit, orange=approaching, red=at/over limit within 24h
+      let urlColor = '#4caf50';
+      if (hitLimit && !cooledDown) urlColor = '#f44336';
+      else if (maxUrls > 0 && urlsToday >= maxUrls * 0.8 && !cooledDown) urlColor = '#ff9800';
+      else if (urlsToday === 0) urlColor = '#aaa';
+      // Status: same color coding pattern as clipper (Ready/Partial/Cooling)
+      let statusHtml;
+      if (isCollecting) {
+        statusHtml = '<span style="color:#4fc3f7">Collecting</span>';
+      } else if (inUse) {
+        statusHtml = '<span style="color:#ff9800">In Use</span>';
+      } else if (!lastGatheredTime || cooledDown) {
+        statusHtml = '<span style="color:#4caf50">Ready</span>';
+      } else if (!hitLimit) {
+        statusHtml = '<span style="color:#ff9800">Partial</span>';
+      } else {
+        statusHtml = '<span style="color:#e65100">Cooling</span>';
+      }
+      const lastGatheredStr = lastGatheredTime ? lastGatheredTime.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '-';
+      const lastGatheredColor = cooledDown || !lastGatheredTime ? '#4caf50' : (hitLimit ? '#e65100' : '#ff9800');
+      const urlDisplayStr = urlsLifetime > 0 ? `${urlsToday.toLocaleString()} <span style="color:#888;font-weight:normal">(${urlsLifetime.toLocaleString()} total)</span>` : urlsToday.toLocaleString();
+      html += `<tr>
+        <td style="padding:4px;color:#4fc3f7">${a.email}</td>
+        <td style="padding:4px;text-align:right;font-weight:bold;color:${urlColor}">${urlDisplayStr}</td>
+        <td style="padding:4px">${statusHtml}</td>
+        <td style="padding:4px;color:${lastGatheredColor}">${lastGatheredStr}</td>
+      </tr>`;
+    });
+    html += '</table>';
+    el.innerHTML = html;
+  } catch(e) {
+    document.getElementById('collAccountEligibility').innerHTML = '<span style="color:#f44">Error: ' + e + '</span>';
+  }
+}
+
+async function loadCollectorTotalUrls() {
+  // Total URLs populated by loadCollectorRangeStats via total_all field
+  loadCollectorRangeStats();
 }
 
 async function loadCollectorStatus() {
@@ -1921,17 +2144,18 @@ async function loadCollectorStatus() {
     const throttled = s.status === 'throttled';
     const limitReached = s.status === 'limit_reached';
     const statusEl = document.getElementById('collStatus');
-    statusEl.textContent = throttled ? 'THROTTLED' : limitReached ? 'LIMIT REACHED' : running ? 'Running' : 'Stopped';
-    statusEl.style.color = throttled ? '#f44336' : limitReached ? '#ff9800' : running ? '#ff9800' : '#4fc3f7';
-    statusEl.style.fontWeight = running ? 'bold' : 'normal';
+    statusEl.textContent = throttled ? 'THROTTLED' : limitReached ? 'LIMIT REACHED' : running ? 'RUNNING' : 'Stopped';
+    statusEl.style.color = throttled ? '#f44336' : limitReached ? '#ff9800' : running ? '#4caf50' : '#4fc3f7';
+    statusEl.style.fontWeight = (running || throttled || limitReached) ? 'bold' : 'normal';
     document.getElementById('collAccount').textContent = s.account || '—';
-    document.getElementById('collNewEntries').textContent = s.new_entries || '0';
+    const urlCount = s.urls_in_range != null ? s.urls_in_range : (parseInt(s.new_entries || 0) || 0);
+    document.getElementById('collNewEntries').textContent = urlCount.toLocaleString();
     document.getElementById('collCurrentDate').textContent = s.current_date || '—';
     document.getElementById('collDateRange').textContent =
       (s.date_start && s.date_end) ? s.date_start + ' to ' + s.date_end : '—';
     document.getElementById('collPid').textContent = s.pid || '—';
 
-    // Progress bar — estimate based on date position within range
+    // Progress bar
     const bar = document.getElementById('collProgressBar');
     const label = document.getElementById('collProgressLabel');
     if (running && s.date_start && s.date_end && s.current_date) {
@@ -1941,21 +2165,25 @@ async function loadCollectorStatus() {
       const range = end - start;
       const pct = range > 0 ? Math.min(100, Math.round(((cur - start) / range) * 100)) : 0;
       bar.style.width = pct + '%';
-      label.textContent = s.current_date + ' (' + pct + '%)';
-    } else if (!running && parseInt(s.new_entries || 0) > 0) {
+      label.textContent = s.current_date + ' (' + pct + '%) — ' + urlCount.toLocaleString() + ' URLs';
+    } else if (!running && urlCount > 0) {
       bar.style.width = '100%';
-      label.textContent = (s.new_entries || 0) + ' URLs collected';
+      label.textContent = urlCount.toLocaleString() + ' URLs collected';
     } else {
       bar.style.width = '0%';
       label.textContent = '';
     }
 
-    // Toggle Start/Stop visibility and polling
+    // Toggle Start/Stop
     if (running) {
       document.getElementById('collectorStartBtn').style.display = 'none';
       document.getElementById('collectorStopBtn').style.display = '';
       if (!window._collectorRefreshInterval) {
-        window._collectorRefreshInterval = setInterval(loadCollectorStatus, 3000);
+        window._collectorRefreshInterval = setInterval(() => {
+          loadCollectorStatus();
+          loadCollectorLog();
+          loadCollectorAccountEligibility();
+        }, 5000);
       }
     } else {
       document.getElementById('collectorStartBtn').style.display = '';
@@ -1963,7 +2191,10 @@ async function loadCollectorStatus() {
       stopBtn.style.display = 'none';
       stopBtn.textContent = 'Stop';
       stopBtn.disabled = false;
-      if (window._collectorRefreshInterval) { clearInterval(window._collectorRefreshInterval); window._collectorRefreshInterval = null; }
+      if (window._collectorRefreshInterval) {
+        clearInterval(window._collectorRefreshInterval);
+        window._collectorRefreshInterval = null;
+      }
     }
   } catch(e) {
     document.getElementById('collStatus').textContent = 'Error';
@@ -1977,11 +2208,13 @@ async function startCollector() {
   const restartEvery = parseInt(document.getElementById('collectorRestartEvery').value) || 100;
   const maxUrls = parseInt(document.getElementById('collectorMaxUrls').value) || 1500;
   if (!dateStart || !dateEnd) { alert('Enter start and end dates.'); return; }
-  const acctMode = document.querySelector('input[name="collAcctMode"]:checked').value;
-  const chosenEmail = acctMode === 'manual' ? document.getElementById('collAccountSelect').value : '';
-  if (acctMode === 'manual' && !chosenEmail) { alert('Select an account.'); return; }
-  const acctLabel = chosenEmail || 'auto';
-  if (!confirm(`Start collecting URLs from ${dateStart} to ${dateEnd}?\nAccount: ${acctLabel}\nMax URLs: ${maxUrls}\nRestart every ${restartEvery} URLs.`)) return;
+  localStorage.setItem('collDateStart', dateStart);
+  localStorage.setItem('collDateEnd', dateEnd);
+  const acctMode = document.getElementById('collectorAccountMode').value;
+  const chosenEmail = acctMode === 'specific' ? document.getElementById('collAccountSelect').value : '';
+  if (acctMode === 'specific' && !chosenEmail) { alert('Select an account.'); return; }
+  const acctLabel = chosenEmail || 'auto-rotate';
+  if (!confirm(`Start collecting URLs?\n\nDate range: ${dateStart} to ${dateEnd}\nAccount: ${acctLabel}\nMax URLs per account: ${maxUrls}\nRestart every: ${restartEvery}`)) return;
   try {
     const payload = {date_start: dateStart, date_end: dateEnd, restart_every: restartEvery, max_urls: maxUrls};
     if (chosenEmail) payload.email = chosenEmail;
@@ -1995,9 +2228,14 @@ async function startCollector() {
     document.getElementById('collectorStartBtn').style.display = 'none';
     document.getElementById('collectorStopBtn').style.display = '';
     if (!window._collectorRefreshInterval) {
-      window._collectorRefreshInterval = setInterval(loadCollectorStatus, 3000);
+      window._collectorRefreshInterval = setInterval(() => {
+        loadCollectorStatus();
+        loadCollectorLog();
+        loadCollectorAccountEligibility();
+      }, 5000);
     }
     loadCollectorStatus();
+    loadCollectorLog();
   } catch(e) { alert('Failed: ' + e); }
 }
 
@@ -2008,6 +2246,118 @@ async function stopCollector() {
     btn.disabled = true;
     await fetch('/api/collector/stop', { method: 'POST' });
   } catch(e) { alert('Failed: ' + e); }
+}
+
+// === COLLECTOR INSTANCES ===
+
+let collInstTarget = 0;
+
+function changeCollectorTarget(delta) {
+  collInstTarget = Math.max(0, collInstTarget + delta);
+  document.getElementById('collInstTargetVal').textContent = collInstTarget;
+}
+
+async function saveCollectorTarget() {
+  const dateStart = document.getElementById('collectorDateStart').value.trim();
+  const dateEnd = document.getElementById('collectorDateEnd').value.trim();
+  const maxUrls = parseInt(document.getElementById('collectorMaxUrls').value) || 1500;
+  const restartEvery = parseInt(document.getElementById('collectorRestartEvery').value) || 100;
+  if (collInstTarget > 0 && (!dateStart || !dateEnd)) {
+    alert('Enter start and end dates.');
+    return;
+  }
+  try {
+    const resp = await fetch('/api/collector/instances/set_target', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        target: collInstTarget,
+        date_start: dateStart,
+        date_end: dateEnd,
+        max_urls: maxUrls,
+        restart_every: restartEvery,
+      }),
+    });
+    const result = await resp.json();
+    if (result.error) { alert(result.error); return; }
+    loadCollectorInstances();
+  } catch(e) { alert('Failed: ' + e); }
+}
+
+async function stopCollectorInstance(slot) {
+  try {
+    await fetch('/api/collector/instances/stop', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({slot_id: slot}),
+    });
+  } catch(e) { alert('Failed: ' + e); }
+}
+
+async function stopAllCollectorInstances() {
+  try {
+    await fetch('/api/collector/instances/stop_all', { method: 'POST' });
+    collInstTarget = 0;
+    document.getElementById('collInstTargetVal').textContent = '0';
+  } catch(e) { alert('Failed: ' + e); }
+}
+
+async function resetAllCollectors() {
+  if (!confirm('Kill all collector instances and reset?')) return;
+  try {
+    await fetch('/api/collector/instances/reset_stale', { method: 'POST' });
+    collInstTarget = 0;
+    document.getElementById('collInstTargetVal').textContent = '0';
+    loadCollectorInstances();
+  } catch(e) { alert('Failed: ' + e); }
+}
+
+async function loadCollectorInstances() {
+  try {
+    const resp = await fetch('/api/collector/instances');
+    const data = await resp.json();
+    const instances = data.instances || [];
+    const target = data.target || 0;
+    const globalStop = data.global_stop;
+
+    collInstTarget = target;
+    document.getElementById('collInstTargetVal').textContent = target;
+
+    const gsEl = document.getElementById('collInstancesGlobalStop');
+    gsEl.style.display = globalStop ? 'block' : 'none';
+
+    const body = document.getElementById('collInstancesBody');
+    if (instances.length === 0) {
+      body.innerHTML = '<tr><td colspan="8" style="color:#666;padding:6px">No active instances.</td></tr>';
+      return;
+    }
+    let html = '';
+    const now = new Date();
+    instances.forEach(inst => {
+      const st = (inst.status || '').toLowerCase();
+      let statusColor = '#aaa';
+      if (st === 'running') statusColor = '#4caf50';
+      else if (st === 'logging-in' || st === 'starting' || st === 'spawning') statusColor = '#ff9800';
+      else if (st === 'stopped' || st === 'error') statusColor = '#f44';
+      const hb = inst.heartbeat_at ? new Date(inst.heartbeat_at.replace(' ', 'T')) : null;
+      const age = hb ? Math.round((now - hb) / 1000) : 999;
+      const ageStr = age < 60 ? age + 's' : Math.round(age / 60) + 'm';
+      const ageColor = age < 60 ? '#4caf50' : (age < 300 ? '#ff9800' : '#f44');
+      html += `<tr>
+        <td style="padding:4px;color:#e0c97f">${inst.slot_id}</td>
+        <td style="padding:4px;color:#aaa">${inst.pid || '-'}</td>
+        <td style="padding:4px;color:#4fc3f7">${inst.account_email || '-'}</td>
+        <td style="padding:4px">${inst.current_date || '-'}</td>
+        <td style="padding:4px;color:#4caf50;font-weight:bold">${(inst.urls_today != null ? inst.urls_today : inst.urls_this_run || 0).toLocaleString()}</td>
+        <td style="padding:4px;color:${statusColor};font-weight:bold">${inst.status || '-'}</td>
+        <td style="padding:4px;color:${ageColor}">${ageStr} ago</td>
+        <td style="padding:4px"><button onclick="stopCollectorInstance('${inst.slot_id}')" style="padding:2px 8px;background:#b71c1c;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:0.8em">Stop</button></td>
+      </tr>`;
+    });
+    body.innerHTML = html;
+  } catch(e) {
+    console.error('loadCollectorInstances error:', e);
+  }
 }
 
 // === AUTO-IGNORE ===

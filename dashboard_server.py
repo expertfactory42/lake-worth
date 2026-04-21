@@ -651,6 +651,260 @@ def _autoscale_loop():
         _time.sleep(30)
 
 
+# === COLLECTOR MULTI-INSTANCE SUPPORT ===
+
+COLLECTOR_GLOBAL_STOP_FLAG = RUNTIME_DIR / "stop_collector_all"
+
+
+def _collector_instance_stop_flag(slot_id):
+    return RUNTIME_DIR / f"stop_collector_{slot_id}"
+
+
+def _sweep_stale_collector_claims():
+    """PID-based sweeper for collector_instances."""
+    conn = get_db()
+    try:
+        # Ensure table exists
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS collector_instances (
+                slot_id TEXT PRIMARY KEY, pid INTEGER, account_email TEXT,
+                status TEXT, current_date TEXT, urls_this_run INTEGER DEFAULT 0,
+                date_start TEXT, date_end TEXT, started_at TEXT,
+                heartbeat_at TEXT, last_action TEXT
+            )
+        """)
+        conn.commit()
+        rows = conn.execute(
+            "SELECT slot_id, pid, status FROM collector_instances"
+        ).fetchall()
+        for r in rows:
+            if not _pid_alive(r["pid"]):
+                print(
+                    f"[collector-sweep] removing slot={r['slot_id']} pid={r['pid']} (dead)",
+                    flush=True,
+                )
+                conn.execute(
+                    "DELETE FROM collector_instances WHERE slot_id = ?",
+                    (r["slot_id"],),
+                )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _next_free_collector_slot_id():
+    conn = get_db()
+    try:
+        taken = set()
+        for r in conn.execute("SELECT slot_id FROM collector_instances").fetchall():
+            try:
+                taken.add(int(r["slot_id"]))
+            except (TypeError, ValueError):
+                pass
+    finally:
+        conn.close()
+    i = 1
+    while i in taken:
+        i += 1
+    return str(i)
+
+
+def _list_collector_instances():
+    _sweep_stale_collector_claims()
+    conn = get_db()
+    try:
+        # Check if accounts table has urls_today column
+        acct_cols = [r[1] for r in conn.execute("PRAGMA table_info(accounts)").fetchall()]
+        has_urls_today = "urls_today" in acct_cols and "urls_today_date" in acct_cols
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        if has_urls_today:
+            rows = conn.execute(
+                """SELECT ci.slot_id, ci.pid, ci.account_email, ci.status,
+                          ci.current_date, ci.urls_this_run, ci.date_start,
+                          ci.date_end, ci.started_at, ci.heartbeat_at,
+                          ci.last_action,
+                          CASE WHEN a.urls_today_date = ? THEN COALESCE(a.urls_today, 0) ELSE 0 END AS urls_today
+                     FROM collector_instances ci
+                     LEFT JOIN accounts a ON a.email = ci.account_email
+                    ORDER BY CAST(ci.slot_id AS INTEGER), ci.slot_id""",
+                (today_str,),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                """SELECT slot_id, pid, account_email, status, current_date,
+                          urls_this_run, date_start, date_end,
+                          started_at, heartbeat_at, last_action
+                     FROM collector_instances
+                    ORDER BY CAST(slot_id AS INTEGER), slot_id"""
+            ).fetchall()
+        return [dict(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def _spawn_collector_instance(date_start="", date_end="",
+                               max_urls=1500, restart_every=100):
+    """Launch a new detached collect_urls.py worker in a fresh slot."""
+    import shutil as _shutil
+    try:
+        if COLLECTOR_GLOBAL_STOP_FLAG.exists():
+            return None, None
+        try:
+            t = int(_get_state("collector_instances_target", "0"))
+            if t <= 0:
+                return None, None
+        except Exception:
+            pass
+        _sweep_stale_collector_claims()
+        slot_id = _next_free_collector_slot_id()
+        # Clean profile
+        try:
+            _profile_dir = RUNTIME_DIR / f"chrome_temp_profile_collector_{slot_id}"
+            if _profile_dir.exists():
+                _shutil.rmtree(_profile_dir, ignore_errors=True)
+        except Exception:
+            pass
+        # Pre-create instance row
+        try:
+            conn = sqlite3.connect(str(DB_PATH))
+            conn.execute(
+                "INSERT OR REPLACE INTO collector_instances "
+                "(slot_id, pid, status, started_at, heartbeat_at) "
+                "VALUES (?, ?, ?, datetime('now','localtime'), datetime('now','localtime'))",
+                (slot_id, 0, "spawning"),
+            )
+            conn.commit()
+            conn.close()
+        except Exception:
+            pass
+        # Clear per-slot stop flag
+        try:
+            _slot_flag = _collector_instance_stop_flag(slot_id)
+            if _slot_flag.exists():
+                if _slot_flag.is_dir():
+                    _shutil.rmtree(_slot_flag, ignore_errors=True)
+                else:
+                    _slot_flag.unlink()
+        except Exception:
+            pass
+        cmd = [
+            "python", "collect_urls.py",
+            f"--slot-id={slot_id}",
+            "--start", date_start,
+            "--end", date_end,
+            "--restart-every", str(restart_every),
+            "--max-urls", str(max_urls),
+        ]
+        _si = subprocess.STARTUPINFO()
+        _si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        _si.wShowWindow = 0
+        print(f"[collector-spawn] spawning slot={slot_id}", flush=True)
+        proc = subprocess.Popen(
+            cmd,
+            cwd=str(BASE_DIR),
+            creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+            startupinfo=_si,
+        )
+        import time as _time
+        _time.sleep(1)
+        if proc.poll() is not None:
+            print(f"[collector-spawn] slot={slot_id} died immediately", flush=True)
+            try:
+                conn = sqlite3.connect(str(DB_PATH), timeout=10)
+                conn.execute("DELETE FROM collector_instances WHERE slot_id = ?",
+                             (slot_id,))
+                conn.commit()
+                conn.close()
+            except Exception:
+                pass
+            return None, None
+        # Update PID
+        try:
+            conn = sqlite3.connect(str(DB_PATH), timeout=10)
+            conn.execute("UPDATE collector_instances SET pid = ? WHERE slot_id = ?",
+                         (proc.pid, slot_id))
+            conn.commit()
+            conn.close()
+        except Exception:
+            pass
+        print(f"[collector-spawn] spawned slot={slot_id} pid={proc.pid}", flush=True)
+        return slot_id, proc.pid
+    except Exception as e:
+        print(f"[collector-spawn] failed: {e}", flush=True)
+        return None, None
+
+
+_collector_autoscale_lock = _threading.Lock()
+_last_collector_spawn_time = 0
+
+
+def _collector_autoscale_tick():
+    global _last_collector_spawn_time
+    if not _collector_autoscale_lock.acquire(blocking=False):
+        return
+    try:
+        import time as _time
+        if _time.time() - _last_collector_spawn_time < _SPAWN_COOLDOWN:
+            return
+        _sweep_stale_collector_claims()
+        try:
+            target = int(_get_state("collector_instances_target", "0"))
+        except ValueError:
+            target = 0
+        if target <= 0:
+            return
+        conn = get_db()
+        try:
+            rows = conn.execute(
+                "SELECT status, started_at FROM collector_instances"
+            ).fetchall()
+        finally:
+            conn.close()
+        current = len(rows)
+        if current >= target:
+            return
+        # Don't spawn while another is still starting
+        import datetime as _dt
+        now = _dt.datetime.now()
+        for r in rows:
+            st = (r["status"] or "").lower()
+            if st in ("running", "stopped"):
+                continue
+            started = r["started_at"] or ""
+            age = 9999
+            try:
+                t = _dt.datetime.strptime(started, "%Y-%m-%d %H:%M:%S")
+                age = (now - t).total_seconds()
+            except Exception:
+                pass
+            if age < 240:
+                return
+        if COLLECTOR_GLOBAL_STOP_FLAG.exists():
+            return
+        date_start = _get_state("collector_instances_date_start", "")
+        date_end = _get_state("collector_instances_date_end", "")
+        max_urls = int(_get_state("collector_instances_max_urls", "1500") or 1500)
+        restart_every = int(_get_state("collector_instances_restart_every", "100") or 100)
+        slot_id, pid = _spawn_collector_instance(
+            date_start=date_start, date_end=date_end,
+            max_urls=max_urls, restart_every=restart_every,
+        )
+        if slot_id:
+            _last_collector_spawn_time = _time.time()
+    except Exception as e:
+        print(f"[collector-autoscale] tick error: {e}", flush=True)
+    finally:
+        _collector_autoscale_lock.release()
+
+
+def _collector_autoscale_loop():
+    import time as _time
+    _time.sleep(15)
+    while True:
+        _collector_autoscale_tick()
+        _time.sleep(30)
+
+
 def _list_instances():
     """Return current clipper_instances rows as plain dicts (after sweep).
     Also joins the account's persistent clips_this_session and the daily
@@ -735,7 +989,7 @@ def get_dashboard_data():
 
     # Articles with their quotes
     article_rows = conn.execute(
-        "SELECT a.*, pp.url AS page_url, pp.clip_url FROM articles a LEFT JOIN processed_pdfs pp ON a.pdf_filename = pp.pdf_filename ORDER BY a.date, a.page"
+        "SELECT a.*, pp.url AS page_url, pp.clip_url, pp.thumbnail_path FROM articles a LEFT JOIN processed_pdfs pp ON a.pdf_filename = pp.pdf_filename ORDER BY a.date, a.page"
     ).fetchall()
 
     article_list = []
@@ -1443,7 +1697,12 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             self.end_headers()
             try:
                 conn = get_db()
-                rows = conn.execute("SELECT * FROM accounts ORDER BY active DESC, total_clips DESC").fetchall()
+                rows = conn.execute("""
+                    SELECT *,
+                           CASE WHEN clips_today_date = date('now','localtime')
+                                THEN COALESCE(clips_today, 0) ELSE 0 END AS clips_today_actual
+                    FROM accounts ORDER BY active DESC, total_clips DESC
+                """).fetchall()
                 accounts = [dict(r) for r in rows]
                 # Include daily clip limit so the UI can determine cooldown status
                 limit_row = conn.execute("SELECT value FROM clipper_state WHERE key='daily_clip_limit'").fetchone()
@@ -1756,6 +2015,179 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 }, default=str).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/instances":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                instances = _list_collector_instances()
+                target = int(_get_state("collector_instances_target", "0") or 0)
+                self.wfile.write(json.dumps({
+                    "instances": instances,
+                    "target": target,
+                    "global_stop": COLLECTOR_GLOBAL_STOP_FLAG.exists(),
+                }, default=str).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path.startswith("/api/collector/range_stats"):
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                from urllib.parse import urlparse, parse_qs
+                q = parse_qs(urlparse(self.path).query)
+                ds = (q.get("start", [""])[0] or "").strip() or None
+                de = (q.get("end", [""])[0] or "").strip() or None
+                rs_conn = sqlite3.connect(str(DB_PATH), timeout=30)
+                rs_conn.row_factory = sqlite3.Row
+                try:
+                    where = []
+                    params = []
+                    if ds:
+                        where.append("date_str >= ?")
+                        params.append(ds)
+                    if de:
+                        where.append("date_str <= ?")
+                        params.append(de)
+                    where_sql = " AND ".join(where) if where else "1=1"
+                    total = rs_conn.execute(
+                        f"SELECT COUNT(*) AS c FROM processed_pdfs WHERE {where_sql}",
+                        params,
+                    ).fetchone()["c"]
+                    done = rs_conn.execute(
+                        f"SELECT COUNT(*) AS c FROM processed_pdfs WHERE {where_sql} AND clipped = 1",
+                        params,
+                    ).fetchone()["c"]
+                    total_all = rs_conn.execute(
+                        "SELECT COUNT(*) AS c FROM processed_pdfs"
+                    ).fetchone()["c"]
+                finally:
+                    rs_conn.close()
+                remain = max(total - done, 0)
+                self.wfile.write(json.dumps({
+                    "start": ds,
+                    "end": de,
+                    "total": total,
+                    "done": done,
+                    "remain": remain,
+                    "total_all": total_all,
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/account_stats":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                conn = get_db()
+                try:
+                    # Per-account URL gathering counts
+                    # Check if daily tracking columns exist in accounts table
+                    has_daily_cols = False
+                    try:
+                        col_info = conn.execute("PRAGMA table_info(accounts)").fetchall()
+                        col_names = {c["name"] for c in col_info}
+                        has_daily_cols = "urls_today" in col_names
+                    except Exception:
+                        pass
+                    if has_daily_cols:
+                        rows = conn.execute("""
+                            SELECT a.email, a.active, a.in_use_by, a.in_use_pid,
+                                   a.total_clips, a.last_clip_time,
+                                   COALESCE(g.gathered, 0) AS urls_gathered,
+                                   g.last_gathered_time AS join_last_gathered_time,
+                                   a.urls_today, a.urls_today_date,
+                                   a.last_gathered_time AS acct_last_gathered_time,
+                                   a.total_urls_gathered
+                            FROM accounts a
+                            LEFT JOIN (
+                                SELECT gathered_by, COUNT(*) AS gathered,
+                                       MAX(processed_at) AS last_gathered_time
+                                FROM processed_pdfs
+                                WHERE gathered_by IS NOT NULL AND gathered_by != ''
+                                GROUP BY gathered_by
+                            ) g ON g.gathered_by = a.email
+                            WHERE a.active = 1
+                            ORDER BY a.email
+                        """).fetchall()
+                    else:
+                        rows = conn.execute("""
+                            SELECT a.email, a.active, a.in_use_by, a.in_use_pid,
+                                   a.total_clips, a.last_clip_time,
+                                   COALESCE(g.gathered, 0) AS urls_gathered,
+                                   g.last_gathered_time
+                            FROM accounts a
+                            LEFT JOIN (
+                                SELECT gathered_by, COUNT(*) AS gathered,
+                                       MAX(processed_at) AS last_gathered_time
+                                FROM processed_pdfs
+                                WHERE gathered_by IS NOT NULL AND gathered_by != ''
+                                GROUP BY gathered_by
+                            ) g ON g.gathered_by = a.email
+                            WHERE a.active = 1
+                            ORDER BY a.email
+                        """).fetchall()
+                    # Get actively collecting accounts from collector_instances
+                    collecting_emails = set()
+                    try:
+                        ci_rows = conn.execute(
+                            "SELECT account_email FROM collector_instances "
+                            "WHERE status IN ('running', 'logging-in', 'starting')"
+                        ).fetchall()
+                        for ci in ci_rows:
+                            if ci["account_email"]:
+                                collecting_emails.add(ci["account_email"])
+                    except Exception:
+                        pass
+                finally:
+                    conn.close()
+                accounts = []
+                for r in rows:
+                    acct = {
+                        "email": r["email"],
+                        "active": r["active"],
+                        "in_use_by": r["in_use_by"],
+                        "in_use_pid": r["in_use_pid"],
+                        "total_clips": r["total_clips"],
+                        "last_clip_time": r["last_clip_time"],
+                        "urls_gathered": r["urls_gathered"],
+                        "is_collecting": r["email"] in collecting_emails,
+                    }
+                    if has_daily_cols:
+                        acct["urls_today"] = r["urls_today"] or 0
+                        acct["urls_today_date"] = r["urls_today_date"]
+                        acct["last_gathered_time"] = r["acct_last_gathered_time"] or r["join_last_gathered_time"]
+                        acct["total_urls_gathered"] = r["total_urls_gathered"] or 0
+                    else:
+                        acct["last_gathered_time"] = r["last_gathered_time"]
+                    accounts.append(acct)
+                self.wfile.write(json.dumps({
+                    "accounts": accounts,
+                    "collecting_emails": list(collecting_emails),
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/log":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                coll_log_dir = BASE_DIR / "collector_logs"
+                log_files = sorted(glob.glob(str(coll_log_dir / "collector_*.log")), key=os.path.getmtime, reverse=True)
+                if log_files:
+                    with open(log_files[0], "r", encoding="utf-8", errors="replace") as f:
+                        all_lines = f.readlines()
+                        tail = all_lines[-500:]
+                        lines = "".join(reversed(tail))
+                else:
+                    lines = "No collector log files found."
+                self.wfile.write(json.dumps({"lines": lines}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
         elif self.path == "/api/collector/last-noarticle-date":
             self.send_response(200)
             self.send_header("Content-type", "application/json")
@@ -1826,6 +2258,22 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                         conn2.execute("UPDATE clipper_state SET value = '' WHERE key = 'collector_pid'")
                         conn2.commit()
                         conn2.close()
+                    except Exception:
+                        pass
+                # Add actual URL count from DB for the active date range
+                ds = status.get("date_start", "")
+                de = status.get("date_end", "")
+                if ds and de:
+                    try:
+                        cnt_conn = get_db()
+                        try:
+                            status["urls_in_range"] = cnt_conn.execute(
+                                "SELECT COUNT(*) FROM processed_pdfs "
+                                "WHERE date_str >= ? AND date_str <= ?",
+                                (ds, de),
+                            ).fetchone()[0]
+                        finally:
+                            cnt_conn.close()
                     except Exception:
                         pass
                 self.wfile.write(json.dumps(status).encode())
@@ -2225,10 +2673,29 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             self.end_headers()
             try:
                 conn = get_db()
-                conn.execute("""
-                    UPDATE accounts SET clips_this_session=0, updated_at=datetime('now','localtime')
-                    WHERE id=?
-                """, (body["id"],))
+                # Check if daily tracking columns exist before clearing them
+                reset_daily = False
+                try:
+                    col_info = conn.execute("PRAGMA table_info(accounts)").fetchall()
+                    col_names = {c["name"] for c in col_info}
+                    reset_daily = "urls_today" in col_names
+                except Exception:
+                    pass
+                if reset_daily:
+                    conn.execute("""
+                        UPDATE accounts SET
+                        last_error=NULL, last_error_time=NULL, last_error_screenshot=NULL,
+                        urls_today=0, urls_today_date=NULL, last_gathered_time=NULL,
+                        updated_at=datetime('now','localtime')
+                        WHERE id=?
+                    """, (body["id"],))
+                else:
+                    conn.execute("""
+                        UPDATE accounts SET
+                        last_error=NULL, last_error_time=NULL, last_error_screenshot=NULL,
+                        updated_at=datetime('now','localtime')
+                        WHERE id=?
+                    """, (body["id"],))
                 conn.commit()
                 conn.close()
                 self.wfile.write(json.dumps({"ok": True}).encode())
@@ -2349,15 +2816,22 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 _set_state("instances_target", target)
                 _set_state("instances_date_start", date_start)
                 _set_state("instances_date_end", date_end)
-                # Clear global stop flag when setting a positive target,
-                # otherwise autoscale_tick and _spawn_instance will refuse to run.
                 if target > 0:
+                    # Clear global stop flag when setting a positive target,
+                    # otherwise autoscale_tick and _spawn_instance will refuse to run.
                     try:
                         if GLOBAL_STOP_FLAG.exists():
                             if GLOBAL_STOP_FLAG.is_dir():
                                 GLOBAL_STOP_FLAG.rmdir()
                             else:
                                 GLOBAL_STOP_FLAG.unlink()
+                    except Exception:
+                        pass
+                else:
+                    # Target=0: set global stop flag to prevent any new spawns
+                    # and ensure all instances stop promptly.
+                    try:
+                        GLOBAL_STOP_FLAG.mkdir(exist_ok=True)
                     except Exception:
                         pass
                 # If lowering target, stop the oldest extras immediately.
@@ -2379,6 +2853,15 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                         try:
                             _instance_stop_flag(r["slot_id"]).mkdir(exist_ok=True)
                             stopped.append(r["slot_id"])
+                        except Exception:
+                            pass
+                if target == 0 and current > 0:
+                    # Belt-and-suspenders: set per-slot flags for ALL instances
+                    for r in rows:
+                        try:
+                            _instance_stop_flag(r["slot_id"]).mkdir(exist_ok=True)
+                            if r["slot_id"] not in stopped:
+                                stopped.append(r["slot_id"])
                         except Exception:
                             pass
                 # Trigger an immediate autoscale tick to spawn if needed.
@@ -2754,14 +3237,12 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                     ).encode())
                     return
                 email = acct["email"]
-                password = acct["password"]
-                # Spawn collector subprocess
+                # Spawn new collector (uses browser_session for login/rotation)
                 cmd = [
-                    "python", "collect_search_results.py",
+                    "python", "collect_urls.py",
                     "--start", date_start,
                     "--end", date_end,
-                    "--email", email,
-                    "--password", password,
+                    "--account", email,
                     "--restart-every", str(restart_every),
                     "--max-urls", str(max_urls),
                 ]
@@ -2802,6 +3283,148 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                     "ok": True,
                     "message": "Stop flag set. Collector will stop after current batch.",
                 }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/instances/set_target":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                try:
+                    target = int(body.get("target", 0))
+                except Exception:
+                    target = 0
+                target = max(0, target)
+                date_start = (body.get("date_start") or "").strip()
+                date_end = (body.get("date_end") or "").strip()
+                max_urls = int(body.get("max_urls", 1500) or 1500)
+                restart_every = int(body.get("restart_every", 100) or 100)
+                _set_state("collector_instances_target", target)
+                _set_state("collector_instances_date_start", date_start)
+                _set_state("collector_instances_date_end", date_end)
+                _set_state("collector_instances_max_urls", max_urls)
+                _set_state("collector_instances_restart_every", restart_every)
+                if target > 0:
+                    try:
+                        if COLLECTOR_GLOBAL_STOP_FLAG.exists():
+                            if COLLECTOR_GLOBAL_STOP_FLAG.is_dir():
+                                import shutil as _sh
+                                _sh.rmtree(COLLECTOR_GLOBAL_STOP_FLAG, ignore_errors=True)
+                            else:
+                                COLLECTOR_GLOBAL_STOP_FLAG.unlink()
+                    except Exception:
+                        pass
+                    try:
+                        _legacy = RUNTIME_DIR / "stop_collector"
+                        if _legacy.exists():
+                            import shutil as _sh2
+                            if _legacy.is_dir():
+                                _sh2.rmtree(_legacy, ignore_errors=True)
+                            else:
+                                _legacy.unlink()
+                    except Exception:
+                        pass
+                else:
+                    # Target=0: set global stop flag and per-slot flags
+                    try:
+                        COLLECTOR_GLOBAL_STOP_FLAG.mkdir(exist_ok=True)
+                    except Exception:
+                        pass
+                    try:
+                        _cconn = get_db()
+                        _cslots = [r[0] for r in _cconn.execute(
+                            "SELECT slot_id FROM collector_instances"
+                        ).fetchall()]
+                        _cconn.close()
+                        for _csid in _cslots:
+                            try:
+                                _collector_instance_stop_flag(_csid).touch()
+                            except Exception:
+                                pass
+                    except Exception:
+                        pass
+                self.wfile.write(json.dumps({
+                    "ok": True, "target": target,
+                    "date_start": date_start, "date_end": date_end,
+                }).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/instances/stop":
+            content_len = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(content_len)) if content_len else {}
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                slot = body.get("slot_id", "")
+                if slot:
+                    flag = _collector_instance_stop_flag(slot)
+                    RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+                    flag.touch()
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/instances/stop_all":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                _set_state("collector_instances_target", "0")
+                RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+                COLLECTOR_GLOBAL_STOP_FLAG.touch()
+                (RUNTIME_DIR / "stop_collector").mkdir(exist_ok=True)
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/instances/clear_stop_all":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                if COLLECTOR_GLOBAL_STOP_FLAG.exists():
+                    COLLECTOR_GLOBAL_STOP_FLAG.unlink()
+                _legacy = RUNTIME_DIR / "stop_collector"
+                if _legacy.exists():
+                    import shutil as _shutil2
+                    if _legacy.is_dir():
+                        _shutil2.rmtree(_legacy, ignore_errors=True)
+                    else:
+                        _legacy.unlink()
+                self.wfile.write(json.dumps({"ok": True}).encode())
+            except Exception as e:
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+        elif self.path == "/api/collector/instances/reset_stale":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            try:
+                _set_state("collector_instances_target", "0")
+                RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+                COLLECTOR_GLOBAL_STOP_FLAG.touch()
+                conn = get_db()
+                try:
+                    rows = conn.execute("SELECT slot_id, pid FROM collector_instances").fetchall()
+                    killed = []
+                    for r in rows:
+                        pid = int(r["pid"] or 0)
+                        if pid and _pid_alive(pid):
+                            try:
+                                os.kill(pid, signal.SIGTERM)
+                                killed.append(pid)
+                            except Exception:
+                                pass
+                    conn.execute("DELETE FROM collector_instances")
+                    conn.commit()
+                finally:
+                    conn.close()
+                self.wfile.write(json.dumps({"ok": True, "killed": killed}).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"error": str(e)}).encode())
         elif self.path == "/api/auto-ignore/start":
@@ -2882,6 +3505,9 @@ def main():
     _t = _threading.Thread(target=_autoscale_loop, daemon=True)
     _t.start()
     print("Autoscale thread started (30s tick).")
+    _ct = _threading.Thread(target=_collector_autoscale_loop, daemon=True)
+    _ct.start()
+    print("Collector autoscale thread started (30s tick).")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

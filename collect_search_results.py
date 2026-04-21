@@ -126,6 +126,59 @@ def update_url(conn, pdf_filename, url):
         conn.commit()
 
 
+def update_collector_account_stats(email, urls_added=0):
+    """Update daily URL counter on the accounts table, matching the clipper's
+    clips_today / clips_today_date pattern.
+
+    Ensures columns: urls_today, urls_today_date, last_gathered_time, total_urls_gathered.
+    Auto-resets urls_today to 0 when urls_today_date != today.
+    """
+    if not email or urls_added <= 0:
+        return
+    conn = sqlite3.connect(DB_PATH, timeout=30)
+    conn.row_factory = sqlite3.Row
+    try:
+        tables = [r[0] for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table'"
+        ).fetchall()]
+        if "accounts" not in tables:
+            return
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(accounts)").fetchall()]
+        if "urls_today" not in cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN urls_today INTEGER DEFAULT 0")
+            conn.commit()
+        if "urls_today_date" not in cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN urls_today_date TEXT")
+            conn.commit()
+        if "last_gathered_time" not in cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN last_gathered_time TEXT")
+            conn.commit()
+        if "total_urls_gathered" not in cols:
+            conn.execute("ALTER TABLE accounts ADD COLUMN total_urls_gathered INTEGER DEFAULT 0")
+            conn.commit()
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        today = datetime.now().strftime("%Y-%m-%d")
+        # Reset urls_today if the stored date isn't today
+        conn.execute("""
+            UPDATE accounts SET urls_today = 0, urls_today_date = ?
+             WHERE email = ? AND (urls_today_date IS NULL OR urls_today_date != ?)
+        """, (today, email, today))
+        # Increment daily and lifetime counters
+        conn.execute("""
+            UPDATE accounts SET
+                urls_today = urls_today + ?,
+                urls_today_date = ?,
+                last_gathered_time = ?,
+                total_urls_gathered = COALESCE(total_urls_gathered, 0) + ?
+            WHERE email = ?
+        """, (urls_added, today, now, urls_added, email))
+        conn.commit()
+    except Exception as e:
+        log.warning(f"  update_collector_account_stats failed: {e}")
+    finally:
+        conn.close()
+
+
 def reserve_account(email):
     """Mark an account as in-use by the collector."""
     conn = sqlite3.connect(DB_PATH, timeout=30)
@@ -156,35 +209,39 @@ def release_account(email):
 
 
 # === BROWSER ===
+# These functions are aligned with clip_and_extract.py's proven browser code.
 
-def _clean_profile_locks():
+
+def _clean_chrome_profile_locks(profile_dir):
     """Remove Chrome singleton lock files that prevent a clean new browser launch."""
     for lock_name in ("SingletonLock", "SingletonCookie", "SingletonSocket"):
-        lock_path = PROFILE_DIR / lock_name
+        lock_path = os.path.join(str(profile_dir), lock_name)
         try:
-            if lock_path.exists():
-                lock_path.unlink()
+            if os.path.exists(lock_path):
+                os.remove(lock_path)
                 log.info(f"  Removed stale lock: {lock_path}")
         except Exception as e:
             log.warning(f"  Could not remove {lock_path}: {e}")
 
 
-def _patch_chrome_preferences():
+def _patch_chrome_preferences(profile_dir):
     """Patch Chrome Preferences to prevent session restore / crash bubble."""
     import json as _json
-    prefs_path = PROFILE_DIR / "Default" / "Preferences"
+    prefs_path = os.path.join(str(profile_dir), "Default", "Preferences")
     prefs = {}
-    if prefs_path.is_file():
+    if os.path.isfile(prefs_path):
         try:
-            prefs = _json.loads(prefs_path.read_text(encoding="utf-8"))
+            with open(prefs_path, "r", encoding="utf-8") as f:
+                prefs = _json.load(f)
         except Exception:
             prefs = {}
     prefs.setdefault("profile", {})
     prefs["profile"]["exit_type"] = "none"
     prefs["profile"]["exited_cleanly"] = True
-    os.makedirs(prefs_path.parent, exist_ok=True)
+    os.makedirs(os.path.dirname(prefs_path), exist_ok=True)
     try:
-        prefs_path.write_text(_json.dumps(prefs), encoding="utf-8")
+        with open(prefs_path, "w", encoding="utf-8") as f:
+            _json.dump(prefs, f)
         log.info("  Patched Chrome Preferences: exit_type=none, exited_cleanly=true")
     except Exception as e:
         log.warning(f"  Could not patch Chrome Preferences: {e}")
@@ -213,63 +270,94 @@ def _kill_chrome_for_profile():
         pass
 
 
-def setup_driver():
-    # Kill any leftover Chrome using our profile
-    _kill_chrome_for_profile()
-    time.sleep(1)
-    # Keep profile (like clipper) — just clean locks and patch prefs
-    os.makedirs(PROFILE_DIR, exist_ok=True)
-    _clean_profile_locks()
-    _patch_chrome_preferences()
-    driver = Driver(
-        uc=True, headed=True,
-        user_data_dir=str(PROFILE_DIR),
-        chromium_arg="--disable-session-crashed-bubble",
-    )
+def is_cloudflare(driver):
+    """Check if the current page is a Cloudflare challenge.
+    Aligned with clipper: checks both title and body text."""
     try:
-        driver.set_window_size(1920, 1080)
+        title = (driver.title or "").lower()
+        if "just a moment" in title:
+            return True
+        page_text = driver.execute_script("return document.body.innerText || '';").lower()
+        if "security verification" in page_text or "checking if the site connection is secure" in page_text:
+            return True
     except Exception:
         pass
-    try:
-        driver.maximize_window()
-    except Exception:
-        pass
-    driver.implicitly_wait(5)
-    # Initial navigation — match clipper: go to star-telegram subdomain
-    driver.uc_open_with_reconnect("https://star-telegram.newspapers.com/", 4)
-    _close_extra_tabs(driver)
+    return False
+
+
+def solve_cloudflare(driver, max_attempts=20):
+    """Detect and solve Cloudflare challenge. Returns True if solved or no challenge.
+    Aligned with clipper: up to 20 attempts with detailed logging."""
+    if not is_cloudflare(driver):
+        return True
+    log.info("  Cloudflare challenge detected — solving...")
+    for attempt in range(max_attempts):
+        try:
+            driver.uc_gui_click_captcha()
+            time.sleep(3)
+            if not is_cloudflare(driver):
+                log.info(f"  Cloudflare solved (attempt {attempt + 1})")
+                return True
+            log.info(f"  Cloudflare still present after click {attempt + 1}/{max_attempts}")
+        except Exception as e:
+            log.warning(f"  Cloudflare solve error: {e}")
+        time.sleep(2)
+    log.warning(f"  Could not solve Cloudflare after {max_attempts} attempts")
+    return False
+
+
+def navigate(driver, url):
+    """Navigate to URL and handle Cloudflare if it appears."""
+    driver.get(url)
     time.sleep(3)
-    # Always attempt cloudflare solve (like clipper)
-    _solve_cloudflare(driver)
-    return driver
+    if is_cloudflare(driver):
+        if not solve_cloudflare(driver):
+            return False
+    return True
 
 
-def _is_cloudflare(driver):
-    """Check if the current page is a Cloudflare challenge."""
+def close_extra_tabs(driver):
+    """Close every browser tab except the currently focused one.
+    Aligned with clipper: re-maximizes surviving tab, handles edge cases."""
     try:
-        page_text = driver.execute_script(
-            "return document.body ? document.body.innerText : '';"
-        ).lower()
-        return ("security verification" in page_text
-                or "checking if the site connection is secure" in page_text
-                or "just a moment" in page_text)
-    except Exception:
-        return False
+        handles = driver.window_handles
+        closed_any = len(handles) > 1
+        if closed_any:
+            current = driver.current_window_handle
+            for h in handles:
+                if h == current:
+                    continue
+                try:
+                    driver.switch_to.window(h)
+                    driver.close()
+                except Exception:
+                    pass
+            try:
+                driver.switch_to.window(current)
+            except Exception:
+                remaining = driver.window_handles
+                if remaining:
+                    driver.switch_to.window(remaining[0])
+        # Re-maximize — new tabs from uc_open_with_reconnect don't inherit
+        # the maximized state from the original tab.
+        try:
+            driver.maximize_window()
+        except Exception:
+            pass
+    except Exception as e:
+        log.info(f"  close_extra_tabs skipped: {e}")
 
 
-def _detect_logged_in_account(driver, expected_email=None):
-    """Verify login by checking the account page for an email address."""
+def _detect_logged_in_account(driver):
+    """Try to detect which account is currently logged in by checking the page for user info.
+    Aligned with clipper's _detect_logged_in_account."""
     try:
-        driver.execute_script(
-            "window.location.href = 'https://www.newspapers.com/account/';"
-        )
+        driver.execute_script("window.location.href = 'https://www.newspapers.com/account/';")
         time.sleep(3)
-        if _is_cloudflare(driver):
-            _solve_cloudflare(driver)
+        if is_cloudflare(driver):
+            solve_cloudflare(driver)
             time.sleep(2)
-        page_text = driver.execute_script(
-            "return document.body ? document.body.innerText : '';"
-        )
+        page_text = driver.execute_script("return document.body.innerText || '';")
         emails = re.findall(r'[\w.+-]+@[\w-]+\.[\w.-]+', page_text)
         if emails:
             log.info(f"  Detected logged-in account: {emails[0]}")
@@ -280,51 +368,49 @@ def _detect_logged_in_account(driver, expected_email=None):
     return None
 
 
-def _solve_cloudflare(driver):
-    """Attempt to solve Cloudflare challenge."""
-    for attempt in range(3):
-        try:
-            driver.uc_gui_click_captcha()
-            time.sleep(5)
-            if not _is_cloudflare(driver):
-                return True
-        except Exception:
-            time.sleep(2)
-    return False
-
-
-def _close_extra_tabs(driver):
-    """Close any extra tabs, keeping only the current one."""
+def setup_driver():
+    """Create browser, navigate to newspapers.com, handle Cloudflare.
+    Aligned with clipper's setup_driver."""
+    # Kill any leftover Chrome using our profile
+    _kill_chrome_for_profile()
+    time.sleep(1)
+    # Keep profile (like clipper) — just clean locks and patch prefs
+    os.makedirs(PROFILE_DIR, exist_ok=True)
+    _clean_chrome_profile_locks(str(PROFILE_DIR))
+    _patch_chrome_preferences(str(PROFILE_DIR))
+    driver = Driver(
+        uc=True, headed=True,
+        user_data_dir=str(PROFILE_DIR),
+        chromium_arg="--disable-session-crashed-bubble",
+    )
+    driver.set_window_size(1920, 1080)
     try:
-        handles = driver.window_handles
-        if len(handles) > 1:
-            current = driver.current_window_handle
-            for h in handles:
-                if h != current:
-                    driver.switch_to.window(h)
-                    driver.close()
-            driver.switch_to.window(current)
+        driver.maximize_window()
     except Exception:
         pass
+    driver.implicitly_wait(5)
+    # Initial navigation — match clipper: go to star-telegram subdomain
+    driver.uc_open_with_reconnect("https://star-telegram.newspapers.com/", 4)
+    close_extra_tabs(driver)
+    time.sleep(3)
+    solve_cloudflare(driver)
+    return driver
 
 
 def do_login(driver, email, password):
-    """Login to newspapers.com. Matches the proven clipper login flow."""
+    """Login to newspapers.com. Aligned with clipper's proven do_login flow."""
     log.info(f"  Logging in as {email}...")
 
-    # Navigate to sign-in page
+    # Navigate to sign-in page — use uc_open_with_reconnect for Cloudflare bypass
+    log.info("  Navigating to sign-in page...")
     try:
-        driver.uc_open_with_reconnect(
-            "https://www.newspapers.com/signin/", 4
-        )
+        driver.uc_open_with_reconnect("https://www.newspapers.com/signin/", 4)
     except Exception:
-        driver.execute_script(
-            "window.location.href = 'https://www.newspapers.com/signin/';"
-        )
-    _close_extra_tabs(driver)
+        driver.execute_script("window.location.href = 'https://www.newspapers.com/signin/';")
+    close_extra_tabs(driver)
     time.sleep(5)
 
-    # Dismiss subscription nag modal if present
+    # Dismiss subscription / upsell nag modal if present
     try:
         nag_js = r"""
             const wanted = ['sign in','log in','sign-in','log-in'];
@@ -357,53 +443,52 @@ def do_login(driver, email, password):
             if driver.find_elements(By.CSS_SELECTOR, "input[type='password']"):
                 break
             try:
-                if driver.execute_script(nag_js):
-                    log.info("  Dismissed subscription nag modal.")
-                    time.sleep(2)
-                    break
+                nag_clicked = bool(driver.execute_script(nag_js))
             except Exception:
-                pass
+                nag_clicked = False
+            if nag_clicked:
+                log.info("  Dismissed subscription nag (clicked in-modal Sign in).")
+                time.sleep(2)
+                break
             time.sleep(1)
-    except Exception:
-        pass
+    except Exception as e:
+        log.info(f"  Nag-dismiss scan skipped: {e}")
 
-    # Handle Cloudflare challenge
-    if _is_cloudflare(driver):
-        log.info("  Cloudflare challenge on sign-in — solving...")
-        _solve_cloudflare(driver)
+    # Handle full-page Cloudflare challenge (first gate)
+    if is_cloudflare(driver):
+        log.info("  Full-page Cloudflare on sign-in — solving...")
+        if not solve_cloudflare(driver):
+            log.warning("  Cloudflare on sign-in page could not be solved.")
+            return False
         time.sleep(3)
 
-    # Wait for login form
+    # Wait for login form to render
     has_form = False
     for _ in range(15):
-        if driver.find_elements(By.CSS_SELECTOR,
-                "input[type='password'], input[name='email']"):
+        if len(driver.find_elements(By.CSS_SELECTOR, "input[type='password'], input[name='email']")) > 0:
             has_form = True
             break
-        if _is_cloudflare(driver):
-            _solve_cloudflare(driver)
+        if is_cloudflare(driver):
+            solve_cloudflare(driver)
         time.sleep(1)
 
     if not has_form:
-        page_text = driver.execute_script(
-            "return document.body ? document.body.innerText : '';"
-        ).lower()
+        # Maybe already logged in from cookies — verify
+        page_text = driver.execute_script("return document.body.innerText || '';").lower()
         if "sign in" not in page_text and "log in" not in page_text:
-            # Verify actually logged in by checking account page
-            detected = _detect_logged_in_account(driver, email)
+            detected = _detect_logged_in_account(driver)
             if detected:
-                log.info(f"  Already logged in as {detected}.")
+                log.info(f"  Already logged in as {detected} (session restored).")
                 return True
             log.warning("  Not actually logged in — no account detected.")
             return False
-        log.warning("  No login form found.")
+        log.warning("  No login form found on sign-in page.")
         return False
 
     # Enter email
     try:
         email_field = None
-        for sel in ["input[name='email']", "input[id='email']",
-                     "input[type='email']", "input[type='text']"]:
+        for sel in ["input[name='email']", "input[id='email']", "input[type='email']", "input[type='text']"]:
             fields = driver.find_elements(By.CSS_SELECTOR, sel)
             for f in fields:
                 if f.is_displayed():
@@ -505,23 +590,23 @@ def do_login(driver, email, password):
     time.sleep(3)
 
     # Handle Cloudflare after submission
-    if _is_cloudflare(driver):
-        _solve_cloudflare(driver)
+    if is_cloudflare(driver):
+        solve_cloudflare(driver)
         time.sleep(3)
 
     # Wait for redirect away from sign-in page
     for _ in range(15):
         if "signin" not in driver.current_url.lower():
             break
-        if _is_cloudflare(driver):
-            _solve_cloudflare(driver)
+        if is_cloudflare(driver):
+            solve_cloudflare(driver)
         time.sleep(1)
 
     if "signin" in driver.current_url.lower():
         log.warning("  LOGIN FAILED — still on sign-in page.")
         return False
 
-    log.info(f"  Login successful as {email}.")
+    log.info(f"  LOGIN SUCCESS as {email}")
     return True
 
 
@@ -725,7 +810,7 @@ def download_thumbnails(driver, entries):
     return results
 
 
-def run_session(conn, driver, start_date, end_date, restart_every):
+def run_session(conn, driver, start_date, end_date, restart_every, gathered_by=""):
     """Collect URLs from search results. Returns (new_entries, latest_date).
 
     Stays on the search results page, scrolling/loading more results.
@@ -735,12 +820,12 @@ def run_session(conn, driver, start_date, end_date, restart_every):
     log.info(f"  Search: {start_date} to {end_date}")
     log.info(f"  URL: {search_url}")
 
-    _close_extra_tabs(driver)
+    close_extra_tabs(driver)
     try:
         driver.get(search_url)
     except Exception as e:
         log.warning(f"  driver.get failed ({e}), retrying with JS navigation...")
-        _close_extra_tabs(driver)
+        close_extra_tabs(driver)
         try:
             driver.execute_script(f"window.location.href = '{search_url}';")
         except Exception as e2:
@@ -833,6 +918,10 @@ def run_session(conn, driver, start_date, end_date, restart_every):
         log.info(
             f"  Batch: {batch_new} new, {len(new_results) - batch_new} skipped"
         )
+
+        # Update daily account stats for this batch
+        if batch_new > 0 and gathered_by:
+            update_collector_account_stats(gathered_by, urls_added=batch_new)
 
         # Throttle detection: many results but nothing new to save
         if batch_new == 0 and len(new_results) > 0:
@@ -959,7 +1048,8 @@ def main():
             try:
                 consecutive_failures = 0
                 new, latest = run_session(
-                    conn, driver, resume_date, args.end, args.restart_every
+                    conn, driver, resume_date, args.end, args.restart_every,
+                    gathered_by=args.email,
                 )
                 total_new += new
 
@@ -969,14 +1059,38 @@ def main():
                     f"(total: {total_new}, at {latest})"
                 )
 
-                # Check URL limit
-                if args.max_urls and total_new >= args.max_urls:
-                    log.info(
-                        f"  URL LIMIT REACHED: {total_new} >= {args.max_urls}. "
-                        f"Switch account and restart."
-                    )
-                    write_status(status="limit_reached", new_entries=total_new)
-                    break
+                # Check daily URL limit from account stats
+                if args.max_urls and args.email:
+                    try:
+                        _ac = sqlite3.connect(DB_PATH, timeout=30)
+                        _ac.row_factory = sqlite3.Row
+                        _row = _ac.execute(
+                            "SELECT urls_today, urls_today_date, last_gathered_time "
+                            "FROM accounts WHERE email = ?",
+                            (args.email,),
+                        ).fetchone()
+                        _ac.close()
+                        _today = datetime.now().strftime("%Y-%m-%d")
+                        if (_row and _row["urls_today_date"] == _today
+                                and (_row["urls_today"] or 0) >= args.max_urls):
+                            # Check 24h safety valve
+                            _eligible = False
+                            if _row["last_gathered_time"]:
+                                try:
+                                    _ldt = datetime.strptime(_row["last_gathered_time"], "%Y-%m-%d %H:%M:%S")
+                                    if (datetime.now() - _ldt).total_seconds() >= 86400:
+                                        _eligible = True
+                                except Exception:
+                                    pass
+                            if not _eligible:
+                                log.info(
+                                    f"  DAILY LIMIT REACHED: {_row['urls_today']} >= {args.max_urls}. "
+                                    f"Switch account and restart."
+                                )
+                                write_status(status="limit_reached", new_entries=total_new)
+                                break
+                    except Exception as _e:
+                        log.warning(f"  Daily limit check failed: {_e}")
 
                 if new == 0:
                     # Advance past current date to avoid getting stuck
