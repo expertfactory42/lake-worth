@@ -8,7 +8,7 @@ from surya.recognition import RecognitionPredictor
 from surya.detection import DetectionPredictor
 
 # Pick a page we know mentions Lake Worth
-pdf_path = r"c:\lake_worth\pdfs\Fort_Worth_Star_Telegram_1914_02_02_2.pdf"
+pdf_path = r"c:\lake_worth_runtime\pdfs\Fort_Worth_Star_Telegram_1914_02_02_2.pdf"
 
 # Render PDF to image at 300 DPI
 doc = fitz.open(pdf_path)

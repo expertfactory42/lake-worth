@@ -36,7 +36,7 @@ import anthropic
 # ---------------------------------------------------------------------------
 
 BASE_DIR = Path(r"C:\lake_worth")
-PDF_DIR = BASE_DIR / "pdfs"
+PDF_DIR = Path(r"C:\lake_worth_runtime") / "pdfs"
 IMAGE_DIR = BASE_DIR / "images"
 DB_PATH = BASE_DIR / "lake_worth.db"
 CACHE_DIR = BASE_DIR / "docupipe_cache"

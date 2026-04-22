@@ -17,8 +17,13 @@ Usage:
     session.shutdown(driver)
 """
 
+import base64
+import ctypes
+import io as _io
+import json
 import logging
 import os
+import random
 import re
 import sqlite3
 import subprocess
@@ -26,6 +31,8 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+import anthropic
+from PIL import Image as _Image, ImageDraw as _ImageDraw
 from seleniumbase import Driver
 from selenium.webdriver.common.by import By
 
@@ -329,6 +336,369 @@ def detect_logged_in_account(driver):
 
 
 # ---------------------------------------------------------------------------
+# 3-tier Turnstile solver (ported from clip_and_extract.py)
+# ---------------------------------------------------------------------------
+
+_TURNSTILE_CALIB_FILE = os.path.join(r"c:\lake_worth_runtime", "turnstile_calibration.json")
+_TURNSTILE_LOG_DIR = r"c:\lake_worth\collector_logs"
+
+
+def _ts_ask_claude(image_path, prompt):
+    """Call Claude vision API with an image and prompt."""
+    with open(image_path, "rb") as f:
+        img_b64 = base64.standard_b64encode(f.read()).decode("utf-8")
+    client = anthropic.Anthropic()
+    resp = client.messages.create(
+        model="claude-haiku-4-5-20251001", max_tokens=300,
+        messages=[{"role": "user", "content": [
+            {"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": img_b64}},
+            {"type": "text", "text": prompt}
+        ]}])
+    return resp.content[0].text.strip()
+
+
+def _ts_screenshot(driver, path):
+    """Viewport screenshot via Selenium — works at any z-level."""
+    driver.save_screenshot(path)
+
+
+def _ts_screenshot_marker(driver, path, x, y):
+    """Viewport screenshot with a red marker drawn at (x,y)."""
+    png = driver.get_screenshot_as_png()
+    img = _Image.open(_io.BytesIO(png))
+    draw = _ImageDraw.Draw(img)
+    r = 14
+    draw.ellipse([x-r, y-r, x+r, y+r], fill="red", outline="yellow", width=3)
+    draw.line([x-30, y, x+30, y], fill="red", width=3)
+    draw.line([x, y-30, x, y+30], fill="red", width=3)
+    img.save(path)
+
+
+def _ts_parse_coords(text, label):
+    """Parse x,y coordinates from Claude response text."""
+    m = re.search(rf'{label}\s+(\d+)\s*,\s*(\d+)', text, re.IGNORECASE)
+    if m:
+        return int(m.group(1)), int(m.group(2))
+    m = re.search(r'(\d+)\s*,\s*(\d+)', text)
+    if m:
+        return int(m.group(1)), int(m.group(2))
+    return None
+
+
+def _ts_load_calib():
+    """Load calibration cache from disk."""
+    if not os.path.exists(_TURNSTILE_CALIB_FILE):
+        return None
+    try:
+        with open(_TURNSTILE_CALIB_FILE) as f:
+            c = json.load(f)
+        # Invalidate old screen-coordinate calibrations
+        if c.get("coord_space") != "viewport":
+            return None
+        return c
+    except Exception:
+        return None
+
+
+def _ts_save_calib(data):
+    """Save calibration cache to disk."""
+    data["coord_space"] = "viewport"
+    tmp = _TURNSTILE_CALIB_FILE + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(data, f, indent=2)
+    os.replace(tmp, _TURNSTILE_CALIB_FILE)
+
+
+def _ts_jitter(x, y, px=2):
+    """Add random jitter to coordinates."""
+    return x + random.randint(-px, px), y + random.randint(-px, px)
+
+
+def _ts_apply_calib(cx, cy, calib):
+    """Apply scale/offset calibration to Claude-reported coordinates."""
+    return (int(cx * calib.get("scale_x", 1.0) + calib.get("offset_x", 0)),
+            int(cy * calib.get("scale_y", 1.0) + calib.get("offset_y", 0)))
+
+
+def _ts_find_checkbox(driver, stamp):
+    """Find Turnstile checkbox in viewport screenshot. Returns (x,y) in screenshot coords."""
+    shot = os.path.join(_TURNSTILE_LOG_DIR, f"ts_find_{stamp}.png")
+    _ts_screenshot(driver, shot)
+    ans = _ts_ask_claude(shot, (
+        "This is a browser viewport screenshot. "
+        "Is there a Cloudflare 'Verify you are human' checkbox visible? "
+        "If yes, respond with ONLY the pixel coordinates of the CENTER of the "
+        "checkbox square in the format: CHECKBOX x,y\n"
+        "If there is no such checkbox, respond with: NONE"))
+    log.info(f"    Turnstile find: {ans}")
+    return _ts_parse_coords(ans, "CHECKBOX") or _ts_parse_coords(ans, "CLICK")
+
+
+def _ts_probe(driver, ax, ay, stamp, label):
+    """Calibration probe: draw marker and ask Claude where it is."""
+    shot = os.path.join(_TURNSTILE_LOG_DIR, f"ts_{label}_{stamp}.png")
+    _ts_screenshot_marker(driver, shot, ax, ay)
+    ans = _ts_ask_claude(shot, (
+        "This screenshot has a RED CIRCLE WITH CROSSHAIR drawn on it.\n"
+        "Tell me the pixel coordinates of the center of the RED MARKER: MARKER x,y\n"
+        "Respond with ONLY that one line."))
+    log.info(f"    Probe {label} at ({ax},{ay}): Claude sees {ans}")
+    return _ts_parse_coords(ans, "MARKER")
+
+
+def _ts_calibrate(driver, stamp, claude_cb):
+    """Full two-point calibration experiment."""
+    pa = (200, 250)
+    pb = (claude_cb[0], claude_cb[1])
+    ca = _ts_probe(driver, pa[0], pa[1], stamp, "calib_corner")
+    if not ca:
+        return None
+    cb = _ts_probe(driver, pb[0], pb[1], stamp, "calib_target")
+    if not cb:
+        return None
+    dx_a, dy_a = pb[0] - pa[0], pb[1] - pa[1]
+    dx_c, dy_c = cb[0] - ca[0], cb[1] - ca[1]
+    if abs(dx_c) < 10 or abs(dy_c) < 10:
+        return None
+    sx, sy = dx_a / dx_c, dy_a / dy_c
+    ox, oy = pa[0] - ca[0] * sx, pa[1] - ca[1] * sy
+    log.info(f"    Calibration: scale=({sx:.4f},{sy:.4f}) offset=({ox:.1f},{oy:.1f})")
+    return {"scale_x": round(sx, 4), "scale_y": round(sy, 4),
+            "offset_x": round(ox, 1), "offset_y": round(oy, 1),
+            "probe_points": [{"actual": list(pa), "claude_saw": list(ca)},
+                             {"actual": list(pb), "claude_saw": list(cb)}]}
+
+
+def _ts_find_chrome_hwnd(driver):
+    """Find the Chrome window HWND and its render widget child."""
+    user32 = ctypes.windll.user32
+    main_hwnd = [None]
+    try:
+        title = driver.title
+    except Exception:
+        return None, None
+    WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.POINTER(ctypes.c_int), ctypes.POINTER(ctypes.c_int))
+    def _find_main(hwnd, lp):
+        length = user32.GetWindowTextLengthW(hwnd)
+        if length > 0:
+            buf = ctypes.create_unicode_buffer(length + 1)
+            user32.GetWindowTextW(hwnd, buf, length + 1)
+            if title and title[:30] in buf.value:
+                main_hwnd[0] = hwnd
+                return False
+        return True
+    user32.EnumWindows(WNDENUMPROC(_find_main), 0)
+    if not main_hwnd[0]:
+        return None, None
+    render_hwnd = [None]
+    def _find_render(hwnd, lp):
+        cls = ctypes.create_unicode_buffer(256)
+        user32.GetClassNameW(hwnd, cls, 256)
+        if "Chrome_RenderWidgetHostHWND" in cls.value:
+            render_hwnd[0] = hwnd
+            return False
+        return True
+    user32.EnumChildWindows(main_hwnd[0], WNDENUMPROC(_find_render), 0)
+    return main_hwnd[0], render_hwnd[0]
+
+
+def _ts_click(driver, x, y, dpi_scale):
+    """Click at viewport-screenshot coords via PostMessage — no foreground needed."""
+    _main_hwnd, _render_hwnd = _ts_find_chrome_hwnd(driver)
+    _target = _render_hwnd or _main_hwnd
+    if not _target:
+        log.warning("    Could not find Chrome window — cannot click Turnstile")
+        return
+    # Convert screenshot coords to client-area (CSS) coords for PostMessage
+    cx, cy = int(x / dpi_scale), int(y / dpi_scale)
+    log.info(f"    PostMessage click: HWND={_target}, screenshot({x},{y}) -> client({cx},{cy})")
+    WM_MOUSEMOVE = 0x0200
+    WM_LBUTTONDOWN, WM_LBUTTONUP, MK_LBUTTON = 0x0201, 0x0202, 0x0001
+    PostMsg = ctypes.windll.user32.PostMessageW
+
+    # Simulate cursor moving toward the checkbox (human-like approach)
+    jx, jy = _ts_jitter(cx, cy)
+    start_x, start_y = cx - random.randint(80, 150), cy + random.randint(-30, 30)
+    steps = random.randint(12, 20)
+    for i in range(steps):
+        t = (i + 1) / steps
+        # Ease-out curve
+        t = 1 - (1 - t) ** 2
+        mx = int(start_x + (jx - start_x) * t)
+        my = int(start_y + (jy - start_y) * t)
+        mlp = (my & 0xFFFF) << 16 | (mx & 0xFFFF)
+        PostMsg(_target, WM_MOUSEMOVE, 0, mlp)
+        time.sleep(random.uniform(0.01, 0.04))
+    # Hover over checkbox briefly
+    time.sleep(random.uniform(0.3, 0.6))
+    # Click
+    lp = (jy & 0xFFFF) << 16 | (jx & 0xFFFF)
+    PostMsg(_target, WM_LBUTTONDOWN, MK_LBUTTON, lp)
+    time.sleep(random.uniform(0.06, 0.15))
+    PostMsg(_target, WM_LBUTTONUP, 0, lp)
+    log.info(f"    Turnstile clicked at ({jx},{jy}) via PostMessage")
+    # Give Turnstile a moment to process
+    time.sleep(random.uniform(1.5, 2.5))
+
+
+def _ts_check_success(driver, stamp):
+    """Verify the Turnstile checkbox is checked via Claude vision."""
+    shot = os.path.join(_TURNSTILE_LOG_DIR, f"ts_result_{stamp}.png")
+    try:
+        _ts_screenshot(driver, shot)
+        ans = _ts_ask_claude(shot, (
+            "Is the Cloudflare 'Verify you are human' checkbox now CHECKED "
+            "(has a checkmark/tick)? Respond ONLY: CHECKED or UNCHECKED"))
+        log.info(f"    Checkbox status: {ans}")
+        upper = ans.upper()
+        return "CHECKED" in upper and "UNCHECKED" not in upper
+    except Exception:
+        return False
+
+
+def solve_login_turnstile(driver):
+    """3-tier Turnstile solver for the login form.
+
+    Tier 1: Use cached position (fast, 0 API calls)
+    Tier 2: Re-find checkbox using cached scale factor (1-2 API calls)
+    Tier 3: Full two-point calibration experiment (4-5 API calls)
+
+    Returns True if solved or no Turnstile present, False if failed.
+    """
+    os.makedirs(_TURNSTILE_LOG_DIR, exist_ok=True)
+    os.makedirs(os.path.dirname(_TURNSTILE_CALIB_FILE), exist_ok=True)
+
+    close_extra_tabs(driver)
+    try:
+        driver.switch_to.window(driver.current_window_handle)
+    except Exception:
+        pass
+
+    log.info("    Checking for Turnstile on login form...")
+    time.sleep(1.5)
+
+    # Quick JS check — if no Turnstile iframe on the page, skip entirely
+    _has_turnstile = False
+    try:
+        _has_turnstile = driver.execute_script(
+            "return !!document.querySelector('iframe[src*=\"turnstile\"], iframe[src*=\"challenges.cloudflare\"], [id*=\"turnstile\"], .cf-turnstile')"
+        )
+    except Exception:
+        _has_turnstile = True  # Assume present if we can't check
+    if not _has_turnstile:
+        log.info("    No Turnstile detected — skipping checkbox click.")
+        return True
+
+    log.info("    Turnstile detected — proceeding with checkbox click.")
+
+    # Detect DPI scale: screenshot pixels vs CSS viewport pixels
+    _vp_w = driver.execute_script("return window.innerWidth") or 1920
+    _ss_img = None
+    _dpi_scale = None
+
+    _stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    _calib = _ts_load_calib()
+    _turnstile_done = False
+
+    # Tier 1: Fast path — use cached viewport position, skip verification
+    if (_calib and _calib.get("last_click_x") and _calib.get("last_success_time")
+            and _calib.get("viewport_size")
+            and _calib.get("fail_count", 0) < 3):
+        _cached_ss_w = _calib["viewport_size"][0]
+        _dpi_scale = _cached_ss_w / _vp_w if _vp_w else 1.0
+        log.info(f"    Turnstile Tier 1: cached ({_calib['last_click_x']},{_calib['last_click_y']}), DPI={_dpi_scale:.2f} (from cache)")
+        _ts_click(driver, _calib["last_click_x"], _calib["last_click_y"], _dpi_scale)
+        _calib["success_count"] = _calib.get("success_count", 0) + 1
+        _ts_save_calib(_calib)
+        log.info("    Turnstile Tier 1 — clicked, proceeding")
+        _turnstile_done = True
+
+    # For Tier 2/3: take screenshot to detect DPI scale and viewport size
+    if not _turnstile_done:
+        _ss_png = driver.get_screenshot_as_png()
+        _ss_img = _Image.open(_io.BytesIO(_ss_png))
+        _dpi_scale = _ss_img.width / _vp_w if _vp_w else 1.0
+        log.info(f"    Viewport={_vp_w}, Screenshot={_ss_img.width}x{_ss_img.height}, DPI={_dpi_scale:.2f}")
+
+    _viewport_size = (
+        [_calib["viewport_size"][0], _calib["viewport_size"][1]]
+        if (_calib and _calib.get("viewport_size"))
+        else ([_ss_img.width, _ss_img.height] if _ss_img
+              else [int(_vp_w * (_dpi_scale or 1.0)), int(1080 * (_dpi_scale or 1.0))])
+    )
+
+    # Tier 2: Re-find checkbox with existing scale
+    if not _turnstile_done and _calib and _calib.get("scale_x"):
+        log.info(f"    Turnstile Tier 2: re-finding with scale ({_calib['scale_x']},{_calib['scale_y']})")
+        try:
+            driver.refresh()
+            time.sleep(5)
+        except Exception:
+            pass
+        _s2 = datetime.now().strftime("%Y%m%d_%H%M%S")
+        _cb2 = _ts_find_checkbox(driver, _s2)
+        if _cb2:
+            _tx2, _ty2 = _ts_apply_calib(_cb2[0], _cb2[1], _calib)
+            log.info(f"    Claude=({_cb2[0]},{_cb2[1]}) -> viewport=({_tx2},{_ty2})")
+            _ts_click(driver, _tx2, _ty2, _dpi_scale)
+            _s2c = datetime.now().strftime("%Y%m%d_%H%M%S")
+            if _ts_check_success(driver, _s2c):
+                _calib["last_click_x"] = _tx2
+                _calib["last_click_y"] = _ty2
+                _calib["last_success_time"] = datetime.now().isoformat()
+                _calib["success_count"] = _calib.get("success_count", 0) + 1
+                _calib["fail_count"] = 0
+                _ts_save_calib(_calib)
+                log.info("    Turnstile Tier 2 SUCCESS")
+                _turnstile_done = True
+            else:
+                log.info("    Turnstile Tier 2 failed")
+
+    # Tier 3: Full two-point calibration
+    if not _turnstile_done:
+        log.info("    Turnstile Tier 3: full calibration")
+        try:
+            driver.refresh()
+            time.sleep(5)
+        except Exception:
+            pass
+        _s3 = datetime.now().strftime("%Y%m%d_%H%M%S")
+        _cb3 = _ts_find_checkbox(driver, _s3)
+        if _cb3:
+            _cal = _ts_calibrate(driver, _s3, _cb3)
+            if _cal:
+                _tx3, _ty3 = _ts_apply_calib(_cb3[0], _cb3[1], _cal)
+                log.info(f"    Calibrated: Claude=({_cb3[0]},{_cb3[1]}) -> viewport=({_tx3},{_ty3})")
+                _ts_click(driver, _tx3, _ty3, _dpi_scale)
+                _s3c = datetime.now().strftime("%Y%m%d_%H%M%S")
+                _success3 = _ts_check_success(driver, _s3c)
+                _new_calib = {
+                    "scale_x": _cal["scale_x"], "scale_y": _cal["scale_y"],
+                    "offset_x": _cal["offset_x"], "offset_y": _cal["offset_y"],
+                    "probe_points": _cal["probe_points"],
+                    "last_click_x": _tx3, "last_click_y": _ty3,
+                    "calibration_time": datetime.now().isoformat(),
+                    "last_success_time": datetime.now().isoformat() if _success3 else None,
+                    "success_count": 1 if _success3 else 0,
+                    "fail_count": 0 if _success3 else 1,
+                    "viewport_size": _viewport_size,
+                }
+                _ts_save_calib(_new_calib)
+                if _success3:
+                    log.info("    Turnstile Tier 3 SUCCESS")
+                    _turnstile_done = True
+                else:
+                    log.info("    Turnstile Tier 3 FAILED")
+            else:
+                log.warning("    Calibration failed — clicking raw coordinates")
+                _ts_click(driver, _cb3[0], _cb3[1], _dpi_scale)
+        else:
+            log.info("    No Turnstile checkbox found — skipping")
+
+    return _turnstile_done
+
+
+# ---------------------------------------------------------------------------
 # Login / Logout
 # ---------------------------------------------------------------------------
 
@@ -473,93 +843,8 @@ def do_login(driver, email, password):
         log.warning(f"  Password entry failed: {e}")
         return False
 
-    # Solve Cloudflare Turnstile on the login form (screenshot-based)
-    log.info("  Checking for Turnstile on login form...")
-    time.sleep(3)  # Give Turnstile widget time to render
-
-    # Step 1: Screenshot to see if the checkbox is there
-    log_dir = Path(r"c:\lake_worth\collector_logs")
-    log_dir.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    shot1 = str(log_dir / f"turnstile_before_{ts}.png")
-    driver.save_screenshot(shot1)
-    log.info(f"  Turnstile check screenshot: {shot1}")
-
-    page_text = driver.execute_script(
-        "return document.body.innerText || '';"
-    ).lower()
-    if "verify you are human" not in page_text:
-        log.info("  No 'Verify you are human' text — skipping Turnstile.")
-    else:
-        log.info("  'Verify you are human' found — locating checkbox...")
-        import pyautogui
-
-        # Step 2: Calculate click position from page layout
-        # Find the widget container by looking for the element with that text
-        # The checkbox square is at the left edge of the widget
-        widget_info = driver.execute_script("""
-            var els = document.querySelectorAll('*');
-            for (var i = 0; i < els.length; i++) {
-                var el = els[i];
-                if (el.children.length > 10) continue;
-                var t = (el.innerText || '').toLowerCase();
-                if (t.indexOf('verify you are human') > -1
-                    && t.indexOf('cloudflare') > -1) {
-                    var r = el.getBoundingClientRect();
-                    if (r.width > 50 && r.height > 20) {
-                        return {x: r.x, y: r.y, w: r.width, h: r.height,
-                                tag: el.tagName, cls: el.className};
-                    }
-                }
-            }
-            // Broader search without requiring "cloudflare"
-            for (var i = 0; i < els.length; i++) {
-                var el = els[i];
-                if (el.children.length > 10) continue;
-                var t = (el.innerText || '').toLowerCase();
-                if (t.indexOf('verify you are human') > -1) {
-                    var r = el.getBoundingClientRect();
-                    if (r.width > 50 && r.height > 20) {
-                        return {x: r.x, y: r.y, w: r.width, h: r.height,
-                                tag: el.tagName, cls: el.className};
-                    }
-                }
-            }
-            return null;
-        """)
-
-        if not widget_info:
-            log.warning("  Could not locate Turnstile widget element.")
-        else:
-            win_rect = driver.get_window_rect()
-            viewport_h = driver.execute_script("return window.innerHeight;")
-            chrome_h = win_rect["height"] - viewport_h
-
-            # Checkbox is ~25px from left edge, vertically centred
-            click_x = int(win_rect["x"] + widget_info["x"] + 25)
-            click_y = int(win_rect["y"] + chrome_h
-                          + widget_info["y"] + widget_info["h"] / 2)
-
-            log.info(
-                f"  Widget: tag={widget_info['tag']} "
-                f"class={widget_info.get('cls','')} "
-                f"rect=({widget_info['x']},{widget_info['y']}) "
-                f"{widget_info['w']}x{widget_info['h']}  "
-                f"win=({win_rect['x']},{win_rect['y']}) chrome_h={chrome_h}"
-            )
-            log.info(f"  Moving mouse to ({click_x}, {click_y})...")
-
-            # Step 3: Move mouse to position, screenshot to verify
-            pyautogui.moveTo(click_x, click_y, duration=0.4)
-            time.sleep(0.5)
-            shot2 = str(log_dir / f"turnstile_cursor_{ts}.png")
-            driver.save_screenshot(shot2)
-            log.info(f"  Cursor position screenshot: {shot2}")
-
-            # Step 4: Click
-            pyautogui.click()
-            log.info("  Clicked Turnstile checkbox.")
-            time.sleep(5)
+    # Solve Cloudflare Turnstile on the login form (3-tier vision system)
+    solve_login_turnstile(driver)
 
     # Click sign-in button
     clicked = False
@@ -958,12 +1243,11 @@ class BrowserSession:
             pass
         driver.implicitly_wait(5)
 
-        # Initial navigation with Cloudflare bypass
-        driver.uc_open_with_reconnect(
-            "https://star-telegram.newspapers.com/", 4
-        )
+        # Initial navigation — use driver.get() like clipper, not
+        # uc_open_with_reconnect which crashes when Cloudflare kills the session
+        driver.get("https://star-telegram.newspapers.com/")
         close_extra_tabs(driver)
-        time.sleep(3)
+        time.sleep(5)
         solve_cloudflare(driver)
 
         # Check login state

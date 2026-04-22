@@ -13,7 +13,7 @@ from io import BytesIO
 
 os.environ.setdefault("ANTHROPIC_API_KEY", "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")
 
-pdf_path = r"c:\lake_worth\pdfs\Fort_Worth_Star_Telegram_1914_02_02_2.pdf"
+pdf_path = r"c:\lake_worth_runtime\pdfs\Fort_Worth_Star_Telegram_1914_02_02_2.pdf"
 
 # Render at 300 DPI
 doc = fitz.open(pdf_path)

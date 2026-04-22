@@ -3191,7 +3191,7 @@ OCR TEXT:
     except Exception as e:
         log.warning(f"    AI extraction error: {e}")
         err_str = str(e).lower()
-        if "credit balance" in err_str or "billing" in err_str or "purchase credits" in err_str:
+        if "credit balance" in err_str or "billing" in err_str or "purchase credits" in err_str or "invalid x-api-key" in err_str or "authentication_error" in err_str:
             log.error("    *** ANTHROPIC API CREDITS EXHAUSTED — EMERGENCY STOP ***")
             # 1. Set global stop flag immediately
             try:
@@ -3207,6 +3207,9 @@ OCR TEXT:
                 )
                 _db.execute(
                     "INSERT OR REPLACE INTO clipper_state (key, value) VALUES ('instances_target', '0')",
+                )
+                _db.execute(
+                    "INSERT OR REPLACE INTO clipper_state (key, value) VALUES ('instances_stop_reason', 'Anthropic API key invalid or credits exhausted')",
                 )
                 _db.commit()
                 _db.close()
@@ -3708,7 +3711,7 @@ def get_unclipped_queue(conn, date_start=None, date_end=None):
     return conn.execute(sql, params).fetchall()
 
 
-def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
+def main_slot(slot_id, date_start=None, date_end=None, max_pages=0, pinned_account=None):
     """Multi-instance worker entry point.
 
     Claims one eligible account at a time, clips pages one-at-a-time from the
@@ -3716,6 +3719,9 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
     the current one is throttled. Exits when the queue is empty or a stop flag
     is set. Guarantees that on any exit path, its page and account claims are
     released and its clipper_instances row is removed.
+
+    If pinned_account is set, only that account is used and no rotation occurs.
+    When the pinned account hits its limit or gets throttled, the slot exits.
 
     Does not touch single-instance code paths.
     """
@@ -3728,6 +3734,7 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
     log.info("=" * 60)
     log.info(f"  Date range: {date_start or 'start'} to {date_end or 'end'}")
     log.info(f"  Max pages:  {max_pages or 'unlimited'}")
+    log.info(f"  Account:    {pinned_account or 'auto-rotate'}")
     log.info(f"  Log: {log_filename}")
 
     # Check stop flags BEFORE doing anything. The per-slot flag is cleared by
@@ -3773,8 +3780,38 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
                 break
 
             # Claim an eligible account. If none available, idle-wait for one.
-            acct = claim_account(slot_id, pid)
+            if pinned_account:
+                # Pinned mode: claim only the specified account
+                _pin_conn = get_accounts_db()
+                try:
+                    _pin_conn.isolation_level = None
+                    _pin_conn.execute("BEGIN IMMEDIATE")
+                    _pin_row = _pin_conn.execute(
+                        "SELECT * FROM accounts WHERE email = ? AND active = 1 AND (in_use_by IS NULL OR in_use_by = ?)",
+                        (pinned_account, slot_id),
+                    ).fetchone()
+                    if _pin_row:
+                        _pin_conn.execute(
+                            "UPDATE accounts SET in_use_by = ?, in_use_since = ?, in_use_pid = ? WHERE id = ?",
+                            (slot_id, _now_str(), pid, _pin_row["id"]),
+                        )
+                        _pin_conn.execute("COMMIT")
+                        acct = dict(_pin_row)
+                    else:
+                        _pin_conn.execute("COMMIT")
+                        acct = None
+                except Exception:
+                    try: _pin_conn.execute("ROLLBACK")
+                    except Exception: pass
+                    acct = None
+                finally:
+                    _pin_conn.close()
+            else:
+                acct = claim_account(slot_id, pid)
             if not acct:
+                if pinned_account:
+                    log.info(f"  Pinned account {pinned_account} not available — exiting.")
+                    break
                 log.info("  No eligible account available — waiting 60s.")
                 write_instance_status(
                     slot_id, status="waiting_for_account",
@@ -4005,6 +4042,10 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0):
             if account_exhausted:
                 break  # queue empty or fatal — exit slot entirely
 
+            if pinned_account:
+                log.info(f"  Pinned account {pinned_account} done — exiting slot.")
+                break
+
             # Otherwise loop to claim the next eligible account.
 
     except KeyboardInterrupt:
@@ -4233,8 +4274,9 @@ if __name__ == "__main__":
     #   python clip_and_extract.py 0 1916-01-01 1917-12-31 user@example.com
     #   python clip_and_extract.py --slot-id=1 0 1916-01-01 1917-12-31    # slot mode
 
-    # Extract --slot-id=X from argv without disturbing positional parsing.
+    # Extract --slot-id=X and --account=X from argv without disturbing positional parsing.
     _slot_id = None
+    _pinned_account = None
     _argv = []
     for _a in sys.argv[1:]:
         if _a.startswith("--slot-id="):
@@ -4242,13 +4284,15 @@ if __name__ == "__main__":
         elif _a == "--slot-id":
             # support "--slot-id X" form
             continue
+        elif _a.startswith("--account="):
+            _pinned_account = _a.split("=", 1)[1].strip() or None
         else:
             _argv.append(_a)
 
     limit = int(_argv[0]) if len(_argv) > 0 and _argv[0] else 0
     ds = _argv[1] if len(_argv) > 1 and _argv[1] else None
     de = _argv[2] if len(_argv) > 2 and _argv[2] else None
-    acct = _argv[3] if len(_argv) > 3 and _argv[3] else None
+    acct = _pinned_account or (_argv[3] if len(_argv) > 3 and _argv[3] else None)
 
     if _slot_id:
         # Retag the logger with the slot id so each instance has its own log file.
@@ -4265,6 +4309,6 @@ if __name__ == "__main__":
                 log.removeHandler(_h)
         log.addHandler(_fh)
         log.info(f"  Slot log file: {_slot_log}")
-        main_slot(_slot_id, date_start=ds, date_end=de, max_pages=limit)
+        main_slot(_slot_id, date_start=ds, date_end=de, max_pages=limit, pinned_account=acct)
     else:
         main(max_pages=limit, date_start=ds, date_end=de, account_email=acct)

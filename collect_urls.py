@@ -851,29 +851,15 @@ def main_slot(slot_id, date_start, date_end, max_urls=1500, restart_every=100):
                         f"{max_urls} URLs today."
                     )
                     write_instance_status(slot_id, last_action="rotating account")
-                    log.info("  Rotating to next account...")
-                    # Rebuild exclude list using daily counters
-                    _sw_exclude = get_ineligible_collector_emails(conn, max_urls)
-                    if _sw_exclude:
-                        log.info(f"  Excluding over-limit accounts: {_sw_exclude}")
-                    if session.switch_account(driver, exclude_emails=_sw_exclude):
-                        log.info(f"  Switched to {session.current_email}")
-                        # Initialize account_urls from DB, not 0
-                        account_urls = conn.execute(
-                            "SELECT COUNT(*) FROM processed_pdfs WHERE gathered_by = ?",
-                            (session.current_email,),
-                        ).fetchone()[0]
-                        log.info(f"  Account already has {account_urls} URLs in DB")
-                        write_instance_status(
-                            slot_id,
-                            account_email=session.current_email,
-                            last_action=f"switched to {session.current_email} ({account_urls} existing)",
-                        )
-                        consecutive_failures = 0
-                        continue
-                    else:
-                        log.info("  No more accounts available. Stopping.")
-                        break
+                    log.info("  Rotating to next account — quitting browser for clean restart...")
+                    # Quit browser and release account — loop will claim next and launch fresh
+                    if driver:
+                        try:
+                            driver.quit()
+                        except Exception:
+                            pass
+                        driver = None
+                    continue
 
                 if new == 0:
                     try:
@@ -1080,30 +1066,14 @@ def main():
                         f"  ACCOUNT DAILY LIMIT: {session.current_email} hit "
                         f"{args.max_urls} URLs today."
                     )
-                    # Rebuild exclude list using daily counters
-                    _sw_exclude = get_ineligible_collector_emails(conn, args.max_urls)
-                    log.info("  Rotating to next account...")
-                    if session.switch_account(driver, exclude_emails=_sw_exclude):
-                        log.info(f"  Switched to {session.current_email}")
-                        write_status(account=session.current_email)
-                        account_urls = conn.execute(
-                            "SELECT COUNT(*) FROM processed_pdfs WHERE gathered_by = ?",
-                            (session.current_email,),
-                        ).fetchone()[0]
-                        if account_urls:
-                            log.info(f"  Account already has {account_urls} URLs in DB")
-                        consecutive_failures = 0
-                        continue
-                    else:
-                        log.info(
-                            "  No more accounts available. "
-                            "Stopping collection."
-                        )
-                        write_status(
-                            status="limit_reached",
-                            new_entries=total_new,
-                        )
-                        break
+                    log.info("  Rotating to next account — quitting browser for clean restart...")
+                    if driver:
+                        try:
+                            driver.quit()
+                        except Exception:
+                            pass
+                        driver = None
+                    continue
 
                 if new == 0:
                     try:

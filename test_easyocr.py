@@ -11,7 +11,7 @@ from PIL import Image
 import numpy as np
 import easyocr
 
-pdf_path = r"c:\lake_worth\pdfs\Fort_Worth_Star_Telegram_1914_02_02_2.pdf"
+pdf_path = r"c:\lake_worth_runtime\pdfs\Fort_Worth_Star_Telegram_1914_02_02_2.pdf"
 
 # Render PDF to image at 300 DPI
 doc = fitz.open(pdf_path)

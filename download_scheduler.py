@@ -37,7 +37,7 @@ def cleanup_chrome():
 
 def count_pdfs():
     import glob
-    return len(glob.glob(r"c:\lake_worth\pdfs\*.pdf"))
+    return len(glob.glob(r"c:\lake_worth_runtime\pdfs\*.pdf"))
 
 
 def run_download():

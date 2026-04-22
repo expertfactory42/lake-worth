@@ -926,6 +926,13 @@ async function loadScreenshots() {
 let _accountsData = [];
 
 var _dailyClipLimit = 250;
+let _accountsSortCol = null, _accountsSortDir = 1;
+
+function sortAccounts(col) {
+  if (_accountsSortCol === col) { _accountsSortDir *= -1; }
+  else { _accountsSortCol = col; _accountsSortDir = 1; }
+  renderAccounts();
+}
 
 async function loadAccounts() {
   const container = document.getElementById('accountsList');
@@ -942,34 +949,72 @@ async function loadAccounts() {
 function renderAccounts() {
   const container = document.getElementById('accountsList');
   if (!_accountsData.length) { container.innerHTML = '<span style="color:#888">No accounts. Click + Add Account to get started.</span>'; return; }
+  const sorted = [..._accountsData];
+  if (_accountsSortCol) {
+    sorted.sort((a, b) => {
+      let av = a[_accountsSortCol] ?? '', bv = b[_accountsSortCol] ?? '';
+      if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * _accountsSortDir;
+      return String(av).localeCompare(String(bv)) * _accountsSortDir;
+    });
+  }
+  const si = col => _accountsSortCol === col ? (_accountsSortDir === 1 ? ' ▲' : ' ▼') : '';
+  const sh = (col, label, style) => `<th style="cursor:pointer;user-select:none;${style}" onclick="sortAccounts('${col}')">${label}${si(col)}</th>`;
   container.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">' +
     '<thead><tr>' +
-    '<th style="text-align:center;padding:6px;border-bottom:1px solid #444">Active</th>' +
-    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Label</th>' +
-    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Email</th>' +
-    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Subscription</th>' +
-    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Total Clips</th>' +
-    '<th style="text-align:right;padding:6px;border-bottom:1px solid #444">Last Run</th>' +
-    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Last Clip</th>' +
-    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444">Notes</th>' +
+    sh('active', 'Active', 'text-align:center;padding:6px;border-bottom:1px solid #444') +
+    sh('label', 'Label', 'text-align:left;padding:6px;border-bottom:1px solid #444') +
+    sh('email', 'Email', 'text-align:left;padding:6px;border-bottom:1px solid #444') +
+    sh('created_at', 'Created', 'text-align:left;padding:6px;border-bottom:1px solid #444') +
+    sh('urls_today', 'Last 24h', 'text-align:right;padding:6px;border-bottom:1px solid #444;background:rgba(76,175,80,0.08)') +
+    sh('total_urls_gathered', 'Total', 'text-align:right;padding:6px;border-bottom:1px solid #444;background:rgba(76,175,80,0.08)') +
+    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444;background:rgba(76,175,80,0.08)">Status</th>' +
+    sh('last_gathered_time', 'Last URL', 'text-align:left;padding:6px;border-bottom:1px solid #444;background:rgba(76,175,80,0.08)') +
+    sh('clips_today', 'Last 24h', 'text-align:right;padding:6px;border-bottom:1px solid #444;background:rgba(79,195,247,0.08)') +
+    sh('total_clips', 'Total', 'text-align:right;padding:6px;border-bottom:1px solid #444;background:rgba(79,195,247,0.08)') +
+    '<th style="text-align:left;padding:6px;border-bottom:1px solid #444;background:rgba(79,195,247,0.08)">Status</th>' +
+    sh('last_clip_time', 'Last Clip', 'text-align:left;padding:6px;border-bottom:1px solid #444;background:rgba(79,195,247,0.08)') +
     '<th style="padding:6px;border-bottom:1px solid #444">Actions</th>' +
+    '</tr>' +
+    '<tr>' +
+    '<th colspan="4" style="padding:2px 6px;border-bottom:2px solid #444"></th>' +
+    '<th colspan="4" style="padding:2px 6px;border-bottom:2px solid #444;text-align:center;color:#4caf50;font-size:0.8em;background:rgba(76,175,80,0.08)">URLs Gathered</th>' +
+    '<th colspan="4" style="padding:2px 6px;border-bottom:2px solid #444;text-align:center;color:#4fc3f7;font-size:0.8em;background:rgba(79,195,247,0.08)">Clipper</th>' +
+    '<th style="padding:2px 6px;border-bottom:2px solid #444"></th>' +
     '</tr></thead><tbody>' +
-    _accountsData.map(a => {
+    sorted.map(a => {
       const statusColor = a.active ? '#4caf50' : '#f44336';
       const statusText = a.active ? 'Active' : 'Inactive';
+      const now = Date.now();
+      // --- URLs Gathered ---
+      const urlsToday = a.urls_today || 0;
+      const urlsTotal = a.total_urls_gathered || 0;
+      const lastGatheredTime = a.last_gathered_time ? new Date(a.last_gathered_time.replace(' ', 'T')) : null;
+      const hoursGathered = lastGatheredTime ? (now - lastGatheredTime) / 3600000 : 999;
+      const gCooled = hoursGathered >= 24;
+      let urlColor = '#4caf50';
+      if (lastGatheredTime && hoursGathered < 24 && urlsToday > 0) urlColor = '#ff9800';
+      const lastGatheredStr = lastGatheredTime ? lastGatheredTime.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '-';
+      const lastGatheredColor = gCooled || !lastGatheredTime ? '#4caf50' : '#ff9800';
+      let urlStatus;
+      if (!lastGatheredTime || gCooled) urlStatus = '<span style="color:#4caf50">Ready</span>';
+      else if (urlsToday > 0) urlStatus = '<span style="color:#ff9800">Partial</span>';
+      else urlStatus = '<span style="color:#4caf50">Ready</span>';
+      // --- Clipper ---
       const lastClip = a.last_clip_time ? a.last_clip_time.substring(0,16) : '-';
+      const lastClipTime = a.last_clip_time ? new Date(a.last_clip_time.replace(' ', 'T')) : null;
+      const hoursClip = lastClipTime ? (now - lastClipTime) / 3600000 : 999;
+      const cCooled = hoursClip >= 24;
       const lastRunClips = a.clips_today_actual ?? a.clips_today ?? 0;
-      // Determine cooldown status based on last clip time and clip count
-      let lastRunColor = '#4caf50'; // green = cooldown over or no clips
-      if (a.last_clip_time) {
-        const lastClipMs = new Date(a.last_clip_time.replace(' ', 'T')).getTime();
-        const hoursSince = (Date.now() - lastClipMs) / (1000 * 60 * 60);
-        if (hoursSince < 24 && lastRunClips >= _dailyClipLimit) {
-          lastRunColor = '#f44336'; // red = maxed out, cooling down
-        } else if (hoursSince < 24 && lastRunClips > 0) {
-          lastRunColor = '#ff9800'; // orange = has clips but still eligible
-        }
-      }
+      const hitLimit = lastRunClips >= _dailyClipLimit;
+      let clipColor = '#4caf50';
+      if (lastClipTime && hoursClip < 24 && hitLimit) clipColor = '#f44336';
+      else if (lastClipTime && hoursClip < 24 && lastRunClips > 0) clipColor = '#ff9800';
+      const lastClipStr = lastClipTime ? lastClipTime.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '-';
+      const lastClipColor = cCooled || !lastClipTime ? '#4caf50' : (hitLimit ? '#e65100' : '#ff9800');
+      let clipStatus;
+      if (!lastClipTime || cCooled) clipStatus = '<span style="color:#4caf50">Ready</span>';
+      else if (!hitLimit) clipStatus = '<span style="color:#ff9800">Partial</span>';
+      else clipStatus = '<span style="color:#e65100">Cooling</span>';
       const hasError = a.last_error && a.last_error_time;
       const errorBtn = hasError
         ? `<span onclick="showAccountError('${a.last_error_screenshot || ''}', '${(a.last_error || '').replace(/'/g, "\\'")}', '${a.email}')" style="color:#f44336;font-size:1.3em;font-weight:bold;cursor:pointer;margin-left:4px" title="${a.last_error} (${(a.last_error_time||'').substring(0,16)})">!</span>`
@@ -982,11 +1027,15 @@ function renderAccounts() {
         </td>
         <td style="padding:6px">${a.label || '-'}</td>
         <td style="padding:6px;color:#4fc3f7">${a.email}</td>
-        <td style="padding:6px">${a.subscription_type || '-'}</td>
-        <td style="padding:6px;text-align:right;font-weight:bold">${a.total_clips}</td>
-        <td style="padding:6px;text-align:right;font-weight:bold;color:${lastRunColor}">${lastRunClips}</td>
-        <td style="padding:6px;font-size:0.85em;color:#aaa">${lastClip}</td>
-        <td style="padding:6px;font-size:0.85em;color:#888">${a.notes || ''}</td>
+        <td style="padding:6px;color:#888">${(a.created_at||'').substring(0,10)||'-'}</td>
+        <td style="padding:6px;text-align:right;font-weight:bold;color:${urlColor};background:rgba(76,175,80,0.08)">${urlsToday}</td>
+        <td style="padding:6px;text-align:right;background:rgba(76,175,80,0.08)">${urlsTotal}</td>
+        <td style="padding:6px;background:rgba(76,175,80,0.08)">${urlStatus}</td>
+        <td style="padding:6px;color:${lastGatheredColor};background:rgba(76,175,80,0.08)">${lastGatheredStr}</td>
+        <td style="padding:6px;text-align:right;font-weight:bold;color:${clipColor};background:rgba(79,195,247,0.08)">${lastRunClips}</td>
+        <td style="padding:6px;text-align:right;background:rgba(79,195,247,0.08)">${a.total_clips}</td>
+        <td style="padding:6px;background:rgba(79,195,247,0.08)">${clipStatus}</td>
+        <td style="padding:6px;color:${lastClipColor};background:rgba(79,195,247,0.08)">${lastClipStr}</td>
         <td style="padding:6px;white-space:nowrap">
           <button onclick="editAccount(${a.id})" style="padding:3px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:3px;cursor:pointer;font-size:0.8em">Edit</button>
           <button onclick="resetSession(${a.id})" style="padding:3px 8px;background:#1a3a5c;color:#4fc3f7;border:1px solid #4fc3f7;border-radius:3px;cursor:pointer;font-size:0.8em">Reset</button>
@@ -1141,6 +1190,12 @@ async function loadClipperSettings() {
     loadClipperLog();
     loadAccountEligibility();
     populateAccountDropdown();
+    // Restore saved account mode
+    const savedMode = localStorage.getItem('clipperAccountMode');
+    if (savedMode) {
+      document.getElementById('clipperAccountMode').value = savedMode;
+      document.getElementById('specificAccountRow').style.display = savedMode === 'specific' ? 'block' : 'none';
+    }
     loadRangeStats();
     // Auto-refresh every 15 seconds while on clipper tab (always, so status updates)
     clearInterval(window._clipperRefreshInterval);
@@ -1161,7 +1216,7 @@ async function loadAccountEligibility() {
     const COOLDOWN_MS = 24 * 60 * 60 * 1000;
     let html = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">';
     html += '<tr><th style="text-align:left;padding:4px;border-bottom:1px solid #444">Account</th>';
-    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Last Run</th>';
+    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Last 24h</th>';
     html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Total</th>';
     html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Status</th>';
     html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Last Clip</th></tr>';
@@ -1293,14 +1348,17 @@ async function clipperKill() {
 
 function toggleAccountSelect() {
   const mode = document.getElementById('clipperAccountMode').value;
+  localStorage.setItem('clipperAccountMode', mode);
   document.getElementById('specificAccountRow').style.display = mode === 'specific' ? 'block' : 'none';
 }
 
 async function populateAccountDropdown() {
   try {
     const resp = await fetch('/api/accounts');
-    const accounts = await resp.json();
+    const data = await resp.json();
+    const accounts = data.accounts || data;
     const sel = document.getElementById('clipperAccountSelect');
+    const prev = sel.value || localStorage.getItem('clipperAccount') || '';
     sel.innerHTML = '';
     const now = new Date();
     const COOLDOWN_MS = 24 * 60 * 60 * 1000;
@@ -1316,6 +1374,8 @@ async function populateAccountDropdown() {
       opt.style.color = ready ? '#4caf50' : '#e65100';
       sel.appendChild(opt);
     });
+    if (prev) { sel.value = prev; }
+    sel.onchange = () => { localStorage.setItem('clipperAccount', sel.value); };
   } catch(e) { console.error('Failed to populate accounts:', e); }
 }
 
@@ -1449,15 +1509,18 @@ async function saveTarget() {
   if (instLocked) return;
   const dateStart = document.getElementById('clipperDateStart').value.trim();
   const dateEnd = document.getElementById('clipperDateEnd').value.trim();
+  const acctMode = document.getElementById('clipperAccountMode').value;
+  const acctEmail = acctMode === 'specific' ? document.getElementById('clipperAccountSelect').value : '';
   localStorage.setItem('clipperDateStart', dateStart);
   localStorage.setItem('clipperDateEnd', dateEnd);
-  if (!confirm(`Set target to ${instTarget} instance(s)?\nCurrently running: ${instLastRunning}\nDate range: ${dateStart||'all'} to ${dateEnd||'all'}\n\nBackend will auto-maintain this count.`)) return;
+  const acctDesc = acctMode === 'specific' ? `Account: ${acctEmail} (pinned, no rotation)` : 'Account: auto-rotate';
+  if (!confirm(`Set target to ${instTarget} instance(s)?\nCurrently running: ${instLastRunning}\nDate range: ${dateStart||'all'} to ${dateEnd||'all'}\n${acctDesc}\n\nBackend will auto-maintain this count.`)) return;
   instLocked = true; applyLockUI();
   try {
     const resp = await fetch('/api/instances/set_target', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ target: instTarget, date_start: dateStart, date_end: dateEnd }),
+      body: JSON.stringify({ target: instTarget, date_start: dateStart, date_end: dateEnd, account_mode: acctMode, account_email: acctEmail }),
     });
     const result = await resp.json();
     if (result.error) { alert(result.error); instLocked=false; applyLockUI(); return; }
@@ -2083,7 +2146,8 @@ async function loadCollectorAccountEligibility() {
     const now = new Date();
     let html = '<table style="width:100%;border-collapse:collapse;font-size:0.9em">';
     html += '<tr><th style="text-align:left;padding:4px;border-bottom:1px solid #444">Account</th>';
-    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">URLs Gathered</th>';
+    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Last 24h</th>';
+    html += '<th style="text-align:right;padding:4px;border-bottom:1px solid #444">Total</th>';
     html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Status</th>';
     html += '<th style="text-align:left;padding:4px;border-bottom:1px solid #444">Last URL</th></tr>';
     accounts.forEach(a => {
@@ -2096,17 +2160,13 @@ async function loadCollectorAccountEligibility() {
       const urlsToday = a.urls_today || 0;
       const urlsLifetime = a.urls_gathered || a.total_urls_gathered || 0;
       const hitLimit = maxUrls > 0 && urlsToday >= maxUrls;
-      // URL count color based on daily count: green=under limit, orange=approaching, red=at/over limit within 24h
-      let urlColor = '#4caf50';
-      if (hitLimit && !cooledDown) urlColor = '#f44336';
-      else if (maxUrls > 0 && urlsToday >= maxUrls * 0.8 && !cooledDown) urlColor = '#ff9800';
-      else if (urlsToday === 0) urlColor = '#aaa';
-      // Status: same color coding pattern as clipper (Ready/Partial/Cooling)
+      // Color: green=cooldown over, orange=active but room left, red=maxed and cooling
+      let last24hColor = '#4caf50';
+      if (lastGatheredTime && hoursSinceGathered < 24 && hitLimit) last24hColor = '#f44336';
+      else if (lastGatheredTime && hoursSinceGathered < 24 && urlsToday > 0) last24hColor = '#ff9800';
       let statusHtml;
       if (isCollecting) {
         statusHtml = '<span style="color:#4fc3f7">Collecting</span>';
-      } else if (inUse) {
-        statusHtml = '<span style="color:#ff9800">In Use</span>';
       } else if (!lastGatheredTime || cooledDown) {
         statusHtml = '<span style="color:#4caf50">Ready</span>';
       } else if (!hitLimit) {
@@ -2116,10 +2176,10 @@ async function loadCollectorAccountEligibility() {
       }
       const lastGatheredStr = lastGatheredTime ? lastGatheredTime.toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '-';
       const lastGatheredColor = cooledDown || !lastGatheredTime ? '#4caf50' : (hitLimit ? '#e65100' : '#ff9800');
-      const urlDisplayStr = urlsLifetime > 0 ? `${urlsToday.toLocaleString()} <span style="color:#888;font-weight:normal">(${urlsLifetime.toLocaleString()} total)</span>` : urlsToday.toLocaleString();
       html += `<tr>
         <td style="padding:4px;color:#4fc3f7">${a.email}</td>
-        <td style="padding:4px;text-align:right;font-weight:bold;color:${urlColor}">${urlDisplayStr}</td>
+        <td style="padding:4px;text-align:right;font-weight:bold;color:${last24hColor}">${urlsToday}</td>
+        <td style="padding:4px;text-align:right">${urlsLifetime}</td>
         <td style="padding:4px">${statusHtml}</td>
         <td style="padding:4px;color:${lastGatheredColor}">${lastGatheredStr}</td>
       </tr>`;

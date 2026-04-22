@@ -16,7 +16,7 @@ from selenium.common.exceptions import (
 )
 
 # === CONFIGURATION ===
-SAVE_DIR = r"c:\lake_worth\pdfs"
+SAVE_DIR = r"c:\lake_worth_runtime\pdfs"
 DOWNLOAD_DIR = r"c:\lake_worth\downloads_temp"
 URL_MAP_FILE = r"c:\lake_worth\pdf_urls.csv"
 DATE_END = "1925-12-31"

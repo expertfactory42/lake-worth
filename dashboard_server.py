@@ -25,7 +25,7 @@ from datetime import datetime, timedelta
 BASE_DIR = Path(r"C:\lake_worth")
 RUNTIME_DIR = Path(r"C:\lake_worth_runtime")
 DB_PATH = BASE_DIR / "lake_worth.db"
-PDF_DIR = BASE_DIR / "pdfs"
+PDF_DIR = RUNTIME_DIR / "pdfs"
 LOG_DIR = BASE_DIR / "collector_logs"
 BOOK_NOTES_PATH = BASE_DIR / "book_notes.txt"
 STOP_FLAG = RUNTIME_DIR / "stop_clipper"
@@ -398,7 +398,7 @@ def _log_spawn(msg):
     print(f"[{_dt.datetime.now().strftime('%H:%M:%S')}] [spawn] {msg}", flush=True)
 
 
-def _spawn_instance(date_start="", date_end="", max_pages="0"):
+def _spawn_instance(date_start="", date_end="", max_pages="0", account_email=""):
     """Launch a new detached clip_and_extract.py worker in a fresh slot.
     Returns (slot_id, pid) on success or (None, None) on failure.
     Extracted from /api/instances/add so autoscale can call it too.
@@ -475,6 +475,8 @@ def _spawn_instance(date_start="", date_end="", max_pages="0"):
         if date_start:
             cmd.append(date_start)
             cmd.append(date_end or "2025-12-31")
+        if account_email:
+            cmd.append(f"--account={account_email}")
         _si = subprocess.STARTUPINFO()
         _si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
         _si.wShowWindow = 0  # SW_HIDE
@@ -633,7 +635,9 @@ def _autoscale_tick():
         _log_spawn(
             f"autoscale tick: current={current} target={target} remain={remain} — spawning"
         )
-        slot_id, pid = _spawn_instance(date_start=date_start, date_end=date_end, max_pages="0")
+        acct_mode = _get_state("instances_account_mode", "")
+        acct_email = _get_state("instances_account_email", "") if acct_mode == "specific" else ""
+        slot_id, pid = _spawn_instance(date_start=date_start, date_end=date_end, max_pages="0", account_email=acct_email)
         if slot_id:
             _last_spawn_time = _time.time()
     except Exception as e:
@@ -1699,8 +1703,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 conn = get_db()
                 rows = conn.execute("""
                     SELECT *,
-                           CASE WHEN clips_today_date = date('now','localtime')
-                                THEN COALESCE(clips_today, 0) ELSE 0 END AS clips_today_actual
+                           COALESCE(clips_today, 0) AS clips_today_actual
                     FROM accounts ORDER BY active DESC, total_clips DESC
                 """).fetchall()
                 accounts = [dict(r) for r in rows]
@@ -2317,6 +2320,19 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(data).encode())
             except Exception as e:
                 self.wfile.write(json.dumps({"status": "idle", "error": str(e)}).encode())
+        elif self.path.startswith("/pdfs/"):
+            # Serve PDFs from RUNTIME_DIR since pdfs moved out of BASE_DIR
+            import urllib.parse
+            fname = urllib.parse.unquote(self.path[len("/pdfs/"):])
+            fpath = PDF_DIR / fname
+            if fpath.exists() and fpath.parent == PDF_DIR:
+                self.send_response(200)
+                self.send_header("Content-type", "application/pdf")
+                self.end_headers()
+                with open(fpath, "rb") as f:
+                    self.wfile.write(f.read())
+            else:
+                self.send_error(404, "PDF not found")
         else:
             super().do_GET()
 
@@ -2813,9 +2829,14 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                             "error": f"No unclipped pages in {date_start} to {date_end}. Check date range."
                         }).encode())
                         return
+                account_mode = (body.get("account_mode") or "").strip()
+                account_email = (body.get("account_email") or "").strip()
                 _set_state("instances_target", target)
                 _set_state("instances_date_start", date_start)
                 _set_state("instances_date_end", date_end)
+                _set_state("instances_account_mode", account_mode)
+                _set_state("instances_account_email", account_email)
+                _set_state("instances_stop_reason", "")
                 if target > 0:
                     # Clear global stop flag when setting a positive target,
                     # otherwise autoscale_tick and _spawn_instance will refuse to run.
