@@ -742,7 +742,7 @@ def main_slot(slot_id, date_start, date_end, max_urls=1500, restart_every=100):
         last_action="starting",
     )
 
-    session = BrowserSession(db_path=DB_PATH, profile_dir=profile_dir)
+    session = BrowserSession(db_path=DB_PATH, profile_dir=profile_dir, app='collector')
     conn = get_db()
     total_new = 0
     session_num = 0
@@ -971,7 +971,7 @@ def main():
         current_date=args.start,
     )
 
-    session = BrowserSession(db_path=DB_PATH, profile_dir=str(PROFILE_DIR))
+    session = BrowserSession(db_path=DB_PATH, profile_dir=str(PROFILE_DIR), app='collector')
     conn = get_db()
     total_new = 0
     session_num = 0

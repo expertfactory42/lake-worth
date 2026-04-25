@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lake Worth Archive - Librarian</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; }
+  h1 { color: #e0c97f; margin-bottom: 20px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  .stat-card {
+    background: #16213e;
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    border: 1px solid #1a3a5c;
+  }
+  .stat-card .number { font-size: 2.2em; font-weight: bold; color: #e0c97f; }
+  .stat-card .label { font-size: 0.85em; color: #aaa; margin-top: 4px; }
+
+  .section { margin-bottom: 25px; }
+  .section h2 { color: #e0c97f; margin-bottom: 10px; font-size: 1.2em; border-bottom: 1px solid #333; padding-bottom: 5px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+  th { background: #16213e; color: #e0c97f; padding: 10px 8px; text-align: left; position: sticky; top: 0; }
+  td { padding: 8px; border-bottom: 1px solid #2a2a4a; }
+  tr:hover { background: #1e2d4a; }
+
+  .quote-block {
+    border-left: 3px solid #4caf50;
+    padding: 8px 12px;
+    margin: 8px 0;
+    background: #1a2a3e;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar: title + tab switcher + modal buttons -->
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+  <h1 style="margin:0">Librarian</h1>
+  <div style="display:flex;background:#0f1a30;border-radius:6px;border:1px solid #333;overflow:hidden">
+    <button id="tab-browse" onclick="switchTab('browse')" style="padding:5px 16px;background:#1a3a5c;color:#e0c97f;border:none;cursor:pointer;font-size:0.85em;font-weight:bold">Browse</button>
+    <button id="tab-tools" onclick="switchTab('tools')" style="padding:5px 16px;background:transparent;color:#888;border:none;cursor:pointer;font-size:0.85em">Enrich</button>
+    <button id="tab-corrections" onclick="switchTab('corrections')" style="padding:5px 16px;background:transparent;color:#888;border:none;cursor:pointer;font-size:0.85em">Corrections</button>
+  </div>
+  <div style="margin-left:auto;display:flex;gap:6px">
+    <button onclick="openAgentsModal()" style="padding:5px 12px;background:#16213e;color:#e0c97f;border:1px solid #e0c97f;border-radius:4px;cursor:pointer;font-size:0.82em">⚗ Agents</button>
+    <button onclick="openRunsModal()" style="padding:5px 12px;background:#16213e;color:#e0c97f;border:1px solid #e0c97f;border-radius:4px;cursor:pointer;font-size:0.82em">⚙ Runs</button>
+  </div>
+</div>
+
+<div id="panel-browse" style="display:flex;gap:14px;align-items:flex-start;height:calc(100vh - 90px)">
+
+  <!-- Left column: all controls -->
+  <div style="width:38%;min-width:280px;display:flex;flex-direction:column;gap:10px;height:100%">
+
+    <!-- Stats -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div style="background:#16213e;border:1px solid #1a3a5c;border-radius:6px;padding:5px 10px;font-size:0.8em;color:#aaa">Total <span style="color:#e0c97f;font-weight:bold" id="lib-stat-total">—</span></div>
+      <div style="background:#16213e;border:1px solid #1a3a5c;border-radius:6px;padding:5px 10px;font-size:0.8em;color:#aaa">Enriched <span style="color:#4caf50;font-weight:bold" id="lib-stat-enriched">—</span></div>
+      <div style="background:#16213e;border:1px solid #1a3a5c;border-radius:6px;padding:5px 10px;font-size:0.8em;color:#aaa">Pending <span style="color:#ff9800;font-weight:bold" id="lib-stat-pending">—</span></div>
+      <div style="background:#16213e;border:1px solid #1a3a5c;border-radius:6px;padding:5px 10px;font-size:0.8em;color:#aaa">Runs <span style="color:#e0c97f;font-weight:bold" id="lib-stat-runs">—</span></div>
+    </div>
+
+    <!-- Filters -->
+    <div style="display:flex;flex-direction:column;gap:6px;background:#16213e;padding:10px;border-radius:8px;border:1px solid #1a3a5c">
+      <input type="text" id="lib-search" placeholder="Search headlines..." style="padding:6px 10px;background:#0f3460;color:#e0e0e0;border:1px solid #555;border-radius:4px;width:100%">
+      <div style="display:flex;gap:6px">
+        <select id="lib-type" style="flex:1;padding:6px 8px;background:#0f3460;color:#e0e0e0;border:1px solid #555;border-radius:4px;font-size:0.85em">
+          <option value="">All Types</option>
+          <option value="news">news</option>
+          <option value="editorial">editorial</option>
+          <option value="letter">letter</option>
+          <option value="ad">ad</option>
+          <option value="social">social</option>
+          <option value="legal">legal</option>
+          <option value="notice">notice</option>
+          <option value="obituary">obituary</option>
+          <option value="stub">stub</option>
+          <option value="unknown">unknown</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:6px">
+        <select id="lib-status" style="flex:1;padding:6px 8px;background:#0f3460;color:#e0e0e0;border:1px solid #555;border-radius:4px;font-size:0.85em">
+          <option value="all">All</option>
+          <option value="enriched">Enriched</option>
+          <option value="pending">Pending</option>
+        </select>
+        <button id="lib-sort-btn" onclick="librarianToggleSort()" title="Toggle sort order" style="padding:6px 10px;background:#0f3460;color:#e0c97f;border:1px solid #555;border-radius:4px;cursor:pointer;font-size:0.85em">↓ Date</button>
+        <button onclick="librarianSearch()" style="flex:1;padding:6px 16px;background:#e0c97f;color:#1a1a2e;border:none;border-radius:4px;cursor:pointer;font-weight:bold">Search</button>
+      </div>
+    </div>
+
+    <!-- Article list -->
+    <div id="lib-article-list" style="flex:1;overflow-y:auto;background:#16213e;border:1px solid #1a3a5c;border-radius:8px;padding:6px">
+      <div style="color:#888;padding:20px;text-align:center">Loading...</div>
+    </div>
+
+    <!-- Pagination -->
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:4px">
+      <button onclick="librarianPageNav(-librarianTotalPages)" title="First page" style="padding:4px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:4px;cursor:pointer">&#8810;</button>
+      <button onclick="librarianPageNav(-10)" title="Back 10 pages" style="padding:4px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:4px;cursor:pointer">&#8249;&#8249;</button>
+      <button id="lib-prev-btn" onclick="librarianPageNav(-1)" style="padding:4px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:4px;cursor:pointer">&#8249;</button>
+      <span id="lib-page-info" style="color:#888;font-size:0.78em;text-align:center;flex:1">—</span>
+      <button id="lib-next-btn" onclick="librarianPageNav(1)" style="padding:4px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:4px;cursor:pointer">&#8250;</button>
+      <button onclick="librarianPageNav(10)" title="Forward 10 pages" style="padding:4px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:4px;cursor:pointer">&#8250;&#8250;</button>
+      <button onclick="librarianPageNav(librarianTotalPages)" title="Last page" style="padding:4px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:4px;cursor:pointer">&#8811;</button>
+    </div>
+
+  </div>
+
+  <!-- Right column: article detail -->
+  <div style="flex:1;min-width:0;height:100%;overflow-y:auto">
+    <div id="lib-article-detail" style="background:#16213e;border:1px solid #1a3a5c;border-radius:8px;padding:16px;min-height:200px">
+      <div style="color:#888;text-align:center;padding:40px 0">Click an article to view details</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Tools Panel -->
+<div id="panel-tools" style="display:none;height:calc(100vh - 90px);overflow-y:auto;padding:4px">
+
+  <!-- Disposition by Year chart -->
+  <div id="disposition-chart-container" style="background:#16213e;border-radius:10px;padding:16px;border:1px solid #1a3a5c;margin-bottom:16px">
+    <div style="color:#e0c97f;font-weight:bold;margin-bottom:10px;font-size:1em;border-bottom:1px solid #333;padding-bottom:6px">Disposition by Year</div>
+    <canvas id="disposition-chart" style="display:block;width:100%"></canvas>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+    <!-- Enrichment Runner -->
+    <div style="background:#16213e;border-radius:10px;padding:16px;border:1px solid #1a3a5c">
+      <div style="color:#e0c97f;font-weight:bold;margin-bottom:12px;font-size:1em;border-bottom:1px solid #333;padding-bottom:6px">Enrichment Runner</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+        <div style="display:flex;gap:8px;align-items:center">
+          <label style="color:#aaa;font-size:0.82em;width:70px">From date</label>
+          <input type="date" id="run-from-date" style="flex:1;padding:5px 8px;background:#0f3460;color:#e0e0e0;border:1px solid #555;border-radius:4px;font-size:0.85em">
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <label style="color:#aaa;font-size:0.82em;width:70px">To date</label>
+          <input type="date" id="run-to-date" style="flex:1;padding:5px 8px;background:#0f3460;color:#e0e0e0;border:1px solid #555;border-radius:4px;font-size:0.85em">
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <label style="color:#aaa;font-size:0.82em;width:70px">Limit</label>
+          <input type="number" id="run-limit" placeholder="all" min="1" style="flex:1;padding:5px 8px;background:#0f3460;color:#e0e0e0;border:1px solid #555;border-radius:4px;font-size:0.85em">
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <label style="color:#aaa;font-size:0.82em;width:70px">Rerun</label>
+          <input type="checkbox" id="run-rerun" style="width:16px;height:16px;cursor:pointer">
+          <span style="color:#888;font-size:0.8em">Re-process already enriched</span>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <button id="run-toggle-btn" onclick="toggleEnrichment()" style="padding:7px 24px;background:#4caf50;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">▶ Start</button>
+      </div>
+      <!-- Progress -->
+      <div id="run-status-row" style="margin-bottom:8px;font-size:0.82em;color:#888">Idle</div>
+      <div style="background:#0f1a30;border-radius:4px;height:8px;margin-bottom:8px;overflow:hidden">
+        <div id="run-progress-bar" style="height:100%;background:#4caf50;width:0%;transition:width 0.4s"></div>
+      </div>
+      <div id="run-current" style="font-size:0.78em;color:#aaa;margin-bottom:8px;min-height:1.2em"></div>
+      <!-- Feed -->
+      <div id="run-feed" style="background:#0f1a30;border-radius:6px;padding:8px;max-height:240px;overflow-y:auto;font-size:0.78em;font-family:monospace;color:#aaa"></div>
+    </div>
+
+    <!-- Processed feed -->
+    <div style="background:#16213e;border-radius:10px;padding:16px;border:1px solid #1a3a5c">
+      <div style="color:#e0c97f;font-weight:bold;margin-bottom:12px;font-size:1em;border-bottom:1px solid #333;padding-bottom:6px">Processed</div>
+      <div id="tools-feed-content" style="max-height:420px;overflow-y:auto;font-size:0.82em"><span style="color:#555;font-style:italic">No active enrichment run.</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Corrections Panel -->
+<div id="panel-corrections" style="display:none;height:calc(100vh - 90px);overflow-y:auto;padding:4px">
+  <div style="background:#16213e;border-radius:10px;padding:16px;border:1px solid #1a3a5c;display:flex;flex-direction:column;max-width:700px">
+    <div style="color:#e0c97f;font-weight:bold;margin-bottom:10px;font-size:1em;border-bottom:1px solid #333;padding-bottom:6px">Data Corrections</div>
+    <div id="corr-chat-history" style="overflow-y:auto;min-height:300px;max-height:calc(100vh - 280px);display:flex;flex-direction:column;gap:10px;margin-bottom:10px;padding-right:2px">
+      <div style="color:#555;font-size:0.82em;text-align:center;padding:20px 0">Describe a data error and I'll find and fix it.</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-end">
+      <textarea id="corr-chat-input" placeholder="e.g. MeCart should be McCart (City Attorney OCR error)" rows="2" style="flex:1;padding:8px;background:#0f1a30;color:#e0e0e0;border:1px solid #555;border-radius:4px;font-size:0.85em;resize:none;font-family:inherit" onkeydown="corrChatKeydown(event)"></textarea>
+      <button onclick="sendCorrectionChat()" id="corr-send-btn" style="padding:8px 14px;background:#e0c97f;color:#1a1a2e;border:none;border-radius:4px;cursor:pointer;font-weight:bold;align-self:flex-end">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Agents Modal -->
+<div id="lib-agents-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:flex-start;justify-content:center;padding-top:40px;overflow-y:auto">
+  <div style="background:#16213e;border:1px solid #1a3a5c;border-radius:10px;padding:24px;width:760px;max-width:95vw;margin-bottom:40px;position:relative">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="color:#e0c97f;margin:0;font-size:1.1em">Enrichment Agents</h2>
+      <button onclick="closeAgentsModal()" style="background:none;border:none;color:#aaa;font-size:1.4em;cursor:pointer;padding:0 4px">&#10005;</button>
+    </div>
+    <div id="lib-agents-content" style="color:#888;text-align:center;padding:20px">Loading...</div>
+  </div>
+</div>
+
+<!-- Enrichment Runs Modal -->
+<div id="lib-runs-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center">
+  <div style="background:#16213e;border:1px solid #1a3a5c;border-radius:10px;padding:24px;width:700px;max-width:95vw;max-height:85vh;overflow-y:auto;position:relative">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="color:#e0c97f;margin:0;font-size:1.1em">Enrichment Runs</h2>
+      <button onclick="closeRunsModal()" style="background:none;border:none;color:#aaa;font-size:1.4em;cursor:pointer;padding:0 4px">&#10005;</button>
+    </div>
+
+    <!-- Progress bar -->
+    <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:0.82em;color:#aaa;margin-bottom:4px">
+        <span>Enrichment Progress</span>
+        <span id="lib-runs-progress-label">—</span>
+      </div>
+      <div style="background:#0a1628;border-radius:4px;height:10px;overflow:hidden">
+        <div id="lib-runs-progress-bar" style="height:100%;background:#4caf50;width:0%;transition:width 0.4s"></div>
+      </div>
+    </div>
+
+    <!-- Runs table -->
+    <div id="lib-runs-content" style="color:#888;text-align:center;padding:20px">Loading...</div>
+  </div>
+</div>
+
+<script>
+// ==================== LIBRARIAN ====================
+
+let librarianPage = 1;
+let librarianTotalPages = 1;
+let librarianFilters = {};
+let librarianArticleIds = [];
+let librarianCurrentIndex = -1;
+let librarianSortDir = 'desc';
+
+function librarianToggleSort() {
+  librarianSortDir = librarianSortDir === 'desc' ? 'asc' : 'desc';
+  document.getElementById('lib-sort-btn').textContent = librarianSortDir === 'desc' ? '↓ Date' : '↑ Date';
+  librarianSearch();
+}
+
+function librarianSearch() {
+  librarianFilters = {
+    search: document.getElementById('lib-search').value.trim(),
+    type: document.getElementById('lib-type').value,
+    status: document.getElementById('lib-status').value,
+    sort: librarianSortDir,
+  };
+  loadLibrarianArticles(1, librarianFilters);
+}
+
+function librarianPageNav(dir) {
+  const next = librarianPage + dir;
+  if (next < 1 || next > librarianTotalPages) return;
+  loadLibrarianArticles(next, librarianFilters);
+}
+
+async function loadLibrarianStats() {
+  try {
+    const r = await fetch('http://localhost:1212/api/librarian/stats');
+    const d = await r.json();
+    document.getElementById('lib-stat-total').textContent = d.total_articles ?? '—';
+    document.getElementById('lib-stat-enriched').textContent = d.enriched ?? '—';
+    document.getElementById('lib-stat-pending').textContent = d.pending ?? '—';
+    document.getElementById('lib-stat-runs').textContent = d.total_runs ?? '—';
+  } catch(e) { console.error('Librarian stats failed:', e); }
+}
+
+function _libBadge(text, bg, fg) {
+  fg = fg || '#fff';
+  return `<span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:0.72em;background:${bg};color:${fg};margin:1px 2px">${text}</span>`;
+}
+
+function _libSetActiveArticle(id) {
+  document.querySelectorAll('.lib-list-item').forEach(el => {
+    const isActive = parseInt(el.dataset.articleId) === parseInt(id);
+    el.style.background = isActive ? '#1a3a5c' : '';
+    el.style.borderLeft = isActive ? '3px solid #e0c97f' : '3px solid transparent';
+    if (isActive) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  });
+  librarianCurrentIndex = librarianArticleIds.indexOf(parseInt(id));
+}
+
+function librarianArticleNav(dir) {
+  const next = librarianCurrentIndex + dir;
+  if (next >= 0 && next < librarianArticleIds.length) {
+    loadLibrarianArticle(librarianArticleIds[next]);
+  }
+}
+
+function _libArticleListItem(a) {
+  const typeB = a.type ? _libBadge(a.type, '#444') : '';
+  const enrichedDot = a.enriched
+    ? '<span style="color:#4caf50;font-size:0.75em">&#9679;</span> '
+    : '<span style="color:#555;font-size:0.75em">&#9679;</span> ';
+  return `<div class="lib-list-item" data-article-id="${a.id}" onclick="loadLibrarianArticle(${a.id})"
+    style="padding:8px 10px;border-bottom:1px solid #2a2a4a;cursor:pointer;border-radius:4px;border-left:3px solid transparent">
+    <div style="font-size:0.78em;color:#888;margin-bottom:2px">${enrichedDot}${a.date || '—'}</div>
+    <div style="color:#e0c97f;font-size:0.9em;margin-bottom:4px">${a.headline || '(no headline)'}</div>
+    <div>${typeB}</div>
+  </div>`;
+}
+
+async function loadLibrarianArticles(page, filters) {
+  page = page || 1;
+  filters = filters || {};
+  librarianPage = page;
+  const params = new URLSearchParams({ page, per_page: 50 });
+  if (filters.search) params.set('search', filters.search);
+  if (filters.type) params.set('type', filters.type);
+  if (filters.status && filters.status !== 'all') params.set('status', filters.status);
+  if (filters.sort) params.set('sort', filters.sort);
+
+  const listEl = document.getElementById('lib-article-list');
+  listEl.innerHTML = '<div style="color:#888;padding:20px;text-align:center">Loading...</div>';
+
+  try {
+    const r = await fetch('http://localhost:1212/api/librarian/articles?' + params.toString());
+    const d = await r.json();
+    if (d.error) { listEl.innerHTML = `<div style="color:#f44336;padding:20px">${d.error}</div>`; return; }
+
+    librarianTotalPages = d.pages || 1;
+    document.getElementById('lib-page-info').textContent = `Page ${d.page} of ${d.pages} (${d.total} articles)`;
+    document.getElementById('lib-prev-btn').disabled = d.page <= 1;
+    document.getElementById('lib-next-btn').disabled = d.page >= d.pages;
+
+    if (!d.articles || d.articles.length === 0) {
+      listEl.innerHTML = '<div style="color:#888;padding:20px;text-align:center">No articles found</div>';
+      librarianArticleIds = [];
+      return;
+    }
+    librarianArticleIds = d.articles.map(a => a.id);
+    librarianCurrentIndex = -1;
+    listEl.innerHTML = d.articles.map(_libArticleListItem).join('');
+
+    // Hover style
+    listEl.querySelectorAll('.lib-list-item').forEach(el => {
+      el.addEventListener('mouseenter', () => { if (parseInt(el.dataset.articleId) !== librarianArticleIds[librarianCurrentIndex]) el.style.background = '#1e2d4a'; });
+      el.addEventListener('mouseleave', () => { if (parseInt(el.dataset.articleId) !== librarianArticleIds[librarianCurrentIndex]) el.style.background = ''; });
+    });
+  } catch(e) {
+    listEl.innerHTML = `<div style="color:#f44336;padding:20px">Error: ${e.message}</div>`;
+  }
+}
+
+async function loadLibrarianArticle(id) {
+  const panel = document.getElementById('lib-article-detail');
+  panel.innerHTML = '<div style="color:#888;text-align:center;padding:40px 0">Loading...</div>';
+  try {
+    const r = await fetch('http://localhost:1212/api/librarian/article/' + id);
+    const a = await r.json();
+    if (a.error) { panel.innerHTML = `<div style="color:#f44336;padding:20px">${a.error}</div>`; return; }
+
+    const typeB = a.type ? _libBadge(a.type, '#444') : '';
+
+    const entitiesHtml = (a.entities && a.entities.length)
+      ? `<div style="margin-top:12px"><div style="color:#e0c97f;font-size:0.85em;margin-bottom:4px">Entities</div>
+          ${a.entities.map(e => `<div style="font-size:0.85em;padding:3px 0;border-bottom:1px solid #2a2a4a">
+            <span style="color:#ccc">${e.name}</span>
+            ${e.type ? `<span style="color:#888;font-size:0.85em"> (${e.type})</span>` : ''}
+            ${e.mention_text ? `<span style="color:#666;font-size:0.8em"> — "${e.mention_text}"</span>` : ''}
+            ${e.verified ? '<span style="color:#4caf50;font-size:0.75em"> ✓</span>' : ''}
+          </div>`).join('')}
+        </div>`
+      : '';
+
+    const quotesHtml = (a.quotes && a.quotes.length)
+      ? `<div style="margin-top:12px"><div style="color:#e0c97f;font-size:0.85em;margin-bottom:4px">Quotes (${a.quotes.length})</div>
+          ${a.quotes.map(q => `<div class="quote-block" style="margin-bottom:8px">
+            <div style="font-style:italic;color:#ddd">"${q.quote_text}"</div>
+            ${q.speaker ? `<div style="font-size:0.82em;color:#888;margin-top:4px">— ${q.speaker}${q.speaker_role ? ', ' + q.speaker_role : ''}</div>` : ''}
+            ${q.context ? `<div style="font-size:0.78em;color:#666;margin-top:2px">${q.context}</div>` : ''}
+          </div>`).join('')}
+        </div>`
+      : '';
+
+    const peopleHtml = (a.people && a.people.length)
+      ? `<div style="margin-top:12px"><div style="color:#e0c97f;font-size:0.85em;margin-bottom:4px">People (${a.people.length})</div>
+          ${a.people.map(p => `<div style="font-size:0.85em;padding:2px 0;border-bottom:1px solid #2a2a4a">
+            <span style="color:#ccc">${p.name}</span>
+            ${p.role ? `<span style="color:#888"> — ${p.role}</span>` : ''}
+          </div>`).join('')}
+        </div>`
+      : '';
+
+    const measurementsHtml = (a.measurements && a.measurements.length)
+      ? `<div style="margin-top:12px"><div style="color:#e0c97f;font-size:0.85em;margin-bottom:4px">Measurements (${a.measurements.length})</div>
+          ${a.measurements.map(m => `<div style="font-size:0.85em;padding:3px 0;border-bottom:1px solid #2a2a4a">
+            <span style="color:#7ec8e3;font-weight:bold">${m.value.toLocaleString()} ${m.unit}</span>
+            <span style="color:#888"> — ${m.context}</span>
+          </div>`).join('')}
+        </div>`
+      : '';
+
+    const flagDefs = [
+      { key: 'has_map',          label: 'MAP',           color: '#4a9eff' },
+      { key: 'has_photo_ref',    label: 'PHOTO REF',     color: '#4caf50' },
+      { key: 'has_illustration', label: 'ILLUSTRATION',  color: '#26c6da' },
+      { key: 'notable_quote',    label: 'NOTABLE QUOTE', color: '#e0c97f' },
+      { key: 'tragic',           label: 'TRAGIC',        color: '#ef5350' },
+      { key: 'has_conflict',     label: 'CONFLICT',      color: '#f06292' },
+    ];
+    const toneColors = {
+      humorous:   '#ffb300',
+      polemical:  '#ab47bc',
+      ceremonial: '#42a5f5',
+      somber:     '#78909c',
+    };
+    const toneVal = a.flags && a.flags.tone && a.flags.tone !== 'neutral' ? a.flags.tone : null;
+    const activeFlags = a.flags ? flagDefs.filter(f => a.flags[f.key]) : [];
+    const flagsHtml = (activeFlags.length || toneVal)
+      ? `<div style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:5px">
+          ${activeFlags.map(f => `<span style="font-size:0.72em;font-weight:bold;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;background:${f.color}22;color:${f.color};border:1px solid ${f.color}55">${f.label}</span>`).join('')}
+          ${toneVal ? `<span style="font-size:0.72em;font-weight:bold;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;background:${toneColors[toneVal]}22;color:${toneColors[toneVal]};border:1px dashed ${toneColors[toneVal]}55">${toneVal.toUpperCase()}</span>` : ''}
+        </div>`
+      : '';
+
+    const summaryBlock = a.summary
+      ? `<div style="margin-bottom:10px;padding:10px 12px;border-left:3px solid #aaa;background:#0f3460;border-radius:0 6px 6px 0">
+          <div style="color:#aaa;font-size:0.75em;margin-bottom:4px;letter-spacing:0.05em">SUMMARY</div>
+          <div style="font-size:0.9em;color:#ccc;line-height:1.5">${a.summary}</div>
+        </div>`
+      : '';
+
+    const keyPointsBlock = (a.key_points && a.key_points.length)
+      ? `<div style="margin-bottom:10px;padding:10px 12px;border-left:3px solid #4a6fa5;background:#0f3460;border-radius:0 6px 6px 0">
+          <div style="color:#aaa;font-size:0.75em;margin-bottom:6px;letter-spacing:0.05em">KEY POINTS</div>
+          <ul style="margin:0;padding-left:16px;list-style:disc">
+            ${a.key_points.map(p => `<li style="font-size:0.85em;color:#ccc;line-height:1.5;margin-bottom:3px">${p}</li>`).join('')}
+          </ul>
+        </div>`
+      : '';
+
+    const enrichedSection = a.type
+      ? `<div style="margin-top:14px;padding:10px;background:#0f3460;border-radius:6px;border:1px solid #1a3a5c">
+          <div style="color:#e0c97f;font-size:0.85em;margin-bottom:6px">Enrichment</div>
+          <div style="margin-bottom:4px">${typeB}</div>
+          ${a.type_confidence ? `<div style="font-size:0.78em;color:#666">Type confidence: ${(a.type_confidence*100).toFixed(0)}%</div>` : ''}
+          ${a.enrichment_run ? `<div style="font-size:0.78em;color:#555;margin-top:4px">Run #${a.enrichment_run.id} · ${a.enrichment_run.agent_name || ''} · ${a.enrichment_run.model || ''} · ${a.enrichment_run.started_at || ''}</div>` : ''}
+        </div>`
+      : `<div style="margin-top:14px;padding:10px;background:#16213e;border-radius:6px;border:1px dashed #333;color:#666;font-size:0.85em">Not yet enriched</div>`;
+
+    _libSetActiveArticle(id);
+    const idx = librarianCurrentIndex;
+    const total = librarianArticleIds.length;
+    const btnStyle = (disabled) => `padding:4px 8px;background:#1a3a5c;color:#e0c97f;border:1px solid #e0c97f;border-radius:4px;cursor:pointer;opacity:${disabled ? 0.3 : 1}`;
+    const navBar = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #2a2a4a;gap:4px">
+      <button onclick="librarianArticleNav(-10)" ${idx < 10 ? 'disabled' : ''} title="Back 10" style="${btnStyle(idx < 10)}">&#8249;&#8249;</button>
+      <button onclick="librarianArticleNav(-1)" ${idx <= 0 ? 'disabled' : ''} title="Prev" style="${btnStyle(idx <= 0)}">&#8249;</button>
+      <span style="color:#666;font-size:0.8em;flex:1;text-align:center">${idx >= 0 ? idx + 1 : '?'} of ${total}</span>
+      <button onclick="librarianArticleNav(1)" ${idx >= total - 1 ? 'disabled' : ''} title="Next" style="${btnStyle(idx >= total - 1)}">&#8250;</button>
+      <button onclick="librarianArticleNav(10)" ${idx >= total - 10 ? 'disabled' : ''} title="Forward 10" style="${btnStyle(idx >= total - 10)}">&#8250;&#8250;</button>
+    </div>`;
+
+    panel.innerHTML = `
+      ${navBar}
+      <div style="border-bottom:1px solid #333;padding-bottom:10px;margin-bottom:12px">
+        <h3 style="color:#e0c97f;margin-bottom:6px">${a.headline || '(no headline)'}</h3>
+        <div style="color:#888;font-size:0.85em">${a.date || '—'} · ${a.newspaper || '—'} · Page ${a.page || '—'}</div>
+        ${a.has_photo ? `<div style="font-size:0.8em;color:#4caf50;margin-top:4px">Has photo${a.photo_description ? ': ' + a.photo_description : ''}</div>` : ''}
+      </div>
+      ${flagsHtml}
+      ${summaryBlock}
+      ${keyPointsBlock}
+      <div style="max-height:240px;overflow-y:auto;background:#0a1628;border-radius:6px;padding:12px;font-size:0.85em;line-height:1.6;color:#ccc;white-space:pre-wrap;margin-bottom:10px">${a.full_text || '(no text)'}</div>
+      ${enrichedSection}
+      ${entitiesHtml}
+      ${quotesHtml}
+      ${peopleHtml}
+      ${measurementsHtml}
+    `;
+  } catch(e) {
+    panel.innerHTML = `<div style="color:#f44336;padding:20px">Error: ${e.message}</div>`;
+  }
+}
+
+const _agentsExpanded = {};
+let _agentsPollTimer = null;
+
+async function openAgentsModal() {
+  const modal = document.getElementById('lib-agents-modal');
+  modal.style.display = 'flex';
+  document.getElementById('lib-agents-content').innerHTML = '<div style="color:#888;text-align:center;padding:20px">Loading...</div>';
+  try {
+    const r = await fetch('http://localhost:1212/api/librarian/agents');
+    const d = await r.json();
+    if (d.error) { document.getElementById('lib-agents-content').innerHTML = `<div style="color:#f44336">${d.error}</div>`; return; }
+
+    const phaseColors = { 1: '#1565c0', 2: '#6a1b9a' };
+    const statusColors = { planned: '#ff9800', 'phase 2 — not yet started': '#555' };
+
+    const cards = d.agents.map(a => {
+      const phaseColor = phaseColors[a.phase] || '#444';
+      const statusColor = Object.entries(statusColors).find(([k]) => a.status.startsWith(k))?.[1] || '#4caf50';
+      const expandId = `agent-expand-${a.id}`;
+
+      const sectionRows = (a.prompt_section_order && a.prompt_section_order.length)
+        ? a.prompt_section_order.map(s => `<div style="padding:3px 0;border-bottom:1px solid #1a2a3e;font-size:0.82em;color:#ccc">${s}</div>`).join('')
+        : '<div style="color:#555;font-size:0.82em;font-style:italic">No prompt sections defined yet</div>';
+
+      const outputList = (a.output || []).map(o => `<span style="display:inline-block;background:#0a1628;border:1px solid #1a3a5c;border-radius:3px;padding:1px 6px;font-size:0.78em;color:#aaa;margin:1px">${o}</span>`).join(' ');
+
+      return `
+        <div style="background:#0f3460;border:1px solid #1a3a5c;border-radius:8px;margin-bottom:10px;overflow:hidden">
+          <div onclick="_toggleAgent('${a.id}')" style="display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer">
+            <span id="agent-arrow-${a.id}" style="color:#e0c97f;font-size:0.9em;transition:transform 0.2s">▶</span>
+            <div style="flex:1">
+              <span style="color:#e0c97f;font-weight:bold;font-size:0.95em">${a.name}</span>
+              <span style="font-size:0.75em;color:#aaa;margin-left:8px">${a.script || ''}</span>
+            </div>
+            <span style="background:${phaseColor};color:#fff;font-size:0.72em;padding:2px 7px;border-radius:3px">Phase ${a.phase}</span>
+            <span style="background:${statusColor};color:#fff;font-size:0.72em;padding:2px 7px;border-radius:3px">${a.status}</span>
+            <span style="color:#888;font-size:0.78em;margin-left:4px">${a.model}</span>
+            <span class="agent-status-dot" data-agent-id="${a.id}" title="Inactive" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#333;flex-shrink:0;transition:background 0.3s,box-shadow 0.3s"></span>
+          </div>
+          <div id="${expandId}" style="display:none;padding:0 14px 14px 14px;border-top:1px solid #1a3a5c">
+            <div style="color:#bbb;font-size:0.85em;margin:10px 0 10px">${a.description}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div>
+                <div style="color:#e0c97f;font-size:0.78em;margin-bottom:3px">Input</div>
+                <div style="color:#aaa;font-size:0.82em">${a.input}</div>
+              </div>
+              <div>
+                <div style="color:#e0c97f;font-size:0.78em;margin-bottom:3px">Output</div>
+                <div>${outputList}</div>
+              </div>
+            </div>
+            ${a.prompt_section_order && a.prompt_section_order.length ? `
+            <div style="margin-bottom:10px">
+              <div style="color:#e0c97f;font-size:0.78em;margin-bottom:4px">Prompt section order</div>
+              <div style="background:#0a1628;border-radius:4px;padding:8px">${sectionRows}</div>
+            </div>` : ''}
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div>
+                <div style="color:#e0c97f;font-size:0.78em;margin-bottom:3px">Cost estimate</div>
+                <div style="color:#aaa;font-size:0.82em">${a.cost_estimate || '—'}</div>
+              </div>
+              <div>
+                <div style="color:#e0c97f;font-size:0.78em;margin-bottom:3px">Last run</div>
+                <div style="color:#555;font-size:0.82em;font-style:italic">${a.last_run || 'never'}</div>
+              </div>
+            </div>
+            ${a.notes ? `<div style="background:#0a1628;border-radius:4px;padding:8px;font-size:0.8em;color:#888;line-height:1.5">${a.notes}</div>` : ''}
+            <div style="margin-top:10px">
+              <div style="color:#e0c97f;font-size:0.78em;margin-bottom:4px">Prompt template</div>
+              <div style="background:#0a1628;border-radius:4px;padding:10px;font-size:0.8em;color:#555;font-style:italic;white-space:pre-wrap;min-height:40px">${a.prompt_template || 'Not yet written.'}</div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('lib-agents-content').innerHTML = cards;
+    // Start polling for live status
+    _pollAgentStatus();
+    if (_agentsPollTimer) clearInterval(_agentsPollTimer);
+    _agentsPollTimer = setInterval(_pollAgentStatus, 3000);
+  } catch(e) {
+    document.getElementById('lib-agents-content').innerHTML = `<div style="color:#f44336;padding:20px">Error: ${e.message}</div>`;
+  }
+}
+
+function _toggleAgent(id) {
+  const el = document.getElementById(`agent-expand-${id}`);
+  const arrow = document.getElementById(`agent-arrow-${id}`);
+  const open = el.style.display === 'none';
+  el.style.display = open ? 'block' : 'none';
+  arrow.style.transform = open ? 'rotate(90deg)' : '';
+}
+
+function closeAgentsModal() {
+  document.getElementById('lib-agents-modal').style.display = 'none';
+  if (_agentsPollTimer) { clearInterval(_agentsPollTimer); _agentsPollTimer = null; }
+}
+
+document.getElementById('lib-agents-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeAgentsModal();
+});
+
+async function _pollAgentStatus() {
+  try {
+    const r = await fetch('http://localhost:1212/api/librarian/agent_status');
+    const s = await r.json();
+    const activeAgent = s.active_agent || null;
+
+    // Update dots
+    document.querySelectorAll('.agent-status-dot').forEach(dot => {
+      const id = dot.dataset.agentId;
+      const isActive = activeAgent && activeAgent === id;
+      dot.style.background = isActive ? '#4caf50' : '#333';
+      dot.style.boxShadow = isActive ? '0 0 6px #4caf50' : 'none';
+      dot.title = isActive ? 'Running' : 'Inactive';
+    });
+
+  } catch(e) { /* silent */ }
+}
+
+async function openRunsModal() {
+  const modal = document.getElementById('lib-runs-modal');
+  modal.style.display = 'flex';
+  document.getElementById('lib-runs-content').innerHTML = '<div style="color:#888;text-align:center;padding:20px">Loading...</div>';
+
+  try {
+    const [statsR, runsR] = await Promise.all([
+      fetch('http://localhost:1212/api/librarian/stats'),
+      fetch('http://localhost:1212/api/librarian/runs')
+    ]);
+    const stats = await statsR.json();
+    const runs = await runsR.json();
+
+    // Progress bar
+    const pct = stats.total_articles > 0 ? Math.round((stats.enriched / stats.total_articles) * 100) : 0;
+    document.getElementById('lib-runs-progress-bar').style.width = pct + '%';
+    document.getElementById('lib-runs-progress-label').textContent = `${stats.enriched.toLocaleString()} of ${stats.total_articles.toLocaleString()} articles (${pct}%)`;
+
+    // Runs table
+    if (!runs.runs || runs.runs.length === 0) {
+      document.getElementById('lib-runs-content').innerHTML = '<div style="color:#666;text-align:center;padding:30px;border:1px dashed #333;border-radius:6px">No enrichment runs yet.<br><span style="font-size:0.85em">Run <code style="color:#e0c97f">python enrich_articles.py --limit 100</code> to start.</span></div>';
+      return;
+    }
+
+    const rows = runs.runs.map(r => {
+      const status = r.completed_at
+        ? `<span style="color:#4caf50;font-size:0.8em">✓ done</span>`
+        : `<span style="color:#ff9800;font-size:0.8em">⟳ running</span>`;
+      const duration = (r.started_at && r.completed_at)
+        ? (() => { const s = Math.round((new Date(r.completed_at) - new Date(r.started_at)) / 1000); return s < 60 ? `${s}s` : `${Math.floor(s/60)}m ${s%60}s`; })()
+        : '—';
+      return `<tr>
+        <td style="color:#888;font-size:0.8em">#${r.id}</td>
+        <td style="color:#e0c97f;font-size:0.85em">${r.agent_name || '—'}</td>
+        <td style="color:#ccc;font-size:0.8em">${r.model || '—'}</td>
+        <td style="color:#ccc;font-size:0.8em">${r.prompt_version || '—'}</td>
+        <td style="color:#aaa;font-size:0.8em;text-align:right">${(r.articles_processed || 0).toLocaleString()}</td>
+        <td style="color:#888;font-size:0.78em">${r.started_at ? r.started_at.slice(0,16).replace('T',' ') : '—'}</td>
+        <td style="font-size:0.8em;color:#888">${duration}</td>
+        <td>${status}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('lib-runs-content').innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:0.9em">
+        <thead>
+          <tr style="border-bottom:1px solid #333">
+            <th style="color:#e0c97f;padding:6px 4px;text-align:left;font-weight:normal;font-size:0.8em">#</th>
+            <th style="color:#e0c97f;padding:6px 4px;text-align:left;font-weight:normal;font-size:0.8em">Agent</th>
+            <th style="color:#e0c97f;padding:6px 4px;text-align:left;font-weight:normal;font-size:0.8em">Model</th>
+            <th style="color:#e0c97f;padding:6px 4px;text-align:left;font-weight:normal;font-size:0.8em">Prompt ver.</th>
+            <th style="color:#e0c97f;padding:6px 4px;text-align:right;font-weight:normal;font-size:0.8em">Articles</th>
+            <th style="color:#e0c97f;padding:6px 4px;text-align:left;font-weight:normal;font-size:0.8em">Started</th>
+            <th style="color:#e0c97f;padding:6px 4px;text-align:left;font-weight:normal;font-size:0.8em">Duration</th>
+            <th style="color:#e0c97f;padding:6px 4px;text-align:left;font-weight:normal;font-size:0.8em">Status</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      ${runs.runs[0].notes ? `<div style="margin-top:10px;font-size:0.8em;color:#666">${runs.runs[0].notes}</div>` : ''}
+    `;
+  } catch(e) {
+    document.getElementById('lib-runs-content').innerHTML = `<div style="color:#f44336;padding:20px">Error: ${e.message}</div>`;
+  }
+}
+
+function closeRunsModal() {
+  document.getElementById('lib-runs-modal').style.display = 'none';
+}
+
+// Close modal on backdrop click
+document.getElementById('lib-runs-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeRunsModal();
+});
+
+// Keyboard navigation — up/down arrows move between articles
+document.addEventListener('keydown', function(e) {
+  const tag = document.activeElement ? document.activeElement.tagName : '';
+  if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); librarianArticleNav(1); }
+  if (e.key === 'ArrowUp')   { e.preventDefault(); librarianArticleNav(-1); }
+});
+
+// ==================== TOOLS TAB ====================
+
+let _toolsPollTimer = null;
+let _runFeedItems = [];
+let _enrichmentRunning = false;
+let _enrichmentStartedAt = 0;
+let _processedFeed = [];
+let _processedFeedIds = new Set();
+
+function _setEnrichBtn(running) {
+  _enrichmentRunning = running;
+  const btn = document.getElementById('run-toggle-btn');
+  if (!btn) return;
+  btn.textContent = running ? '■ Stop' : '▶ Start';
+  btn.style.background = running ? '#f44336' : '#4caf50';
+}
+
+function toggleEnrichment() {
+  if (_enrichmentRunning) stopEnrichment();
+  else startEnrichment();
+}
+
+function switchTab(tab) {
+  document.getElementById('panel-browse').style.display = tab === 'browse' ? 'flex' : 'none';
+  document.getElementById('panel-tools').style.display = tab === 'tools' ? 'block' : 'none';
+  document.getElementById('panel-corrections').style.display = tab === 'corrections' ? 'block' : 'none';
+  ['browse', 'tools', 'corrections'].forEach(t => {
+    document.getElementById('tab-' + t).style.cssText = t === tab
+      ? 'padding:5px 16px;background:#1a3a5c;color:#e0c97f;border:none;cursor:pointer;font-size:0.85em;font-weight:bold'
+      : 'padding:5px 16px;background:transparent;color:#888;border:none;cursor:pointer;font-size:0.85em';
+  });
+  if (tab === 'tools') { loadDefaultRunDates(); loadDispositionChart(); startToolsPoll(); }
+  else { stopToolsPoll(); }
+}
+
+function _renderProcessedFeed() {
+  const feedEl = document.getElementById('tools-feed-content');
+  if (!feedEl) return;
+  if (_processedFeed.length === 0) {
+    feedEl.innerHTML = '<span style="color:#555;font-style:italic">No processed articles yet.</span>';
+  } else {
+    feedEl.innerHTML = _processedFeed.map(a =>
+      `<div style="display:flex;gap:10px;padding:2px 0;border-bottom:1px solid #1a2a3e">
+        <span style="color:#888;white-space:nowrap">${a.date || '—'}</span>
+        <span style="color:#aaa;white-space:nowrap;flex-shrink:0">${(a.newspaper || '').replace('Fort Worth ','')}</span>
+        <span style="color:#ccc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.headline || '(no headline)'}</span>
+      </div>`
+    ).join('');
+  }
+}
+
+function _saveProcessedFeed() {
+  try { localStorage.setItem('lw_processed_feed', JSON.stringify(_processedFeed)); } catch(e) {}
+}
+
+function _loadProcessedFeed() {
+  try {
+    const stored = localStorage.getItem('lw_processed_feed');
+    if (!stored) return;
+    _processedFeed = JSON.parse(stored);
+    _processedFeed.forEach(a => { if (a.id) _processedFeedIds.add(a.id); });
+    _renderProcessedFeed();
+  } catch(e) {}
+}
+
+async function loadDispositionChart() {
+  try {
+    const r = await fetch('/api/librarian/articles_by_year');
+    const data = await r.json();
+    if (!Array.isArray(data) || data.length === 0) return;
+    drawDispositionChart(data);
+  } catch(e) {}
+}
+
+function drawDispositionChart(data) {
+  const canvas = document.getElementById('disposition-chart');
+  if (!canvas) return;
+  const container = document.getElementById('disposition-chart-container');
+  const ctx = canvas.getContext('2d');
+
+  const pad = { top: 16, right: 16, bottom: 44, left: 46 };
+  canvas.width = (container ? container.clientWidth - 32 : 600);
+  canvas.height = 210;
+
+  const W = canvas.width, H = canvas.height;
+  const chartW = W - pad.left - pad.right;
+  const chartH = H - pad.top - pad.bottom;
+  const n = data.length;
+  const maxTotal = Math.max(...data.map(d => d.total), 1);
+  const gap = 4;
+  const barW = Math.max(2, Math.floor((chartW - gap * (n - 1)) / n));
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Y grid lines + labels
+  const yTicks = 5;
+  for (let i = 0; i <= yTicks; i++) {
+    const val = Math.round(maxTotal * i / yTicks);
+    const y = pad.top + chartH - Math.round(chartH * i / yTicks);
+    ctx.strokeStyle = '#2a2a4a'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + chartW, y); ctx.stroke();
+    ctx.fillStyle = '#666'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val, pad.left - 4, y + 3);
+  }
+
+  // Bars
+  const barBottom = pad.top + chartH;
+  data.forEach((d, i) => {
+    const x = pad.left + i * (barW + gap);
+    const totalH = Math.round((d.total / maxTotal) * chartH);
+    const enrichedH = Math.round((d.enriched / maxTotal) * chartH);
+    const unenrichedH = totalH - enrichedH;
+
+    // Orange (unenriched) — bottom
+    if (unenrichedH > 0) {
+      ctx.fillStyle = '#f57c00';
+      ctx.fillRect(x, barBottom - unenrichedH, barW, unenrichedH);
+    }
+    // Green (enriched) — top
+    if (enrichedH > 0) {
+      ctx.fillStyle = '#4caf50';
+      ctx.fillRect(x, barBottom - totalH, barW, enrichedH);
+    }
+
+    // X label (angled)
+    ctx.save();
+    ctx.fillStyle = '#888'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+    ctx.translate(x + barW / 2, barBottom + 6);
+    ctx.rotate(-Math.PI / 4);
+    ctx.fillText(d.year, 0, 0);
+    ctx.restore();
+  });
+
+  // Legend
+  const lx = pad.left + chartW - 130, ly = pad.top + 2;
+  ctx.fillStyle = '#4caf50'; ctx.fillRect(lx, ly, 10, 10);
+  ctx.fillStyle = '#888'; ctx.font = '10px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Enriched', lx + 13, ly + 9);
+  ctx.fillStyle = '#f57c00'; ctx.fillRect(lx + 70, ly, 10, 10);
+  ctx.fillStyle = '#888';
+  ctx.fillText('Unenriched', lx + 83, ly + 9);
+}
+
+async function loadDefaultRunDates() {
+  const fromEl = document.getElementById('run-from-date');
+  const toEl = document.getElementById('run-to-date');
+  if (fromEl.value && toEl.value) return;
+  try {
+    const r = await fetch('/api/librarian/last_enriched_date');
+    const d = await r.json();
+    if (!d.last_date) return;
+    const [year, month] = d.last_date.split('-').map(Number);
+    if (!fromEl.value) fromEl.value = d.last_date;
+    if (!toEl.value) {
+      const endYear = month === 12 ? year + 1 : year;
+      toEl.value = `${endYear}-12-31`;
+    }
+  } catch(e) { /* ignore */ }
+}
+
+async function startEnrichment() {
+  const params = {
+    from_date: document.getElementById('run-from-date').value || null,
+    to_date: document.getElementById('run-to-date').value || null,
+    limit: document.getElementById('run-limit').value ? parseInt(document.getElementById('run-limit').value) : null,
+    rerun: document.getElementById('run-rerun').checked
+  };
+  try {
+    const res = await fetch('/api/librarian/run/start', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(params)
+    });
+    const data = await res.json();
+    if (data.error) {
+      document.getElementById('run-status-row').textContent = 'Error: ' + data.error;
+    } else {
+      _runFeedItems = [];
+      _enrichmentStartedAt = Date.now();
+      document.getElementById('run-feed').innerHTML = '';
+      document.getElementById('run-status-row').textContent = 'Started (PID ' + data.pid + ')';
+      _setEnrichBtn(true);
+      startToolsPoll();
+    }
+  } catch(e) {
+    document.getElementById('run-status-row').textContent = 'Error: ' + e.message;
+  }
+}
+
+async function stopEnrichment() {
+  try {
+    const res = await fetch('/api/librarian/run/stop', { method: 'POST' });
+    const data = await res.json();
+    document.getElementById('run-status-row').textContent = data.message || 'Stopped';
+    _setEnrichBtn(false);
+    stopToolsPoll();
+  } catch(e) {
+    document.getElementById('run-status-row').textContent = 'Error: ' + e.message;
+  }
+}
+
+function startToolsPoll() {
+  if (_toolsPollTimer) return;
+  _toolsPollTimer = setInterval(pollRunStatus, 2000);
+  pollRunStatus();
+}
+
+function stopToolsPoll() {
+  if (_toolsPollTimer) { clearInterval(_toolsPollTimer); _toolsPollTimer = null; }
+}
+
+async function pollRunStatus() {
+  try {
+    const res = await fetch('/api/librarian/agent_status');
+    const data = await res.json();
+    const isActive = !!data.active_agent;
+    const done = data.articles_done || 0;
+    const total = data.articles_total || 0;
+    const pct = total > 0 ? Math.round(done / total * 100) : 0;
+    document.getElementById('run-progress-bar').style.width = (total > 0 ? pct : (isActive ? 5 : 0)) + '%';
+    document.getElementById('run-status-row').textContent = isActive
+      ? `Running: ${done}${total ? '/' + total : ''} articles${total ? ' (' + pct + '%)' : ''}`
+      : (done > 0 ? `Done — ${done} article(s) processed` : 'Idle');
+    const current = data.current_articles || [];
+    if (current.length > 0) {
+      const line = current[0];
+      document.getElementById('run-current').textContent = typeof line === 'object' ? (line.headline || '') : line;
+    } else {
+      document.getElementById('run-current').textContent = '';
+    }
+    // Accumulate new articles into persistent feed
+    let feedChanged = false;
+    current.forEach(a => {
+      if (a.id && !_processedFeedIds.has(a.id)) {
+        _processedFeedIds.add(a.id);
+        _processedFeed.unshift(a);
+        if (_processedFeed.length > 500) _processedFeed.pop();
+        feedChanged = true;
+      }
+    });
+    if (feedChanged) {
+      _saveProcessedFeed();
+      _renderProcessedFeed();
+    }
+    // Feed: append new items
+    if (data.feed && Array.isArray(data.feed)) {
+      const feed = document.getElementById('run-feed');
+      const newItems = data.feed.slice(_runFeedItems.length);
+      newItems.forEach(item => {
+        _runFeedItems.push(item);
+        const div = document.createElement('div');
+        div.style.cssText = 'padding:2px 0;border-bottom:1px solid #1a2a3e;color:#aaa';
+        div.textContent = item;
+        feed.appendChild(div);
+        feed.scrollTop = feed.scrollHeight;
+      });
+    }
+    const recentlyStarted = _enrichmentStartedAt && (Date.now() - _enrichmentStartedAt) < 10000;
+    _setEnrichBtn(isActive || recentlyStarted);
+    if (!isActive && !recentlyStarted && _toolsPollTimer) {
+      stopToolsPoll();
+    }
+  } catch(e) { /* ignore poll errors */ }
+}
+
+let _corrChatHistory = [];
+
+function corrChatKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendCorrectionChat(); }
+}
+
+async function sendCorrectionChat() {
+  const input = document.getElementById('corr-chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  document.getElementById('corr-send-btn').disabled = true;
+  _corrChatHistory.push({role: 'user', content: text});
+  renderCorrChat();
+  const histEl = document.getElementById('corr-chat-history');
+  const typing = document.createElement('div');
+  typing.id = 'corr-typing';
+  typing.style.cssText = 'color:#888;font-size:0.8em;font-style:italic;padding:4px 0';
+  typing.textContent = 'Thinking...';
+  histEl.appendChild(typing);
+  histEl.scrollTop = histEl.scrollHeight;
+  try {
+    const res = await fetch('/api/librarian/corrections/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({messages: _corrChatHistory})
+    });
+    const data = await res.json();
+    const typingEl = document.getElementById('corr-typing');
+    if (typingEl) typingEl.remove();
+    _corrChatHistory.push({role: 'assistant', content: data.error ? 'Error: ' + data.error : data.reply, actions: data.actions || []});
+  } catch(e) {
+    const typingEl = document.getElementById('corr-typing');
+    if (typingEl) typingEl.remove();
+    _corrChatHistory.push({role: 'assistant', content: 'Error: ' + e.message, actions: []});
+  }
+  renderCorrChat();
+  document.getElementById('corr-send-btn').disabled = false;
+  document.getElementById('corr-chat-input').focus();
+}
+
+function renderCorrChat() {
+  const el = document.getElementById('corr-chat-history');
+  if (_corrChatHistory.length === 0) {
+    el.innerHTML = '<div style="color:#555;font-size:0.82em;text-align:center;padding:20px 0">Describe a data error and I\'ll find and fix it.</div>';
+    return;
+  }
+  const toolIcons = {search_db:'🔍', read_corrections:'📄', write_corrections:'✏️', apply_corrections:'⚡'};
+  el.innerHTML = _corrChatHistory.map(m => {
+    if (m.role === 'user') {
+      return `<div style="display:flex;justify-content:flex-end"><div style="background:#1a3a5c;color:#e0c97f;padding:8px 12px;border-radius:10px 10px 2px 10px;max-width:85%;font-size:0.85em">${escapeHtml(m.content)}</div></div>`;
+    }
+    const acts = (m.actions || []).map(a =>
+      `<div style="font-size:0.75em;color:#4caf50;margin-top:3px">${toolIcons[a.tool] || '⚙️'} ${a.tool}</div>`
+    ).join('');
+    return `<div style="display:flex;justify-content:flex-start"><div style="background:#0f1a30;color:#e0e0e0;padding:8px 12px;border-radius:10px 10px 10px 2px;max-width:92%;font-size:0.85em"><div style="white-space:pre-wrap">${escapeHtml(m.content)}</div>${acts}</div></div>`;
+  }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ==================== END LIBRARIAN ====================
+
+// Load stats on page open
+loadLibrarianStats();
+loadLibrarianArticles(1, {});
+_loadProcessedFeed();
+</script>
+</body>
+</html>

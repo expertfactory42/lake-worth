@@ -965,6 +965,13 @@ def ensure_accounts_table():
         )
     """)
     conn.commit()
+    for col, default in [("collector_active", 1), ("clipper_active", 1)]:
+        try:
+            conn.execute(f"ALTER TABLE accounts ADD COLUMN {col} INTEGER DEFAULT {default}")
+            conn.execute(f"UPDATE accounts SET {col} = active WHERE {col} IS NULL")
+            conn.commit()
+        except Exception:
+            pass
     conn.close()
 
 
@@ -1026,7 +1033,7 @@ def get_dashboard_data():
 
     # People
     people_rows = conn.execute(
-        "SELECT * FROM people ORDER BY first_seen_date"
+        "SELECT * FROM people ORDER BY date_first"
     ).fetchall()
     people_list = [dict(p) for p in people_rows]
 
@@ -1704,7 +1711,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 rows = conn.execute("""
                     SELECT *,
                            COALESCE(clips_today, 0) AS clips_today_actual
-                    FROM accounts ORDER BY active DESC, total_clips DESC
+                    FROM accounts ORDER BY (COALESCE(clipper_active,1) + COALESCE(collector_active,1)) DESC, total_clips DESC
                 """).fetchall()
                 accounts = [dict(r) for r in rows]
                 # Include daily clip limit so the UI can determine cooldown status
@@ -1900,7 +1907,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                     acct_email = None
                     if not progress["running"]:
                         next_row = acc_conn.execute(
-                            "SELECT email, clips_this_session FROM accounts WHERE active = 1"
+                            "SELECT email, clips_this_session FROM accounts WHERE active = 1 AND clipper_active = 1"
                             " AND (last_throttle_time IS NULL OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))"
                             " ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC LIMIT 1"
                         ).fetchone()
@@ -1956,7 +1963,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                         progress["clip_limit"] = int(lim_row["value"] or 0)
                     # Find next eligible account (not throttled within 24h)
                     next_row = state_conn.execute(
-                        "SELECT email, clips_this_session FROM accounts WHERE active = 1"
+                        "SELECT email, clips_this_session FROM accounts WHERE active = 1 AND clipper_active = 1"
                         " AND (last_throttle_time IS NULL OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))"
                         " ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC LIMIT 1"
                     ).fetchone()
@@ -2098,8 +2105,10 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                         pass
                     if has_daily_cols:
                         rows = conn.execute("""
-                            SELECT a.email, a.active, a.in_use_by, a.in_use_pid,
+                            SELECT a.id, a.email, a.active, a.collector_active, a.clipper_active,
+                                   a.in_use_by, a.in_use_pid,
                                    a.total_clips, a.last_clip_time,
+                                   a.last_error, a.last_error_time, a.last_error_screenshot,
                                    COALESCE(g.gathered, 0) AS urls_gathered,
                                    g.last_gathered_time AS join_last_gathered_time,
                                    a.urls_today, a.urls_today_date,
@@ -2113,13 +2122,15 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                                 WHERE gathered_by IS NOT NULL AND gathered_by != ''
                                 GROUP BY gathered_by
                             ) g ON g.gathered_by = a.email
-                            WHERE a.active = 1
+                            WHERE a.active = 1 AND a.collector_active = 1
                             ORDER BY a.email
                         """).fetchall()
                     else:
                         rows = conn.execute("""
-                            SELECT a.email, a.active, a.in_use_by, a.in_use_pid,
+                            SELECT a.id, a.email, a.active, a.collector_active, a.clipper_active,
+                                   a.in_use_by, a.in_use_pid,
                                    a.total_clips, a.last_clip_time,
+                                   a.last_error, a.last_error_time, a.last_error_screenshot,
                                    COALESCE(g.gathered, 0) AS urls_gathered,
                                    g.last_gathered_time
                             FROM accounts a
@@ -2130,7 +2141,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                                 WHERE gathered_by IS NOT NULL AND gathered_by != ''
                                 GROUP BY gathered_by
                             ) g ON g.gathered_by = a.email
-                            WHERE a.active = 1
+                            WHERE a.active = 1 AND a.collector_active = 1
                             ORDER BY a.email
                         """).fetchall()
                     # Get actively collecting accounts from collector_instances
@@ -2150,14 +2161,20 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 accounts = []
                 for r in rows:
                     acct = {
+                        "id": r["id"],
                         "email": r["email"],
                         "active": r["active"],
+                        "collector_active": r["collector_active"],
+                        "clipper_active": r["clipper_active"],
                         "in_use_by": r["in_use_by"],
                         "in_use_pid": r["in_use_pid"],
                         "total_clips": r["total_clips"],
                         "last_clip_time": r["last_clip_time"],
                         "urls_gathered": r["urls_gathered"],
                         "is_collecting": r["email"] in collecting_emails,
+                        "last_error": r["last_error"],
+                        "last_error_time": r["last_error_time"],
+                        "last_error_screenshot": r["last_error_screenshot"],
                     }
                     if has_daily_cols:
                         acct["urls_today"] = r["urls_today"] or 0
@@ -2656,8 +2673,11 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             self.end_headers()
             try:
                 conn = get_db()
+                field = body.get("field", "active")
+                if field not in ("active", "collector_active", "clipper_active"):
+                    field = "active"
                 conn.execute(
-                    "UPDATE accounts SET active=?, updated_at=datetime('now','localtime') WHERE id=?",
+                    f"UPDATE accounts SET {field}=?, updated_at=datetime('now','localtime') WHERE id=?",
                     (1 if body.get("active") else 0, body["id"]),
                 )
                 conn.commit()
@@ -2700,6 +2720,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 if reset_daily:
                     conn.execute("""
                         UPDATE accounts SET
+                        active=1,
                         last_error=NULL, last_error_time=NULL, last_error_screenshot=NULL,
                         urls_today=0, urls_today_date=NULL, last_gathered_time=NULL,
                         updated_at=datetime('now','localtime')
@@ -2708,6 +2729,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 else:
                     conn.execute("""
                         UPDATE accounts SET
+                        active=1,
                         last_error=NULL, last_error_time=NULL, last_error_screenshot=NULL,
                         updated_at=datetime('now','localtime')
                         WHERE id=?

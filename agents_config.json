@@ -1,0 +1,99 @@
+{
+  "agents": [
+    {
+      "id": "enrichment",
+      "name": "Enrichment Agent",
+      "phase": 1,
+      "status": "planned",
+      "model": "claude-sonnet-4-6",
+      "description": "Single combined Sonnet call per article. Extracts everything in one pass. Haiku was tested and found inadequate for extraction quality. Prompt sections ordered by stability: classification first, quotes last (highest degradation risk under multi-task).",
+      "input": "headline + full_text",
+      "output": ["article_type", "article_flags", "article_eras", "article_entities", "quotes", "people"],
+      "prompt_section_order": [
+        "1. Article type classification",
+        "2. Importance (1-5) + boolean flags (interesting, ironic, tragic, comic, cautionary, scandalous, notable_quote)",
+        "3. Era assignment with confidence",
+        "4. Entity extraction (camps, establishments, vessels, organizations, locations — types emerge from data)",
+        "5. Quote extraction (verbatim only, null speaker over guessing, attribution confidence: explicit/implied/inferred)"
+      ],
+      "cost_estimate": "~$300 for 12k articles (actual), ~$2,000 projected for 80k (Sonnet + prompt caching)",
+      "notes": "Uses Claude native structured output (output_config.format) + Pydantic validation. Prompt caching on system prompt at 1-hour TTL. Skips articles under 50 chars (auto-classified as stub).",
+      "status": "ready",
+      "prompt_template": "You are a historical newspaper analyst working on the Fort Worth Star-Telegram archive (1909\u20131925), part of a preservation project for Lake Worth, Texas history.\n\nYour task: analyze a newspaper article and extract structured enrichment data in a single pass.\n\n=== ARTICLE TYPES ===\nnews         \u2014 news report\neditorial    \u2014 opinion or editorial\nletter       \u2014 letter to the editor\nad           \u2014 advertisement\nsocial       \u2014 social notice, personal item, party, visit\nlegal        \u2014 court filing, legal notice, lawsuit record\nnotice       \u2014 public notice, announcement\nobituary     \u2014 death notice or obituary\nstub         \u2014 too short or garbled to classify meaningfully\nunknown      \u2014 cannot determine\n\n=== IMPORTANCE SCALE (1\u20135) ===\n1 \u2014 routine filler, no lasting significance\n2 \u2014 minor local interest\n3 \u2014 notable event, significant local development\n4 \u2014 major event, lawsuit, or landmark decision\n5 \u2014 historically pivotal \u2014 dam, naming, amusement park, flood, founding moment\n\n=== BOOLEAN FLAGS ===\ninteresting     \u2014 genuinely interesting to a modern reader\nironic          \u2014 contains irony visible in hindsight\ntragic          \u2014 death, loss, ruined plans\ncomic           \u2014 genuinely funny or absurd\ncautionary      \u2014 lesson about neglect, hubris, or short-sightedness\nscandalous      \u2014 scandal, misbehavior, embarrassment\nnotable_quote   \u2014 contains a quote strong enough to anchor a book passage\n\n=== THE 7 NARRATIVE ERAS ===\nimpoundment    (1909\u20131914) \u2014 dam construction, water fights, lake fills\ndiscovery      (1914\u20131917) \u2014 lake is new; organic recreation, fishing, first camps, flooding lawsuits\ncarnival       (1917\u20131929) \u2014 amusement park, interurban, bootlegging, Shriners, peak chaos\ndepression_war (1929\u20131945) \u2014 carnival fades, WWII, attendance drops\npostwar_suburbs(1945\u20131970) \u2014 lake becomes neighborhood lake, siltation, operators close\ndecline        (1970\u20132000) \u2014 governance failures, dredging neglect, deterioration\nrenewal        (2000\u2013present) \u2014 dredging projects, community advocacy, historical awareness\n\nAssign the era that best fits the article's *content and themes*, not just its date. An article from 1916 could fit either impoundment or discovery \u2014 use judgment.\n\n=== ENTITY EXTRACTION ===\nExtract every named camp, establishment, organization, vessel, road, park, or event.\n- name: canonical name as you would list it in an index\n- type: whatever label fits best \u2014 camp | pavilion | steamer | club | park | road | organization | event | location | etc.\n- mention_text: the EXACT text as printed in the article (OCR warts and all)\nDo not try to resolve duplicates \u2014 that is a separate canonicalization pass.\n\n=== QUOTE EXTRACTION \u2014 CRITICAL ===\nExtract ALL direct quotes. Over-extract rather than under-extract. We can filter; we cannot recover missed quotes.\n- quote_text: VERBATIM from the source \u2014 never reconstruct, paraphrase, or clean OCR noise\n- speaker: null if unknown \u2014 NEVER GUESS. Hallucinated attribution is worse than no attribution for a preservation project.\n- speaker_role: the title or role as described in the article (null if not given)\n- context: one sentence describing when or why this was said (null if not clear)\n- attribution_confidence:\n    explicit  \u2014 quotation marks are present\n    implied   \u2014 attribution language present (\"he said\", \"according to\", \"stated that\")\n    inferred  \u2014 boundary inferred from context, no direct signal\n\n=== PEOPLE EXTRACTION ===\nExtract every named person mentioned.\n- name: full name as printed (e.g. \"J. C. Lord\", \"Tillman Graham\")\n- role: title or role as described in this article (e.g. \"superintendent of construction\", \"promoter\")\n\n=== STUB HANDLING ===\nIf the article text is very short (under 50 characters) or completely garbled, set article_type to \"stub\".\nFor stubs: return empty lists for entities, quotes, and people.\n\n=== FEW-SHOT EXAMPLES ===\n[3 hand-crafted examples from the corpus are embedded in the script's SYSTEM_PROMPT constant. See enrich_articles.py for the full prompt including examples.]",
+      "prompt_hash": "16d60bfed077e87b",
+      "script": "enrich_articles.py"
+    },
+    {
+      "id": "canonicalizer",
+      "name": "Entity Canonicalizer",
+      "phase": 1,
+      "status": "planned",
+      "model": "claude-haiku-4-5-20251022 (clustering) + claude-sonnet-4-6 (disambiguation)",
+      "description": "Post-processing pass — not per-article. Runs after enrichment agent has processed a large batch. Clusters entity mention variants by text similarity, then resolves ambiguous clusters to canonical records.",
+      "input": "All entity mentions from article_entities table (name, type, mention_text, context)",
+      "output": ["entities table (canonical records with name, type, date_first, date_last)", "mention_variants array per entity"],
+      "prompt_section_order": [
+        "1. Haiku pass: cluster mentions by string similarity into candidate groups",
+        "2. Sonnet pass (ambiguous only): decide if variants are the same entity, assign canonical name",
+        "3. Write canonical records, link mentions via entity_id"
+      ],
+      "cost_estimate": "Minimal — runs once per corpus, only ambiguous clusters hit Sonnet",
+      "notes": "Handles cases like 'Camp Barnard' vs 'the Barnard camp' vs 'Barnard\\'s'. Stores original mention_text alongside canonical form. Run nightly after new articles arrive.",
+      "prompt_template": null,
+      "script": "canonicalize_entities.py"
+    },
+    {
+      "id": "embeddings",
+      "name": "Embedding Generator",
+      "phase": 1,
+      "status": "planned",
+      "model": "Voyage AI voyage-large-2",
+      "description": "Generates semantic vectors for all articles. Stored in sqlite-vec. Enables semantic search and similarity queries in the Article Browser.",
+      "input": "headline + full_text (concatenated)",
+      "output": ["vectors stored in sqlite-vec"],
+      "prompt_section_order": [],
+      "cost_estimate": "~$5 one-time for 80k articles",
+      "notes": "Not a Claude agent — uses Voyage AI API. Run once after enrichment, then incrementally as new articles arrive.",
+      "prompt_template": null,
+      "script": "generate_embeddings.py"
+    },
+    {
+      "id": "thread_tagger",
+      "name": "Story Thread Tagger",
+      "phase": 2,
+      "status": "phase 2 — not yet started",
+      "model": "claude-sonnet-4-6",
+      "description": "Tags articles with story thread membership and role. Requires story threads to be defined by hand first. Agent matches articles to defined threads.",
+      "input": "article (headline + full_text) + full thread library (name, description, era)",
+      "output": ["article_threads rows with role: origin | development | peak | resolution | footnote | parallel"],
+      "prompt_section_order": [
+        "1. Review thread library",
+        "2. Identify which threads this article belongs to",
+        "3. For each matching thread, assign a role"
+      ],
+      "cost_estimate": "TBD — Sonnet pricing, depends on thread count and corpus size",
+      "notes": "Cannot run until threads are defined. Thread definition UI is a Phase 2 dashboard feature.",
+      "prompt_template": null,
+      "script": "tag_threads.py"
+    },
+    {
+      "id": "connection_builder",
+      "name": "Connection Builder",
+      "phase": 2,
+      "status": "phase 2 — not yet started",
+      "model": "claude-sonnet-4-6",
+      "description": "Builds connections between article pairs with shared people, entities, or threads. Targeted — not all-against-all. Thread membership drives candidate pair selection.",
+      "input": "Article pairs with shared people/entities/threads",
+      "output": ["connections rows with relationship: cause | effect | irony | callback | contrast | parallel | continuation"],
+      "prompt_section_order": [
+        "1. Review both articles",
+        "2. Identify relationship type",
+        "3. Write a description of why they are connected"
+      ],
+      "cost_estimate": "TBD — depends on thread coverage and pair count",
+      "notes": "Human verification queue: all AI-suggested connections go into a review queue before being trusted. source=ai, verified=0 until reviewed.",
+      "prompt_template": null,
+      "script": "build_connections.py"
+    }
+  ]
+}

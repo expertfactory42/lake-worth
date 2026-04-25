@@ -971,9 +971,11 @@ class BrowserSession:
         session.shutdown(driver)
     """
 
-    def __init__(self, db_path, profile_dir):
+    def __init__(self, db_path, profile_dir, app='clipper'):
         self.db_path = db_path
         self.profile_dir = str(profile_dir)
+        self.app = app
+        self._active_field = 'collector_active' if app == 'collector' else 'clipper_active'
         self.current_email = None
         self.current_clips = 0
 
@@ -1011,7 +1013,7 @@ class BrowserSession:
             if "accounts" not in tables:
                 return None
 
-            sql = """SELECT * FROM accounts WHERE active = 1
+            sql = f"""SELECT * FROM accounts WHERE active = 1 AND {self._active_field} = 1
                      AND (
                          clips_today < ?
                          OR clips_today IS NULL
@@ -1047,7 +1049,7 @@ class BrowserSession:
             if "accounts" not in tables:
                 return []
             rows = conn.execute(
-                "SELECT * FROM accounts WHERE active = 1 "
+                f"SELECT * FROM accounts WHERE active = 1 AND {self._active_field} = 1 "
                 "ORDER BY last_throttle_time ASC NULLS FIRST, total_clips ASC"
             ).fetchall()
             return [dict(r) for r in rows]
@@ -1061,9 +1063,9 @@ class BrowserSession:
         try:
             conn.isolation_level = None
             conn.execute("BEGIN IMMEDIATE")
-            sql = """
+            sql = f"""
                 SELECT * FROM accounts
-                 WHERE active = 1
+                 WHERE active = 1 AND {self._active_field} = 1
                    AND in_use_by IS NULL
                    AND (
                        clips_today < ?
@@ -1262,7 +1264,7 @@ class BrowserSession:
                 conn = self._get_db()
                 try:
                     row = conn.execute(
-                        "SELECT * FROM accounts WHERE email = ? AND active = 1",
+                        f"SELECT * FROM accounts WHERE email = ? AND active = 1 AND {self._active_field} = 1",
                         (preferred_account,),
                     ).fetchone()
                     if row:
@@ -1321,7 +1323,7 @@ class BrowserSession:
                         conn = self._get_db()
                         try:
                             row = conn.execute(
-                                "SELECT * FROM accounts WHERE email = ? AND active = 1 "
+                                f"SELECT * FROM accounts WHERE email = ? AND active = 1 AND {self._active_field} = 1 "
                                 "AND (last_throttle_time IS NULL "
                                 "OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))",
                                 (current_user,),
@@ -1374,8 +1376,8 @@ class BrowserSession:
                     conn = self._get_db()
                     try:
                         row = conn.execute(
-                            "SELECT * FROM accounts "
-                            "WHERE email = ? AND active = 1",
+                            f"SELECT * FROM accounts "
+                            f"WHERE email = ? AND active = 1 AND {self._active_field} = 1",
                             (preferred_account,),
                         ).fetchone()
                         if row:

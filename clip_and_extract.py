@@ -489,7 +489,7 @@ def claim_account(slot_id, pid):
         row = conn.execute(
             """
             SELECT * FROM accounts
-             WHERE active = 1
+             WHERE active = 1 AND clipper_active = 1
                AND (last_error IS NULL OR last_error = '')
                AND in_use_by IS NULL
                AND (
@@ -1002,7 +1002,7 @@ def get_next_account(exclude_email=None):
             return None
 
         today = datetime.now().strftime("%Y-%m-%d")
-        sql = """SELECT * FROM accounts WHERE active = 1
+        sql = """SELECT * FROM accounts WHERE active = 1 AND clipper_active = 1
                  AND (last_error IS NULL OR last_error = '')
                  AND (
                      clips_today < ?
@@ -1035,7 +1035,7 @@ def get_all_active_accounts():
         if "accounts" not in tables:
             return []
         rows = conn.execute(
-            "SELECT * FROM accounts WHERE active = 1 AND (last_error IS NULL OR last_error = '') ORDER BY last_clip_time ASC NULLS FIRST, clips_today ASC NULLS FIRST, total_clips ASC"
+            "SELECT * FROM accounts WHERE active = 1 AND clipper_active = 1 AND (last_error IS NULL OR last_error = '') ORDER BY last_clip_time ASC NULLS FIRST, clips_today ASC NULLS FIRST, total_clips ASC"
         ).fetchall()
         return [dict(r) for r in rows]
     finally:
@@ -1219,6 +1219,7 @@ def check_account_error(driver, email, context="page"):
             fname = f"acct_error_{email.split('@')[0]}_{ts}.png"
             fpath = os.path.join(LOG_DIR, fname)
             try:
+                driver.execute_script("window.scrollTo(0, 0)")
                 driver.save_screenshot(fpath)
                 log.info(f"    Error screenshot saved: {fpath}")
             except Exception as e:
@@ -2101,7 +2102,7 @@ def setup_driver(preferred_account=None, slot_id=None):
         if preferred_account:
             aconn = get_accounts_db()
             try:
-                row = aconn.execute("SELECT * FROM accounts WHERE email = ? AND active = 1", (preferred_account,)).fetchone()
+                row = aconn.execute("SELECT * FROM accounts WHERE email = ? AND active = 1 AND clipper_active = 1", (preferred_account,)).fetchone()
                 if row:
                     acct = dict(row)
                 else:
@@ -2160,7 +2161,7 @@ def setup_driver(preferred_account=None, slot_id=None):
                 aconn = get_accounts_db()
                 try:
                     row = aconn.execute(
-                        "SELECT * FROM accounts WHERE email = ? AND active = 1 AND (last_throttle_time IS NULL OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))",
+                        "SELECT * FROM accounts WHERE email = ? AND active = 1 AND clipper_active = 1 AND (last_throttle_time IS NULL OR last_throttle_time < datetime('now', 'localtime', '-24 hours'))",
                         (current_user,)
                     ).fetchone()
                     if row:
@@ -2196,7 +2197,7 @@ def setup_driver(preferred_account=None, slot_id=None):
                 time.sleep(2)
                 aconn = get_accounts_db()
                 try:
-                    row = aconn.execute("SELECT * FROM accounts WHERE email = ? AND active = 1", (preferred_account,)).fetchone()
+                    row = aconn.execute("SELECT * FROM accounts WHERE email = ? AND active = 1 AND clipper_active = 1", (preferred_account,)).fetchone()
                     if row:
                         if do_login(driver, dict(row)):
                             log.info(f"  Switched to {preferred_account}")
@@ -3191,8 +3192,15 @@ OCR TEXT:
     except Exception as e:
         log.warning(f"    AI extraction error: {e}")
         err_str = str(e).lower()
-        if "credit balance" in err_str or "billing" in err_str or "purchase credits" in err_str or "invalid x-api-key" in err_str or "authentication_error" in err_str:
-            log.error("    *** ANTHROPIC API CREDITS EXHAUSTED — EMERGENCY STOP ***")
+        _is_auth_err = "invalid x-api-key" in err_str or "authentication_error" in err_str
+        _is_credit_err = "credit balance" in err_str or "billing" in err_str or "purchase credits" in err_str
+        if _is_auth_err or _is_credit_err:
+            if _is_auth_err:
+                log.error("    *** ANTHROPIC API KEY INVALID — EMERGENCY STOP ***")
+                _stop_reason = "Anthropic API key invalid"
+            else:
+                log.error("    *** ANTHROPIC API CREDITS EXHAUSTED — EMERGENCY STOP ***")
+                _stop_reason = "Anthropic API credits exhausted"
             # 1. Set global stop flag immediately
             try:
                 os.makedirs(GLOBAL_STOP_FLAG_FILE, exist_ok=True)
@@ -3209,7 +3217,8 @@ OCR TEXT:
                     "INSERT OR REPLACE INTO clipper_state (key, value) VALUES ('instances_target', '0')",
                 )
                 _db.execute(
-                    "INSERT OR REPLACE INTO clipper_state (key, value) VALUES ('instances_stop_reason', 'Anthropic API key invalid or credits exhausted')",
+                    "INSERT OR REPLACE INTO clipper_state (key, value) VALUES ('instances_stop_reason', ?)",
+                    (_stop_reason,),
                 )
                 _db.commit()
                 _db.close()
@@ -3640,7 +3649,7 @@ def clip_page(driver, url, conn, clipped_image_ids=None, done_filenames=None):
     )
 
     if articles == "credits_exhausted":
-        log.error("    STOPPING: Anthropic API credits exhausted. Clip saved but AI extraction skipped.")
+        log.error("    STOPPING: Anthropic API unavailable (key invalid or credits exhausted). Clip saved but AI extraction skipped.")
         _save_error_screenshot(driver, "credits_exhausted")
         # Don't un-clip — the clip and OCR are saved. Just stop.
         return "stop"
@@ -3787,7 +3796,7 @@ def main_slot(slot_id, date_start=None, date_end=None, max_pages=0, pinned_accou
                     _pin_conn.isolation_level = None
                     _pin_conn.execute("BEGIN IMMEDIATE")
                     _pin_row = _pin_conn.execute(
-                        "SELECT * FROM accounts WHERE email = ? AND active = 1 AND (in_use_by IS NULL OR in_use_by = ?)",
+                        "SELECT * FROM accounts WHERE email = ? AND active = 1 AND clipper_active = 1 AND (in_use_by IS NULL OR in_use_by = ?)",
                         (pinned_account, slot_id),
                     ).fetchone()
                     if _pin_row:
